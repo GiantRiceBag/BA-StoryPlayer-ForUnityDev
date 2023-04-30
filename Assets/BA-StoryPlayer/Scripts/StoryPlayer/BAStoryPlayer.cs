@@ -8,6 +8,7 @@ namespace BAStoryPlayer
 
         [SerializeField]
         CharacterManager _characterManager;
+        [SerializeField]
         UIManager _UIManager;
         public CharacterManager CharacterManager
         {

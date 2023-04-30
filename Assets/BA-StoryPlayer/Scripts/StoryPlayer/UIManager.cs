@@ -1,9 +1,10 @@
 using System.Collections;
-using System.Collections.Generic;
 using System;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using BAStoryPlayer.DoTweenS;
+using BAStoryPlayer.UI;
 
 namespace BAStoryPlayer
 {
@@ -17,8 +18,12 @@ namespace BAStoryPlayer
     {
         const int NUM_CHAR_PERSECOND = 20; // 每秒打印字数
         const float INTERVAL_PRINT = 1 / (float)NUM_CHAR_PERSECOND;
+        const float TIME_BLUR_BACKGROUP = 0.7f;
 
         [Header("References")]
+        [SerializeField] Image image_Backgroup;
+        [SerializeField] Image image_BlurLayer;
+        [Space]
         [SerializeField] TextMeshProUGUI text_Speaker;
         [SerializeField] TextMeshProUGUI text_Main;
         [Space]
@@ -45,6 +50,11 @@ namespace BAStoryPlayer
 
         private void Start()
         {
+            if(image_Backgroup == null)
+                image_Backgroup = transform.Find("Backgroup").GetComponent<Image>();
+            if (image_BlurLayer == null)
+                image_BlurLayer = image_Backgroup.transform.Find("BlurLayer").GetComponent<Image>();
+
             if (text_Speaker == null)
                 text_Speaker = transform.Find("TextArea").Find("Text_Speaker").GetComponent<TextMeshProUGUI>();
             if(text_Main == null)
@@ -150,11 +160,33 @@ namespace BAStoryPlayer
                 gameObject_Continued.SetActive(enable);
         }
 
+        public void SetBlurBackgroup(bool enable)
+        {
+            image_BlurLayer.DoFloat("_Size", enable ? 3 : 0, TIME_BLUR_BACKGROUP);
+        }
+
+        public void SetBackgroup(Sprite sprite)
+        {
+            image_Backgroup.sprite = sprite;
+        }
+
+        public void ShowTitle(string title,string subtitle)
+        {
+            GameObject obj = Instantiate( Resources.Load("Prefabs/Title") as GameObject);
+            obj.transform.SetParent(transform);
+            obj.GetComponent<Title>().Initialize(title, subtitle);
+
+        }
+
         // TODO TEST
         public void TestPrint()
         {
             Print("你好 我好 大家好 你好 我好 大家好你好 我好 大家好你好 我好 大家好你好 我好 大家好你好 我好 大家好你好 我好 大家好你好 我好 大家好你好 我好 大家好你好 我好 大家好你好 我好 大家好你好 我好 大家好");
             UpdateSpeaker("hoshino");
+        }
+        public void TestTitle()
+        {
+            ShowTitle("野兽先辈的调教","妙妙屋");
         }
     }
 }

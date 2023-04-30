@@ -11,6 +11,8 @@ namespace BAStoryPlayer.DoTweenS
         internal Coroutine coroutine;
         internal object target;
         internal int time;
+        internal string targetName;
+
         public Action onComplete;
 
         public TweenS(object target,float duration,Transform transform,Coroutine coroutine = null){
@@ -25,6 +27,10 @@ namespace BAStoryPlayer.DoTweenS
         public TweenS(object target, float duration, int time,Transform transform, Coroutine coroutine = null):this(target,duration,transform,coroutine)
         {
             this.time = Math.Clamp(time, 1, int.MaxValue);
+        }
+        public TweenS(string targetName,object target, float duration,Transform transform, Coroutine coroutine = null) : this(target, duration, transform, coroutine)
+        {
+            this.targetName = targetName;
         }
 
         public void Kill()

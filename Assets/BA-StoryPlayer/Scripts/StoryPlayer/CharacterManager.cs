@@ -10,6 +10,45 @@ namespace BAStoryPlayer
         Instant = 0,
         Smooth
     }
+    public enum CharacterEffect
+    {
+        Appear = 0,
+        Disapper,
+        Disapper2Left,
+        Disapper2Right,
+        AppearL2R,
+        AppearR2L,
+        Hophop,
+        Shake,
+        Move,
+        Stiff,
+        Closeup,
+        Jump,
+        falldownR,
+        Hide
+    }
+
+    public enum CharacterEmotion
+    {
+        Heart = 0,
+        Respond,
+        Music,
+        Twinkle,
+        Upset,
+        Sweat,
+        Dot,Char,Exclaim,
+        Suprise,
+        Question,
+        Shy,
+        Angry,
+        Steam,
+        Sigh,
+        Sad,
+        Bulb,
+        Zzz,
+        Tear,
+        Think
+    }
 
     public class CharacterManager : MonoBehaviour
     {

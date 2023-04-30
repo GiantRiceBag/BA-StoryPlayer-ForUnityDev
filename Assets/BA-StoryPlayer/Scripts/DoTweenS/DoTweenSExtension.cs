@@ -1,6 +1,7 @@
 using System.Collections;
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 using Spine.Unity;
 
 namespace BAStoryPlayer.DoTweenS
@@ -126,6 +127,35 @@ namespace BAStoryPlayer.DoTweenS
             {
                 skeletonGraphic.color = Color.Lerp(originCol, targetCol, lerp);
                 lerp = Mathf.Clamp(lerp + increment * Time.deltaTime, 0, 1);
+                yield return null;
+            }
+
+            tween.RunOnComplete();
+        }
+        #endregion
+
+        #region ²ÄÖÊ
+        public static TweenS DoFloat(this Image image,string propertyName,float target,float duration)
+        {
+            MonoBehaviour mono = image.GetComponent<MonoBehaviour>();
+            TweenS tween = new TweenS(propertyName, target, duration,image.transform);
+            tween.SetCoroutine(mono.StartCoroutine(DoFloat_Image_Material(mono, tween)));
+            return tween;
+
+        }
+        static IEnumerator DoFloat_Image_Material(this MonoBehaviour mono,TweenS tween)
+        {
+            Image image = tween.transform.GetComponent<Image>();
+            Material mat = image.material;
+            mat = GameObject.Instantiate(mat);
+            image.material = mat;
+            float target = (float)tween.target;
+            float origin = mat.GetFloat(tween.targetName);
+            float lerp = 0, increment = 1 / tween.duration;
+            while(mat.GetFloat(tween.targetName) != target)
+            {
+                mat.SetFloat(tween.targetName, Mathf.Lerp(origin, target, lerp));
+                lerp = Math.Clamp(lerp + increment * Time.deltaTime, 0, 1);
                 yield return null;
             }
 
