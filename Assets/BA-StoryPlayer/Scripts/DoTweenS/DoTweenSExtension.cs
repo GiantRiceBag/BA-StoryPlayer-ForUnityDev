@@ -9,7 +9,7 @@ namespace BAStoryPlayer.DoTweenS
     public static class DoTweenSExtension
     {
         #region 基于锚点的移动
-        public static TweenS DMove_Anchored(this Transform transform, Vector2 target, float duration)
+        public static TweenS DoMove_Anchored(this Transform transform, Vector2 target, float duration)
         {
             MonoBehaviour mono = transform.GetComponent<MonoBehaviour>();
             TweenS tween = new TweenS(target, duration, transform);
@@ -68,7 +68,7 @@ namespace BAStoryPlayer.DoTweenS
                 while (lerp != 0)
                 {
                     rect.anchoredPosition = Vector2.Lerp(origin, target, lerp);
-                    lerp = Mathf.Clamp(lerp + increment * Time.deltaTime, 0, 1);
+                    lerp = Mathf.Clamp(lerp - increment * Time.deltaTime, 0, 1);
                     yield return null;
                 }
 
@@ -95,12 +95,12 @@ namespace BAStoryPlayer.DoTweenS
 
             float maxOffsetX = Mathf.Abs((float)tween.target);
             float max = func(Mathf.PI / 2);
-            float lerp = 0, increment = destX / tween.duration;
+            float valueX = 0, increment = destX / tween.duration;
             Vector3 origin = tween.transform.position;
-            while(lerp != destX)
+            while(valueX != destX)
             {
-                tween.transform.position = origin + new Vector3(func(lerp) / max * maxOffsetX,0,0);
-                lerp = Mathf.Clamp(lerp + increment * Time.deltaTime, 0, 1);
+                tween.transform.position = origin + new Vector3(func(valueX) / max * maxOffsetX,0,0);
+                valueX = Mathf.Clamp(valueX + increment * Time.deltaTime, 0, destX);
                 yield return null;
             }
 
@@ -114,6 +114,7 @@ namespace BAStoryPlayer.DoTweenS
         {
             MonoBehaviour mono = skeletonGraphics.GetComponent<MonoBehaviour>();
             TweenS tween = new TweenS(targetCol, duration, mono.transform);
+            tween.type = TweenSType.Color;
             tween.SetCoroutine(mono.StartCoroutine(DoColor(mono, tween)));
             return tween;
         }
@@ -139,6 +140,7 @@ namespace BAStoryPlayer.DoTweenS
         {
             MonoBehaviour mono = image.GetComponent<MonoBehaviour>();
             TweenS tween = new TweenS(propertyName, target, duration,image.transform);
+            tween.type = TweenSType.Material;
             tween.SetCoroutine(mono.StartCoroutine(DoFloat_Image_Material(mono, tween)));
             return tween;
 

@@ -3,6 +3,13 @@ using UnityEngine;
 
 namespace BAStoryPlayer.DoTweenS
 {
+    public enum TweenSType
+    {
+        Vector,
+        Color,
+        Material
+    }
+
     public class TweenS
     {
         internal int tid;
@@ -12,6 +19,7 @@ namespace BAStoryPlayer.DoTweenS
         internal object target;
         internal int time;
         internal string targetName;
+        internal TweenSType type = TweenSType.Vector;
 
         public Action onComplete;
 

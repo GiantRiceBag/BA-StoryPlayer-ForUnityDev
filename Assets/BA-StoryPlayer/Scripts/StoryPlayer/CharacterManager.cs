@@ -10,7 +10,7 @@ namespace BAStoryPlayer
         Instant = 0,
         Smooth
     }
-    public enum CharacterEffect
+    public enum CharacterAction
     {
         Appear = 0,
         Disapper,
@@ -55,7 +55,14 @@ namespace BAStoryPlayer
         const int NUM_CHARACTER_SLOT = 5;
         const float VALUE_CHARACTER_SCALE = 0.7f;
         const int VALUE_INTERVAL_SLOT = 320;
-        const float TIME_TRANSITION = 1;
+        // TODO 动作相关参数 后面统一放到配置表中
+        const float TIME_TRANSITION = 0.75f;
+        const float TIME_HOPHOP = 0.5f;
+        const float TIME_SHAKE = 0.64f;
+        const float TIME_MOVE = 0.45f;
+        const float TIME_STIFF = 0.45f;
+        const float TIME_JUMP = 0.3f;
+
         Vector2 INTERVAL_WINK
         {
             get
@@ -275,24 +282,23 @@ namespace BAStoryPlayer
         /// 变更角色位置但不改变其编号
         /// </summary>
         /// <param name="currentIndex">角色编号</param>
-        /// <param name="index">目标位置编号</param>
+        /// <param name="targetIndex">目标位置编号</param>
         /// <param name="transition">过渡方式</param>
-        void MoveCharacterTo(int currentIndex,int index,TransistionType transition = TransistionType.Instant)
+        void MoveCharacterTo(int currentIndex,int targetIndex,TransistionType transition = TransistionType.Instant)
         {
-            if (!ValidateIndex(currentIndex) || !ValidateIndex(index))
+            if (!ValidateIndex(currentIndex) || !ValidateIndex(targetIndex))
                 return;
 
             switch (transition)
             {
                 case TransistionType.Instant:
                     {
-                        character[currentIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2((index+1) * VALUE_INTERVAL_SLOT, 0);
+                        character[currentIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2((targetIndex+1) * VALUE_INTERVAL_SLOT, 0);
                         break;
                     }
                 case TransistionType.Smooth:
                     {
-                        // TODO 插值移动
-                        character[currentIndex].transform.DMove_Anchored(new Vector2((index + 1) * VALUE_INTERVAL_SLOT, 0),0.3f).onComplete = ()=> { Debug.Log("完成!"); };
+                        character[currentIndex].transform.DoMove_Anchored(new Vector2((targetIndex + 1) * VALUE_INTERVAL_SLOT, 0), TIME_MOVE);
                         break;
                     }
             default:break;
@@ -305,6 +311,33 @@ namespace BAStoryPlayer
                 return;
             MoveCharacterTo(currentIndex, index, transition);
         }
+        void MoveCharacterTo(int currentIndex,Vector2 pos,TransistionType transition = TransistionType.Instant)
+        {
+            if (!ValidateIndex(currentIndex))
+                return;
+
+            switch (transition)
+            {
+                case TransistionType.Instant:
+                    {
+                        character[currentIndex].GetComponent<RectTransform>().anchoredPosition = pos;
+                        break;
+                    }
+                case TransistionType.Smooth:
+                    {
+                        character[currentIndex].transform.DoMove_Anchored(pos, TIME_MOVE);
+                        break;
+                    }
+                default: break;
+            }
+        }
+        void MoveCharacterTo(string name, Vector2 pos, TransistionType transition = TransistionType.Instant)
+        {
+            int currentIndex = CheckCharacterExist(name);
+            if (currentIndex == -1)
+                return;
+            MoveCharacterTo(currentIndex, pos, transition);
+        }
 
         bool ValidateIndex(int index)
         {
@@ -312,6 +345,99 @@ namespace BAStoryPlayer
                 return true;
             Debug.LogError($"角色槽位下标 {index} 超出范围");
             return false;
+        }
+
+        /// <summary>
+        /// 使角色执行某种动作
+        /// </summary>
+        /// <param name="index">编号</param>
+        /// <param name="action">动作</param>
+        /// <param name="arg">参数(可选)</param>
+        public void AnimateCharacter(int index,CharacterAction action,int arg = -1)
+        {
+            if (CheckSlotEmpty(index))
+                return;
+
+            switch (action)
+            {
+                case CharacterAction.Appear:
+                    {
+                        character[index].DoColor(Color.white, TIME_TRANSITION);
+                        break;
+                    }
+                case CharacterAction.Disapper:
+                    {
+                        character[index].DoColor(Color.black, TIME_TRANSITION);
+                        break;
+                    }
+                case CharacterAction.Disapper2Left:
+                    {
+                        MoveCharacterTo(index, new Vector2(-500, 0), TransistionType.Smooth);
+                        break;
+                    }
+                case CharacterAction.Disapper2Right:
+                    {
+                        MoveCharacterTo(index, new Vector2(2420, 0), TransistionType.Smooth);
+                        break;
+                    }
+                case CharacterAction.AppearL2R:
+                    {
+                        character[index].color = Color.white;
+                        MoveCharacterTo(index, new Vector2(-500, 0));
+                        MoveCharacterTo(index, arg, TransistionType.Smooth);
+                        break;
+                    }
+                case CharacterAction.AppearR2L:
+                    {
+                        character[index].color = Color.white;
+                        MoveCharacterTo(index, new Vector2(2420, 0));
+                        MoveCharacterTo(index, arg, TransistionType.Smooth);
+                        break;
+                    }
+                case CharacterAction.Hophop:
+                    {
+                        character[index].transform.DoBound_Anchored_Relative(new Vector2(0, 50), TIME_HOPHOP, 2);
+                        break;
+                    }
+                case CharacterAction.Shake:
+                    {
+                        character[index].transform.DoShakeX(40, TIME_SHAKE, 2);
+                        break;
+                    }
+                case CharacterAction.Move:
+                    {
+                        MoveCharacterTo(index, arg, TransistionType.Smooth);
+                        break;
+                    }
+                case CharacterAction.Stiff:
+                    {
+                        character[index].transform.DoShakeX(10, TIME_STIFF, 4);
+                        break;
+                    }
+                case CharacterAction.Closeup:
+                    {
+                        // TODO
+                        Debug.Log($"{action}没做");
+                        break;
+                    }
+                case CharacterAction.Jump:
+                    {
+                        character[index].transform.DoBound_Anchored_Relative(new Vector2(0, 70), TIME_JUMP);
+                        break;
+                    }
+                case CharacterAction.falldownR:
+                    {
+                        // TODO
+                        Debug.Log($"{action}没做");
+                        break;
+                    }
+                case CharacterAction.Hide:
+                    {
+                        character[index].DoColor(Color.black, TIME_TRANSITION).onComplete = () => { DestroyCharacter(index); };
+                    break;
+                }
+                default:return;
+            }
         }
 
         // TODO TEST
@@ -336,6 +462,16 @@ namespace BAStoryPlayer
         public void TestTween()
         {
             character[2].DoColor(Color.black, 0.5f).onComplete = () => { DestroyCharacter(2, true); };
+        }
+        public void TestAction()
+        {
+            AnimateCharacter(2, (CharacterAction)index, 2);
+            index++;
+            index %= 14;
+        }
+        public void TestActionWithArg(int index)
+        {
+            AnimateCharacter(2, (CharacterAction)index, 2);
         }
     }
 }

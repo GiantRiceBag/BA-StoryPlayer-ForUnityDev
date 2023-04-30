@@ -51,7 +51,7 @@ namespace BAStoryPlayer
         private void Start()
         {
             if(image_Backgroup == null)
-                image_Backgroup = transform.Find("Backgroup").GetComponent<Image>();
+                image_Backgroup = transform.parent.Find("Backgroup").GetComponent<Image>();
             if (image_BlurLayer == null)
                 image_BlurLayer = image_Backgroup.transform.Find("BlurLayer").GetComponent<Image>();
 
