@@ -1700,7 +1700,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   color_Selected_Backgroup: {r: 0.4245283, g: 0.4245283, b: 0.4245283, a: 1}
   color_Selected_Text: {r: 1, g: 1, b: 1, a: 1}
-  color_Unselected_Text: {r: 0.25490198, g: 0.3254902, b: 0.39607847, a: 1}
   text: {fileID: 1931587720}
   subpanel: {fileID: 1355406511}
   selected: 0
@@ -1858,7 +1857,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1896,6 +1895,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Auto: 0
+  _characterManager: {fileID: 0}
 --- !u!1 &1135304844
 GameObject:
   m_ObjectHideFlags: 0
@@ -1980,9 +1980,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1558932131}
-        m_TargetAssemblyTypeName: BAStoryPlayer.UIManager, Assembly-CSharp
-        m_MethodName: TestPrint
+      - m_Target: {fileID: 69067042}
+        m_TargetAssemblyTypeName: BAStoryPlayer.CharacterManager, Assembly-CSharp
+        m_MethodName: TEST2
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2378,7 +2378,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2794,9 +2794,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1558932131}
-        m_TargetAssemblyTypeName: BAStoryPlayer.UIManager, Assembly-CSharp
-        m_MethodName: Skip
+      - m_Target: {fileID: 69067042}
+        m_TargetAssemblyTypeName: BAStoryPlayer.CharacterManager, Assembly-CSharp
+        m_MethodName: TestTween
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

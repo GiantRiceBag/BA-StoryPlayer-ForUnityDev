@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
 using Spine.Unity;
-
+using BAStoryPlayer.DoTweenS;
 namespace BAStoryPlayer
 {
     public enum TransistionType
@@ -16,6 +16,7 @@ namespace BAStoryPlayer
         const int NUM_CHARACTER_SLOT = 5;
         const float VALUE_CHARACTER_SCALE = 0.7f;
         const int VALUE_INTERVAL_SLOT = 320;
+        const float TIME_TRANSITION = 1;
         Vector2 INTERVAL_WINK
         {
             get
@@ -36,15 +37,22 @@ namespace BAStoryPlayer
             }
         }
 
+        BAStoryPlayer StoryPlayer
+        {
+            get
+            {
+                return BAStoryPlayerController.Instance.StoryPlayer;
+            }
+        }
+
         /// <summary>
         /// 激活角色
         /// </summary>
         /// <param name="index">初始位置/角色编号</param>
         /// <param name="name">角色姓名</param>
         /// <param name="animationID">播放动画的编号</param>
-        /// <param name="lines">角色的对话</param>
         /// <param name="transistion">出场方式[仅首次出场有效]</param>
-        public void ActivateCharacter(int index,string name,string animationID,string lines = null,TransistionType transistion = TransistionType.Instant)
+        public void ActivateCharacter(int index,string name,string animationID,TransistionType transistion = TransistionType.Instant)
         {
             int currentIndex = CheckCharacterExist(name);
             // 角色不在场上
@@ -89,7 +97,8 @@ namespace BAStoryPlayer
                         }
                     case TransistionType.Smooth:
                         {
-                            // TODO 平缓过度
+                            character[index].color = Color.black;
+                            character[index].DoColor(Color.white, TIME_TRANSITION);
                             break;
                         }
                     default:break;
@@ -108,7 +117,7 @@ namespace BAStoryPlayer
                 {
                     DestroyCharacter(index);
 
-                    MoveCharacterTo(currentIndex, index);
+                    MoveCharacterTo(currentIndex, index,TransistionType.Smooth);
                     character[index] = character[currentIndex];
                     character[currentIndex] = null;
                 }
@@ -121,7 +130,6 @@ namespace BAStoryPlayer
             // TODO
             // 播放角色台词
         }
-
         /// <summary>
         /// 检查角色是否存在并返回对应下标 若不存在则返回-1
         /// </summary>
@@ -154,16 +162,29 @@ namespace BAStoryPlayer
         }
 
         /// <summary>
-        /// 删除在场上的角色(不删除对象仅取消编号)
+        /// 尝试删除在场上的角色(不删除对象仅取消编号)
         /// </summary>
         /// <param name="index">下标</param>
-        void DestroyCharacter(int index)
+        /// <param name="destoryObject">完全删除角色</param>
+        void DestroyCharacter(int index,bool destoryObject = false)
         {
             if (CheckSlotEmpty(index))
                 return;
 
-            character[index].gameObject.SetActive(false);
+            if (destoryObject)
+            {
+                characterPool.Remove(character[index].name);
+                Destroy(character[index].gameObject);
+            }
+            else
+            {
+                character[index].gameObject.SetActive(false);
+            }
+
+            SetWinkAction(character[index].name, false);
             character[index] = null;
+           
+
         }
 
         /// <summary>
@@ -232,6 +253,7 @@ namespace BAStoryPlayer
                 case TransistionType.Smooth:
                     {
                         // TODO 插值移动
+                        character[currentIndex].transform.DMove_Anchored(new Vector2((index + 1) * VALUE_INTERVAL_SLOT, 0),0.3f).onComplete = ()=> { Debug.Log("完成!"); };
                         break;
                     }
             default:break;
@@ -259,15 +281,22 @@ namespace BAStoryPlayer
         int index2 = 0;
         public void TEST()
         {
-            ActivateCharacter(index, "hoshino", testAni[index]);
-            index++;
-            index %= 5;
+            ActivateCharacter(index, "hoshino", testAni[index],TransistionType.Smooth);
+            int next = Random.Range(0, 5);
+            while(index == next)
+            {
+                next = Random.Range(0, 5);
+            }
+            index = next;
         }
         public void TEST2()
         {
-            ActivateCharacter(index2, "shiroko", testAni[index2]);
-            index2++;
-            index2 %= 5;
+            DestroyCharacter(2,true);
+            ActivateCharacter(2, "shiroko", testAni[0],TransistionType.Smooth);
+        }
+        public void TestTween()
+        {
+            character[2].DoColor(Color.black, 0.5f).onComplete = () => { DestroyCharacter(2, true); };
         }
     }
 }

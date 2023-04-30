@@ -33,6 +33,14 @@ namespace BAStoryPlayer
         string mainTextBuffer = null;
         bool printing = false;
 
+        BAStoryPlayer StoryPlayer
+        {
+            get
+            {
+                return BAStoryPlayerController.Instance.StoryPlayer;
+            }
+        }
+
         public event Action onFinishedPrinting;
 
         private void Start()
@@ -90,6 +98,8 @@ namespace BAStoryPlayer
 
             printing = true;
             mainTextBuffer = text;
+            if (coroutine_Print != null)
+                StopCoroutine(coroutine_Print);
             coroutine_Print = StartCoroutine(CPrint());
         }
         IEnumerator CPrint()
