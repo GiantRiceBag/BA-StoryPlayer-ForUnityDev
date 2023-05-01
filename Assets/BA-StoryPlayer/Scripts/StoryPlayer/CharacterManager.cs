@@ -28,27 +28,7 @@ namespace BAStoryPlayer
         Hide
     }
 
-    public enum CharacterEmotion
-    {
-        Heart = 0,
-        Respond,
-        Music,
-        Twinkle,
-        Upset,
-        Sweat,
-        Dot,Char,Exclaim,
-        Suprise,
-        Question,
-        Shy,
-        Angry,
-        Steam,
-        Sigh,
-        Sad,
-        Bulb,
-        Zzz,
-        Tear,
-        Think
-    }
+
 
     public class CharacterManager : MonoBehaviour
     {
@@ -57,6 +37,7 @@ namespace BAStoryPlayer
         const int VALUE_INTERVAL_SLOT = 320;
         // TODO 动作相关参数 后面统一放到配置表中
         const float TIME_TRANSITION = 0.75f;
+        const float TIME_HIGHLIGHT = 0.2f;
         const float TIME_HOPHOP = 0.5f;
         const float TIME_SHAKE = 0.64f;
         const float TIME_MOVE = 0.45f;
@@ -68,6 +49,13 @@ namespace BAStoryPlayer
             get
             {
                 return new Vector2(4, 5.5f);
+            }
+        }
+        Color COLOR_UNHIGHLIGHT
+        {
+            get
+            {
+                return new Color(0.6f, 0.6f, 0.6f);
             }
         }
 
@@ -117,6 +105,7 @@ namespace BAStoryPlayer
                     obj.transform.SetParent(transform);
                     obj.name = name;
                     var rectTransform = obj.GetComponent<RectTransform>();
+                    rectTransform.sizeDelta = Vector2.zero;
                     rectTransform.anchorMin = new Vector2(0, 0);
                     rectTransform.anchorMax = new Vector2(0, 0);
                     rectTransform.pivot = new Vector2(0.5f, 0);
@@ -124,6 +113,7 @@ namespace BAStoryPlayer
                     rectTransform.localScale = new Vector3(VALUE_CHARACTER_SCALE, VALUE_CHARACTER_SCALE, 1);
                     characterPool.Add(name, obj);
                 }
+                // TODO 可能要和入场动作相冲突
                 // 对象池存在对应角色则只需要修改位置即可
                 else
                 {
@@ -149,6 +139,8 @@ namespace BAStoryPlayer
                         }
                     default:break;
                 }
+
+                Highlight(index);
 
                 character[index].AnimationState.SetAnimation(0, animationID, false);
                 if (animationID == "00")
@@ -353,7 +345,7 @@ namespace BAStoryPlayer
         /// <param name="index">编号</param>
         /// <param name="action">动作</param>
         /// <param name="arg">参数(可选)</param>
-        public void AnimateCharacter(int index,CharacterAction action,int arg = -1)
+        public void SetAction(int index,CharacterAction action,int arg = -1)
         {
             if (CheckSlotEmpty(index))
                 return;
@@ -440,6 +432,79 @@ namespace BAStoryPlayer
             }
         }
 
+        /// <summary>
+        /// 设置角色情绪emoji
+        /// </summary>
+        /// <param name="index">下标</param>
+        /// <param name="emotion">表情</param>
+        public void SetEmotion(int index,CharacterEmotion emotion)
+        {
+            if (CheckSlotEmpty(index))
+                return;
+
+            EmotionFactory.SetEmotion(character[index].transform, emotion);
+        }
+
+        /// <summary>
+        /// 高亮某个角色
+        /// </summary>
+        /// <param name="index">角色下标</param>
+        /// <param name="transition">过渡方式</param>
+        public void Highlight(int index,TransistionType transition = TransistionType.Instant)
+        {
+            if (CheckSlotEmpty(index))
+                return;
+
+            character[index].color = Color.white;
+            foreach(var i in character)
+            {
+                if (i == character[index] || i == null)
+                    continue;
+                switch (transition)
+                {
+                    case TransistionType.Instant:
+                        {
+                            i.color = COLOR_UNHIGHLIGHT;
+                            break;
+                        }
+                    case TransistionType.Smooth:
+                        {
+                            i.DoColor(COLOR_UNHIGHLIGHT, TIME_HIGHLIGHT);
+                            break;
+                        }
+                    default: return;
+                }
+            }
+        }
+        /// <summary>
+        /// 设置是否高亮所有角色
+        /// </summary>
+        /// <param name="enable"></param>
+        /// <param name="transition"></param>
+        public void SetHighlightAll(bool enable,TransistionType transition = TransistionType.Instant)
+        {
+            foreach (var i in character)
+            {
+                if (i == null)
+                    continue;
+
+                switch (transition)
+                {
+                    case TransistionType.Instant:
+                        {
+                            i.color = COLOR_UNHIGHLIGHT;
+                            break;
+                        }
+                    case TransistionType.Smooth:
+                        {
+                            i.DoColor(COLOR_UNHIGHLIGHT, TIME_HIGHLIGHT);
+                            break;
+                        }
+                    default: return;
+                }
+            }
+        }
+
         // TODO TEST
         string[] testAni = { "00", "01", "02","03","04" };
         int index = 0;
@@ -465,13 +530,20 @@ namespace BAStoryPlayer
         }
         public void TestAction()
         {
-            AnimateCharacter(2, (CharacterAction)index, 2);
+            SetAction(2, (CharacterAction)index, 2);
             index++;
             index %= 14;
         }
         public void TestActionWithArg(int index)
         {
-            AnimateCharacter(2, (CharacterAction)index, 2);
+            SetAction(2, (CharacterAction)index, 2);
+        }
+        public void TestEmotion()
+        {
+            SetEmotion(0, (CharacterEmotion)index);
+            SetEmotion(2, (CharacterEmotion)index);
+            SetEmotion(4, (CharacterEmotion)index++);
+            index %= 13;
         }
     }
 }

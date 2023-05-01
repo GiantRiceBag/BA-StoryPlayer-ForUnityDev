@@ -37,6 +37,7 @@ namespace BAStoryPlayer
         public GameObject LoadCharacter(string romaji)
         {
             GameObject prefab = Resources.Load(PATH_CHARACTER_PREFABS + CharacterDataTable[romaji].prefabUrl) as GameObject;
+            prefab.name = romaji;
             if(prefab == null)
             {
                 Debug.LogError($"未在路径{PATH_CHARACTER_PREFABS + CharacterDataTable[romaji].prefabUrl}中找到角色预制体");

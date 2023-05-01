@@ -29,18 +29,17 @@ namespace BAStoryPlayer
             }
         }
 
-        // Start is called before the first frame update
         void Start()
         {
             // TODO Test
-            //CharacterManager.ActivateCharacter(2, "hoshino", "00",TransistionType.Smooth);
+            CharacterManager.ActivateCharacter(0, "hoshino", "00", TransistionType.Smooth);
+            //CharacterManager.ActivateCharacter(1, "aru", "00", TransistionType.Smooth);
+            CharacterManager.ActivateCharacter(2, "serika_shibaseki", "00");
+            //CharacterManager.ActivateCharacter(3, "shiroko", "00", TransistionType.Smooth);
+            CharacterManager.ActivateCharacter(4, "kayoko", "00", TransistionType.Smooth);
         }
 
-        // Update is called once per frame
-        void Update()
-        {
 
-        }
     }
 
 }

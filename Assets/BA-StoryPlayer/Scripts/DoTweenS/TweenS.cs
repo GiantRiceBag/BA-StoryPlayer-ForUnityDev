@@ -41,6 +41,11 @@ namespace BAStoryPlayer.DoTweenS
             this.targetName = targetName;
         }
 
+        public TweenS OnComplete(Action action)
+        {
+            onComplete = action;
+            return this;
+        }
         public void Kill()
         {
             Stop();

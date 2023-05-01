@@ -109,16 +109,16 @@ namespace BAStoryPlayer.DoTweenS
 
         #endregion
 
-        #region 颜色
+        #region Spine组件颜色
         public static TweenS DoColor(this SkeletonGraphic skeletonGraphics,Color targetCol,float duration)
         {
             MonoBehaviour mono = skeletonGraphics.GetComponent<MonoBehaviour>();
             TweenS tween = new TweenS(targetCol, duration, mono.transform);
             tween.type = TweenSType.Color;
-            tween.SetCoroutine(mono.StartCoroutine(DoColor(mono, tween)));
+            tween.SetCoroutine(mono.StartCoroutine(DoColor_SkeletonGraphic(mono, tween)));
             return tween;
         }
-        static IEnumerator DoColor(this MonoBehaviour mono,TweenS tween)
+        static IEnumerator DoColor_SkeletonGraphic(this MonoBehaviour mono,TweenS tween)
         {
             Color targetCol = (Color)tween.target;
             var skeletonGraphic = tween.transform.GetComponent<SkeletonGraphic>();
@@ -127,6 +127,34 @@ namespace BAStoryPlayer.DoTweenS
             while(lerp != 1)
             {
                 skeletonGraphic.color = Color.Lerp(originCol, targetCol, lerp);
+                lerp = Mathf.Clamp(lerp + increment * Time.deltaTime, 0, 1);
+                yield return null;
+            }
+
+            tween.RunOnComplete();
+        }
+        #endregion
+
+        #region Image透明度通道
+        public static TweenS DoAlpha(this Image image,float target,float duration)
+        {
+            MonoBehaviour mono = image.transform.GetComponent<MonoBehaviour>();
+            TweenS tween = new TweenS(target, duration, image.transform);
+            tween.type = TweenSType.Color;
+            tween.SetCoroutine(mono.StartCoroutine(DoAlpha_Image(mono, tween)));
+            return tween;
+        }
+        static IEnumerator DoAlpha_Image(this MonoBehaviour mono,TweenS tween)
+        {
+            float target = (float)tween.target;
+            var image = tween.transform.GetComponent<Image>();
+            float lerp = 0, increment = 1 / tween.duration;
+            float origin = image.color.a;
+            while (lerp != 1)
+            {
+                Color col = image.color;
+                col.a = Mathf.Lerp(origin, target, lerp);
+                image.color = col;
                 lerp = Mathf.Clamp(lerp + increment * Time.deltaTime, 0, 1);
                 yield return null;
             }
