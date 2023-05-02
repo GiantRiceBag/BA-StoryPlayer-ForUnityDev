@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 using BAStoryPlayer.DoTweenS;
+using System.Collections.Generic;
+using BAStoryPlayer.UI;
 
 namespace BAStoryPlayer
 {
@@ -10,7 +12,22 @@ namespace BAStoryPlayer
         string PATH_BACKGROUP = "Backgroup/";
         float TIME_TRAINSITION = 1;
 
-        public bool Auto;
+        bool auto = false;
+        public bool Auto
+        {
+            set
+            {
+                auto = value;
+                if (!auto)
+                    OnCancleAuto?.Invoke();
+                if (auto && playing && executable)
+                    Next();
+            }
+            get
+            {
+                return auto;
+            }
+        }
         [Space]
         int currentGroupID = -1;
 
@@ -20,6 +37,12 @@ namespace BAStoryPlayer
         [SerializeField] CharacterManager _characterManager;
         [SerializeField] UIManager _UIManager;
         [SerializeField] AudioManager _audioManager;
+
+        [Header("Real-Time Data")]
+        List<StoryUnit> storyUnit;
+        [SerializeField] int index_Current_Unit = 0;
+        [SerializeField] bool playing = false;
+        [SerializeField] bool executable = true;
 
         public CharacterManager CharacterManager
         {
@@ -94,19 +117,89 @@ namespace BAStoryPlayer
 
         [HideInInspector]public UnityEvent<int,int> OnPlayerSelect; // 第一个参数为选项ID 第二个参数为组ID
 
+        public UnityEvent OnCancleAuto;
+        //TODO TEST
+        List<StoryUnit> testUnits = new List<StoryUnit>();
         void Start()
         {
             if (image_Backgroup == null)
                 image_Backgroup = transform.Find("Backgroup").GetComponent<Image>();
             image_Backgroup.enabled = false;
 
-            // TODO Test
-            //CharacterManager.ActivateCharacter(0, "hoshino", "00", TransistionType.Smooth);
-            //CharacterManager.ActivateCharacter(1, "aru", "00", TransistionType.Smooth);
-            //CharacterManager.ActivateCharacter(2, "serika_shibaseki", "00");
-            //CharacterManager.ActivateCharacter(3, "shiroko", "00", TransistionType.Smooth);
-            //CharacterManager.ActivateCharacter(4, "kayoko", "00", TransistionType.Smooth);
 
+
+            StoryUnit unit1 = new StoryUnit();
+            StoryUnit unit2 = new StoryUnit();
+            StoryUnit unit3 = new StoryUnit();
+            StoryUnit unit4 = new StoryUnit();
+            StoryUnit unit5 = new StoryUnit();
+            StoryUnit unit6 = new StoryUnit();
+
+            unit1.type = UnitType.Title;
+            unit1.action += () =>
+            {
+                SetBackgroup("BG2");
+                AudioManager.PlayBGM("Theme_01");
+                UIManager.HideAllUI();
+                UIManager.ShowTitle("我是大标题", "我是小标题");
+            };
+
+            unit2.type = UnitType.Text;
+            unit2.action = () =>
+            {
+                UIManager.ShowVenue("世界第一银行");
+                CharacterManager.ActivateCharacter(2, "shiroko", "00");
+                CharacterManager.SetAction(2, CharacterAction.Hophop);
+                CharacterManager.SetEmotion(2, CharacterEmotion.Heart);
+                UIManager.PrintText("今天也要一起去抢银行吗?");
+                UIManager.SetSpeaker("shiroko");
+            };
+
+            unit3.type = UnitType.Option;
+            unit3.action = () => {
+                List<OptionData> dats = new List<OptionData>();
+                dats.Add(new OptionData(1, "今天要抢哪一个银行?"));
+                dats.Add(new OptionData(2, "对不起 我拒绝"));
+                UIManager.ShowOption(dats);
+            };
+
+            unit4.type = UnitType.Text;
+            unit4.action = () =>
+            {
+                CharacterManager.ActivateCharacter(0, "hoshino", "00");
+                CharacterManager.SetAction(0, CharacterAction.AppearL2R,0);
+                CharacterManager.SetEmotion(0, CharacterEmotion.Heart);
+                UIManager.PrintText("我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来!!");
+                UIManager.SetSpeaker("hoshino");
+            };
+
+            unit5.type = UnitType.Text;
+            unit5.action = () =>
+            {
+                CharacterManager.ActivateCharacter(4, "aru", "06", TransistionType.Smooth);
+                CharacterManager.SetAction(4,CharacterAction.Stiff);
+                CharacterManager.SetEmotion(4,CharacterEmotion.Sweat);
+                UIManager.PrintText("我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来!");
+                UIManager.SetSpeaker("aru");
+            };
+
+            unit6.type = UnitType.Text;
+            unit6.action = () =>
+            {
+                CharacterManager.ActivateCharacter(2, "shiroko", "00");
+                CharacterManager.SetAction(2,CharacterAction.Jump);
+                CharacterManager.SetEmotion(2,CharacterEmotion.Music);
+                UIManager.PrintText("走吧!");
+                UIManager.SetSpeaker("shiroko");
+            };
+
+
+            testUnits.Add(unit1);
+            testUnits.Add(unit2);
+            testUnits.Add(unit3);
+            testUnits.Add(unit4);
+            testUnits.Add(unit5);
+            testUnits.Add(unit6);
         }
 
         /// <summary>
@@ -150,8 +243,66 @@ namespace BAStoryPlayer
                     default:return;
                 }
             }
+        }
 
+        /// <summary>
+        /// 载入单元
+        /// </summary>
+        public void LoadUnits(int groupID,List<StoryUnit> units)
+        {
+            currentGroupID = groupID;
+            storyUnit = units;
+            index_Current_Unit = 0;
+            playing = true;
+        }
 
+        /// <summary>
+        /// 执行下一单元
+        /// </summary>
+        public void Next()
+        {
+            if(index == storyUnit.Count)
+            {
+                // TODO 删除播放器
+                Debug.Log("播放完成");
+                playing = false;
+                return;
+            }
+
+            if (!executable || !playing)
+                return;
+
+            switch (storyUnit[index].type)
+            {
+                case UnitType.Text:
+                case UnitType.Title:
+                case UnitType.Option:
+                    {
+                        storyUnit[index].Execute();
+                        index++;
+                        executable = false;
+                        break;
+                    }
+                case UnitType.Command:
+                    {
+                        if(storyUnit[index].wait != 0)
+                        {
+                            // TODO 根据单元等待时间执行等待
+                        }
+                        storyUnit[index].Execute();
+                        index++;
+                        Next();
+                        break;
+                    }
+                default:return;
+            }
+        }
+
+        public void ReadyToNext(bool next = false)
+        {
+            executable = true;
+            if (next || Auto)
+                Next();
         }
 
         // TODO TEST
@@ -164,10 +315,8 @@ namespace BAStoryPlayer
         }
         public void TestAll()
         {
-            SetBackgroup("BG2");
-            AudioManager.PlayBGM("Theme_01");
-            UIManager.HideAllUI();
-            UIManager.ShowTitle("我是大标题", "我是小标题");
+            LoadUnits(0, testUnits);
+            Next();
         }
         public void TestSpeaker()
         {

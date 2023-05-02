@@ -83,6 +83,9 @@ namespace BAStoryPlayer.UI
         {
             if (block != null)
                 Destroy(block);
+
+            // TODO 一般来说选完后自动执行下一个单元
+            BAStoryPlayerController.Instance.StoryPlayer.ReadyToNext(true);
         }
     }
 

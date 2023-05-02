@@ -28,6 +28,7 @@ namespace BAStoryPlayer
         [SerializeField] Button btn_Menu;
 
         Coroutine coroutine_Print;
+        Coroutine coroutine_Next;
 
         string currentSpeaker = null;
         string mainTextBuffer = null;
@@ -64,7 +65,24 @@ namespace BAStoryPlayer
             if (btn_Menu == null)
                 btn_Menu = transform.Find("Button_Menu").GetComponent<Button>();
 
-            onFinishedPrinting += () => { gameObject_Continued.SetActive(true); };
+            // ÊÂ¼þ°ó¶¨
+            onFinishedPrinting = () => { 
+                gameObject_Continued.SetActive(true);
+
+                if (StoryPlayer.Auto)
+                    coroutine_Next = DoTweenS.DoTweenS.Delay(transform, () => { StoryPlayer.ReadyToNext(); }, 2);
+                else
+                    StoryPlayer.ReadyToNext();
+            };
+            StoryPlayer.OnCancleAuto.AddListener(() => {
+                if(coroutine_Next != null)
+                {
+                    StopCoroutine(coroutine_Next);
+                    coroutine_Next = null;
+                    StoryPlayer.ReadyToNext();
+                }
+                    
+            });
         }
 
         /// <summary>
@@ -99,7 +117,8 @@ namespace BAStoryPlayer
         {
             text_Main.text = null;
             gameObject_Continued.SetActive(false);
-            SetActive_UI_TextArea(true);
+            SetActive_UI_TextArea();
+            SetActive_UI_Button();
 
             printing = true;
             mainTextBuffer = text;
@@ -143,12 +162,12 @@ namespace BAStoryPlayer
             text_Speaker.text = null;
         }
 
-        public void SetActive_UI_Button(bool enable)
+        public void SetActive_UI_Button(bool enable = true)
         {
             btn_Auto.gameObject.SetActive(enable);
             btn_Menu.gameObject.SetActive(enable);
         }
-        public void SetActive_UI_TextArea(bool enable)
+        public void SetActive_UI_TextArea(bool enable = true)
         {
             gameObject_TextArea.SetActive(enable);
             if (!enable)

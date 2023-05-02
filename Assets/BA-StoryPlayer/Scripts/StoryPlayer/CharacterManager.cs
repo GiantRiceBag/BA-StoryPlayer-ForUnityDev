@@ -19,6 +19,7 @@ namespace BAStoryPlayer
         AppearL2R,
         AppearR2L,
         Hophop,
+        Greeting,
         Shake,
         Move,
         Stiff,
@@ -43,6 +44,7 @@ namespace BAStoryPlayer
         const float TIME_MOVE = 0.45f;
         const float TIME_STIFF = 0.45f;
         const float TIME_JUMP = 0.3f;
+        const float TIME_GREETING = 0.8f;
 
         Vector2 INTERVAL_WINK
         {
@@ -163,6 +165,8 @@ namespace BAStoryPlayer
                 // ¶¯×÷Ìæ»»
                 character[index].AnimationState.SetAnimation(0, animationID, true);
                 SetWinkAction(name, animationID == "00" ? true : false);
+
+                Highlight(index);
             }
 
             // TODO
@@ -389,6 +393,11 @@ namespace BAStoryPlayer
                 case CharacterAction.Hophop:
                     {
                         character[index].transform.DoBound_Anchored_Relative(new Vector2(0, 50), TIME_HOPHOP, 2);
+                        break;
+                    }
+                case CharacterAction.Greeting:
+                    {
+                        character[index].transform.DoBound_Anchored_Relative(new Vector2(0, -70), TIME_GREETING);
                         break;
                     }
                 case CharacterAction.Shake:

@@ -14,6 +14,7 @@ namespace BAStoryPlayer.UI
         private void Start()
         {
             GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 848);
+            transform.localScale = Vector3.one;
         }
 
         public void SetText(string text)

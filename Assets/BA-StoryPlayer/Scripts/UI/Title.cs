@@ -46,7 +46,8 @@ namespace BAStoryPlayer.UI
 
         public void RunOnComplete()
         {
-            // TODO 事件发送
+            // TODO 一般播放完标题就开始执行下一各单元
+            BAStoryPlayerController.Instance.StoryPlayer.ReadyToNext(true);
             Destroy(gameObject);
         }
     }
