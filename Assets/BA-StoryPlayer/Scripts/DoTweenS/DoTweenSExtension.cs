@@ -77,6 +77,36 @@ namespace BAStoryPlayer.DoTweenS
         }
         #endregion
 
+        #region Transofrm²Ù×÷
+        public static TweenS DoScale(this Transform transform,Vector3 target,float duration)
+        {
+            MonoBehaviour mono = transform.GetComponent<MonoBehaviour>();
+            TweenS tween = new TweenS(target, duration, transform);
+            tween.type = TweenSType.Scale;
+            tween.SetCoroutine(mono.StartCoroutine(DoLocalScale(mono, tween)));
+            return tween;
+        }
+        public static  TweenS DoLocalScale(this Transform transform,Vector2 target,float duration)
+        {
+            return DoScale(transform, new Vector3(target.x, target.y, 1), duration);
+        }
+        static IEnumerator DoLocalScale(this MonoBehaviour mono,TweenS tween)
+        {
+            Vector3 target = (Vector3)tween.target,origin = tween.transform.localScale;
+            float lerp = 0, increment = 1 / tween.duration;
+
+            while(lerp != 1)
+            {
+                tween.transform.localScale = Vector3.Lerp(origin, target, lerp);
+                lerp = Mathf.Clamp(lerp + increment * Time.deltaTime, 0, 1);
+                yield return null;
+            }
+
+            tween.RunOnComplete();
+        }
+
+        #endregion
+
         #region XÖáÒ¡»Î
         public static TweenS DoShakeX(this Transform transform,float maxOffsetX,float duration,int time = 1)
         {

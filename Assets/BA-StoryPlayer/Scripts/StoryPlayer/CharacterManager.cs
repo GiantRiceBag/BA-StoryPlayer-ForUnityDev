@@ -155,7 +155,7 @@ namespace BAStoryPlayer
                 {
                     DestroyCharacter(index);
 
-                    MoveCharacterTo(currentIndex, index,TransistionType.Smooth);
+                    MoveCharacterTo(currentIndex, index);
                     character[index] = character[currentIndex];
                     character[currentIndex] = null;
                 }
@@ -166,7 +166,7 @@ namespace BAStoryPlayer
             }
 
             // TODO
-            // 播放角色台词
+            // 播放角色台词 估计也用不着
         }
         /// <summary>
         /// 检查角色是否存在并返回对应下标 若不存在则返回-1
@@ -540,9 +540,11 @@ namespace BAStoryPlayer
         }
         public void TestEmotion()
         {
-            SetEmotion(0, (CharacterEmotion)index);
+            //SetEmotion(0, (CharacterEmotion)index);
             SetEmotion(2, (CharacterEmotion)index);
-            SetEmotion(4, (CharacterEmotion)index++);
+            SetAction(2, (CharacterAction)index, 2);
+            //SetEmotion(4, (CharacterEmotion)index++);
+            index++;
             index %= 13;
         }
     }

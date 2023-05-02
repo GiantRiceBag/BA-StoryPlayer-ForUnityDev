@@ -2004,6 +2004,9 @@ MonoBehaviour:
   Auto: 0
   _characterManager: {fileID: 69067042}
   _UIManager: {fileID: 1558932131}
+  OnPlayerSelect:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!224 &1091728856 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7713838403380697680, guid: 6c22d817ddba44e449a945d9803275c6, type: 3}
@@ -2093,9 +2096,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 69067042}
-        m_TargetAssemblyTypeName: BAStoryPlayer.CharacterManager, Assembly-CSharp
-        m_MethodName: TestEmotion
+      - m_Target: {fileID: 1558932131}
+        m_TargetAssemblyTypeName: BAStoryPlayer.UIManager, Assembly-CSharp
+        m_MethodName: TestOption
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2557,7 +2560,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1558932130
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3608,7 +3611,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 1c35d0c7be395c24185b376272b3935d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 58b09ccbe3a9c7947b51a1fa77ef7d2c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

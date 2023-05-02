@@ -7,7 +7,8 @@ namespace BAStoryPlayer.DoTweenS
     {
         Vector,
         Color,
-        Material
+        Material,
+        Scale
     }
 
     public class TweenS

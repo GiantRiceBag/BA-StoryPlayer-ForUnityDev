@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using System;
 using UnityEngine;
 using UnityEngine.UI;
@@ -172,10 +173,16 @@ namespace BAStoryPlayer
 
         public void ShowTitle(string title,string subtitle)
         {
-            GameObject obj = Instantiate( Resources.Load("Prefabs/Title") as GameObject);
+            GameObject obj = Instantiate( Resources.Load("UI/Title") as GameObject);
             obj.transform.SetParent(transform);
             obj.GetComponent<Title>().Initialize(title, subtitle);
 
+        }
+        public void ShowOption(List<OptionData> dates)
+        {
+            GameObject obj = Instantiate(Resources.Load("UI/OptionManager") as GameObject);
+            obj.transform.SetParent(StoryPlayer.transform);
+            obj.GetComponent<OptionManager>().AddOptions(dates);
         }
 
         // TODO TEST
@@ -187,6 +194,14 @@ namespace BAStoryPlayer
         public void TestTitle()
         {
             ShowTitle("野兽先辈的调教","妙妙屋");
+        }
+        public void TestOption()
+        {
+            List<OptionData> dats = new List<OptionData>();
+            dats.Add(new OptionData(1, "测试1选项"));
+            dats.Add(new OptionData(2, "测试2选项"));
+            dats.Add(new OptionData(3, "测试3选项"));
+            ShowOption(dats);
         }
     }
 }
