@@ -29,6 +29,7 @@ namespace BAStoryPlayer.UI
             }
         }
 
+        GameObject block;
         // Start is called before the first frame update
         void Start()
         {
@@ -53,7 +54,7 @@ namespace BAStoryPlayer.UI
             obj.transform.SetParent(transform);
 
             var option = obj.GetComponent<Button_Option>();
-            option.Initialize(data.optionID, data.text);
+            option.Initialize(data.optionID, $"\"{ data.text}\"");
         }
 
         public void RevokeInteractablilty(Transform exception = null)
@@ -75,7 +76,13 @@ namespace BAStoryPlayer.UI
             obj.AddComponent<RectTransform>().sizeDelta = GetComponent<RectTransform>().sizeDelta;
             obj.AddComponent<Image>().color = new Color(0, 0, 0, 0);
             obj.transform.localScale = Vector3.one;
-            Instantiate(obj);
+            block = Instantiate(obj);
+        }
+
+        private void OnDestroy()
+        {
+            if (block != null)
+                Destroy(block);
         }
     }
 

@@ -995,7 +995,7 @@ AnimationClip:
     intParameter: 0
     messageOptions: 0
   - time: 2.7666667
-    functionName: SelfDestory
+    functionName: RunOnComplete
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

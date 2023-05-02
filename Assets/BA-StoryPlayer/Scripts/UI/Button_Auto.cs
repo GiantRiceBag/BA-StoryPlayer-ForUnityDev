@@ -17,6 +17,7 @@ namespace BAStoryPlayer.UI
             {
                 selected = !selected;
                 BAStoryPlayerController.Instance.StoryPlayer.Auto = selected;
+                BAStoryPlayerController.Instance.StoryPlayer.AudioManager.Play("Button_Click");
 
                 if (selected)
                 {

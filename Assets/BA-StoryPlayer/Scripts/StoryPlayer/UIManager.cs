@@ -9,12 +9,6 @@ using BAStoryPlayer.UI;
 
 namespace BAStoryPlayer
 {
-    public enum TextType
-    {
-        mainText = 0,
-        speaker
-    }
-
     public class UIManager : MonoBehaviour
     {
         const int NUM_CHAR_PERSECOND = 20; // 每秒打印字数
@@ -77,7 +71,7 @@ namespace BAStoryPlayer
         /// 更新说话者信息
         /// </summary>
         /// <param name="romaji">说话者罗马音/若为空则不显示说话者信息</param>
-        public void UpdateSpeaker(string romaji = null)
+        public void SetSpeaker(string romaji = null)
         {
             if (currentSpeaker == romaji)
                 return;
@@ -101,7 +95,7 @@ namespace BAStoryPlayer
         /// 输出主文本
         /// </summary>
         /// <param name="text"></param>
-        public void Print(string text)
+        public void PrintText(string text)
         {
             text_Main.text = null;
             gameObject_Continued.SetActive(false);
@@ -161,6 +155,12 @@ namespace BAStoryPlayer
                 gameObject_Continued.SetActive(enable);
         }
 
+        public void HideAllUI()
+        {
+            SetActive_UI_Button(false);
+            SetActive_UI_TextArea(false);
+        }
+
         public void SetBlurBackgroup(bool enable)
         {
             image_BlurLayer.DoFloat("_Size", enable ? 3 : 0, TIME_BLUR_BACKGROUP);
@@ -188,8 +188,8 @@ namespace BAStoryPlayer
         // TODO TEST
         public void TestPrint()
         {
-            Print("你好 我好 大家好 你好 我好 大家好你好 我好 大家好你好 我好 大家好你好 我好 大家好你好 我好 大家好你好 我好 大家好你好 我好 大家好你好 我好 大家好你好 我好 大家好你好 我好 大家好你好 我好 大家好");
-            UpdateSpeaker("hoshino");
+            PrintText("你好 我好 大家好 你好 我好 大家好你好 我好 大家好你好 我好 大家好你好 我好 大家好你好 我好 大家好你好 我好 大家好你好 我好 大家好你好 我好 大家好你好 我好 大家好你好 我好 大家好你好 我好 大家好");
+            SetSpeaker("hoshino");
         }
         public void TestTitle()
         {
@@ -198,9 +198,8 @@ namespace BAStoryPlayer
         public void TestOption()
         {
             List<OptionData> dats = new List<OptionData>();
-            dats.Add(new OptionData(1, "测试1选项"));
-            dats.Add(new OptionData(2, "测试2选项"));
-            dats.Add(new OptionData(3, "测试3选项"));
+            dats.Add(new OptionData(1, "今天要抢哪一个银行?"));
+            dats.Add(new OptionData(2, "对不起 我拒绝"));
             ShowOption(dats);
         }
     }

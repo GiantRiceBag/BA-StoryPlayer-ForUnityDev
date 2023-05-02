@@ -25,6 +25,8 @@ namespace BAStoryPlayer.UI
 
             GetComponent<Button>().onClick.AddListener(() =>
             {
+                BAStoryPlayerController.Instance.StoryPlayer.AudioManager.Play("Button_Click");
+
                 selected = !selected;
 
                 if (selected)

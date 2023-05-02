@@ -24,7 +24,7 @@ namespace BAStoryPlayer.UI
             {
                 if (clicked) return;
                 clicked = true;
-
+                BAStoryPlayerController.Instance.StoryPlayer.AudioManager.Play("Button_Click");
                 GetComponent<Animator>().SetBool("Interactable", false);
                 transform.parent.GetComponent<OptionManager>().RevokeInteractablilty(transform);
             });

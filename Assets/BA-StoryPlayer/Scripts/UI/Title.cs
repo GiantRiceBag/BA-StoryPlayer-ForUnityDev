@@ -44,7 +44,7 @@ namespace BAStoryPlayer.UI
             BAStoryPlayerController.Instance.StoryPlayer.UIManager.SetBlurBackgroup(false);
         }
 
-        public void SelfDestory()
+        public void RunOnComplete()
         {
             // TODO ÊÂ¼þ·¢ËÍ
             Destroy(gameObject);

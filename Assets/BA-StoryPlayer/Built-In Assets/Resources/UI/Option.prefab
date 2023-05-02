@@ -224,8 +224,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\"\u6D4B\u8BD5\u6D4B\u8BD5\u6D4B\u8BD5TestTestTest\u3002\""
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: e9c72dd661037a043a0955b243ad2224, type: 2}
-  m_sharedMaterial: {fileID: -994392331755598702, guid: e9c72dd661037a043a0955b243ad2224, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: dc88fcd301ea9d2489e8a46974645556, type: 2}
+  m_sharedMaterial: {fileID: -8719309384418167009, guid: dc88fcd301ea9d2489e8a46974645556, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

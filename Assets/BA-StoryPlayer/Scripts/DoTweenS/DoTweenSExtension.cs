@@ -165,7 +165,7 @@ namespace BAStoryPlayer.DoTweenS
         }
         #endregion
 
-        #region Image透明度通道
+        #region Image组件
         public static TweenS DoAlpha(this Image image,float target,float duration)
         {
             MonoBehaviour mono = image.transform.GetComponent<MonoBehaviour>();
@@ -184,6 +184,32 @@ namespace BAStoryPlayer.DoTweenS
             {
                 Color col = image.color;
                 col.a = Mathf.Lerp(origin, target, lerp);
+                image.color = col;
+                lerp = Mathf.Clamp(lerp + increment * Time.deltaTime, 0, 1);
+                yield return null;
+            }
+
+            tween.RunOnComplete();
+        }
+
+        public static TweenS DoColor(this Image image, Color target, float duration)
+        {
+            MonoBehaviour mono = image.transform.GetComponent<MonoBehaviour>();
+            TweenS tween = new TweenS(target, duration, image.transform);
+            tween.type = TweenSType.Color;
+            tween.SetCoroutine(mono.StartCoroutine(DoColor_Image(mono, tween)));
+            return tween;
+        }
+        static IEnumerator DoColor_Image(this MonoBehaviour mono, TweenS tween)
+        {
+            Color target = (Color)tween.target;
+            var image = tween.transform.GetComponent<Image>();
+            float lerp = 0, increment = 1 / tween.duration;
+            Color origin = image.color;
+            while (lerp != 1)
+            {
+                Color col = image.color;
+                col = Color.Lerp(origin, target, lerp);
                 image.color = col;
                 lerp = Mathf.Clamp(lerp + increment * Time.deltaTime, 0, 1);
                 yield return null;
@@ -215,6 +241,33 @@ namespace BAStoryPlayer.DoTweenS
             while(mat.GetFloat(tween.targetName) != target)
             {
                 mat.SetFloat(tween.targetName, Mathf.Lerp(origin, target, lerp));
+                lerp = Math.Clamp(lerp + increment * Time.deltaTime, 0, 1);
+                yield return null;
+            }
+
+            tween.RunOnComplete();
+        }
+        #endregion
+
+        #region 音频
+        public static TweenS DoVolume(this AudioSource audio,float target, float duration)
+        {
+            MonoBehaviour mono = audio.GetComponent<MonoBehaviour>();
+            TweenS tween = new TweenS(target, duration, audio.transform);
+            tween.type = TweenSType.Audio;
+            tween.SetCoroutine(mono.StartCoroutine(DoVolume(mono, tween)));
+            return tween;
+
+        }
+        static IEnumerator DoVolume(this MonoBehaviour mono, TweenS tween)
+        {
+            AudioSource audio = tween.transform.GetComponent<AudioSource>();
+            float target = (float)tween.target;
+            float origin = audio.volume;
+            float lerp = 0, increment = 1 / tween.duration;
+            while (lerp != 1)
+            {
+                audio.volume = Mathf.Lerp(origin, target, lerp);
                 lerp = Math.Clamp(lerp + increment * Time.deltaTime, 0, 1);
                 yield return null;
             }
