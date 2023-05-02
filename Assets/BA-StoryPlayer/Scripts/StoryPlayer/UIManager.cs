@@ -184,6 +184,12 @@ namespace BAStoryPlayer
             obj.transform.SetParent(StoryPlayer.transform);
             obj.GetComponent<OptionManager>().AddOptions(dates);
         }
+        public void ShowVenue(string venue)
+        {
+            GameObject obj = Instantiate(Resources.Load("UI/Venue") as GameObject);
+            obj.transform.SetParent(StoryPlayer.transform);
+            obj.GetComponent<Venue>().SetText(venue);
+        }
 
         // TODO TEST
         public void TestPrint()

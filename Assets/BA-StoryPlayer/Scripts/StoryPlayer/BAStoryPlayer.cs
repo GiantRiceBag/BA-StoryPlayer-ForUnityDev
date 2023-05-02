@@ -171,6 +171,7 @@ namespace BAStoryPlayer
         }
         public void TestSpeaker()
         {
+            UIManager.ShowVenue("世界第一银行");
             CharacterManager.ActivateCharacter(2, "shiroko", "00");
             CharacterManager.SetAction(2, CharacterAction.Hophop);
             CharacterManager.SetEmotion(2, CharacterEmotion.Heart);
