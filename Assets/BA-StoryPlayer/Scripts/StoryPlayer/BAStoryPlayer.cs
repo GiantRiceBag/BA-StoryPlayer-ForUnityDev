@@ -142,12 +142,10 @@ namespace BAStoryPlayer
                     if (storyUnit[i].selectionGroup == selectionID)
                     {
                         priorIndex.Enqueue(i);
-                        Debug.Log(i);
                     }
                     else if (storyUnit[i].selectionGroup == -1) // 注意添加最后一个无选项组的单元
                     {
                         priorIndex.Enqueue(i);
-                        Debug.Log(i);
                         break;
                     }
                 }
@@ -164,6 +162,7 @@ namespace BAStoryPlayer
             StoryUnit unit6 = new StoryUnit();
             StoryUnit unit31 = new StoryUnit();
             StoryUnit unit32 = new StoryUnit();
+            StoryUnit unit321 = new StoryUnit();
 
             unit1.type = UnitType.Title;
             unit1.action += () =>
@@ -226,9 +225,16 @@ namespace BAStoryPlayer
             unit32.selectionGroup = 2;
             unit32.action = () =>
             {
-                CharacterModule.ActivateCharacter(2, "shiroko", "00", "!?");
+                CharacterModule.ActivateCharacter(2, "shiroko", "05", "!?");
                 CharacterModule.SetAction(2, CharacterAction.Stiff);
                 CharacterModule.SetEmotion(2, CharacterEmotion.Surprise);
+            };
+            unit321.type = UnitType.Text;
+            unit321.selectionGroup = 2;
+            unit321.action = () =>
+            {
+                CharacterModule.ActivateCharacter(2, "shiroko", "06", "你可没有拒绝的权力。");
+                CharacterModule.SetEmotion(2, CharacterEmotion.Angry);
             };
 
 
@@ -237,6 +243,7 @@ namespace BAStoryPlayer
             testUnits.Add(unit3);
             testUnits.Add(unit31);
             testUnits.Add(unit32);
+            testUnits.Add(unit321);
             testUnits.Add(unit4);
             testUnits.Add(unit5);
             testUnits.Add(unit6);

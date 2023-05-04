@@ -126,10 +126,10 @@ namespace BAStoryPlayer.DoTweenS
             float maxOffsetX = Mathf.Abs((float)tween.target);
             float max = func(Mathf.PI / 2);
             float valueX = 0, increment = destX / tween.duration;
-            Vector3 origin = tween.transform.position;
+            Vector3 origin = tween.transform.localPosition;
             while(valueX != destX)
             {
-                tween.transform.position = origin + new Vector3(func(valueX) / max * maxOffsetX,0,0);
+                tween.transform.localPosition = origin + new Vector3(func(valueX) / max * maxOffsetX,0,0);
                 valueX = Mathf.Clamp(valueX + increment * Time.deltaTime, 0, destX);
                 yield return null;
             }

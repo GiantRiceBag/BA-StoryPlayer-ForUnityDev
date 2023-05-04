@@ -242,6 +242,9 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  OnAnimateCharacter:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!224 &121557569 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4795261797649538470, guid: c29883e34b23ba7429fe8ae9381cdcf1, type: 3}
@@ -653,7 +656,7 @@ Canvas:
   m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_Camera: {fileID: 519420031}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -1248,7 +1251,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -668.3, y: 52.6}
+  m_AnchoredPosition: {x: -668.3, y: 52.600006}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &671806053
@@ -2118,12 +2121,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   image_Backgroup: {fileID: 987475423}
-  _characterManager: {fileID: 69067042}
-  _UIManager: {fileID: 1558932131}
-  _audioManager: {fileID: 1062703885}
+  _characterModule: {fileID: 0}
+  _UIModule: {fileID: 0}
+  _audioModule: {fileID: 0}
   index_CurrentUnit: 0
   isPlaying: 0
   executable: 1
+  isLocking: 0
   OnPlayerSelect:
     m_PersistentCalls:
       m_Calls: []
@@ -2370,9 +2374,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1558932131}
-        m_TargetAssemblyTypeName: BAStoryPlayer.UIManager, Assembly-CSharp
-        m_MethodName: TestOption
+      - m_Target: {fileID: 69067042}
+        m_TargetAssemblyTypeName: BAStoryPlayer.CharacterManager, Assembly-CSharp
+        m_MethodName: TestAction
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4188,6 +4192,10 @@ PrefabInstance:
     - target: {fileID: 3233989260576721885, guid: 751a0180dad5f8545a6e04ad9a7dc59b, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3233989260576721887, guid: 751a0180dad5f8545a6e04ad9a7dc59b, type: 3}
+      propertyPath: startingAnimation
+      value: 06
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 751a0180dad5f8545a6e04ad9a7dc59b, type: 3}
