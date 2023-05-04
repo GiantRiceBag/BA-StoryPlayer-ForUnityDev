@@ -14,7 +14,7 @@ namespace BAStoryPlayer.UI
 
         private void Start()
         {
-            BAStoryPlayerController.Instance.StoryPlayer.UIManager.SetBlurBackgroup(true);
+            BAStoryPlayerController.Instance.StoryPlayer.UIModule.SetBlurBackgroup(true);
 
             if (image_Bannerline == null)
                 image_Bannerline = transform.Find("BannerLine").GetComponent<Image>();
@@ -41,12 +41,12 @@ namespace BAStoryPlayer.UI
 
         public void RemoveBlurEffect()
         {
-            BAStoryPlayerController.Instance.StoryPlayer.UIManager.SetBlurBackgroup(false);
+            BAStoryPlayerController.Instance.StoryPlayer.UIModule.SetBlurBackgroup(false);
         }
 
         public void RunOnComplete()
         {
-            // TODO 一般播放完标题就开始执行下一各单元
+            //  一般播放完标题就开始执行下一个单元
             BAStoryPlayerController.Instance.StoryPlayer.ReadyToNext(true);
             Destroy(gameObject);
         }

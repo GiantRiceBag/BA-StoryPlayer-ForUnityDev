@@ -72,7 +72,6 @@ namespace BAStoryPlayer
                 return character;
             }
         }
-
         BAStoryPlayer StoryPlayer
         {
             get
@@ -81,11 +80,13 @@ namespace BAStoryPlayer
             }
         }
 
+        [HideInInspector] public UnityEngine.Events.UnityEvent<float> OnAnimateCharacter;
+
         /// <summary>
-        /// 激活角色
+        /// 激活角色(若有动作,一定要先于动作前调用)
         /// </summary>
         /// <param name="index">初始位置/角色编号</param>
-        /// <param name="name">角色姓名</param>
+        /// <param name="name">角色姓名(罗马音)</param>
         /// <param name="animationID">播放动画的编号</param>
         /// <param name="transistion">出场方式[仅首次出场有效]</param>
         public void ActivateCharacter(int index,string name,string animationID,TransistionType transistion = TransistionType.Instant)
@@ -115,8 +116,6 @@ namespace BAStoryPlayer
                     rectTransform.localScale = new Vector3(VALUE_CHARACTER_SCALE, VALUE_CHARACTER_SCALE, 1);
                     characterPool.Add(name, obj);
                 }
-                // TODO 可能要和入场动作相冲突
-                // 对象池存在对应角色则只需要修改位置即可
                 else
                 {
                     obj.GetComponent<RectTransform>().anchoredPosition = new Vector3((index + 1) * VALUE_INTERVAL_SLOT, 0, 0);
@@ -168,9 +167,12 @@ namespace BAStoryPlayer
 
                 Highlight(index);
             }
-
-            // TODO
-            // 播放角色台词 估计也用不着
+        }
+        public void ActivateCharacter(int index, string name, string animationID, string lines,TransistionType transistion = TransistionType.Instant)
+        {
+            ActivateCharacter(index, name, animationID, transistion);
+            StoryPlayer.UIModule.SetSpeaker(name);
+            StoryPlayer.UIModule.PrintText(lines);
         }
         /// <summary>
         /// 检查角色是否存在并返回对应下标 若不存在则返回-1
@@ -359,21 +361,25 @@ namespace BAStoryPlayer
                 case CharacterAction.Appear:
                     {
                         character[index].DoColor(Color.white, TIME_TRANSITION);
+                        OnAnimateCharacter?.Invoke(TIME_TRANSITION);
                         break;
                     }
                 case CharacterAction.Disapper:
                     {
                         character[index].DoColor(Color.black, TIME_TRANSITION);
+                        OnAnimateCharacter?.Invoke(TIME_TRANSITION);
                         break;
                     }
                 case CharacterAction.Disapper2Left:
                     {
                         MoveCharacterTo(index, new Vector2(-500, 0), TransistionType.Smooth);
+                        OnAnimateCharacter?.Invoke(TIME_MOVE);
                         break;
                     }
                 case CharacterAction.Disapper2Right:
                     {
                         MoveCharacterTo(index, new Vector2(2420, 0), TransistionType.Smooth);
+                        OnAnimateCharacter?.Invoke(TIME_MOVE);
                         break;
                     }
                 case CharacterAction.AppearL2R:
@@ -381,6 +387,7 @@ namespace BAStoryPlayer
                         character[index].color = Color.white;
                         MoveCharacterTo(index, new Vector2(-500, 0));
                         MoveCharacterTo(index, arg, TransistionType.Smooth);
+                        OnAnimateCharacter?.Invoke(TIME_MOVE);
                         break;
                     }
                 case CharacterAction.AppearR2L:
@@ -388,31 +395,37 @@ namespace BAStoryPlayer
                         character[index].color = Color.white;
                         MoveCharacterTo(index, new Vector2(2420, 0));
                         MoveCharacterTo(index, arg, TransistionType.Smooth);
+                        OnAnimateCharacter?.Invoke(TIME_MOVE);
                         break;
                     }
                 case CharacterAction.Hophop:
                     {
                         character[index].transform.DoBound_Anchored_Relative(new Vector2(0, 50), TIME_HOPHOP, 2);
+                        OnAnimateCharacter?.Invoke(TIME_HOPHOP);
                         break;
                     }
                 case CharacterAction.Greeting:
                     {
                         character[index].transform.DoBound_Anchored_Relative(new Vector2(0, -70), TIME_GREETING);
+                        OnAnimateCharacter?.Invoke(TIME_GREETING);
                         break;
                     }
                 case CharacterAction.Shake:
                     {
                         character[index].transform.DoShakeX(40, TIME_SHAKE, 2);
+                        OnAnimateCharacter?.Invoke(TIME_SHAKE);
                         break;
                     }
                 case CharacterAction.Move:
                     {
                         MoveCharacterTo(index, arg, TransistionType.Smooth);
+                        OnAnimateCharacter?.Invoke(TIME_MOVE);
                         break;
                     }
                 case CharacterAction.Stiff:
                     {
                         character[index].transform.DoShakeX(10, TIME_STIFF, 4);
+                        OnAnimateCharacter?.Invoke(TIME_STIFF);
                         break;
                     }
                 case CharacterAction.Closeup:
@@ -424,6 +437,7 @@ namespace BAStoryPlayer
                 case CharacterAction.Jump:
                     {
                         character[index].transform.DoBound_Anchored_Relative(new Vector2(0, 70), TIME_JUMP);
+                        OnAnimateCharacter?.Invoke(TIME_JUMP);
                         break;
                     }
                 case CharacterAction.falldownR:
@@ -435,10 +449,13 @@ namespace BAStoryPlayer
                 case CharacterAction.Hide:
                     {
                         character[index].DoColor(Color.black, TIME_TRANSITION).onComplete = () => { DestroyCharacter(index); };
-                    break;
+                        OnAnimateCharacter?.Invoke(TIME_TRANSITION);
+                        break;
                 }
                 default:return;
             }
+
+
         }
 
         /// <summary>

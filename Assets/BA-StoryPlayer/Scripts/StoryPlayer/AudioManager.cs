@@ -39,7 +39,7 @@ namespace BAStoryPlayer
         [SerializeField]
         [Range(0, 1f)] float mVolume_Master = 1;
         [SerializeField]
-        [Range(0, 1f)] float mVolume_Music = 0.75f;
+        [Range(0, 1f)] float mVolume_Music = 0.6f;
         [SerializeField]
         [Range(0, 1f)] float mVolume_Sound = 1;
 

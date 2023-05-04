@@ -1,8 +1,3 @@
-using System.Collections;
-using System;
-using System.Collections.Generic;
-using UnityEngine;
-
 namespace BAStoryPlayer
 {
     public enum UnitType
@@ -16,8 +11,9 @@ namespace BAStoryPlayer
     public class StoryUnit
     {
         public UnitType type = UnitType.Text;
-        public Action action;
-        public int wait = 0;
+        public System.Action action;
+        public float wait = 0;
+        public int selectionGroup = -1;
 
         public void Execute()
         {

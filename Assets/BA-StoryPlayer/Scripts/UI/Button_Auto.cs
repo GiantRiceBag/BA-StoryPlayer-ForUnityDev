@@ -17,7 +17,7 @@ namespace BAStoryPlayer.UI
             {
                 selected = !selected;
                 BAStoryPlayerController.Instance.StoryPlayer.Auto = selected;
-                BAStoryPlayerController.Instance.StoryPlayer.AudioManager.Play("Button_Click");
+                BAStoryPlayerController.Instance.StoryPlayer.AudioModule.Play("Button_Click");
 
                 if (selected)
                 {
@@ -27,8 +27,12 @@ namespace BAStoryPlayer.UI
                 {
                     GetComponent<Image>().color = Color.white;
                 }
+            });
 
-
+            BAStoryPlayerController.Instance.StoryPlayer.OnCancelAuto.AddListener(() =>
+            {
+                selected = false;
+                GetComponent<Image>().color = Color.white;
             });
         }
 

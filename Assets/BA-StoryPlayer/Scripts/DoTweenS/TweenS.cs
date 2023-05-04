@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace BAStoryPlayer.DoTweenS
@@ -23,7 +22,7 @@ namespace BAStoryPlayer.DoTweenS
         internal string targetName;
         internal TweenSType type = TweenSType.Vector;
 
-        public Action onComplete;
+        public System.Action onComplete;
 
         public TweenS(object target,float duration,Transform transform,Coroutine coroutine = null){
             tid = DoTweenS.UsableTid;
@@ -36,14 +35,14 @@ namespace BAStoryPlayer.DoTweenS
         }
         public TweenS(object target, float duration, int time,Transform transform, Coroutine coroutine = null):this(target,duration,transform,coroutine)
         {
-            this.time = Math.Clamp(time, 1, int.MaxValue);
+            this.time = System.Math.Clamp(time, 1, int.MaxValue);
         }
         public TweenS(string targetName,object target, float duration,Transform transform, Coroutine coroutine = null) : this(target, duration, transform, coroutine)
         {
             this.targetName = targetName;
         }
 
-        public TweenS OnComplete(Action action)
+        public TweenS OnComplete(System.Action action)
         {
             onComplete = action;
             return this;

@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -43,7 +42,7 @@ namespace BAStoryPlayer.UI
 
         }
 
-        public void AddOptions(List<OptionData> datas)
+        public void AddOptions(System.Collections.Generic.List<OptionData> datas)
         {
             foreach (var i in datas)
                 AddOption(i);
@@ -79,13 +78,14 @@ namespace BAStoryPlayer.UI
             block = Instantiate(obj);
         }
 
-        private void OnDestroy()
+        public void FinishSelecting()
         {
             if (block != null)
                 Destroy(block);
 
-            // TODO 一般来说选完后自动执行下一个单元
+            // 一般来说选完后自动执行下一个单元
             BAStoryPlayerController.Instance.StoryPlayer.ReadyToNext(true);
+            Destroy(gameObject);
         }
     }
 

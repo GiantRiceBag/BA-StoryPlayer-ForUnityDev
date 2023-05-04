@@ -1,7 +1,4 @@
 using System.Collections.Generic;
-using UnityEngine;
-using System.Collections;
-using System;
 
 namespace BAStoryPlayer.DoTweenS
 {
@@ -82,18 +79,6 @@ namespace BAStoryPlayer.DoTweenS
 
             return true;
         }
-
-        public static Coroutine Delay(Transform obj,Action action,float duration)
-        {
-            return obj.GetComponent<MonoBehaviour>().StartCoroutine(Delay(action, duration));
-        }
-        static IEnumerator Delay(Action action,float duration)
-        {
-            yield return new WaitForSeconds(duration);
-            action?.Invoke();
-        }
-
-
     }
 
 }

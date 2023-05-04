@@ -5,6 +5,7 @@ namespace BAStoryPlayer
     public class BAStoryPlayerController : BSingleton<BAStoryPlayerController>
     {
         const string PATH_CHARACTER_PREFABS = "CharacterPrefab/";
+        const string PATH_STORYPLAYER = "StoryPlayer";
         const string PATH_CHARACTERDATA = "Setting/";
 
         CharacterData _characterDataTable;

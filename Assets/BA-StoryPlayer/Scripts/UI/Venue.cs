@@ -1,7 +1,5 @@
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
-using BAStoryPlayer.DoTweenS;
 using System.Collections;
 
 namespace BAStoryPlayer.UI

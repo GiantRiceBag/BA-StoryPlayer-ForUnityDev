@@ -1,8 +1,9 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
-using BAStoryPlayer.DoTweenS;
 using System.Collections.Generic;
+using System;
+using BAStoryPlayer.DoTweenS;
 using BAStoryPlayer.UI;
 
 namespace BAStoryPlayer
@@ -19,8 +20,8 @@ namespace BAStoryPlayer
             {
                 auto = value;
                 if (!auto)
-                    OnCancleAuto?.Invoke();
-                if (auto && playing && executable)
+                    OnCancelAuto?.Invoke();
+                if (auto && isPlaying && executable)
                     Next();
             }
             get
@@ -29,48 +30,50 @@ namespace BAStoryPlayer
             }
         }
         [Space]
-        int currentGroupID = -1;
+        int groupID = -1;
 
         [Header("References")]
         [SerializeField] Image image_Backgroup;
         [Space]
-        [SerializeField] CharacterManager _characterManager;
-        [SerializeField] UIManager _UIManager;
-        [SerializeField] AudioManager _audioManager;
+        [SerializeField] CharacterManager _characterModule;
+        [SerializeField] UIManager _UIModule;
+        [SerializeField] AudioManager _audioModule;
 
         [Header("Real-Time Data")]
         List<StoryUnit> storyUnit;
-        [SerializeField] int index_Current_Unit = 0;
-        [SerializeField] bool playing = false;
+        [SerializeField] int index_CurrentUnit = 0;
+        Queue<int> priorIndex = new Queue<int>(); // 优先下标队列 
+        [SerializeField] bool isPlaying = false;
         [SerializeField] bool executable = true;
+        [SerializeField] bool isLocking = false;
 
-        public CharacterManager CharacterManager
+        public CharacterManager CharacterModule
         {
             get
             {
-                if (_characterManager == null)
-                    _characterManager = transform.GetComponentInChildren<CharacterManager>();
-                return _characterManager;
+                if (_characterModule == null)
+                    _characterModule = transform.GetComponentInChildren<CharacterManager>();
+                return _characterModule;
             }
         }
-        public UIManager UIManager
+        public UIManager UIModule
         {
             get
             {
-                if (_UIManager == null)
-                    _UIManager = transform.GetComponentInChildren<UIManager>();
-                return _UIManager;
+                if (_UIModule == null)
+                    _UIModule = transform.GetComponentInChildren<UIManager>();
+                return _UIModule;
             }
         }
-        public AudioManager AudioManager
+        public AudioManager AudioModule
         {
             get
             {
-                if (_audioManager == null)
-                    _audioManager = transform.GetComponent<AudioManager>();
-                if (_audioManager == null)
-                    _audioManager = gameObject.AddComponent<AudioManager>();
-                return _audioManager;
+                if (_audioModule == null)
+                    _audioModule = transform.GetComponent<AudioManager>();
+                if (_audioModule == null)
+                    _audioModule = gameObject.AddComponent<AudioManager>();
+                return _audioModule;
             }
         }
 
@@ -78,47 +81,49 @@ namespace BAStoryPlayer
         {
             get
             {
-                return currentGroupID;
+                return groupID;
             }
         }
         public float Volume_Music
         {
             set
             {
-                AudioManager.Volume_Music = value;
+                AudioModule.Volume_Music = value;
             }
             get
             {
-                return AudioManager.Volume_Music;
+                return AudioModule.Volume_Music;
             }
         }
         public float Volume_Sound
         {
             set
             {
-                AudioManager.Volume_Sound = value;
+                AudioModule.Volume_Sound = value;
             }
             get
             {
-                return AudioManager.Volume_Sound;
+                return AudioModule.Volume_Sound;
             }
         }
         public float Volume_Master
         {
             set
             {
-                AudioManager.Volume_Master = value;
+                AudioModule.Volume_Master = value;
             }
             get
             {
-                return AudioManager.Volume_Master;
+                return AudioModule.Volume_Master;
             }
         }
 
         [HideInInspector]public UnityEvent<int,int> OnPlayerSelect; // 第一个参数为选项ID 第二个参数为组ID
+        [HideInInspector] public UnityEvent OnCancelAuto;
 
-        public UnityEvent OnCancleAuto;
-        //TODO TEST
+        Coroutine coroutine_Lock;
+
+        // TEST
         List<StoryUnit> testUnits = new List<StoryUnit>();
         void Start()
         {
@@ -126,33 +131,55 @@ namespace BAStoryPlayer
                 image_Backgroup = transform.Find("Backgroup").GetComponent<Image>();
             image_Backgroup.enabled = false;
 
+            CharacterModule.OnAnimateCharacter.AddListener((duration)=> { Lock(duration); });
 
+            // 选项事件订阅
+            OnPlayerSelect.AddListener((selectionID,groupID) =>
+            {
+                // 坐标前移寻找最近的选项下标 并放入优先下标队列 遇到-1则停止
+                for(int i = index_CurrentUnit; i < storyUnit.Count; i++)
+                {
+                    if (storyUnit[i].selectionGroup == selectionID)
+                    {
+                        priorIndex.Enqueue(i);
+                        Debug.Log(i);
+                    }
+                    else if (storyUnit[i].selectionGroup == -1) // 注意添加最后一个无选项组的单元
+                    {
+                        priorIndex.Enqueue(i);
+                        Debug.Log(i);
+                        break;
+                    }
+                }
+                // 注意先切换下标
+                NextIndex();
+            });
 
+            // TEST
             StoryUnit unit1 = new StoryUnit();
             StoryUnit unit2 = new StoryUnit();
             StoryUnit unit3 = new StoryUnit();
             StoryUnit unit4 = new StoryUnit();
             StoryUnit unit5 = new StoryUnit();
             StoryUnit unit6 = new StoryUnit();
+            StoryUnit unit31 = new StoryUnit();
+            StoryUnit unit32 = new StoryUnit();
 
             unit1.type = UnitType.Title;
             unit1.action += () =>
             {
                 SetBackgroup("BG2");
-                AudioManager.PlayBGM("Theme_01");
-                UIManager.HideAllUI();
-                UIManager.ShowTitle("我是大标题", "我是小标题");
+                AudioModule.PlayBGM("Theme_01");
+                UIModule.ShowTitle("我是大标题", "我是小标题");
             };
 
             unit2.type = UnitType.Text;
             unit2.action = () =>
             {
-                UIManager.ShowVenue("世界第一银行");
-                CharacterManager.ActivateCharacter(2, "shiroko", "00");
-                CharacterManager.SetAction(2, CharacterAction.Hophop);
-                CharacterManager.SetEmotion(2, CharacterEmotion.Heart);
-                UIManager.PrintText("今天也要一起去抢银行吗?");
-                UIManager.SetSpeaker("shiroko");
+                UIModule.ShowVenue("世界第一银行：行动前准备");
+                CharacterModule.ActivateCharacter(2, "shiroko", "00", "今天也要一起去抢银行吗?");
+                CharacterModule.SetAction(2, CharacterAction.Hophop);
+                CharacterModule.SetEmotion(2, CharacterEmotion.Heart);
             };
 
             unit3.type = UnitType.Option;
@@ -160,43 +187,56 @@ namespace BAStoryPlayer
                 List<OptionData> dats = new List<OptionData>();
                 dats.Add(new OptionData(1, "今天要抢哪一个银行?"));
                 dats.Add(new OptionData(2, "对不起 我拒绝"));
-                UIManager.ShowOption(dats);
+                UIModule.ShowOption(dats);
             };
 
             unit4.type = UnitType.Text;
             unit4.action = () =>
             {
-                CharacterManager.ActivateCharacter(0, "hoshino", "00");
-                CharacterManager.SetAction(0, CharacterAction.AppearL2R,0);
-                CharacterManager.SetEmotion(0, CharacterEmotion.Heart);
-                UIManager.PrintText("我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来!!");
-                UIManager.SetSpeaker("hoshino");
+                CharacterModule.ActivateCharacter(0, "hoshino", "00", "我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来!!");
+                CharacterModule.SetAction(0, CharacterAction.AppearL2R,0);
+                CharacterModule.SetEmotion(0, CharacterEmotion.Twinkle);
             };
 
             unit5.type = UnitType.Text;
             unit5.action = () =>
             {
-                CharacterManager.ActivateCharacter(4, "aru", "06", TransistionType.Smooth);
-                CharacterManager.SetAction(4,CharacterAction.Stiff);
-                CharacterManager.SetEmotion(4,CharacterEmotion.Sweat);
-                UIManager.PrintText("我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来!");
-                UIManager.SetSpeaker("aru");
+                CharacterModule.ActivateCharacter(4, "aru", "06", "你们认真的吗!?", TransistionType.Smooth);
+                CharacterModule.SetAction(4,CharacterAction.Stiff);
+                CharacterModule.SetEmotion(4,CharacterEmotion.Surprise);
             };
 
             unit6.type = UnitType.Text;
             unit6.action = () =>
             {
-                CharacterManager.ActivateCharacter(2, "shiroko", "00");
-                CharacterManager.SetAction(2,CharacterAction.Jump);
-                CharacterManager.SetEmotion(2,CharacterEmotion.Music);
-                UIManager.PrintText("走吧!");
-                UIManager.SetSpeaker("shiroko");
+                CharacterModule.ActivateCharacter(2, "shiroko", "00", "走吧!");
+                CharacterModule.SetAction(2,CharacterAction.Jump);
+                CharacterModule.SetEmotion(2,CharacterEmotion.Music);
+            };
+
+            unit31.type = UnitType.Text;
+            unit31.selectionGroup = 1;
+            unit31.action = () =>
+            {
+                CharacterModule.ActivateCharacter(2, "shiroko", "00", "什么银行随你挑。");
+                CharacterModule.SetAction(2,CharacterAction.Greeting);
+                CharacterModule.SetEmotion(2,CharacterEmotion.Chat);
+            };
+            unit32.type = UnitType.Text;
+            unit32.selectionGroup = 2;
+            unit32.action = () =>
+            {
+                CharacterModule.ActivateCharacter(2, "shiroko", "00", "!?");
+                CharacterModule.SetAction(2, CharacterAction.Stiff);
+                CharacterModule.SetEmotion(2, CharacterEmotion.Surprise);
             };
 
 
             testUnits.Add(unit1);
             testUnits.Add(unit2);
             testUnits.Add(unit3);
+            testUnits.Add(unit31);
+            testUnits.Add(unit32);
             testUnits.Add(unit4);
             testUnits.Add(unit5);
             testUnits.Add(unit6);
@@ -246,14 +286,17 @@ namespace BAStoryPlayer
         }
 
         /// <summary>
-        /// 载入单元
+        /// 载入执行单元 数据初始化
         /// </summary>
         public void LoadUnits(int groupID,List<StoryUnit> units)
         {
-            currentGroupID = groupID;
+            priorIndex.Clear();
+            this.groupID = groupID;
             storyUnit = units;
-            index_Current_Unit = 0;
-            playing = true;
+            index_CurrentUnit = 0;
+            isLocking = false;
+            isPlaying = true;
+            executable = true;
         }
 
         /// <summary>
@@ -261,36 +304,50 @@ namespace BAStoryPlayer
         /// </summary>
         public void Next()
         {
-            if(index == storyUnit.Count)
+            // 操作锁 针对非Auto模式
+            if (isLocking && !Auto)
+                return;
+
+            // 文本跳过
+            if(isPlaying && UIModule.IsPriting && !executable)
             {
-                // TODO 删除播放器
-                Debug.Log("播放完成");
-                playing = false;
+                UIModule.Skip();
+                if (Auto)
+                    Auto = false;
                 return;
             }
 
-            if (!executable || !playing)
+            if (!executable || !isPlaying)
                 return;
 
-            switch (storyUnit[index].type)
+            if (index_CurrentUnit == storyUnit.Count)
+            {
+                // TODO 删除播放器
+                Debug.Log("播放完成");
+                isPlaying = false;
+                CloseStoryPlayer();
+                return;
+            }
+
+            switch (storyUnit[index_CurrentUnit].type)
             {
                 case UnitType.Text:
                 case UnitType.Title:
                 case UnitType.Option:
                     {
-                        storyUnit[index].Execute();
-                        index++;
+                        storyUnit[index_CurrentUnit].Execute();
+                        NextIndex();
                         executable = false;
                         break;
                     }
                 case UnitType.Command:
                     {
-                        if(storyUnit[index].wait != 0)
+                        if(storyUnit[index_CurrentUnit].wait != 0)
                         {
                             // TODO 根据单元等待时间执行等待
                         }
-                        storyUnit[index].Execute();
-                        index++;
+                        storyUnit[index_CurrentUnit].Execute();
+                        NextIndex();
                         Next();
                         break;
                     }
@@ -298,20 +355,81 @@ namespace BAStoryPlayer
             }
         }
 
+        /// <summary>
+        /// 加载下一个下标
+        /// </summary>
+        void NextIndex()
+        {
+            if (priorIndex.Count != 0)
+            {
+                index_CurrentUnit = priorIndex.Dequeue();
+            }
+            else
+                index_CurrentUnit++;
+        }
+
+        /// <summary>
+        /// 准备执行下一单元
+        /// </summary>
+        /// <param name="next">是否直接执行下一单元</param>
         public void ReadyToNext(bool next = false)
         {
             executable = true;
+            // 若Auto则直接执行
             if (next || Auto)
                 Next();
         }
 
-        // TODO TEST
-        int index = 0;
+        /// <summary>
+        /// 关闭播放器
+        /// </summary>
+        void CloseStoryPlayer()
+        {
+            AudioModule.PauseBGM();
+            GameObject curtain = Instantiate(new GameObject("Curtain"));
+            curtain.transform.SetParent(transform);
+            curtain.transform.localPosition = Vector3.zero;
+            curtain.transform.localScale = Vector3.one;
+            curtain.AddComponent<RectTransform>().sizeDelta = GetComponent<RectTransform>().sizeDelta;
+            var image = curtain.AddComponent<Image>();
+            image.color = new Color(0, 0, 0, 0);
+            image.DoAlpha(1, 1f).onComplete = ()=> {
+                Destroy(gameObject);
+            };
+        }
+
+        /// <summary>
+        /// 锁定操作一段时间 用于确保动作播放完毕
+        /// </summary>
+        public void Lock(float duration,float extra = 0.5f)
+        {
+            if (isLocking)
+                StopCoroutine(coroutine_Lock);
+
+            isLocking = true;
+            coroutine_Lock = Delay(transform,() =>
+            {
+                isLocking = false;
+            }, duration + extra);
+        }
+
+        public static Coroutine Delay(Transform obj, Action action, float duration)
+        {
+            return obj.GetComponent<MonoBehaviour>().StartCoroutine(CDelay(action, duration));
+        }
+        static System.Collections.IEnumerator CDelay(Action action, float duration)
+        {
+            yield return new WaitForSeconds(duration);
+            action?.Invoke();
+        }
+
+        // TEST
+        int indexTest = 0;
         public void TestBG()
         {
-            SetBackgroup($"BG{index+1}", TransistionType.Smooth);
-            index++;
-            index %= 5;
+            SetBackgroup($"BG{indexTest+1}", TransistionType.Smooth);
+            indexTest++;
+            indexTest %= 5;
         }
         public void TestAll()
         {
@@ -320,12 +438,12 @@ namespace BAStoryPlayer
         }
         public void TestSpeaker()
         {
-            UIManager.ShowVenue("世界第一银行");
-            CharacterManager.ActivateCharacter(2, "shiroko", "00");
-            CharacterManager.SetAction(2, CharacterAction.Hophop);
-            CharacterManager.SetEmotion(2, CharacterEmotion.Heart);
-            UIManager.PrintText("今天也要一起去抢银行吗?");
-            UIManager.SetSpeaker("shiroko");
+            UIModule.ShowVenue("世界第一银行");
+            CharacterModule.ActivateCharacter(2, "shiroko", "00");
+            CharacterModule.SetAction(2, CharacterAction.Hophop);
+            CharacterModule.SetEmotion(2, CharacterEmotion.Heart);
+            UIModule.PrintText("今天也要一起去抢银行吗?");
+            UIModule.SetSpeaker("shiroko");
         }
     }
 }

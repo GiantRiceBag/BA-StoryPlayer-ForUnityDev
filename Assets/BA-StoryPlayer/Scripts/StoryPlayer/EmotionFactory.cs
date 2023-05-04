@@ -27,9 +27,9 @@ namespace BAStoryPlayer
         Think
     }
 
-    public static class EmotionFactory 
+    public static class EmotionFactory
     {
-                /*
+         /*
         // TODO 后期根据角色大小进行调整
         坐标暂时通用
         Heart -318  1211
@@ -47,7 +47,7 @@ namespace BAStoryPlayer
         Angry -177 1127
         */
 
-        public static void SetEmotion(Transform target,CharacterEmotion emotion)
+        public static void SetEmotion(Transform target,CharacterEmotion emotion,bool sound = true)
         {
             switch (emotion)
             {
@@ -67,6 +67,8 @@ namespace BAStoryPlayer
                     {
                         var emo = GameObject.Instantiate(Resources.Load<GameObject>($"Emotions/Emotion_{emotion.ToString()}")).GetComponent<Emotion>();
                         emo.Initlaize(target, GetPos(emotion));
+                        if (sound)
+                            BAStoryPlayerController.Instance.StoryPlayer.AudioModule.Play($"Emotion/Emotion_{emotion.ToString()}");
                         break;
                     }
                 case CharacterEmotion.Steam:

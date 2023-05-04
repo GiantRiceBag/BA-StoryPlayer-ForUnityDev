@@ -32,7 +32,15 @@ namespace BAStoryPlayer
 
         string currentSpeaker = null;
         string mainTextBuffer = null;
-        bool printing = false;
+        bool isPrinting = false;
+
+        public bool IsPriting
+        {
+            get
+            {
+                return isPrinting;
+            }
+        }
 
         BAStoryPlayer StoryPlayer
         {
@@ -42,7 +50,7 @@ namespace BAStoryPlayer
             }
         }
 
-        public event Action onFinishedPrinting;
+        [HideInInspector] public UnityEngine.Events.UnityEvent  onFinishPrinting;
 
         private void Start()
         {
@@ -66,15 +74,18 @@ namespace BAStoryPlayer
                 btn_Menu = transform.Find("Button_Menu").GetComponent<Button>();
 
             // 事件绑定
-            onFinishedPrinting = () => { 
+            onFinishPrinting.AddListener(() => { 
                 gameObject_Continued.SetActive(true);
 
+                // 若Auto则延缓两秒后继续
                 if (StoryPlayer.Auto)
-                    coroutine_Next = DoTweenS.DoTweenS.Delay(transform, () => { StoryPlayer.ReadyToNext(); }, 2);
+                    coroutine_Next = BAStoryPlayer.Delay(transform, () => { StoryPlayer.ReadyToNext(); }, 2);
                 else
                     StoryPlayer.ReadyToNext();
-            };
-            StoryPlayer.OnCancleAuto.AddListener(() => {
+            });
+
+            // 若取消Auto 则删除当前执行的协程
+            StoryPlayer.OnCancelAuto.AddListener(() => {
                 if(coroutine_Next != null)
                 {
                     StopCoroutine(coroutine_Next);
@@ -120,7 +131,7 @@ namespace BAStoryPlayer
             SetActive_UI_TextArea();
             SetActive_UI_Button();
 
-            printing = true;
+            isPrinting = true;
             mainTextBuffer = text;
             if (coroutine_Print != null)
                 StopCoroutine(coroutine_Print);
@@ -134,10 +145,10 @@ namespace BAStoryPlayer
                 yield return new WaitForSeconds(INTERVAL_PRINT);
             }
             coroutine_Print = null;
-            printing = false;
+            isPrinting = false;
             mainTextBuffer = null;
 
-            onFinishedPrinting?.Invoke();
+            onFinishPrinting?.Invoke();
         }
 
         /// <summary>
@@ -145,15 +156,15 @@ namespace BAStoryPlayer
         /// </summary>
         public void Skip()
         {
-            if (!printing)
+            if (!isPrinting)
                 return;
 
             StopCoroutine(coroutine_Print);
             text_Main.text = mainTextBuffer;
             mainTextBuffer = null;
-            printing = false;
+            isPrinting = false;
 
-            onFinishedPrinting?.Invoke();
+            onFinishPrinting?.Invoke();
         }
 
         public void ClearText()
@@ -190,12 +201,18 @@ namespace BAStoryPlayer
             image_Backgroup.sprite = sprite;
         }
 
+        /// <summary>
+        /// 显示标题并关闭所有UI
+        /// </summary>
+        /// <param name="title"></param>
+        /// <param name="subtitle"></param>
         public void ShowTitle(string title,string subtitle)
         {
             GameObject obj = Instantiate( Resources.Load("UI/Title") as GameObject);
             obj.transform.SetParent(transform);
             obj.GetComponent<Title>().Initialize(title, subtitle);
 
+            HideAllUI();
         }
         public void ShowOption(List<OptionData> dates)
         {

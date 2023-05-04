@@ -1,11 +1,9 @@
-using System;
-using System.Text;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace BAStoryPlayer
 {
-    [Serializable]
+    [System.Serializable]
     public class CharacterDataUnit
     {
         [Tooltip("由于目前使用场景的角色量不多 以角色罗马音作为主要查询依据")]
@@ -19,7 +17,7 @@ namespace BAStoryPlayer
 
         public override string ToString()
         {
-            StringBuilder result = new StringBuilder();
+            System.Text.StringBuilder result = new System.Text.StringBuilder();
             result.Append($"罗马音 {romaji}\n");
             result.Append($"姓名 {familyName}{name}\n");
             result.Append($"学院 {collage}\n");
