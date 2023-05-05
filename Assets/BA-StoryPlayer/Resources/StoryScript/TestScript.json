@@ -1,0 +1,86 @@
+{
+    "groupID": 1,
+    "content": [
+        {
+            "scripts": "#title;我是小标题;我是大标题",
+            "selectionGroup": 0,
+            "bgmURL": "Theme_01",
+            "soundURL": "",
+            "backgroupURL": "BG3",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "3;shiroko;00;今天也要一起去抢银行吗?\n#place;银行劫案:行动准备\n#3;em;h\n#3;a",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroupURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "[s1]今天要抢哪一个银行?\n[s2]对不起,我拒绝",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroupURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "3;shiroko;00;什么银行随你挑\n#3;em;c\n#3;greeting",
+            "selectionGroup": 1,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroupURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "#na;那就世界第一银行吧",
+            "selectionGroup": 1,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroupURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "3;shiroko;05;!?\n#3;stiff\n#3;em;surprise",
+            "selectionGroup": 2,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroupURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "3;shiroko;06;你没有选择的权利\n#3;em;a",
+            "selectionGroup": 2,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroupURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "1;hoshino;00;是抢银行吗？我也来我也来我也来！\n#1;em;h\n#1;ar1",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroupURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "5;aru;06;你们认真的吗？\n#5;a\n#5;stiff\n#5;em;surprise",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroupURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "3;shiroko;00;走吧\n#3;jump\n#3;em;m",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroupURL": "",
+            "popupFileURL": ""
+        }
+        
+    ]
+}

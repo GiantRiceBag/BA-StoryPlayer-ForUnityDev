@@ -24,20 +24,20 @@ namespace BAStoryPlayer.DoTweenS
 
         public System.Action onComplete;
 
-        public TweenS(object target,float duration,Transform transform,Coroutine coroutine = null){
+        public TweenS(object target,float duration,Transform transform,TweenSType type){
             tid = DoTweenS.UsableTid;
             this.target = target;
             this.duration = duration;
             this.transform = transform;
-            this.coroutine = coroutine;
+            this.type = type;
 
             DoTweenS.Add(this);
         }
-        public TweenS(object target, float duration, int time,Transform transform, Coroutine coroutine = null):this(target,duration,transform,coroutine)
+        public TweenS(object target, float duration, int time,Transform transform,TweenSType type) :this(target,duration,transform,type)
         {
             this.time = System.Math.Clamp(time, 1, int.MaxValue);
         }
-        public TweenS(string targetName,object target, float duration,Transform transform, Coroutine coroutine = null) : this(target, duration, transform, coroutine)
+        public TweenS(string targetName,object target, float duration,Transform transform, TweenSType type) : this(target, duration, transform, type)
         {
             this.targetName = targetName;
         }

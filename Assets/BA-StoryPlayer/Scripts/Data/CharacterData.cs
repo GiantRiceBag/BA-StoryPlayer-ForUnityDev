@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace BAStoryPlayer
@@ -30,7 +29,7 @@ namespace BAStoryPlayer
     public class CharacterData : ScriptableObject
     {
         [SerializeField]
-        List<CharacterDataUnit> Datas = new List<CharacterDataUnit>();
+        System.Collections.Generic.List<CharacterDataUnit> Datas = new System.Collections.Generic.List<CharacterDataUnit>();
 
         public CharacterDataUnit this[string romaji]
         {

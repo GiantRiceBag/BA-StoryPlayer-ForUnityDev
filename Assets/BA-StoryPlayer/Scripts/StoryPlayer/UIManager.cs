@@ -115,7 +115,7 @@ namespace BAStoryPlayer
             // 旁边
             else
             {
-                text_Speaker = null;
+                text_Speaker.text = null;
             }
 
             currentSpeaker = romaji;
@@ -196,17 +196,10 @@ namespace BAStoryPlayer
             image_BlurLayer.DoFloat("_Size", enable ? 3 : 0, TIME_BLUR_BACKGROUP);
         }
 
-        public void SetBackgroup(Sprite sprite)
-        {
-            image_Backgroup.sprite = sprite;
-        }
-
         /// <summary>
         /// 显示标题并关闭所有UI
         /// </summary>
-        /// <param name="title"></param>
-        /// <param name="subtitle"></param>
-        public void ShowTitle(string title,string subtitle)
+        public void ShowTitle(string subtitle,string title)
         {
             GameObject obj = Instantiate( Resources.Load("UI/Title") as GameObject);
             obj.transform.SetParent(transform);

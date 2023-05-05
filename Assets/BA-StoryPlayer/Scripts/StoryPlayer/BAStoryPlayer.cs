@@ -120,6 +120,7 @@ namespace BAStoryPlayer
 
         [HideInInspector]public UnityEvent<int,int> OnPlayerSelect; // 第一个参数为选项ID 第二个参数为组ID
         [HideInInspector] public UnityEvent OnCancelAuto;
+        [HideInInspector] public UnityEvent OnFinishPlaying;
 
         Coroutine coroutine_Lock;
 
@@ -129,21 +130,21 @@ namespace BAStoryPlayer
         {
             if (image_Backgroup == null)
                 image_Backgroup = transform.Find("Backgroup").GetComponent<Image>();
-            image_Backgroup.enabled = false;
 
-            CharacterModule.OnAnimateCharacter.AddListener((duration)=> { Lock(duration); });
+            // 动作事件订阅 锁定一定时间的操作
+            CharacterModule.OnAnimateCharacter.AddListener((duration)=> { Lock(duration + 0.5f); });
 
             // 选项事件订阅
-            OnPlayerSelect.AddListener((selectionID,groupID) =>
+            OnPlayerSelect.AddListener((selectionGroup,groupID) =>
             {
                 // 坐标前移寻找最近的选项下标 并放入优先下标队列 遇到-1则停止
                 for(int i = index_CurrentUnit; i < storyUnit.Count; i++)
                 {
-                    if (storyUnit[i].selectionGroup == selectionID)
+                    if (storyUnit[i].selectionGroup == selectionGroup)
                     {
                         priorIndex.Enqueue(i);
                     }
-                    else if (storyUnit[i].selectionGroup == -1) // 注意添加最后一个无选项组的单元
+                    else if (storyUnit[i].selectionGroup == 0) // 注意添加最后一个无选项组的单元
                     {
                         priorIndex.Enqueue(i);
                         break;
@@ -152,101 +153,6 @@ namespace BAStoryPlayer
                 // 注意先切换下标
                 NextIndex();
             });
-
-            // TEST
-            StoryUnit unit1 = new StoryUnit();
-            StoryUnit unit2 = new StoryUnit();
-            StoryUnit unit3 = new StoryUnit();
-            StoryUnit unit4 = new StoryUnit();
-            StoryUnit unit5 = new StoryUnit();
-            StoryUnit unit6 = new StoryUnit();
-            StoryUnit unit31 = new StoryUnit();
-            StoryUnit unit32 = new StoryUnit();
-            StoryUnit unit321 = new StoryUnit();
-
-            unit1.type = UnitType.Title;
-            unit1.action += () =>
-            {
-                SetBackgroup("BG2");
-                AudioModule.PlayBGM("Theme_01");
-                UIModule.ShowTitle("我是大标题", "我是小标题");
-            };
-
-            unit2.type = UnitType.Text;
-            unit2.action = () =>
-            {
-                UIModule.ShowVenue("世界第一银行：行动前准备");
-                CharacterModule.ActivateCharacter(2, "shiroko", "00", "今天也要一起去抢银行吗?");
-                CharacterModule.SetAction(2, CharacterAction.Hophop);
-                CharacterModule.SetEmotion(2, CharacterEmotion.Heart);
-            };
-
-            unit3.type = UnitType.Option;
-            unit3.action = () => {
-                List<OptionData> dats = new List<OptionData>();
-                dats.Add(new OptionData(1, "今天要抢哪一个银行?"));
-                dats.Add(new OptionData(2, "对不起 我拒绝"));
-                UIModule.ShowOption(dats);
-            };
-
-            unit4.type = UnitType.Text;
-            unit4.action = () =>
-            {
-                CharacterModule.ActivateCharacter(0, "hoshino", "00", "我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来我也来!!");
-                CharacterModule.SetAction(0, CharacterAction.AppearL2R,0);
-                CharacterModule.SetEmotion(0, CharacterEmotion.Twinkle);
-            };
-
-            unit5.type = UnitType.Text;
-            unit5.action = () =>
-            {
-                CharacterModule.ActivateCharacter(4, "aru", "06", "你们认真的吗!?", TransistionType.Smooth);
-                CharacterModule.SetAction(4,CharacterAction.Stiff);
-                CharacterModule.SetEmotion(4,CharacterEmotion.Surprise);
-            };
-
-            unit6.type = UnitType.Text;
-            unit6.action = () =>
-            {
-                CharacterModule.ActivateCharacter(2, "shiroko", "00", "走吧!");
-                CharacterModule.SetAction(2,CharacterAction.Jump);
-                CharacterModule.SetEmotion(2,CharacterEmotion.Music);
-            };
-
-            unit31.type = UnitType.Text;
-            unit31.selectionGroup = 1;
-            unit31.action = () =>
-            {
-                CharacterModule.ActivateCharacter(2, "shiroko", "00", "什么银行随你挑。");
-                CharacterModule.SetAction(2,CharacterAction.Greeting);
-                CharacterModule.SetEmotion(2,CharacterEmotion.Chat);
-            };
-            unit32.type = UnitType.Text;
-            unit32.selectionGroup = 2;
-            unit32.action = () =>
-            {
-                CharacterModule.ActivateCharacter(2, "shiroko", "05", "!?");
-                CharacterModule.SetAction(2, CharacterAction.Stiff);
-                CharacterModule.SetEmotion(2, CharacterEmotion.Surprise);
-            };
-            unit321.type = UnitType.Text;
-            unit321.selectionGroup = 2;
-            unit321.action = () =>
-            {
-                CharacterModule.ActivateCharacter(2, "shiroko", "06", "你可没有拒绝的权力。");
-                CharacterModule.SetEmotion(2, CharacterEmotion.Angry);
-            };
-
-
-            testUnits.Add(unit1);
-            testUnits.Add(unit2);
-            testUnits.Add(unit3);
-            testUnits.Add(unit31);
-            testUnits.Add(unit32);
-            testUnits.Add(unit321);
-            testUnits.Add(unit4);
-            testUnits.Add(unit5);
-            testUnits.Add(unit6);
         }
 
         /// <summary>
@@ -263,7 +169,6 @@ namespace BAStoryPlayer
             size.y = size.x * ratio;
 
             image_Backgroup.GetComponent<RectTransform>().sizeDelta = size;
-
             if (!image_Backgroup.enabled)
             {
                 image_Backgroup.enabled = true;
@@ -330,7 +235,6 @@ namespace BAStoryPlayer
             if (index_CurrentUnit == storyUnit.Count)
             {
                 // TODO 删除播放器
-                Debug.Log("播放完成");
                 isPlaying = false;
                 CloseStoryPlayer();
                 return;
@@ -402,6 +306,7 @@ namespace BAStoryPlayer
             image.color = new Color(0, 0, 0, 0);
             image.DoAlpha(1, 1f).onComplete = ()=> {
                 Destroy(gameObject);
+                OnFinishPlaying?.Invoke();
             };
         }
 

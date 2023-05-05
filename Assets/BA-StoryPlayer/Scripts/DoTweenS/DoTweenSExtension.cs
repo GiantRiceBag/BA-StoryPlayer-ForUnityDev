@@ -12,7 +12,7 @@ namespace BAStoryPlayer.DoTweenS
         public static TweenS DoMove_Anchored(this Transform transform, Vector2 target, float duration)
         {
             MonoBehaviour mono = transform.GetComponent<MonoBehaviour>();
-            TweenS tween = new TweenS(target, duration, transform);
+            TweenS tween = new TweenS(target, duration, transform,TweenSType.Vector);
             tween.SetCoroutine(mono.StartCoroutine(DoMove_Anchored(mono, tween)));
             return tween;
         }
@@ -40,7 +40,7 @@ namespace BAStoryPlayer.DoTweenS
         public static TweenS DoBound_Anchored(this Transform transform, Vector2 target, float duration, int time = 1)
         {
             MonoBehaviour mono = transform.GetComponent<MonoBehaviour>();
-            TweenS tween = new TweenS(target, duration, time, transform);
+            TweenS tween = new TweenS(target, duration, time, transform,TweenSType.Vector);
             tween.SetCoroutine(mono.StartCoroutine(DoBound_Anchored(mono, tween)));
             return tween;
         }
@@ -81,8 +81,7 @@ namespace BAStoryPlayer.DoTweenS
         public static TweenS DoScale(this Transform transform,Vector3 target,float duration)
         {
             MonoBehaviour mono = transform.GetComponent<MonoBehaviour>();
-            TweenS tween = new TweenS(target, duration, transform);
-            tween.type = TweenSType.Scale;
+            TweenS tween = new TweenS(target, duration, transform,TweenSType.Scale);
             tween.SetCoroutine(mono.StartCoroutine(DoLocalScale(mono, tween)));
             return tween;
         }
@@ -111,7 +110,7 @@ namespace BAStoryPlayer.DoTweenS
         public static TweenS DoShakeX(this Transform transform,float maxOffsetX,float duration,int time = 1)
         {
             MonoBehaviour mono = transform.GetComponent<MonoBehaviour>();
-            TweenS tween = new TweenS(maxOffsetX, duration, time, transform);
+            TweenS tween = new TweenS(maxOffsetX, duration, time, transform,TweenSType.Vector);
             tween.SetCoroutine(mono.StartCoroutine(DoShakeX(mono, tween)));
             return tween;
         }
@@ -143,8 +142,7 @@ namespace BAStoryPlayer.DoTweenS
         public static TweenS DoColor(this SkeletonGraphic skeletonGraphics,Color targetCol,float duration)
         {
             MonoBehaviour mono = skeletonGraphics.GetComponent<MonoBehaviour>();
-            TweenS tween = new TweenS(targetCol, duration, mono.transform);
-            tween.type = TweenSType.Color;
+            TweenS tween = new TweenS(targetCol, duration, mono.transform,TweenSType.Color);
             tween.SetCoroutine(mono.StartCoroutine(DoColor_SkeletonGraphic(mono, tween)));
             return tween;
         }
@@ -169,8 +167,7 @@ namespace BAStoryPlayer.DoTweenS
         public static TweenS DoAlpha(this Image image,float target,float duration)
         {
             MonoBehaviour mono = image.transform.GetComponent<MonoBehaviour>();
-            TweenS tween = new TweenS(target, duration, image.transform);
-            tween.type = TweenSType.Color;
+            TweenS tween = new TweenS(target, duration, image.transform,TweenSType.Color);
             tween.SetCoroutine(mono.StartCoroutine(DoAlpha_Image(mono, tween)));
             return tween;
         }
@@ -195,8 +192,7 @@ namespace BAStoryPlayer.DoTweenS
         public static TweenS DoColor(this Image image, Color target, float duration)
         {
             MonoBehaviour mono = image.transform.GetComponent<MonoBehaviour>();
-            TweenS tween = new TweenS(target, duration, image.transform);
-            tween.type = TweenSType.Color;
+            TweenS tween = new TweenS(target, duration, image.transform,TweenSType.Color);
             tween.SetCoroutine(mono.StartCoroutine(DoColor_Image(mono, tween)));
             return tween;
         }
@@ -223,8 +219,7 @@ namespace BAStoryPlayer.DoTweenS
         public static TweenS DoFloat(this Image image,string propertyName,float target,float duration)
         {
             MonoBehaviour mono = image.GetComponent<MonoBehaviour>();
-            TweenS tween = new TweenS(propertyName, target, duration,image.transform);
-            tween.type = TweenSType.Material;
+            TweenS tween = new TweenS(propertyName, target, duration,image.transform,TweenSType.Material);
             tween.SetCoroutine(mono.StartCoroutine(DoFloat_Image_Material(mono, tween)));
             return tween;
 
@@ -253,8 +248,7 @@ namespace BAStoryPlayer.DoTweenS
         public static TweenS DoVolume(this AudioSource audio,float target, float duration)
         {
             MonoBehaviour mono = audio.GetComponent<MonoBehaviour>();
-            TweenS tween = new TweenS(target, duration, audio.transform);
-            tween.type = TweenSType.Audio;
+            TweenS tween = new TweenS(target, duration, audio.transform,TweenSType.Audio);
             tween.SetCoroutine(mono.StartCoroutine(DoVolume(mono, tween)));
             return tween;
 

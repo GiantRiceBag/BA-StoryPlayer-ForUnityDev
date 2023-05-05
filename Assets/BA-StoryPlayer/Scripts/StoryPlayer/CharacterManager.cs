@@ -341,7 +341,7 @@ namespace BAStoryPlayer
         {
             if (index >= 0 && index < NUM_CHARACTER_SLOT)
                 return true;
-            Debug.LogError($"角色槽位下标 {index} 超出范围");
+            Debug.LogError($"角色槽位下标 {index} 超出范围[0-4]");
             return false;
         }
 
@@ -360,12 +360,14 @@ namespace BAStoryPlayer
             {
                 case CharacterAction.Appear:
                     {
+                        character[index].color = Color.black;
                         character[index].DoColor(Color.white, TIME_TRANSITION);
                         OnAnimateCharacter?.Invoke(TIME_TRANSITION);
                         break;
                     }
                 case CharacterAction.Disapper:
                     {
+                        character[index].color = Color.white;
                         character[index].DoColor(Color.black, TIME_TRANSITION);
                         OnAnimateCharacter?.Invoke(TIME_TRANSITION);
                         break;

@@ -71,7 +71,9 @@ namespace BAStoryPlayer.DoTweenS
                 if (i.transform == tween.transform && i.type == tween.type)
                 {
                     if (kill)
+                    {
                         Kill(index);
+                    }
                     return false;
                 }
                 index++;
