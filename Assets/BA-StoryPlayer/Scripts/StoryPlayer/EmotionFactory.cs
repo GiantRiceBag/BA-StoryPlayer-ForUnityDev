@@ -45,8 +45,15 @@ namespace BAStoryPlayer
         Question -173 1185
         Shy -266 1126
         Angry -177 1127
+         Steam -287 1074
+         Sigh -188.5 909.4
+         Sad -201 1101
+         Bulb -299 1168
+         Zzz -218 1031
+         Tear -212 963
         */
 
+        // TODO 表情全做完后可以删掉Case了
         public static void SetEmotion(Transform target,CharacterEmotion emotion,bool sound = true)
         {
             switch (emotion)
@@ -64,6 +71,12 @@ namespace BAStoryPlayer
                 case CharacterEmotion.Question:
                 case CharacterEmotion.Shy:
                 case CharacterEmotion.Angry:
+                case CharacterEmotion.Steam:
+                case CharacterEmotion.Sigh:
+                case CharacterEmotion.Sad:
+                case CharacterEmotion.Bulb:
+                case CharacterEmotion.Zzz:
+                case CharacterEmotion.Tear:
                     {
                         var emo = GameObject.Instantiate(Resources.Load<GameObject>($"Emotions/Emotion_{emotion.ToString()}")).GetComponent<Emotion>();
                         emo.Initlaize(target, GetPos(emotion));
@@ -71,12 +84,6 @@ namespace BAStoryPlayer
                             BAStoryPlayerController.Instance.StoryPlayer.AudioModule.Play($"Emotion/Emotion_{emotion.ToString()}");
                         break;
                     }
-                case CharacterEmotion.Steam:
-                case CharacterEmotion.Sigh:
-                case CharacterEmotion.Sad:
-                case CharacterEmotion.Bulb:
-                case CharacterEmotion.Zzz:
-                case CharacterEmotion.Tear:
                 case CharacterEmotion.Think:
                 default:
                     {
@@ -118,11 +125,17 @@ namespace BAStoryPlayer
                 case CharacterEmotion.Angry:
                     return new Vector2(-177, 1127);
                 case CharacterEmotion.Steam:
+                    return new Vector2(-287, 1074);
                 case CharacterEmotion.Sigh:
+                    return new Vector2(-188.5f, 909.4f);
                 case CharacterEmotion.Sad:
+                    return new Vector2(-201, 1101);
                 case CharacterEmotion.Bulb:
+                    return new Vector2(-299, 1168);
                 case CharacterEmotion.Zzz:
+                    return new Vector2(-218, 1031);
                 case CharacterEmotion.Tear:
+                    return new Vector2(-212, 963);
                 case CharacterEmotion.Think:
                 default:
                     {

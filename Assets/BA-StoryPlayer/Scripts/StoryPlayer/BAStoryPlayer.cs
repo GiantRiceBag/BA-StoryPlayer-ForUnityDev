@@ -153,6 +153,11 @@ namespace BAStoryPlayer
                 // 注意先切换下标
                 NextIndex();
             });
+
+            //TEST
+            //CharacterModule.ActivateCharacter(0, "shiroko", "00");
+            //CharacterModule.ActivateCharacter(2, "hoshino", "00");
+            //CharacterModule.ActivateCharacter(4, "aru", "00");
         }
 
         /// <summary>
@@ -160,8 +165,15 @@ namespace BAStoryPlayer
         /// </summary>
         /// <param name="url">相对URL</param>
         /// <param name="type">平缓切换 对背景初次登场无效</param>
-        public void SetBackgroup(string url,TransistionType transition = TransistionType.Instant)
+        public void SetBackgroup(string url = null,TransistionType transition = TransistionType.Instant)
         {
+            if(url == null)
+            {
+                image_Backgroup.sprite = null;
+                image_Backgroup.enabled = false;
+                return;
+            }
+
             Sprite sprite = Resources.Load<Sprite>(PATH_BACKGROUP + url);
             Vector2 size = sprite.rect.size;
             float ratio = size.y / size.x;
@@ -235,7 +247,6 @@ namespace BAStoryPlayer
             if (index_CurrentUnit == storyUnit.Count)
             {
                 // TODO 删除播放器
-                isPlaying = false;
                 CloseStoryPlayer();
                 return;
             }
@@ -255,8 +266,19 @@ namespace BAStoryPlayer
                     {
                         if(storyUnit[index_CurrentUnit].wait != 0)
                         {
-                            // TODO 根据单元等待时间执行等待
+                            // 根据单元等待时间执行等待
+                            executable = false;
+                            Delay(transform, () =>
+                            {
+                                executable = true;
+                                storyUnit[index_CurrentUnit].Execute();
+                                NextIndex();
+                                Next();
+                            }, storyUnit[index_CurrentUnit].wait / 1000f);
+
+                            break;
                         }
+
                         storyUnit[index_CurrentUnit].Execute();
                         NextIndex();
                         Next();
@@ -296,7 +318,10 @@ namespace BAStoryPlayer
         /// </summary>
         void CloseStoryPlayer()
         {
+            isPlaying = false;
             AudioModule.PauseBGM();
+
+            // 生成幕布
             GameObject curtain = Instantiate(new GameObject("Curtain"));
             curtain.transform.SetParent(transform);
             curtain.transform.localPosition = Vector3.zero;
@@ -304,10 +329,26 @@ namespace BAStoryPlayer
             curtain.AddComponent<RectTransform>().sizeDelta = GetComponent<RectTransform>().sizeDelta;
             var image = curtain.AddComponent<Image>();
             image.color = new Color(0, 0, 0, 0);
-            image.DoAlpha(1, 1f).onComplete = ()=> {
-                Destroy(gameObject);
-                OnFinishPlaying?.Invoke();
-            };
+
+            Delay(transform, () =>
+            {
+                image.DoAlpha(1, 1f).onComplete = () => {
+                    // TODO 保留不删除
+                    //Destroy(gameObject);
+                    gameObject.SetActive(false);
+                    SetBackgroup();
+                    UIModule.HideAllUI();
+                    CharacterModule.ClearAll();
+                    DoTweenS.DoTweenS.KillAll();
+                    AudioModule.ClearAll();
+
+                    Destroy(curtain);
+                    OnFinishPlaying?.Invoke();
+                };
+            }, 1f);
+
+
+
         }
 
         /// <summary>

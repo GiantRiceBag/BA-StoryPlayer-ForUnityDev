@@ -17,7 +17,6 @@ namespace BAStoryPlayer
 
         [Header("References")]
         [SerializeField] Image image_Backgroup;
-        [SerializeField] Image image_BlurLayer;
         [Space]
         [SerializeField] TextMeshProUGUI text_Speaker;
         [SerializeField] TextMeshProUGUI text_Main;
@@ -56,8 +55,6 @@ namespace BAStoryPlayer
         {
             if(image_Backgroup == null)
                 image_Backgroup = transform.parent.Find("Backgroup").GetComponent<Image>();
-            if (image_BlurLayer == null)
-                image_BlurLayer = image_Backgroup.transform.Find("BlurLayer").GetComponent<Image>();
 
             if (text_Speaker == null)
                 text_Speaker = transform.Find("TextArea").Find("Text_Speaker").GetComponent<TextMeshProUGUI>();
@@ -193,7 +190,7 @@ namespace BAStoryPlayer
 
         public void SetBlurBackgroup(bool enable)
         {
-            image_BlurLayer.DoFloat("_Size", enable ? 3 : 0, TIME_BLUR_BACKGROUP);
+            image_Backgroup.DoFloat("radius", enable ? 30 : 0, TIME_BLUR_BACKGROUP);
         }
 
         /// <summary>

@@ -2,7 +2,7 @@ namespace BAStoryPlayer
 {
     /*
      处理角色操作以及文本对话部分
-    脚本:character,character,na
+    脚本:character,character,na,hide
      */
     public class SubParser_CharacterLayer : BSubParser
     {
@@ -66,6 +66,19 @@ namespace BAStoryPlayer
                             storyUnit.UpdateType(weight, UnitType.Text);
                             break;
                         }
+                    case ScriptTag.All:
+                        {
+                            switch (args[1])
+                            {
+                                case "hide":
+                                    {
+                                        storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.HideAll(); };
+                                        break;
+                                    }
+                                default:break;
+                            }
+                            break;
+                        }
                     default: continue;
                 }
             }
@@ -113,6 +126,7 @@ namespace BAStoryPlayer
                         storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Sweat); };
                         break;
                     }
+                case "[...]":
                 case "...":
                 case "dot":
                     {
@@ -125,24 +139,28 @@ namespace BAStoryPlayer
                         storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Chat); };
                         break;
                     }
+                case "[!]":
                 case "!":
                 case "exclaim":
                     {
                         storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Exclaim); };
                         break;
                     }
+                case "[?!]":
                 case "?!":
                 case "surprise":
                     {
                         storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Surprise); };
                         break;
                     }
+                case "[?]":
                 case "?":
                 case "question":
                     {
                         storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Question); };
                         break;
                     }
+                case "[///]":
                 case "///":
                 case "shy":
                     {

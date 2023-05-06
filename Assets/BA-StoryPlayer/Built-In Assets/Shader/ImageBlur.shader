@@ -1,148 +1,84 @@
-// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
-
-// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
-
-// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
-
 Shader "Hidden/ImageBlur"
 {
-Properties
-	{
-		_Size("Size", Range(0,3)) = 1
-		_Color("Color", Color) = (1,1,1,1)
-	}
-	SubShader
-	{
-		Tags { "RenderType" = "Opaque" }
-		LOD 100
+   Properties
+    {
+        _MainTex ("Texture", 2D) = "white" {}
+        radius ("Radius", Range(0,30)) = 0
+        resolution ("Resolution", float) = 2000
+        hstep("HorizontalStep", Range(0,1)) = 0.5
+        vstep("VerticalStep", Range(0,1)) = 0.5  
+    }
 
-		GrabPass {Tags{"LightMode" = "Always"}}
+    SubShader
+    {
+        Tags {"Queue"="Transparent" "IgnoreProjector"="true" "RenderType"="Transparent"}
+        ZWrite Off Blend SrcAlpha OneMinusSrcAlpha Cull Off
+        Pass
+        {    
+            CGPROGRAM
+            #pragma vertex vert
+            #pragma fragment frag
+            #pragma fragmentoption ARB_precision_hint_fastest
+            #include "UnityCG.cginc"
 
-		Pass
-		{
-			CGPROGRAM
-			#pragma vertex vert
-			#pragma fragment frag
-			#include "UnityCG.cginc"
+            struct appdata_t
+            {
+                float4 vertex   : POSITION;
+                float4 color    : COLOR;
+                float2 texcoord : TEXCOORD0;
+            };    
+            struct v2f
+            {
+                half2 texcoord  : TEXCOORD0;
+                float4 vertex   : SV_POSITION;
+                fixed4 color    : COLOR;
+            };
 
-			struct appdata
-			{
-				float4 vertex : POSITION;
-				float2 uv : TEXCOORD0;
-			};
+            sampler2D _MainTex;
+            float radius;
+            float resolution;
 
-			struct v2f
-			{
-				float4 uvgrab : TEXCOORD0;
-				float4 vertex : SV_POSITION;
-			};
+            //the direction of our blur
+            //hstep (1.0, 0.0) -> x-axis blur
+            //vstep(0.0, 1.0) -> y-axis blur
+            //for example horizontaly blur equal:
+            //float hstep = 1;
+            //float vstep = 0;
+            float hstep;
+            float vstep;
 
-			sampler2D _GrabTexture;
-			float4 _GrabTexture_TexelSize;
-			float _Size;
-			half4 _Color;
+            v2f vert(appdata_t IN)
+            {
+                v2f OUT;
+                OUT.vertex = UnityObjectToClipPos(IN.vertex);
+                OUT.texcoord = IN.texcoord;
+                OUT.color = IN.color;
+                return OUT;
+            }
 
-			v2f vert(appdata_base v) {
-				v2f o;
-				o.vertex = UnityObjectToClipPos(v.vertex);
-				#if UNITY_UV_STARTS_AT_TOP
-				float scale = -1.0;
-				#else
-				float scale = 1.0;
-				#endif
-				o.uvgrab.xy = (float2(o.vertex.x, o.vertex.y*scale) + o.vertex.w) * 0.5;
-				o.uvgrab.zw = o.vertex.zw;
-				return o;
-			}
+            float4 frag(v2f i) : COLOR
+            {    
+                float2 uv = i.texcoord.xy;
+                float4 sum = float4(0.0, 0.0, 0.0, 0.0);
+                float2 tc = uv;
 
-			fixed4 frag(v2f i) : SV_Target
-			{
-				// sample the texture
-				// half4 col = tex2Dproj( _GrabTexture, UNITY_PROJ_COORD(i.uvgrab));
-				// return col;
+                //blur radius in pixels
+                float blur = radius/resolution/4;     
 
-				half4 sum = half4(0,0,0,0);
+                sum += tex2D(_MainTex, float2(tc.x - 4.0*blur*hstep, tc.y - 4.0*blur*vstep)) * 0.0162162162;
+                sum += tex2D(_MainTex, float2(tc.x - 3.0*blur*hstep, tc.y - 3.0*blur*vstep)) * 0.0540540541;
+                sum += tex2D(_MainTex, float2(tc.x - 2.0*blur*hstep, tc.y - 2.0*blur*vstep)) * 0.1216216216;
+                sum += tex2D(_MainTex, float2(tc.x - 1.0*blur*hstep, tc.y - 1.0*blur*vstep)) * 0.1945945946;
 
-				#define GRABPIXEL(weight,kernelx) tex2Dproj( _GrabTexture, UNITY_PROJ_COORD(float4(i.uvgrab.x + _GrabTexture_TexelSize.x * kernelx*_Size, i.uvgrab.y, i.uvgrab.z, i.uvgrab.w))) * weight
+                sum += tex2D(_MainTex, float2(tc.x, tc.y)) * 0.2270270270;
 
-				sum += GRABPIXEL(0.05, -4.0);
-				sum += GRABPIXEL(0.09, -3.0);
-				sum += GRABPIXEL(0.12, -2.0);
-				sum += GRABPIXEL(0.15, -1.0);
-				sum += GRABPIXEL(0.18, 0.0);
-				sum += GRABPIXEL(0.15, +1.0);
-				sum += GRABPIXEL(0.12, +2.0);
-				sum += GRABPIXEL(0.09, +3.0);
-				sum += GRABPIXEL(0.05, +4.0);
-				sum *= _Color;
-				return sum;
-			}
-			ENDCG
-		}
-
-		GrabPass{ Tags{ "LightMode" = "Always" } }
-
-		Pass
-		{
-			CGPROGRAM
-			#pragma vertex vert
-			#pragma fragment frag
-			#include "UnityCG.cginc"
-
-			struct appdata
-			{
-				float4 vertex : POSITION;
-				float2 uv : TEXCOORD0;
-			};
-
-			struct v2f
-			{
-				float4 uvgrab : TEXCOORD0;
-				float4 vertex : SV_POSITION;
-			};
-
-			sampler2D _GrabTexture;
-			float4 _GrabTexture_TexelSize;
-			float _Size;
-			half4 _Color;
-			
-			v2f vert(appdata_base v) {
-				v2f o;
-				o.vertex = UnityObjectToClipPos(v.vertex);
-				#if UNITY_UV_STARTS_AT_TOP
-				float scale = -1.0;
-				#else
-				float scale = 1.0;
-				#endif
-				o.uvgrab.xy = (float2(o.vertex.x, o.vertex.y*scale) + o.vertex.w) * 0.5;
-				o.uvgrab.zw = o.vertex.zw;
-				return o;
-			}
-
-			fixed4 frag(v2f i) : SV_Target
-			{
-				// sample the texture
-				// half4 col = tex2Dproj( _GrabTexture, UNITY_PROJ_COORD(i.uvgrab));
-				// return col;
-
-				half4 sum = half4(0,0,0,0);
-
-				#define GRABPIXEL(weight,kernely) tex2Dproj( _GrabTexture, UNITY_PROJ_COORD(float4(i.uvgrab.x, i.uvgrab.y + _GrabTexture_TexelSize.y * kernely*_Size, i.uvgrab.z, i.uvgrab.w))) * weight
-
-				sum += GRABPIXEL(0.05, -4.0);
-				sum += GRABPIXEL(0.09, -3.0);
-				sum += GRABPIXEL(0.12, -2.0);
-				sum += GRABPIXEL(0.15, -1.0);
-				sum += GRABPIXEL(0.18, 0.0);
-				sum += GRABPIXEL(0.15, +1.0);
-				sum += GRABPIXEL(0.12, +2.0);
-				sum += GRABPIXEL(0.09, +3.0);
-				sum += GRABPIXEL(0.05, +4.0);
-				sum *= _Color;
-				return sum;
-			}
-			ENDCG
-		}
-	}
-	Fallback "UI/Unlit/Transparent"
+                sum += tex2D(_MainTex, float2(tc.x + 1.0*blur*hstep, tc.y + 1.0*blur*vstep)) * 0.1945945946;
+                sum += tex2D(_MainTex, float2(tc.x + 2.0*blur*hstep, tc.y + 2.0*blur*vstep)) * 0.1216216216;
+                sum += tex2D(_MainTex, float2(tc.x + 3.0*blur*hstep, tc.y + 3.0*blur*vstep)) * 0.0540540541;
+                sum += tex2D(_MainTex, float2(tc.x + 4.0*blur*hstep, tc.y + 4.0*blur*vstep)) * 0.0162162162;
+                return float4(sum.rgb, 1);
+            }    
+            ENDCG
+        }
+    }
 }

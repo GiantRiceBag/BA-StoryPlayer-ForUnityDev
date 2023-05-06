@@ -12,7 +12,7 @@ namespace BAStoryPlayer
         const string PATH_MUSIC = "Music/";
         const int MAX_POOL_SIZE = 10;
 
-        const float TIME_FADE = 1f;
+        const float TIME_FADE = 0.5f;
 
         int mPlayerID = 0;
 
@@ -232,6 +232,7 @@ namespace BAStoryPlayer
             else
             {
                 GameObject go = new GameObject("AudioSource");
+                go.hideFlags = HideFlags.HideInHierarchy;
                 go.transform.SetParent(transform);
 
                 source = go.AddComponent<AudioSource>();
@@ -240,6 +241,15 @@ namespace BAStoryPlayer
 
             playingPool.Add(source);
             return source;
+        }
+
+        public void ClearAll()
+        {
+            for(int i = playingPool.Count - 1; i >= 0; i--)
+            {
+                Destroy(playingPool[i].gameObject);
+            }
+            SourceBGM.clip = null;
         }
     }
 

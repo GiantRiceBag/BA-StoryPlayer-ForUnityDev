@@ -38,8 +38,8 @@ namespace BAStoryPlayer.DoTweenS
         public static void KillAll()
         {
             if (tweenList.Count == 0) return;
-            StopAll();
-            tweenList.Clear();
+            for (int i = tweenList.Count - 1; i >= 0; i--)
+                tweenList[i].Kill();
         }
         public static void Stop(int index)
         {

@@ -450,14 +450,37 @@ namespace BAStoryPlayer
                     }
                 case CharacterAction.Hide:
                     {
-                        character[index].DoColor(Color.black, TIME_TRANSITION).onComplete = () => { DestroyCharacter(index); };
+                        // TODO 立即删除还是渐变退出 先暂时立即删除
+                        //character[index].DoColor(Color.black, TIME_TRANSITION).onComplete = () => { DestroyCharacter(index); };
+                        DestroyCharacter(index);
                         OnAnimateCharacter?.Invoke(TIME_TRANSITION);
                         break;
                 }
                 default:return;
             }
+        }
 
 
+        /// <summary>
+        /// 立即隐藏场上角色
+        /// </summary>
+        public void HideAll()
+        {
+            for(int i = 0; i < NUM_CHARACTER_SLOT; i++)
+            {
+                SetAction(i, CharacterAction.Hide);
+            }
+        }
+
+        /// <summary>
+        /// 完全删除角色
+        /// </summary>
+        public void ClearAll()
+        {
+            for (int i = 0; i < NUM_CHARACTER_SLOT; i++)
+            {
+                DestroyCharacter(i, true);
+            }
         }
 
         /// <summary>
@@ -568,12 +591,12 @@ namespace BAStoryPlayer
         }
         public void TestEmotion()
         {
-            //SetEmotion(0, (CharacterEmotion)index);
+            SetEmotion(0, (CharacterEmotion)index);
             SetEmotion(2, (CharacterEmotion)index);
-            SetAction(2, (CharacterAction)index, 2);
-            //SetEmotion(4, (CharacterEmotion)index++);
+            //SetAction(2, (CharacterAction)index, 2);
+            SetEmotion(4, (CharacterEmotion)index);
             index++;
-            index %= 13;
+            index %= 19;
         }
     }
 }

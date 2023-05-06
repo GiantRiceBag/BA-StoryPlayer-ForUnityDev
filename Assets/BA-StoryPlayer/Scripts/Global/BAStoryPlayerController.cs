@@ -62,6 +62,9 @@ namespace BAStoryPlayer
 
             isPlaying = true;
 
+            // TODO 不删除方案的选项
+            StoryPlayer.gameObject.SetActive(true);
+
             StoryScript storyScript;
             string json = Resources.Load<TextAsset>(PATH_STORYSCRIPT+url).ToString();
             storyScript = JsonUtility.FromJson(json, typeof(StoryScript)) as StoryScript;
@@ -71,6 +74,7 @@ namespace BAStoryPlayer
             StoryPlayer.LoadUnits(storyScript.groupID, parser.Parse(storyScript)); // 播放器初始化
             StoryPlayer.Next(); // 开始播放第一个执行单元
 
+            // 订阅播放结束事件
             StoryPlayer.OnFinishPlaying.AddListener(() =>
             {
                 isPlaying = false;
