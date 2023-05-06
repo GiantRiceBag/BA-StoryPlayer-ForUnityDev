@@ -19,7 +19,7 @@ namespace BAStoryPlayer
         public int selectionGroup;
         public string bgmURL;
         public string soundURL;
-        public string backgroupURL;
+        public string backgroundURL;
         public string popupFileURL;
         [System.NonSerialized]  public System.Collections.Generic.List<ScriptData> scriptList = new System.Collections.Generic.List<ScriptData>(); // 供解析用
 
@@ -30,7 +30,7 @@ namespace BAStoryPlayer
             text.Append($"选项组 : {selectionGroup}\n");
             text.Append($"背景音乐URL : {bgmURL}\n");
             text.Append($"音效URL : {soundURL}\n");
-            text.Append($"背景URL : {backgroupURL}\n");
+            text.Append($"背景URL : {backgroundURL}\n");
             text.Append($"文件URL : {popupFileURL}");
             return text.ToString();
         }

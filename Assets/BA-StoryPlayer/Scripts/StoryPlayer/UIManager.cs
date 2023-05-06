@@ -16,7 +16,7 @@ namespace BAStoryPlayer
         const float TIME_BLUR_BACKGROUP = 0.7f;
 
         [Header("References")]
-        [SerializeField] Image image_Backgroup;
+        [SerializeField] Image image_Background;
         [Space]
         [SerializeField] TextMeshProUGUI text_Speaker;
         [SerializeField] TextMeshProUGUI text_Main;
@@ -53,8 +53,8 @@ namespace BAStoryPlayer
 
         private void Start()
         {
-            if(image_Backgroup == null)
-                image_Backgroup = transform.parent.Find("Backgroup").GetComponent<Image>();
+            if(image_Background == null)
+                image_Background = transform.parent.Find("Background").GetComponent<Image>();
 
             if (text_Speaker == null)
                 text_Speaker = transform.Find("TextArea").Find("Text_Speaker").GetComponent<TextMeshProUGUI>();
@@ -188,15 +188,15 @@ namespace BAStoryPlayer
             SetActive_UI_TextArea(false);
         }
 
-        public void SetBlurBackgroup(bool enable,TransistionType transition = TransistionType.Smooth)
+        public void SetBlurBackground(bool enable,TransistionType transition = TransistionType.Smooth)
         {
             if(transition == TransistionType.Smooth)
-                image_Backgroup.DoFloat("radius", enable ? 30 : 0, TIME_BLUR_BACKGROUP);
+                image_Background.DoFloat("radius", enable ? 30 : 0, TIME_BLUR_BACKGROUP);
             else if(transition == TransistionType.Instant)
             {
-                Material mat = image_Backgroup.material;
+                Material mat = image_Background.material;
                 mat.SetFloat("radius", enable ? 30 : 0);
-                image_Backgroup.material = mat;
+                image_Background.material = mat;
             }
                 
         }

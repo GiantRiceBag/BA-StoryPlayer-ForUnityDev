@@ -10,7 +10,7 @@ namespace BAStoryPlayer
 {
     public class BAStoryPlayer : MonoBehaviour
     {
-        string PATH_BACKGROUP = "Backgroup/";
+        string PATH_BACKGROUP = "Background/";
         float TIME_TRAINSITION = 1;
 
         bool auto = false;
@@ -33,7 +33,7 @@ namespace BAStoryPlayer
         int groupID = -1;
 
         [Header("References")]
-        [SerializeField] Image image_Backgroup;
+        [SerializeField] Image image_Background;
         [Space]
         [SerializeField] CharacterManager _characterModule;
         [SerializeField] UIManager _UIModule;
@@ -128,8 +128,8 @@ namespace BAStoryPlayer
         List<StoryUnit> testUnits = new List<StoryUnit>();
         void Start()
         {
-            if (image_Backgroup == null)
-                image_Backgroup = transform.Find("Backgroup").GetComponent<Image>();
+            if (image_Background == null)
+                image_Background = transform.Find("Background").GetComponent<Image>();
 
             // 动作事件订阅 锁定一定时间的操作
             CharacterModule.OnAnimateCharacter.AddListener((duration)=> { Lock(duration + 0.5f); });
@@ -165,12 +165,12 @@ namespace BAStoryPlayer
         /// </summary>
         /// <param name="url">相对URL</param>
         /// <param name="type">平缓切换 对背景初次登场无效</param>
-        public void SetBackgroup(string url = null,TransistionType transition = TransistionType.Instant)
+        public void SetBackground(string url = null,TransistionType transition = TransistionType.Instant)
         {
             if(url == null)
             {
-                image_Backgroup.sprite = null;
-                image_Backgroup.enabled = false;
+                image_Background.sprite = null;
+                image_Background.enabled = false;
                 return;
             }
 
@@ -180,11 +180,11 @@ namespace BAStoryPlayer
             size.x = 1920;
             size.y = size.x * ratio;
 
-            image_Backgroup.GetComponent<RectTransform>().sizeDelta = size;
-            if (!image_Backgroup.enabled)
+            image_Background.GetComponent<RectTransform>().sizeDelta = size;
+            if (!image_Background.enabled)
             {
-                image_Backgroup.enabled = true;
-                image_Backgroup.sprite = sprite;
+                image_Background.enabled = true;
+                image_Background.sprite = sprite;
             }
             else
             {
@@ -192,15 +192,15 @@ namespace BAStoryPlayer
                 {
                     case TransistionType.Instant:
                         {
-                            image_Backgroup.sprite = sprite;
+                            image_Background.sprite = sprite;
                             break;
                         }
                     case TransistionType.Smooth:
                         {
-                            image_Backgroup.DoColor(Color.black, TIME_TRAINSITION / 2).onComplete = () =>
+                            image_Background.DoColor(Color.black, TIME_TRAINSITION / 2).onComplete = () =>
                             {
-                                image_Backgroup.sprite = sprite;
-                                image_Backgroup.DoColor(Color.white, TIME_TRAINSITION / 2);
+                                image_Background.sprite = sprite;
+                                image_Background.DoColor(Color.white, TIME_TRAINSITION / 2);
                             };
                             break;
                         }
@@ -336,7 +336,7 @@ namespace BAStoryPlayer
                     // TODO 保留不删除
                     //Destroy(gameObject);
                     gameObject.SetActive(false);
-                    SetBackgroup();
+                    SetBackground();
                     UIModule.HideAllUI();
                     CharacterModule.ClearAll();
                     DoTweenS.DoTweenS.KillAll();
@@ -380,7 +380,7 @@ namespace BAStoryPlayer
         int indexTest = 0;
         public void TestBG()
         {
-            SetBackgroup($"BG{indexTest+1}", TransistionType.Smooth);
+            SetBackground($"BG{indexTest+1}", TransistionType.Smooth);
             indexTest++;
             indexTest %= 5;
         }

@@ -16,9 +16,9 @@ namespace BAStoryPlayer
             if (storyUnit == null)
                 storyUnit = new StoryUnit();
 
-            if (rawStoryUnit.backgroupURL != string.Empty)
+            if (rawStoryUnit.backgroundURL != string.Empty)
             {
-                storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.SetBackgroup(rawStoryUnit.backgroupURL); };
+                storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.SetBackground(rawStoryUnit.backgroundURL); };
             }
 
             for(int i = 0; i < rawStoryUnit.scriptList.Count; i++) {

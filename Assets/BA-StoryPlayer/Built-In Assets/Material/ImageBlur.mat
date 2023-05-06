@@ -46,7 +46,7 @@ Material:
     - _StencilWriteMask: 255
     - _blurSizeXY: 0
     - hstep: 0.4
-    - radius: 0
+    - radius: 30
     - resolution: 1500
     - vstep: 0.4
     m_Colors:

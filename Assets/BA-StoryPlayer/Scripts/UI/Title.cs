@@ -14,7 +14,7 @@ namespace BAStoryPlayer.UI
 
         private void Start()
         {
-            BAStoryPlayerController.Instance.StoryPlayer.UIModule.SetBlurBackgroup(true,TransistionType.Instant);
+            BAStoryPlayerController.Instance.StoryPlayer.UIModule.SetBlurBackground(true,TransistionType.Instant);
 
             if (image_Bannerline == null)
                 image_Bannerline = transform.Find("BannerLine").GetComponent<Image>();
@@ -41,7 +41,7 @@ namespace BAStoryPlayer.UI
 
         public void RemoveBlurEffect()
         {
-            BAStoryPlayerController.Instance.StoryPlayer.UIModule.SetBlurBackgroup(false);
+            BAStoryPlayerController.Instance.StoryPlayer.UIModule.SetBlurBackground(false);
         }
 
         public void RunOnComplete()

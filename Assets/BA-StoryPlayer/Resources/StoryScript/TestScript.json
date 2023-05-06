@@ -6,7 +6,7 @@
             "selectionGroup": 0,
             "bgmURL": "Theme_01",
             "soundURL": "",
-            "backgroupURL": "BG3",
+            "backgroundURL": "BG3",
             "popupFileURL": ""
         },
         {
@@ -14,7 +14,7 @@
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
-            "backgroupURL": "",
+            "backgroundURL": "",
             "popupFileURL": ""
         },
         {
@@ -22,7 +22,7 @@
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
-            "backgroupURL": "",
+            "backgroundURL": "",
             "popupFileURL": ""
         },
         {
@@ -30,7 +30,7 @@
             "selectionGroup": 1,
             "bgmURL": "",
             "soundURL": "",
-            "backgroupURL": "",
+            "backgroundURL": "",
             "popupFileURL": ""
         },
         {
@@ -38,7 +38,7 @@
             "selectionGroup": 1,
             "bgmURL": "",
             "soundURL": "",
-            "backgroupURL": "",
+            "backgroundURL": "",
             "popupFileURL": ""
         },
         {
@@ -46,7 +46,7 @@
             "selectionGroup": 2,
             "bgmURL": "",
             "soundURL": "",
-            "backgroupURL": "",
+            "backgroundURL": "",
             "popupFileURL": ""
         },
         {
@@ -54,7 +54,7 @@
             "selectionGroup": 2,
             "bgmURL": "",
             "soundURL": "",
-            "backgroupURL": "",
+            "backgroundURL": "",
             "popupFileURL": ""
         },
         {
@@ -62,7 +62,7 @@
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
-            "backgroupURL": "",
+            "backgroundURL": "",
             "popupFileURL": ""
         },
         {
@@ -70,7 +70,7 @@
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
-            "backgroupURL": "",
+            "backgroundURL": "",
             "popupFileURL": ""
         },
         {
@@ -78,7 +78,7 @@
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
-            "backgroupURL": "",
+            "backgroundURL": "",
             "popupFileURL": ""
         }
         
