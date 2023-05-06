@@ -188,9 +188,17 @@ namespace BAStoryPlayer
             SetActive_UI_TextArea(false);
         }
 
-        public void SetBlurBackgroup(bool enable)
+        public void SetBlurBackgroup(bool enable,TransistionType transition = TransistionType.Smooth)
         {
-            image_Backgroup.DoFloat("radius", enable ? 30 : 0, TIME_BLUR_BACKGROUP);
+            if(transition == TransistionType.Smooth)
+                image_Backgroup.DoFloat("radius", enable ? 30 : 0, TIME_BLUR_BACKGROUP);
+            else if(transition == TransistionType.Instant)
+            {
+                Material mat = image_Backgroup.material;
+                mat.SetFloat("radius", enable ? 30 : 0);
+                image_Backgroup.material = mat;
+            }
+                
         }
 
         /// <summary>
