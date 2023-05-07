@@ -43,7 +43,6 @@ namespace BAStoryPlayer
         [SerializeField] bool isPlaying = false;
         [SerializeField] bool executable = true;
         [SerializeField] bool isLocking = false;
-        [SerializeField] bool isWaiting = false;
 
         public CharacterManager CharacterModule
         {
@@ -122,8 +121,6 @@ namespace BAStoryPlayer
 
         Coroutine coroutine_Lock;
 
-        // TEST
-        List<StoryUnit> testUnits = new List<StoryUnit>();
         void Start()
         {
             if (image_Background == null)
@@ -157,11 +154,6 @@ namespace BAStoryPlayer
             {
                 Lock(BAStoryPlayerController.Instance.Setting.Time_Lock_AfterPrinting);
             });
-
-            //TEST
-            //CharacterModule.ActivateCharacter(0, "shiroko", "00");
-            //CharacterModule.ActivateCharacter(2, "hoshino", "00");
-            //CharacterModule.ActivateCharacter(4, "aru", "00");
         }
 
         /// <summary>
@@ -451,29 +443,6 @@ namespace BAStoryPlayer
         {
             yield return new WaitForSeconds(duration);
             action?.Invoke();
-        }
-
-        // TEST
-        int indexTest = 0;
-        public void TestBG()
-        {
-            SetBackground($"BG{indexTest+1}", TransistionType.Smooth);
-            indexTest++;
-            indexTest %= 5;
-        }
-        public void TestAll()
-        {
-            LoadUnits(0, testUnits);
-            Next();
-        }
-        public void TestSpeaker()
-        {
-            UIModule.ShowVenue("世界第一银行");
-            CharacterModule.ActivateCharacter(2, "shiroko", "00");
-            CharacterModule.SetAction(2, CharacterAction.Hophop);
-            CharacterModule.SetEmotion(2, CharacterEmotion.Heart);
-            UIModule.PrintText("今天也要一起去抢银行吗?");
-            UIModule.SetSpeaker("shiroko");
         }
     }
 }

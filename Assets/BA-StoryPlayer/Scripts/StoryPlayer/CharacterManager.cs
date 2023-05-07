@@ -519,49 +519,6 @@ namespace BAStoryPlayer
                 }
             }
         }
-
-        // TEST
-        string[] testAni = { "00", "01", "02","03","04" };
-        int index = 0;
-        int index2 = 0;
-        public void TEST()
-        {
-            ActivateCharacter(index, "hoshino", testAni[index],TransistionType.Smooth);
-            int next = Random.Range(0, 5);
-            while(index == next)
-            {
-                next = Random.Range(0, 5);
-            }
-            index = next;
-        }
-        public void TEST2()
-        {
-            DestroyCharacter(2,true);
-            ActivateCharacter(2, "shiroko", testAni[0],TransistionType.Smooth);
-        }
-        public void TestTween()
-        {
-            character[2].DoColor(Color.black, 0.5f).onComplete = () => { DestroyCharacter(2, true); };
-        }
-        public void TestAction()
-        {
-            SetAction(2, (CharacterAction)index, 2);
-            index++;
-            index %= 14;
-        }
-        public void TestActionWithArg(int index)
-        {
-            SetAction(2, (CharacterAction)index, 2);
-        }
-        public void TestEmotion()
-        {
-            SetEmotion(0, (CharacterEmotion)index);
-            SetEmotion(2, (CharacterEmotion)index);
-            //SetAction(2, (CharacterAction)index, 2);
-            SetEmotion(4, (CharacterEmotion)index);
-            index++;
-            index %= 19;
-        }
     }
 }
 

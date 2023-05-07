@@ -218,24 +218,6 @@ namespace BAStoryPlayer
             obj.transform.SetParent(StoryPlayer.transform);
             obj.GetComponent<Venue>().SetText(venue);
         }
-
-        // TEST
-        public void TestPrint()
-        {
-            PrintText("你好 我好 大家好 你好 我好 大家好你好 我好 大家好你好 我好 大家好你好 我好 大家好你好 我好 大家好你好 我好 大家好你好 我好 大家好你好 我好 大家好你好 我好 大家好你好 我好 大家好你好 我好 大家好");
-            SetSpeaker("hoshino");
-        }
-        public void TestTitle()
-        {
-            ShowTitle("野兽先辈的调教","妙妙屋");
-        }
-        public void TestOption()
-        {
-            List<OptionData> dats = new List<OptionData>();
-            dats.Add(new OptionData(1, "今天要抢哪一个银行?"));
-            dats.Add(new OptionData(2, "对不起 我拒绝"));
-            ShowOption(dats);
-        }
     }
 }
 
