@@ -520,7 +520,7 @@ namespace BAStoryPlayer
             }
         }
 
-        // TODO TEST
+        // TEST
         string[] testAni = { "00", "01", "02","03","04" };
         int index = 0;
         int index2 = 0;

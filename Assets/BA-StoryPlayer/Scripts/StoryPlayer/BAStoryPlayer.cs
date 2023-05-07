@@ -43,6 +43,7 @@ namespace BAStoryPlayer
         [SerializeField] bool isPlaying = false;
         [SerializeField] bool executable = true;
         [SerializeField] bool isLocking = false;
+        [SerializeField] bool isWaiting = false;
 
         public CharacterManager CharacterModule
         {
@@ -229,10 +230,10 @@ namespace BAStoryPlayer
         /// <summary>
         /// 执行下一单元
         /// </summary>
-        public void Next()
+        public void Next(bool breakLock = false)
         {
             // 操作锁 针对非Auto模式
-            if (isLocking && !Auto)
+            if (isLocking && !Auto && !breakLock)
                 return;
 
             // 文本跳过
@@ -249,7 +250,6 @@ namespace BAStoryPlayer
 
             if (index_CurrentUnit == storyUnit.Count)
             {
-                // TODO 删除播放器
                 CloseStoryPlayer();
                 return;
             }
@@ -269,23 +269,25 @@ namespace BAStoryPlayer
                     {
                         if(storyUnit[index_CurrentUnit].wait != 0)
                         {
-                            // 根据单元等待时间执行等待
+                            // 根据单元等待时间执行等待完毕后自动执行下一单元
+                            storyUnit[index_CurrentUnit].Execute();
                             executable = false;
                             Delay(transform, () =>
                             {
                                 executable = true;
-                                storyUnit[index_CurrentUnit].Execute();
                                 NextIndex();
-                                Next();
+                                Next(true);
                             }, storyUnit[index_CurrentUnit].wait / 1000f);
-
+                            break;
+                        }
+                        else
+                        {
+                            storyUnit[index_CurrentUnit].Execute();
+                            NextIndex();
+                            Next(true);
                             break;
                         }
 
-                        storyUnit[index_CurrentUnit].Execute();
-                        NextIndex();
-                        Next();
-                        break;
                     }
                 default:return;
             }
@@ -319,26 +321,54 @@ namespace BAStoryPlayer
         /// <summary>
         /// 关闭播放器
         /// </summary>
-        void CloseStoryPlayer()
+        /// <param name="fadeOut">是否启用幕布渐出</param>
+        /// <param name="destoryObject">是否删除播放器Object</param>
+        void CloseStoryPlayer(bool fadeOut = true,bool destoryObject = false)
         {
             isPlaying = false;
             AudioModule.PauseBGM();
 
             Delay(transform, () =>
             {
-                CreateCurtain(CurtainType.Out, 1, () =>
+                if (fadeOut)
                 {
-                    // TODO 保留不删除
-                    //Destroy(gameObject);
-                    gameObject.SetActive(false);
-                    SetBackground();
-                    UIModule.HideAllUI();
-                    CharacterModule.ClearAll();
-                    DoTweenS.DoTweenS.KillAll();
-                    AudioModule.ClearAll();
+                    CreateCurtain(CurtainType.Out, 1, () =>
+                    {
+                        OnFinishPlaying?.Invoke();
 
-                    OnFinishPlaying?.Invoke();
-                });
+                        if (!destoryObject)
+                        {
+                            gameObject.SetActive(false);
+                            SetBackground();
+                            UIModule.HideAllUI();
+                            CharacterModule.ClearAll();
+                            DoTweenS.DoTweenS.KillAll();
+                            AudioModule.ClearAll();
+                        }
+                        else
+                        {
+                            Destroy(gameObject);
+                        }
+                    });
+                }
+                else
+                {
+                    if (!destoryObject)
+                    {
+                        gameObject.SetActive(false);
+                        SetBackground();
+                        UIModule.HideAllUI();
+                        CharacterModule.ClearAll();
+                        DoTweenS.DoTweenS.KillAll();
+                        AudioModule.ClearAll();
+                    }
+                    else
+                    {
+                        Destroy(gameObject);
+                    }
+                }
+
+
             }, 1f);
         }
 
@@ -410,6 +440,9 @@ namespace BAStoryPlayer
             }, duration + extra);
         }
 
+        /// <summary>
+        /// 延迟委托
+        /// </summary>
         public static Coroutine Delay(Transform obj, Action action, float duration)
         {
             return obj.GetComponent<MonoBehaviour>().StartCoroutine(CDelay(action, duration));

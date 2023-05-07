@@ -219,7 +219,7 @@ namespace BAStoryPlayer
             obj.GetComponent<Venue>().SetText(venue);
         }
 
-        // TODO TEST
+        // TEST
         public void TestPrint()
         {
             PrintText("你好 我好 大家好 你好 我好 大家好你好 我好 大家好你好 我好 大家好你好 我好 大家好你好 我好 大家好你好 我好 大家好你好 我好 大家好你好 我好 大家好你好 我好 大家好你好 我好 大家好你好 我好 大家好");
