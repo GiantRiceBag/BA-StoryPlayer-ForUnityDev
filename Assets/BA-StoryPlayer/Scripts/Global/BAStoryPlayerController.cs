@@ -92,6 +92,26 @@ namespace BAStoryPlayer
                 isPlaying = false;
             });
         }
+        public void LoadStory(StoryScript storyScript)
+        {
+            if (isPlaying) { Debug.Log("剧情播放中"); return; }
+
+            isPlaying = true;
+
+            // TODO 不删除方案的选项
+            StoryPlayer.gameObject.SetActive(true);
+
+            MasterParser parser = new MasterParser(); // 实例化解析器
+
+            StoryPlayer.LoadUnits(storyScript.groupID, parser.Parse(storyScript)); // 播放器初始化
+            StoryPlayer.Next(); // 开始播放第一个执行单元
+
+            // 订阅播放结束事件
+            StoryPlayer.OnFinishPlaying.AddListener(() =>
+            {
+                isPlaying = false;
+            });
+        }
 
         public GameObject LoadCharacter(string indexName)
         {

@@ -115,7 +115,7 @@ namespace BAStoryPlayer
             }
         }
 
-        [HideInInspector]public UnityEvent<int,int> OnPlayerSelect; // 第一个参数为选项ID 第二个参数为组ID
+        [HideInInspector]public UnityEvent<int,int> OnUserSelect; // 第一个参数为选项ID 第二个参数为组ID
         [HideInInspector] public UnityEvent OnCancelAuto;
         [HideInInspector] public UnityEvent OnFinishPlaying;
 
@@ -130,7 +130,7 @@ namespace BAStoryPlayer
             CharacterModule.OnAnimateCharacter.AddListener((duration)=> { Lock(duration + BAStoryPlayerController.Instance.Setting.Time_Lock_AfterAction); });
 
             // 选项事件订阅
-            OnPlayerSelect.AddListener((selectionGroup,groupID) =>
+            OnUserSelect.AddListener((selectionGroup,groupID) =>
             {
                 // 坐标前移寻找最近的选项下标 并放入优先下标队列 遇到-1则停止
                 for(int i = index_CurrentUnit; i < storyUnit.Count; i++)

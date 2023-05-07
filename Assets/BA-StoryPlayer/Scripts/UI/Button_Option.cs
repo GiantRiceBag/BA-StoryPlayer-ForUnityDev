@@ -31,7 +31,7 @@ namespace BAStoryPlayer.UI
                 BAStoryPlayerController.Instance.StoryPlayer.AudioModule.Play("Button_Click");
                 animator.SetBool("Interactable", false);
                 transform.parent.GetComponent<OptionManager>().RevokeInteractablilty(transform);
-                BAStoryPlayerController.Instance.StoryPlayer.OnPlayerSelect?.Invoke(optionID, BAStoryPlayerController.Instance.StoryPlayer.GroupID);
+                BAStoryPlayerController.Instance.StoryPlayer.OnUserSelect?.Invoke(optionID, BAStoryPlayerController.Instance.StoryPlayer.GroupID);
             });
         }
 

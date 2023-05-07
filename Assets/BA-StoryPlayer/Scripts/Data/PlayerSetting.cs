@@ -1,7 +1,7 @@
 using UnityEngine;
 namespace BAStoryPlayer
 {
-    [CreateAssetMenu(menuName = "BAStoryPlayer/播放器设定", fileName = "PlayerSetting")]
+    [CreateAssetMenu(menuName = "BAStoryPlayer/播放器设置表", fileName = "PlayerSetting")]
     public class PlayerSetting : ScriptableObject
     {
         [Header("每秒文本输出字数")]

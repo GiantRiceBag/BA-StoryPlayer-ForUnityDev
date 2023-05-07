@@ -25,7 +25,7 @@ namespace BAStoryPlayer
         }
     }
 
-    [CreateAssetMenu(menuName = "BAStoryPlayer/角色数据表",fileName = "CharacterDataTable")]
+    [CreateAssetMenu(menuName = "BAStoryPlayer/角色信息表",fileName = "CharacterDataTable")]
     public class CharacterData : ScriptableObject
     {
         [SerializeField]
