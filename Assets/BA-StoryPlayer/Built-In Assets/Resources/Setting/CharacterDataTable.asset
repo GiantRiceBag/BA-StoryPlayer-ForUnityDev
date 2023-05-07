@@ -10,38 +10,38 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9059376da301de345a9a085a547c8315, type: 3}
-  m_Name: CharacterDataLookupTable
+  m_Name: CharacterDataTable
   m_EditorClassIdentifier: 
   Datas:
-  - romaji: shiroko
+  - indexName: shiroko
     familyName: "\u7802\u72FC"
     name: "\u767D\u5B50"
     collage: "\u963F\u62DC\u591A\u65AF"
     affiliation: "\u5BF9\u7B56\u59D4\u5458\u4F1A"
     prefabUrl: shiroko
     portraitUrl: 
-  - romaji: hoshino
+  - indexName: hoshino
     familyName: "\u5C0F\u9E1F\u6E38"
     name: "\u661F\u91CE"
     collage: "\u963F\u62DC\u591A\u65AF"
     affiliation: "\u5BF9\u7B56\u59D4\u5458\u4F1A"
     prefabUrl: hoshino
     portraitUrl: 
-  - romaji: serika_shibaseki
+  - indexName: serika_shibaseki
     familyName: "\u9ED1\u89C1"
     name: "\u732B\u732B\u9999(\u6253\u5DE5)"
     collage: "\u963F\u62DC\u591A\u65AF"
     affiliation: "\u5BF9\u7B56\u59D4\u5458\u4F1A"
     prefabUrl: serika_shibaseki
     portraitUrl: 
-  - romaji: aru
+  - indexName: aru
     familyName: "\u9646\u516B\u9B54"
     name: "\u963F\u9732"
     collage: "\u683C\u9ED1\u5A1C"
     affiliation: "\u4FBF\u5229\u5C4B68"
     prefabUrl: aru
     portraitUrl: 
-  - romaji: kayoko
+  - indexName: kayoko
     familyName: "\u9B3C\u65B9"
     name: "\u4F73\u4EE3\u5B50"
     collage: "\u683C\u9ED1\u5A1C"

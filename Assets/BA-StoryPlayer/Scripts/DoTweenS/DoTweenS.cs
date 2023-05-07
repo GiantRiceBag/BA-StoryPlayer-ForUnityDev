@@ -6,13 +6,7 @@ namespace BAStoryPlayer.DoTweenS
     {
         static DoTweenS _instance;
         static int usableTid = 0;
-        public static int UsableTid
-        {
-            get
-            {
-                return usableTid++;
-            }
-        }
+        public static int UsableTid { get { return usableTid++; } }
         public static DoTweenS Instance
         {
             get

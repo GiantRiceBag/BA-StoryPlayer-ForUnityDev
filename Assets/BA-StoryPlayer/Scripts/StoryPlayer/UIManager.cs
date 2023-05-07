@@ -11,10 +11,6 @@ namespace BAStoryPlayer
 {
     public class UIManager : MonoBehaviour
     {
-        const int NUM_CHAR_PERSECOND = 20; // 每秒打印字数
-        const float INTERVAL_PRINT = 1 / (float)NUM_CHAR_PERSECOND;
-        const float TIME_BLUR_BACKGROUP = 0.7f;
-
         [Header("References")]
         [SerializeField] Image image_Background;
         [Space]
@@ -41,15 +37,11 @@ namespace BAStoryPlayer
             }
         }
 
-        BAStoryPlayer StoryPlayer
-        {
-            get
-            {
-                return BAStoryPlayerController.Instance.StoryPlayer;
-            }
-        }
+        BAStoryPlayer StoryPlayer { get { return BAStoryPlayerController.Instance.StoryPlayer; } }
 
-        [HideInInspector] public UnityEngine.Events.UnityEvent  onFinishPrinting;
+        [HideInInspector] public UnityEngine.Events.UnityEvent OnStartPrinting;
+        [HideInInspector] public UnityEngine.Events.UnityEvent  OnFinishPrinting;
+        
 
         private void Start()
         {
@@ -71,7 +63,7 @@ namespace BAStoryPlayer
                 btn_Menu = transform.Find("Button_Menu").GetComponent<Button>();
 
             // 事件绑定
-            onFinishPrinting.AddListener(() => { 
+            OnFinishPrinting.AddListener(() => { 
                 gameObject_Continued.SetActive(true);
 
                 // 若Auto则延缓两秒后继续
@@ -96,16 +88,16 @@ namespace BAStoryPlayer
         /// <summary>
         /// 更新说话者信息
         /// </summary>
-        /// <param name="romaji">说话者罗马音/若为空则不显示说话者信息</param>
-        public void SetSpeaker(string romaji = null)
+        /// <param name="indexName">说话者索引名/若为空则不显示说话者信息</param>
+        public void SetSpeaker(string indexName = null)
         {
-            if (currentSpeaker == romaji)
+            if (currentSpeaker == indexName)
                 return;
 
             // 角色说话
-            if(romaji != null)
+            if(indexName != null)
             {
-                var data = BAStoryPlayerController.Instance.CharacterDataTable[romaji];
+                var data = BAStoryPlayerController.Instance.CharacterDataTable[indexName];
                 string result = $"{data.name} <color=#9CD7EF><size=39>{data.affiliation}</size></color>";
                 text_Speaker.text = result;
             }
@@ -115,7 +107,7 @@ namespace BAStoryPlayer
                 text_Speaker.text = null;
             }
 
-            currentSpeaker = romaji;
+            currentSpeaker = indexName;
         }
         /// <summary>
         /// 输出主文本
@@ -123,6 +115,8 @@ namespace BAStoryPlayer
         /// <param name="text"></param>
         public void PrintText(string text)
         {
+            OnStartPrinting?.Invoke();
+
             text_Main.text = null;
             gameObject_Continued.SetActive(false);
             SetActive_UI_TextArea();
@@ -139,13 +133,13 @@ namespace BAStoryPlayer
             for(int i = 0; i < mainTextBuffer.Length; i++)
             {
                 text_Main.text += mainTextBuffer[i];
-                yield return new WaitForSeconds(INTERVAL_PRINT);
+                yield return new WaitForSeconds(BAStoryPlayerController.Instance.Setting.Interval_Print);
             }
             coroutine_Print = null;
             isPrinting = false;
             mainTextBuffer = null;
 
-            onFinishPrinting?.Invoke();
+            OnFinishPrinting?.Invoke();
         }
 
         /// <summary>
@@ -161,7 +155,7 @@ namespace BAStoryPlayer
             mainTextBuffer = null;
             isPrinting = false;
 
-            onFinishPrinting?.Invoke();
+            OnFinishPrinting?.Invoke();
         }
 
         public void ClearText()
@@ -191,11 +185,11 @@ namespace BAStoryPlayer
         public void SetBlurBackground(bool enable,TransistionType transition = TransistionType.Smooth)
         {
             if(transition == TransistionType.Smooth)
-                image_Background.DoFloat("radius", enable ? 30 : 0, TIME_BLUR_BACKGROUP);
+                image_Background.DoFloat("_Weight", enable ? 1 : 0, BAStoryPlayerController.Instance.Setting.Time_BlurBackground);
             else if(transition == TransistionType.Instant)
             {
                 Material mat = image_Background.material;
-                mat.SetFloat("radius", enable ? 30 : 0);
+                mat.SetFloat("_Weight", enable ? 1 : 0);
                 image_Background.material = mat;
             }
                 

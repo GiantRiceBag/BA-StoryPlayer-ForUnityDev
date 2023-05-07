@@ -8,12 +8,6 @@ namespace BAStoryPlayer
 {
     public class AudioManager : MonoBehaviour
     {
-        const string PATH_SOUND = "Sound/";
-        const string PATH_MUSIC = "Music/";
-        const int MAX_POOL_SIZE = 10;
-
-        const float TIME_FADE = 0.5f;
-
         int mPlayerID = 0;
 
         List<AudioSource> playingPool = new List<AudioSource>();
@@ -107,7 +101,7 @@ namespace BAStoryPlayer
 
         public void PlayBGM(string audioURL, bool fade = true, float fadeScale = 2)
         {
-            AudioClip clip = Resources.Load<AudioClip>(PATH_MUSIC + audioURL);
+            AudioClip clip = Resources.Load<AudioClip>(BAStoryPlayerController.Instance.Setting.Path_Music + audioURL);
             PlayBGM(clip, fade, fadeScale);
         }
 
@@ -121,16 +115,16 @@ namespace BAStoryPlayer
                     SourceBGM.volume = 0;
                     SourceBGM.clip = audioClip;
                     SourceBGM.Play();
-                    SourceBGM.DoVolume(Volume_Music, TIME_FADE * fadeScale);
+                    SourceBGM.DoVolume(Volume_Music, BAStoryPlayerController.Instance.Setting.Time_Bgm_Fade * fadeScale);
                 }
                 else
                 {
-                    SourceBGM.DoVolume(0, TIME_FADE * fadeScale).onComplete = () =>
+                    SourceBGM.DoVolume(0, BAStoryPlayerController.Instance.Setting.Time_Bgm_Fade * fadeScale).onComplete = () =>
                     {
                         SourceBGM.Stop();
                         SourceBGM.clip = audioClip;
                         SourceBGM.Play();
-                        SourceBGM.DoVolume(Volume_Music, TIME_FADE * fadeScale);
+                        SourceBGM.DoVolume(Volume_Music, BAStoryPlayerController.Instance.Setting.Time_Bgm_Fade * fadeScale);
                     };
                 }
             }
@@ -149,7 +143,7 @@ namespace BAStoryPlayer
 
             if (fade)
             {
-                SourceBGM.DoVolume(0, TIME_FADE * fadeScale).onComplete = () =>
+                SourceBGM.DoVolume(0, BAStoryPlayerController.Instance.Setting.Time_Bgm_Fade * fadeScale).onComplete = () =>
                 {
                     SourceBGM.Pause();
                 };
@@ -162,7 +156,7 @@ namespace BAStoryPlayer
 
         public int Play(string audioURL, bool isOneShot = true, float scale = 1)
         {
-            AudioClip clip = Resources.Load<AudioClip>(PATH_SOUND + audioURL);
+            AudioClip clip = Resources.Load<AudioClip>(BAStoryPlayerController.Instance.Setting.Path_Sound + audioURL);
             return Play(clip, isOneShot, scale);
         }
 
@@ -203,7 +197,7 @@ namespace BAStoryPlayer
 
         void ReleaseSource(AudioSource source)
         {
-            if (sourcePool.Count >= MAX_POOL_SIZE)
+            if (sourcePool.Count >= BAStoryPlayerController.Instance.Setting.Num_Max_AudioSource)
             {
                 Destroy(source.gameObject);
             }

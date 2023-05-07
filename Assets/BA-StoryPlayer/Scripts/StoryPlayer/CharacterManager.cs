@@ -29,56 +29,20 @@ namespace BAStoryPlayer
         Hide
     }
 
-
-
     public class CharacterManager : MonoBehaviour
     {
         const int NUM_CHARACTER_SLOT = 5;
         const float VALUE_CHARACTER_SCALE = 0.7f;
         const int VALUE_INTERVAL_SLOT = 320;
-        // TODO 动作相关参数 后面统一放到配置表中
-        const float TIME_TRANSITION = 0.75f;
-        const float TIME_HIGHLIGHT = 0.2f;
-        const float TIME_HOPHOP = 0.5f;
-        const float TIME_SHAKE = 0.64f;
-        const float TIME_MOVE = 0.45f;
-        const float TIME_STIFF = 0.45f;
-        const float TIME_JUMP = 0.3f;
-        const float TIME_GREETING = 0.8f;
 
-        Vector2 INTERVAL_WINK
-        {
-            get
-            {
-                return new Vector2(4, 5.5f);
-            }
-        }
-        Color COLOR_UNHIGHLIGHT
-        {
-            get
-            {
-                return new Color(0.6f, 0.6f, 0.6f);
-            }
-        }
+        Color COLOR_UNHIGHLIGHT { get { return new Color(0.6f, 0.6f, 0.6f);  } }
 
         [SerializeField] SkeletonGraphic[] character = new SkeletonGraphic[NUM_CHARACTER_SLOT];
         Dictionary<string, GameObject> characterPool = new Dictionary<string, GameObject>();
         Dictionary<string, Coroutine> winkAction = new Dictionary<string, Coroutine>();
 
-        public SkeletonGraphic[] Character
-        {
-            get
-            {
-                return character;
-            }
-        }
-        BAStoryPlayer StoryPlayer
-        {
-            get
-            {
-                return BAStoryPlayerController.Instance.StoryPlayer;
-            }
-        }
+        public SkeletonGraphic[] Character { get { return character; } }
+        BAStoryPlayer StoryPlayer { get { return BAStoryPlayerController.Instance.StoryPlayer; } }
 
         [HideInInspector] public UnityEngine.Events.UnityEvent<float> OnAnimateCharacter;
 
@@ -135,7 +99,7 @@ namespace BAStoryPlayer
                     case TransistionType.Smooth:
                         {
                             character[index].color = Color.black;
-                            character[index].DoColor(Color.white, TIME_TRANSITION);
+                            character[index].DoColor(Color.white, BAStoryPlayerController.Instance.Setting.Time_Character_Fade);
                             break;
                         }
                     default:break;
@@ -267,11 +231,11 @@ namespace BAStoryPlayer
             }
             else
             {
-                yield return new WaitForSeconds(Random.Range(INTERVAL_WINK.x, INTERVAL_WINK.y));
+                yield return new WaitForSeconds(Random.Range(BAStoryPlayerController.Instance.Setting.Time_Character_Wink.x, BAStoryPlayerController.Instance.Setting.Time_Character_Wink.y));
                 while (true)
                 {
                     character[index].AnimationState.SetAnimation(0, "Eye_Close_01", false);
-                    yield return new WaitForSeconds(Random.Range(INTERVAL_WINK.x, INTERVAL_WINK.y));
+                    yield return new WaitForSeconds(Random.Range(BAStoryPlayerController.Instance.Setting.Time_Character_Wink.x, BAStoryPlayerController.Instance.Setting.Time_Character_Wink.y));
                 }
             }
         }
@@ -296,7 +260,7 @@ namespace BAStoryPlayer
                     }
                 case TransistionType.Smooth:
                     {
-                        character[currentIndex].transform.DoMove_Anchored(new Vector2((targetIndex + 1) * VALUE_INTERVAL_SLOT, 0), TIME_MOVE);
+                        character[currentIndex].transform.DoMove_Anchored(new Vector2((targetIndex + 1) * VALUE_INTERVAL_SLOT, 0), BAStoryPlayerController.Instance.Setting.Time_Character_Move);
                         break;
                     }
             default:break;
@@ -323,7 +287,7 @@ namespace BAStoryPlayer
                     }
                 case TransistionType.Smooth:
                     {
-                        character[currentIndex].transform.DoMove_Anchored(pos, TIME_MOVE);
+                        character[currentIndex].transform.DoMove_Anchored(pos, BAStoryPlayerController.Instance.Setting.Time_Character_Move);
                         break;
                     }
                 default: break;
@@ -361,27 +325,27 @@ namespace BAStoryPlayer
                 case CharacterAction.Appear:
                     {
                         character[index].color = Color.black;
-                        character[index].DoColor(Color.white, TIME_TRANSITION);
-                        OnAnimateCharacter?.Invoke(TIME_TRANSITION);
+                        character[index].DoColor(Color.white, BAStoryPlayerController.Instance.Setting.Time_Character_Fade);
+                        OnAnimateCharacter?.Invoke(BAStoryPlayerController.Instance.Setting.Time_Character_Fade);
                         break;
                     }
                 case CharacterAction.Disapper:
                     {
                         character[index].color = Color.white;
-                        character[index].DoColor(Color.black, TIME_TRANSITION);
-                        OnAnimateCharacter?.Invoke(TIME_TRANSITION);
+                        character[index].DoColor(Color.black, BAStoryPlayerController.Instance.Setting.Time_Character_Fade);
+                        OnAnimateCharacter?.Invoke(BAStoryPlayerController.Instance.Setting.Time_Character_Fade);
                         break;
                     }
                 case CharacterAction.Disapper2Left:
                     {
                         MoveCharacterTo(index, new Vector2(-500, 0), TransistionType.Smooth);
-                        OnAnimateCharacter?.Invoke(TIME_MOVE);
+                        OnAnimateCharacter?.Invoke(BAStoryPlayerController.Instance.Setting.Time_Character_Move);
                         break;
                     }
                 case CharacterAction.Disapper2Right:
                     {
                         MoveCharacterTo(index, new Vector2(2420, 0), TransistionType.Smooth);
-                        OnAnimateCharacter?.Invoke(TIME_MOVE);
+                        OnAnimateCharacter?.Invoke(BAStoryPlayerController.Instance.Setting.Time_Character_Move);
                         break;
                     }
                 case CharacterAction.AppearL2R:
@@ -389,7 +353,7 @@ namespace BAStoryPlayer
                         character[index].color = Color.white;
                         MoveCharacterTo(index, new Vector2(-500, 0));
                         MoveCharacterTo(index, arg, TransistionType.Smooth);
-                        OnAnimateCharacter?.Invoke(TIME_MOVE);
+                        OnAnimateCharacter?.Invoke(BAStoryPlayerController.Instance.Setting.Time_Character_Move);
                         break;
                     }
                 case CharacterAction.AppearR2L:
@@ -397,37 +361,37 @@ namespace BAStoryPlayer
                         character[index].color = Color.white;
                         MoveCharacterTo(index, new Vector2(2420, 0));
                         MoveCharacterTo(index, arg, TransistionType.Smooth);
-                        OnAnimateCharacter?.Invoke(TIME_MOVE);
+                        OnAnimateCharacter?.Invoke(BAStoryPlayerController.Instance.Setting.Time_Character_Move);
                         break;
                     }
                 case CharacterAction.Hophop:
                     {
-                        character[index].transform.DoBound_Anchored_Relative(new Vector2(0, 50), TIME_HOPHOP, 2);
-                        OnAnimateCharacter?.Invoke(TIME_HOPHOP);
+                        character[index].transform.DoBound_Anchored_Relative(new Vector2(0, 50), BAStoryPlayerController.Instance.Setting.Time_Character_Hophop, 2);
+                        OnAnimateCharacter?.Invoke(BAStoryPlayerController.Instance.Setting.Time_Character_Hophop);
                         break;
                     }
                 case CharacterAction.Greeting:
                     {
-                        character[index].transform.DoBound_Anchored_Relative(new Vector2(0, -70), TIME_GREETING);
-                        OnAnimateCharacter?.Invoke(TIME_GREETING);
+                        character[index].transform.DoBound_Anchored_Relative(new Vector2(0, -70), BAStoryPlayerController.Instance.Setting.Time_Character_Greeting);
+                        OnAnimateCharacter?.Invoke(BAStoryPlayerController.Instance.Setting.Time_Character_Greeting);
                         break;
                     }
                 case CharacterAction.Shake:
                     {
-                        character[index].transform.DoShakeX(40, TIME_SHAKE, 2);
-                        OnAnimateCharacter?.Invoke(TIME_SHAKE);
+                        character[index].transform.DoShakeX(40, BAStoryPlayerController.Instance.Setting.Time_Character_Shake, 2);
+                        OnAnimateCharacter?.Invoke(BAStoryPlayerController.Instance.Setting.Time_Character_Shake);
                         break;
                     }
                 case CharacterAction.Move:
                     {
                         MoveCharacterTo(index, arg, TransistionType.Smooth);
-                        OnAnimateCharacter?.Invoke(TIME_MOVE);
+                        OnAnimateCharacter?.Invoke(BAStoryPlayerController.Instance.Setting.Time_Character_Move);
                         break;
                     }
                 case CharacterAction.Stiff:
                     {
-                        character[index].transform.DoShakeX(10, TIME_STIFF, 4);
-                        OnAnimateCharacter?.Invoke(TIME_STIFF);
+                        character[index].transform.DoShakeX(10, BAStoryPlayerController.Instance.Setting.Time_Character_Stiff, 4);
+                        OnAnimateCharacter?.Invoke(BAStoryPlayerController.Instance.Setting.Time_Character_Stiff);
                         break;
                     }
                 case CharacterAction.Closeup:
@@ -438,8 +402,8 @@ namespace BAStoryPlayer
                     }
                 case CharacterAction.Jump:
                     {
-                        character[index].transform.DoBound_Anchored_Relative(new Vector2(0, 70), TIME_JUMP);
-                        OnAnimateCharacter?.Invoke(TIME_JUMP);
+                        character[index].transform.DoBound_Anchored_Relative(new Vector2(0, 70), BAStoryPlayerController.Instance.Setting.Time_Character_Jump);
+                        OnAnimateCharacter?.Invoke(BAStoryPlayerController.Instance.Setting.Time_Character_Jump);
                         break;
                     }
                 case CharacterAction.falldownR:
@@ -453,7 +417,7 @@ namespace BAStoryPlayer
                         // TODO 立即删除还是渐变退出 先暂时立即删除
                         //character[index].DoColor(Color.black, TIME_TRANSITION).onComplete = () => { DestroyCharacter(index); };
                         DestroyCharacter(index);
-                        OnAnimateCharacter?.Invoke(TIME_TRANSITION);
+                        OnAnimateCharacter?.Invoke(BAStoryPlayerController.Instance.Setting.Time_Character_Fade);
                         break;
                 }
                 default:return;
@@ -520,7 +484,7 @@ namespace BAStoryPlayer
                         }
                     case TransistionType.Smooth:
                         {
-                            i.DoColor(COLOR_UNHIGHLIGHT, TIME_HIGHLIGHT);
+                            i.DoColor(COLOR_UNHIGHLIGHT, BAStoryPlayerController.Instance.Setting.Time_Character_Highlight);
                             break;
                         }
                     default: return;
@@ -548,7 +512,7 @@ namespace BAStoryPlayer
                         }
                     case TransistionType.Smooth:
                         {
-                            i.DoColor(COLOR_UNHIGHLIGHT, TIME_HIGHLIGHT);
+                            i.DoColor(COLOR_UNHIGHLIGHT, BAStoryPlayerController.Instance.Setting.Time_Character_Highlight);
                             break;
                         }
                     default: return;

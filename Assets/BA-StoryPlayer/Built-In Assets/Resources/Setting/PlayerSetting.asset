@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ebe972e5b673cc44b104bf73c8191b2, type: 3}
+  m_Name: PlayerSetting
+  m_EditorClassIdentifier: 
+  num_Char_Persecond: 20
+  time_Lock_AfterPrinting: 0.5
+  time_Lock_AfterAction: 0.5
+  time_BlurBackground: 0.7
+  time_SwitchBackground: 1
+  time_Character_Fade: 0.75
+  time_Character_Highlight: 0.2
+  time_Character_Wink: {x: 4, y: 5.5}
+  time_Character_Hophop: 0.5
+  time_Character_Shake: 0.64
+  time_Character_Move: 0.45
+  time_Character_Stiff: 0.45
+  time_Character_Jump: 0.3
+  time_Character_Greeting: 0.8
+  num_Max_AudioSource: 10
+  time_Bgm_Fade: 0.5
+  path_Music: Music/
+  path_Sound: Sound/
+  path_Background: Background/
+  path_Prefab: CharacterPrefab/
+  path_StoryScript: StoryScript/

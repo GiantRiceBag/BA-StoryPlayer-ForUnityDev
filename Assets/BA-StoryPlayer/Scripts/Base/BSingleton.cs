@@ -1,8 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class BSingleton<T> : MonoBehaviour where T : Component
+namespace BAStoryPlayer
+{
+    public class BSingleton<T> : MonoBehaviour where T : Component
 {
     protected static T _instance;
     protected bool _enable;
@@ -16,7 +16,17 @@ public class BSingleton<T> : MonoBehaviour where T : Component
             {
                 GameObject go = new GameObject(typeof(T).ToString());
                 _instance = go.AddComponent<T>();
-            }
+
+                    if (typeof(T).Name.Equals("BAStoryPlayerController"))
+                    {
+                        go.AddComponent<RectTransform>();
+                        go.AddComponent<Canvas>();
+                        var scaler = go.AddComponent<UnityEngine.UI.CanvasScaler>();
+                        scaler.uiScaleMode = UnityEngine.UI.CanvasScaler.ScaleMode.ScaleWithScreenSize;
+                        scaler.referenceResolution = new Vector2(1920, 1080);
+                        scaler.matchWidthOrHeight = 1;
+                    }
+                }
 
              return _instance;
         }
@@ -41,4 +51,6 @@ public class BSingleton<T> : MonoBehaviour where T : Component
                 Destroy(gameObject);
         }
     }
+}
+
 }

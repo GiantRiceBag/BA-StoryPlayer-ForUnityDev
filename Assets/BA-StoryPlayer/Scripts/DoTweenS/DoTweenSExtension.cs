@@ -8,7 +8,7 @@ namespace BAStoryPlayer.DoTweenS
 {
     public static class DoTweenSExtension
     {
-        #region 基于锚点的移动
+        #region 基于锚点的位移
         public static TweenS DoMove_Anchored(this Transform transform, Vector2 target, float duration)
         {
             MonoBehaviour mono = transform.GetComponent<MonoBehaviour>();
@@ -34,9 +34,6 @@ namespace BAStoryPlayer.DoTweenS
             tween.RunOnComplete();
         }
 
-        #endregion
-
-        #region 基于锚点的跳跃
         public static TweenS DoBound_Anchored(this Transform transform, Vector2 target, float duration, int time = 1)
         {
             MonoBehaviour mono = transform.GetComponent<MonoBehaviour>();

@@ -3,50 +3,62 @@ namespace BAStoryPlayer
 {
     public class BAStoryPlayerController : BSingleton<BAStoryPlayerController>
     {
-        const string PATH_STORYSCRIPT = "StoryScript/";
-        const string PATH_CHARACTER_PREFABS = "CharacterPrefab/";
-        const string PATH_CHARACTERDATA = "Setting/";
-
+        const string PATH_SETTING = "Setting/";
         const string PATH_STORYPLAYER = "StoryPlayer";
 
-        CharacterData _characterDataTable;
-       [SerializeField]  BAStoryPlayer _storyPlayer;
+        [Header("References")]
+       [SerializeField] CharacterData characterDataTable;
+       [SerializeField] PlayerSetting playerSetting;
+       [SerializeField]  BAStoryPlayer storyPlayer;
 
         public BAStoryPlayer StoryPlayer
         {
             get
             {
-                if (_storyPlayer == null)
+                if (storyPlayer == null)
                 {
                     var temp = transform.Find("StoryPlayer");
                     if(temp!=null)
-                        temp.TryGetComponent<BAStoryPlayer>(out _storyPlayer);
+                        temp.TryGetComponent<BAStoryPlayer>(out storyPlayer);
                 }
-                if (_storyPlayer == null)
+                if (storyPlayer == null)
                 {
-                    _storyPlayer = Instantiate(Resources.Load(PATH_STORYPLAYER) as GameObject).GetComponent<BAStoryPlayer>();
-                    _storyPlayer.transform.SetParent(transform);
-                    _storyPlayer.name = "StoryPlayer";
-                    _storyPlayer.transform.localPosition = Vector3.zero;
-                    _storyPlayer.transform.localScale = Vector3.one;
+                    storyPlayer = Instantiate(Resources.Load(PATH_STORYPLAYER) as GameObject).GetComponent<BAStoryPlayer>();
+                    storyPlayer.transform.SetParent(transform);
+                    storyPlayer.name = "StoryPlayer";
+                    storyPlayer.transform.localPosition = Vector3.zero;
+                    storyPlayer.transform.localScale = Vector3.one;
                 }
 
 
-                return _storyPlayer;
+                return storyPlayer;
             }
         }
         public CharacterData CharacterDataTable
         {
             get
             {
-                if (_characterDataTable == null)
+                if (characterDataTable == null)
                 {
-                    _characterDataTable = Resources.Load<CharacterData>(PATH_CHARACTERDATA + "CharacterDataLookupTable");
-                    if (_characterDataTable == null)
-                        Debug.LogError($"未能在路径 {PATH_CHARACTERDATA} 找到信息表请手动创建以及配置 *注意*请使用查询表默认名");
+                    // TODO 日后引入较为全面的学生数据表
+                    characterDataTable = Resources.Load<CharacterData>(PATH_SETTING + "CharacterDataTable");
+                    Debug.LogWarning($"未配置角色信息表!");
                 }
 
-                return _characterDataTable;
+                return characterDataTable;
+            }
+        }
+        public PlayerSetting Setting
+        {
+            get
+            {
+                if (playerSetting == null)
+                {
+                    playerSetting = Resources.Load<PlayerSetting>(PATH_SETTING + "PlayerSetting");
+                    Debug.LogWarning($"未引用播放器设定表 已使用默认表");
+                }
+
+                return playerSetting;
             }
         }
 
@@ -66,7 +78,7 @@ namespace BAStoryPlayer
             StoryPlayer.gameObject.SetActive(true);
 
             StoryScript storyScript;
-            string json = Resources.Load<TextAsset>(PATH_STORYSCRIPT+url).ToString();
+            string json = Resources.Load<TextAsset>(Setting.Path_StoryScript+url).ToString();
             storyScript = JsonUtility.FromJson(json, typeof(StoryScript)) as StoryScript;
 
             MasterParser parser = new MasterParser(); // 实例化解析器
@@ -81,13 +93,13 @@ namespace BAStoryPlayer
             });
         }
 
-        public GameObject LoadCharacter(string romaji)
+        public GameObject LoadCharacter(string indexName)
         {
-            GameObject prefab = Resources.Load(PATH_CHARACTER_PREFABS + CharacterDataTable[romaji].prefabUrl) as GameObject;
-            prefab.name = romaji;
+            GameObject prefab = Resources.Load(Setting.Path_Prefab + CharacterDataTable[indexName].prefabUrl) as GameObject;
+            prefab.name = indexName;
             if(prefab == null)
             {
-                Debug.LogError($"未在路径{PATH_CHARACTER_PREFABS + CharacterDataTable[romaji].prefabUrl}中找到角色预制体");
+                Debug.LogError($"未在路径{Setting.Path_Prefab + CharacterDataTable[indexName].prefabUrl}中找到角色预制体");
                 return null;
             }
             GameObject obj = Instantiate(prefab);

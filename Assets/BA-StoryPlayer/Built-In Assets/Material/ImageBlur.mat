@@ -38,12 +38,14 @@ Material:
     - _BlurSize: 20
     - _BumpAmt: 16.9
     - _ColorMask: 15
-    - _Size: 2.28
+    - _Size: 3
     - _Stencil: 0
     - _StencilComp: 8
     - _StencilOp: 0
     - _StencilReadMask: 255
     - _StencilWriteMask: 255
+    - _UseUIAlphaClip: 0
+    - _Weight: 1
     - _blurSizeXY: 0
     - hstep: 0.4
     - radius: 30

@@ -10,9 +10,6 @@ namespace BAStoryPlayer
 {
     public class BAStoryPlayer : MonoBehaviour
     {
-        string PATH_BACKGROUP = "Background/";
-        float TIME_TRAINSITION = 1;
-
         bool auto = false;
         public bool Auto
         {
@@ -132,7 +129,7 @@ namespace BAStoryPlayer
                 image_Background = transform.Find("Background").GetComponent<Image>();
 
             // 动作事件订阅 锁定一定时间的操作
-            CharacterModule.OnAnimateCharacter.AddListener((duration)=> { Lock(duration + 0.5f); });
+            CharacterModule.OnAnimateCharacter.AddListener((duration)=> { Lock(duration + BAStoryPlayerController.Instance.Setting.Time_Lock_AfterAction); });
 
             // 选项事件订阅
             OnPlayerSelect.AddListener((selectionGroup,groupID) =>
@@ -152,6 +149,12 @@ namespace BAStoryPlayer
                 }
                 // 注意先切换下标
                 NextIndex();
+            });
+
+            // 文本输出结束时间订阅 锁定操作一段时间
+            UIModule.OnFinishPrinting.AddListener(() =>
+            {
+                Lock(BAStoryPlayerController.Instance.Setting.Time_Lock_AfterPrinting);
             });
 
             //TEST
@@ -174,7 +177,7 @@ namespace BAStoryPlayer
                 return;
             }
 
-            Sprite sprite = Resources.Load<Sprite>(PATH_BACKGROUP + url);
+            Sprite sprite = Resources.Load<Sprite>(BAStoryPlayerController.Instance.Setting.Path_Background + url);
             Vector2 size = sprite.rect.size;
             float ratio = size.y / size.x;
             size.x = 1920;
@@ -197,10 +200,10 @@ namespace BAStoryPlayer
                         }
                     case TransistionType.Smooth:
                         {
-                            image_Background.DoColor(Color.black, TIME_TRAINSITION / 2).onComplete = () =>
+                            image_Background.DoColor(Color.black, BAStoryPlayerController.Instance.Setting.Time_SwitchBAckground / 2).onComplete = () =>
                             {
                                 image_Background.sprite = sprite;
-                                image_Background.DoColor(Color.white, TIME_TRAINSITION / 2);
+                                image_Background.DoColor(Color.white, BAStoryPlayerController.Instance.Setting.Time_SwitchBAckground / 2);
                             };
                             break;
                         }
@@ -321,18 +324,10 @@ namespace BAStoryPlayer
             isPlaying = false;
             AudioModule.PauseBGM();
 
-            // 生成幕布
-            GameObject curtain = Instantiate(new GameObject("Curtain"));
-            curtain.transform.SetParent(transform);
-            curtain.transform.localPosition = Vector3.zero;
-            curtain.transform.localScale = Vector3.one;
-            curtain.AddComponent<RectTransform>().sizeDelta = GetComponent<RectTransform>().sizeDelta;
-            var image = curtain.AddComponent<Image>();
-            image.color = new Color(0, 0, 0, 0);
-
             Delay(transform, () =>
             {
-                image.DoAlpha(1, 1f).onComplete = () => {
+                CreateCurtain(CurtainType.Out, 1, () =>
+                {
                     // TODO 保留不删除
                     //Destroy(gameObject);
                     gameObject.SetActive(false);
@@ -342,13 +337,62 @@ namespace BAStoryPlayer
                     DoTweenS.DoTweenS.KillAll();
                     AudioModule.ClearAll();
 
-                    Destroy(curtain);
                     OnFinishPlaying?.Invoke();
-                };
+                });
             }, 1f);
+        }
 
+        public enum CurtainType
+        {
+            In,
+            Out,
+            OutIn,
+            InOut
+        }
+        /// <summary>
+        /// 创建幕布
+        /// </summary>
+        /// <param name="type">幕布类型</param>
+        /// <param name="duration">持续时间</param>
+        /// <param name="feedback">回调函数</param>
+        public void CreateCurtain(CurtainType type,float duration,Action feedback = null)
+        {
+            GameObject curtain = Instantiate(new GameObject("Curtain"));
+            curtain.transform.SetParent(transform);
+            curtain.transform.localPosition = Vector3.zero;
+            curtain.transform.localScale = Vector3.one;
+            curtain.AddComponent<RectTransform>().sizeDelta = GetComponent<RectTransform>().sizeDelta;
+            var image = curtain.AddComponent<Image>();
 
+            switch (type)
+            {
+                case CurtainType.In:
+                    {
+                        image.color = new Color(0, 0, 0, 1);
+                        image.DoAlpha(0, duration).onComplete = ()=> { feedback?.Invoke(); Destroy(curtain); };
+                        break;
+                    }
+                case CurtainType.Out:
+                    {
+                        image.color = new Color(0, 0, 0, 0);
+                        image.DoAlpha(1, duration).onComplete = () => { feedback?.Invoke(); Destroy(curtain); };
+                        break;
+                    }
+                case CurtainType.OutIn:
+                    {
+                        image.color = new Color(0, 0, 0, 0);
+                        image.DoAlpha(1, duration/2).onComplete = () => { feedback?.Invoke(); image.DoAlpha(0, duration/2).onComplete = ()=> { Destroy(curtain); }; };
+                        break;
+                    }
+                case CurtainType.InOut:
+                    {
+                        image.color = new Color(0, 0, 0, 1);
+                        image.DoAlpha(0, duration/2).onComplete = () => { feedback?.Invoke(); image.DoAlpha(1, duration/2).onComplete = ()=> { Destroy(curtain); }; };
+                        break;
+                    }
+                default:return;
 
+            }
         }
 
         /// <summary>

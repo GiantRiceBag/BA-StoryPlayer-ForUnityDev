@@ -148,6 +148,8 @@ namespace BAStoryPlayer
                     }
                 case "[?!]":
                 case "?!":
+                case "[!?]":
+                case "!?":
                 case "surprise":
                     {
                         storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Surprise); };
@@ -234,22 +236,14 @@ namespace BAStoryPlayer
                         storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Disapper2Right); };
                         break;
                     }
-                case "ar1":// 注意实际-1
-                case "ar2":
-                case "ar3":
-                case "ar4":
-                case "ar5":
+                case "ar":// 注意实际-1
                     {
-                        storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.AppearL2R, int.Parse(actionName[2].ToString())-1); };
+                        storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.AppearL2R,characterIndex); };
                         break;
                     }
-                case "al1":// 注意实际-1
-                case "al2":
-                case "al3":
-                case "al4":
-                case "al5":
+                case "al":// 注意实际-1
                     {
-                        storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.AppearR2L, int.Parse(actionName[2].ToString())-1); };
+                        storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.AppearR2L, characterIndex); };
                         break;
                     }
                 case "hophop":

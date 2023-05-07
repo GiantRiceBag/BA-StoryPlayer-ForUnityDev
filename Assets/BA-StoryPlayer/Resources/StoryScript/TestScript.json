@@ -6,7 +6,7 @@
             "selectionGroup": 0,
             "bgmURL": "Theme_01",
             "soundURL": "",
-            "backgroundURL": "BG3",
+            "backgroundURL": "BG2",
             "popupFileURL": ""
         },
         {
@@ -58,7 +58,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "1;hoshino;00;是抢银行吗？我也来我也来我也来！\n#1;em;h\n#1;ar1",
+            "scripts": "1;hoshino;00;是抢银行吗？我也来我也来我也来！\n#1;em;h\n#1;ar",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
