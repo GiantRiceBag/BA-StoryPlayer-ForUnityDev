@@ -23,7 +23,10 @@ namespace BAStoryPlayer
                     int optionIndex = 0;
                     // 有编号选项
                     if (args[0].Length == 2)
+                    {
                         optionIndex = int.Parse((args[0][1]).ToString());
+                        datas.Add(new OptionData(optionIndex, args[1]));
+                    }
                     else
                     {
                         // 无编号选项即只有一个选项则不在读取后面的指令
