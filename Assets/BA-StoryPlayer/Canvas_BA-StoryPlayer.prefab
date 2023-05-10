@@ -515,14 +515,14 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 4046783726208085478}
         m_TargetAssemblyTypeName: BAStoryPlayer.BAStoryPlayerController, Assembly-CSharp
-        m_MethodName: LoadStory
+        m_MethodName: LoadStoryTest
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 10
           m_FloatArgument: 0
-          m_StringArgument: TestScript2
+          m_StringArgument: TestScript
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!1 &4046783726170602844

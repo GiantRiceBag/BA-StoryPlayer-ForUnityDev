@@ -68,9 +68,9 @@ namespace BAStoryPlayer
         /// 故事载入
         /// </summary>
         /// <param name="url">故事脚本URL 默认放于Resources下的StoryScript文件夹中</param>
-        public void LoadStory(string url)
+        public BAStoryPlayer LoadStory(string url)
         {
-            if (isPlaying) { Debug.Log("剧情播放中"); return; }
+            if (isPlaying) { Debug.Log("剧情播放中"); return null; }
 
             isPlaying = true;
 
@@ -91,10 +91,12 @@ namespace BAStoryPlayer
             {
                 isPlaying = false;
             });
+
+            return StoryPlayer;
         }
-        public void LoadStory(StoryScript storyScript)
+        public BAStoryPlayer LoadStory(StoryScript storyScript)
         {
-            if (isPlaying) { Debug.Log("剧情播放中"); return; }
+            if (isPlaying) { Debug.Log("剧情播放中"); return null; }
 
             isPlaying = true;
 
@@ -111,6 +113,8 @@ namespace BAStoryPlayer
             {
                 isPlaying = false;
             });
+
+            return StoryPlayer;
         }
 
         public GameObject LoadCharacter(string indexName)
@@ -124,6 +128,12 @@ namespace BAStoryPlayer
             }
             GameObject obj = Instantiate(prefab);
             return obj;
+        }
+
+        //TEST
+        public void LoadStoryTest(string url)
+        {
+            LoadStory(url);
         }
     }
 }
