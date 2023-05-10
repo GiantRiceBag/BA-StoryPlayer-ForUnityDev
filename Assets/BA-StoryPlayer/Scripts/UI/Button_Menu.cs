@@ -13,8 +13,12 @@ namespace BAStoryPlayer.UI
         [SerializeField] GameObject subpanel;
         [Space]
         [SerializeField] bool selected = false;
+        [SerializeField] AudioClip sound_Click;
         void Start()
         {
+            if (sound_Click == null)
+                sound_Click = Resources.Load("Sound/Button_Click") as AudioClip;
+
             if (text == null)
                 text = transform.GetComponentInChildren<TextMeshProUGUI>();
             if (subpanel == null)
@@ -25,7 +29,7 @@ namespace BAStoryPlayer.UI
 
             GetComponent<Button>().onClick.AddListener(() =>
             {
-                BAStoryPlayerController.Instance.StoryPlayer.AudioModule.Play("Button_Click");
+                BAStoryPlayerController.Instance.StoryPlayer.AudioModule.Play(sound_Click);
 
                 selected = !selected;
 

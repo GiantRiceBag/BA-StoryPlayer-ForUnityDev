@@ -12,10 +12,14 @@ namespace BAStoryPlayer.UI
         bool clicked = false;
         bool pointerOnButton = false;
         Animator animator;
+        [SerializeField] AudioClip sound_Click;
 
         // Start is called before the first frame update
         void Start()
         {
+            if (sound_Click == null)
+                sound_Click = Resources.Load("Sound/Button_Click") as AudioClip;
+
             animator = GetComponent<Animator>();
             animator.enabled = false;
 
@@ -28,7 +32,7 @@ namespace BAStoryPlayer.UI
             {
                 if (clicked) return;
                 clicked = true;
-                BAStoryPlayerController.Instance.StoryPlayer.AudioModule.Play("Button_Click");
+                BAStoryPlayerController.Instance.StoryPlayer.AudioModule.Play(sound_Click);
                 animator.SetBool("Interactable", false);
                 transform.parent.GetComponent<OptionManager>().RevokeInteractablilty(transform);
                 BAStoryPlayerController.Instance.StoryPlayer.OnUserSelect?.Invoke(optionID, BAStoryPlayerController.Instance.StoryPlayer.GroupID);

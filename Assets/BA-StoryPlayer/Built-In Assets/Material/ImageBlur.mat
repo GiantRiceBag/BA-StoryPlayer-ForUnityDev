@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: ImageBlur
-  m_Shader: {fileID: 4800000, guid: 1a20746cb96ff1d49887eee8d3377539, type: 3}
+  m_Shader: {fileID: 4800000, guid: 0829a27bdeaeea54fb9427ce52cda7b0, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -39,7 +39,7 @@ Material:
     - _BlurSize: 20
     - _BumpAmt: 16.9
     - _ColorMask: 15
-    - _Size: 3
+    - _Size: 5
     - _Stencil: 0
     - _StencilComp: 8
     - _StencilOp: 0
