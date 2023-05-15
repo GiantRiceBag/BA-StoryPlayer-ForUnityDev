@@ -379,7 +379,7 @@ namespace BAStoryPlayer
         /// <param name="feedback">»Øµ÷º¯Êý</param>
         public void CreateCurtain(CurtainType type,float duration,Action feedback = null)
         {
-            GameObject curtain = Instantiate(new GameObject("Curtain"));
+            GameObject curtain = new GameObject("Curtain");
             curtain.transform.SetParent(transform);
             curtain.transform.localPosition = Vector3.zero;
             curtain.transform.localScale = Vector3.one;

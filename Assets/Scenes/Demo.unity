@@ -286,6 +286,30 @@ PrefabInstance:
       propertyPath: m_Name
       value: Canvas_BA-StoryPlayer
       objectReference: {fileID: 0}
+    - target: {fileID: 4046783725725252888, guid: 7c1218018e8d780428af747e098cb316, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.52430195
+      objectReference: {fileID: 0}
+    - target: {fileID: 4046783725725252888, guid: 7c1218018e8d780428af747e098cb316, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.39865148
+      objectReference: {fileID: 0}
+    - target: {fileID: 4046783725725252888, guid: 7c1218018e8d780428af747e098cb316, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 967.00006
+      objectReference: {fileID: 0}
+    - target: {fileID: 4046783725725252888, guid: 7c1218018e8d780428af747e098cb316, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 2373
+      objectReference: {fileID: 0}
+    - target: {fileID: 4046783725725252889, guid: 7c1218018e8d780428af747e098cb316, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4046783726107986015, guid: 7c1218018e8d780428af747e098cb316, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
+      value: SS335
+      objectReference: {fileID: 0}
     - target: {fileID: 4046783726208085466, guid: 7c1218018e8d780428af747e098cb316, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -374,5 +398,25 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 519420031}
+    - target: {fileID: 4046783726740346142, guid: 7c1218018e8d780428af747e098cb316, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.55693
+      objectReference: {fileID: 0}
+    - target: {fileID: 4046783726740346142, guid: 7c1218018e8d780428af747e098cb316, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.40680587
+      objectReference: {fileID: 0}
+    - target: {fileID: 4046783726740346142, guid: 7c1218018e8d780428af747e098cb316, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 1370.8501
+      objectReference: {fileID: 0}
+    - target: {fileID: 4046783726740346142, guid: 7c1218018e8d780428af747e098cb316, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 2539.388
+      objectReference: {fileID: 0}
+    - target: {fileID: 4046783726740346143, guid: 7c1218018e8d780428af747e098cb316, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7c1218018e8d780428af747e098cb316, type: 3}

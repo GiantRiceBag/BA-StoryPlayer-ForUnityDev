@@ -1,0 +1,159 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9059376da301de345a9a085a547c8315, type: 3}
+  m_Name: CharacterDataTable
+  m_EditorClassIdentifier: 
+  Datas:
+  - indexName: shiroko
+    familyName: "\u7802\u72FC"
+    name: "\u767D\u5B50"
+    collage: "\u963F\u62DC\u591A\u65AF"
+    affiliation: "\u5BF9\u7B56\u59D4\u5458\u4F1A"
+    prefabUrl: shiroko
+    portraitUrl: 
+    spineEmotion: 1
+  - indexName: hoshino
+    familyName: "\u5C0F\u9E1F\u6E38"
+    name: "\u661F\u91CE"
+    collage: "\u963F\u62DC\u591A\u65AF"
+    affiliation: "\u5BF9\u7B56\u59D4\u5458\u4F1A"
+    prefabUrl: hoshino
+    portraitUrl: 
+    spineEmotion: 1
+  - indexName: serika
+    familyName: "\u9ED1\u89C1"
+    name: "\u82B9\u9999"
+    collage: "\u963F\u62DC\u591A\u65AF"
+    affiliation: "\u5BF9\u7B56\u59D4\u5458\u4F1A"
+    prefabUrl: serika
+    portraitUrl: 
+    spineEmotion: 1
+  - indexName: aru
+    familyName: "\u9646\u516B\u9B54"
+    name: "\u963F\u9732"
+    collage: "\u683C\u9ED1\u5A1C"
+    affiliation: "\u4FBF\u5229\u5C4B68"
+    prefabUrl: aru
+    portraitUrl: 
+    spineEmotion: 1
+  - indexName: kayoko
+    familyName: "\u9B3C\u65B9"
+    name: "\u4F73\u4EE3\u5B50"
+    collage: "\u683C\u9ED1\u5A1C"
+    affiliation: "\u4FBF\u5229\u5C4B68"
+    prefabUrl: kayoko
+    portraitUrl: 
+    spineEmotion: 1
+  - indexName: rabu
+    familyName: 
+    name: "\u5170\u821E"
+    collage: "\u683C\u9ED1\u5A1C"
+    affiliation: "JumpJump\u94A2\u76D4\u56E2"
+    prefabUrl: rabu
+    portraitUrl: 
+    spineEmotion: 1
+  - indexName: master_shibaseki
+    familyName: 
+    name: "\u67F4\u5927\u5C06"
+    collage: 
+    affiliation: "\u67F4\u5927\u5C06\u62C9\u9762"
+    prefabUrl: master_shibaseki
+    portraitUrl: 
+    spineEmotion: 0
+  - indexName: haruka
+    familyName: "\u4F0A\u8349"
+    name: "\u6625\u9999"
+    collage: "\u683C\u9ED1\u5A1C"
+    affiliation: "\u4FBF\u5229\u5C4B68"
+    prefabUrl: haruka
+    portraitUrl: 
+    spineEmotion: 1
+  - indexName: mutsuki
+    familyName: "\u6D45\u9EC4"
+    name: "\u7766\u6708"
+    collage: "\u683C\u9ED1\u5A1C"
+    affiliation: "\u4FBF\u5229\u5C4B68"
+    prefabUrl: mutsuki
+    portraitUrl: 
+    spineEmotion: 1
+  - indexName: nonomi
+    familyName: "\u5341\u516D\u591C"
+    name: "\u91CE\u5BAB"
+    collage: "\u963F\u62DC\u591A\u65AF"
+    affiliation: "\u5BF9\u7B56\u59D4\u5458\u4F1A"
+    prefabUrl: nonomi
+    portraitUrl: 
+    spineEmotion: 1
+  - indexName: ayane
+    familyName: "\u5965\u7A7A"
+    name: "\u7EEB\u97F3"
+    collage: "\u963F\u62DC\u591A\u65AF"
+    affiliation: "\u5BF9\u7B56\u59D4\u5458\u4F1A"
+    prefabUrl: ayane
+    portraitUrl: 
+    spineEmotion: 1
+  - indexName: hihumi
+    familyName: "\u963F\u6148\u8C37"
+    name: "\u65E5\u5BCC\u7F8E"
+    collage: "\u4E09\u4E00\u7EFC\u5408\u5B66\u56ED"
+    affiliation: "\u8865\u4E60\u6388\u8BFE\u90E8"
+    prefabUrl: hihumi
+    portraitUrl: 
+    spineEmotion: 1
+  - indexName: wakamo
+    familyName: "\u72D0\u5742"
+    name: "\u82E5\u85FB"
+    collage: "\u767E\u9B3C\u591C\u884C\u8054\u5408\u5B66\u9662"
+    affiliation: 
+    prefabUrl: wakamo
+    portraitUrl: 
+    spineEmotion: 1
+  - indexName: master
+    familyName: 
+    name: "\u8001\u677F"
+    collage: 
+    affiliation: 
+    prefabUrl: master
+    portraitUrl: 
+    spineEmotion: 1
+  - indexName: passerby
+    familyName: 
+    name: "\u8DEF\u4EBA"
+    collage: 
+    affiliation: 
+    prefabUrl: passerby
+    portraitUrl: 
+    spineEmotion: 0
+  - indexName: sukeban
+    familyName: 
+    name: "\u6DF7\u6DF7"
+    collage: 
+    affiliation: 
+    prefabUrl: sukeban
+    portraitUrl: 
+    spineEmotion: 1
+  - indexName: azusa
+    familyName: "\u767D\u6D32"
+    name: "\u6893"
+    collage: "\u4E09\u4E00\u7EFC\u5408\u5B66\u56ED"
+    affiliation: "\u8865\u4E60\u6388\u8BFE\u90E8"
+    prefabUrl: azusa
+    portraitUrl: 
+    spineEmotion: 1
+  - indexName: shiroko_alter
+    familyName: 
+    name: ???
+    collage: 
+    affiliation: 
+    prefabUrl: shiroko_alter
+    portraitUrl: 
+    spineEmotion: 1

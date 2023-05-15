@@ -5,7 +5,7 @@ namespace BAStoryPlayer
     [System.Serializable]
     public class CharacterDataUnit
     {
-        [Tooltip("由于目前使用场景的角色量不多 以角色罗马音作为主要索引名")]
+        [Tooltip("建议以角色罗马音作为主要索引名")]
         public string indexName;
         public string familyName;
         public string name;
@@ -13,6 +13,8 @@ namespace BAStoryPlayer
         public string affiliation;
         public string prefabUrl;
         public string portraitUrl;
+        [Header("是否启用差分（角色没有差分的就不要勾上）")]
+        public bool spineEmotion = true;
 
         public override string ToString()
         {

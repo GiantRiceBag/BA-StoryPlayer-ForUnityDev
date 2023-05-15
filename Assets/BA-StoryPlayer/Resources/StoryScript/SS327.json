@@ -1,0 +1,157 @@
+{
+    "groupID": 327,
+    "content": [
+        {
+            "scripts": "#na;（第二天）",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "3;ayane;01;包裹？是谁送来的？就这么放在学校门口也没有署名……",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "1;serika;01;让我看看……",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "5;shiroko;01;小心，先排除危险。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "#na;白子小心的撕开包裹，然后直接抛向了天空。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "1;hoshino;01;啊？早上好……哎呀。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "5;shiroko;01;啊，砸到人了。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "1;hoshino;01;这个包里是……",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "5;shiroko;01;哎？",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "1;hoshino;01;哦，自己找到路回来了啊，哟西哟西。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "3;nonomi;01;真厉害呢。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "1;serika;01;真的能回来吗？",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "3;ayane;01;不管怎么想都不可能吧！估计是有谁找到了送回来的……",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "1;hoshino;01;但是大叔我可从来没让人找过哦？",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "5;shiroko;01;怎么回事呢。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "1;hoshino;01;可能是仙鹤送来的？不都说多睡的人有福气吗，白子酱？",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "3;ayane;01;哪有会用快递袋的仙鹤啦！",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "1;serika;01;不会吗！？",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "5;shiroko;01;说不定会呢。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        }
+    ]
+}

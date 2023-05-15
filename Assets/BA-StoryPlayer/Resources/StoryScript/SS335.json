@@ -1,0 +1,237 @@
+{
+    "groupID": 335,
+    "content": [
+        {
+            "scripts": "5;shiroko;01;喂，那边的狐狸，我们暂时放下恩怨，联手如何？",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "3;wakamo;S2_01;有什么联合的必要吗？我马上就要……",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "5;shiroko;01;看这个，已经有人把谋害老师的计划全准备好了哦？",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "3;wakamo;S2_01;这是……",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "5;shiroko;01;凯撒理事那家伙，现正躲藏在黑市银行里逍遥法外。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "3;wakamo;S2_01;居然敢做出这种事！",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "1;sukeban;01;太可恶了！居然把我们当对抗联邦学生会的工具！",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "3;wakamo;S2_01;一定要把他劈开，揉烂，撕碎！",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "1;sukeban;01;大姐头！大姐头！",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "#1;hide\n#3;hide\n3;hihumi;01;这样的话混混们就离开了，赠送佩洛洛的活动就能继续了！",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "5;shiroko;01;那么，接下来就能光明正大的抢……我是说把坏人打倒了。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "3;hihumi;01;如果可以的话，我也来帮忙！",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "1;azusa;01;不可原谅的家伙。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "5;rabu;01;我就知道这背后有蹊跷！都是那家伙害得我吃不饱饭！",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "3;aru;01;原来引来一大群不良害的我们任务失败的就是那家伙吗！",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "1;haruka;01;不可原谅！不可原谅！不可原谅！",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "5;kayoko;01;……（才反应过来啊）",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "#all;hide\n3;shiroko_alter;01;（戴上头套）",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "5;shiroko;01;那么，「太平洋劫匪大队」……",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "1;hihumi;01;啊？",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "5;shiroko;01;我是说「白鸟正义联盟」，出发！",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "#clearST\n#1;d\n#3;d\n#5;d\nwait;1500",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "#na;早间新闻：据报，在D.U.白鸟区集结的大量不良在袭击了黑市的银行，凯撒理事目前下落不明，而根据掌握的证据，他还涉嫌非法挪用资金，攻击联邦学生会等十二项罪名…",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "2;hoshino;01;哈……啊……昨天还挺热闹的，不会是白子酱你袭击的吧？",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "4;shiroko;01;……当然不是。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "2;hoshino;01;毕竟白子酱昨天替我把鲸鱼找回来了，也没空去干这种事，对吧？",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "4;shiroko;01;……嗯。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "2;hoshino;01;虽然应该是经过修补的，但是完全看不出来呢，想必修复的人也花了不少功夫，大叔真想知道是谁啊。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "4;shiroko;01;有机会的话，一定会再见面的吧。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        }
+    ]
+}

@@ -1,0 +1,261 @@
+{
+    "groupID": 334,
+    "content": [
+        {
+            "scripts": "5;kayoko;01\n1;hihumi;01\n3;shiroko;01;如果说哪里能找到证据的话，应该就是这里了。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "5;kayoko;01;你不会又……",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "3;shiroko;01;但是现在没装备，不太好动手。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "1;hihumi;01;所以说，考虑一点别的办法也行……",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "5;aru;01;来银行是做什么？",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "1;shiroko_alter;01;我就想你应该在这里。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "3;shiroko;01;啊。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "5;kayoko;01;难道说，你是……",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "3;shiroko;01;只不过是我的……额，远房亲戚。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "1;shiroko_alter;01;……啊，是的，我看到有这个的委托，所以想你是不是需要帮助。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "3;shiroko;01;来的正好，帮大忙了。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "#all;hide\n#na;（少女说明中）",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "1;shiroko_alter;01;我明白了，只要拿到凯撒暗中操纵不良攻击白鸟区准备以此弹劾联邦学生会的证据就行了吧。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "3;shiroko;01;理解的那么快真是帮大忙了。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "1;shiroko_alter;01;等我一会。\n#1;d",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "3;shiroko;01;嗯，拜托你了。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "5;hihumi;01;所以……刚刚那个很像白子的同学……",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "3;shiroko;01;是我的……额，同事？",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "5;hihumi;01;和刚刚说的不一样！？",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "1;aru;01;感觉像是认识的人……",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "3;mutsuki;01;是谁呢，真有意思啊。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "5;kayoko;01;还是不知道比较好。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "#all;hide\n3;shiroko_alter;01;我回来了。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "5;hihumi;01;好快！？",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "3;shiroko_alter;01;凯撒理事现在也只能玩这种小把戏了，财产流通记录和意图计划书我都从金库里拿来了。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "1;aru;01;好快！？真的假的？",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "5;shiroko;01;本来还想正面攻进去的……",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "3;shiroko_alter;01;那我先走了，顺便，这个给你。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "#na;（获得了「大叔的鲸鱼布偶」）",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "5;shiroko;01;你还会这个啊……",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "3;shiroko_alter;01;嗯，毕竟发生了各种各样的事，再见了。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "5;shiroko;01;你也是很辛苦呢，不过我觉得还是留下来比较好，接下来才是最高潮哦。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        }
+    ]
+}

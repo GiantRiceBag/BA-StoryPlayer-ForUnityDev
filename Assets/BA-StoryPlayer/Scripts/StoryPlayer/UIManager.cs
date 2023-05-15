@@ -91,7 +91,7 @@ namespace BAStoryPlayer
         /// <param name="indexName">说话者索引名/若为空则不显示说话者信息</param>
         public void SetSpeaker(string indexName = null)
         {
-            if (currentSpeaker == indexName)
+            if (currentSpeaker == indexName && indexName != null)
                 return;
 
             // 角色说话

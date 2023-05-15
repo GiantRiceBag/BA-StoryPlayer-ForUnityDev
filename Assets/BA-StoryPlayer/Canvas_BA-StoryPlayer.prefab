@@ -522,7 +522,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 10
           m_FloatArgument: 0
-          m_StringArgument: TestScript
+          m_StringArgument: SS107
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!1 &4046783726170602844
@@ -1477,6 +1477,18 @@ PrefabInstance:
     - target: {fileID: 5703000470023379106, guid: 7bf58a48315d37d4393e19a3e660ec5a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5703000470341460551, guid: 7bf58a48315d37d4393e19a3e660ec5a, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5703000470341460551, guid: 7bf58a48315d37d4393e19a3e660ec5a, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 500
+      objectReference: {fileID: 0}
+    - target: {fileID: 5703000470341460551, guid: 7bf58a48315d37d4393e19a3e660ec5a, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -768.3
       objectReference: {fileID: 0}
     - target: {fileID: 5703000470482579996, guid: 7bf58a48315d37d4393e19a3e660ec5a, type: 3}
       propertyPath: sound_Click

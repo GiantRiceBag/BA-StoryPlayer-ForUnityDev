@@ -67,7 +67,11 @@ namespace BAStoryPlayer
                 {
                     obj = BAStoryPlayerController.Instance.LoadCharacter(name);
                     if (obj == null)
+                    {
+                        Debug.LogError($"无法在 Resoucres文件夹中的路径 {BAStoryPlayerController.Instance.Setting.Path_Prefab} 找到对应角色预制体");
                         return;
+                    }
+                        
 
                     obj.transform.SetParent(transform);
                     obj.name = name;
@@ -88,6 +92,7 @@ namespace BAStoryPlayer
                 // 对应槽位有其他角色则删除
                 DestroyCharacter(index);
                 character[index] = obj.GetComponent<SkeletonGraphic>();
+
                 // 首次出场方式
                 switch (transistion)
                 {
@@ -107,10 +112,19 @@ namespace BAStoryPlayer
 
                 Highlight(index);
 
-                character[index].AnimationState.SetAnimation(0, animationID, false);
-                if (animationID == "00")
+
+
+                // 默认 动画01 启用眨眼动画 （用Contains是因为有些动画有前后缀）
+                if (animationID.Contains("01") && BAStoryPlayerController.Instance.CharacterDataTable[name].spineEmotion)
                     SetWinkAction(name, true);
-                character[index].AnimationState.SetAnimation(1, "Idle_01", true);
+
+                // 看配表角色是否启用差分
+                if (BAStoryPlayerController.Instance.CharacterDataTable[name].spineEmotion)
+                {
+                    character[index].AnimationState.SetAnimation(0, animationID, false); // 差分动画
+                    character[index].AnimationState.SetAnimation(1, "Idle_01", true); // 呼吸轨道
+                }
+
             }
             // 角色在场上
             else
@@ -118,6 +132,9 @@ namespace BAStoryPlayer
                 // 位置更替 若目标位置有其他角色则直接删除
                 if(currentIndex != index)
                 {
+                    // 先停掉角色的眨眼动画在变换位置
+                    SetWinkAction(name, false);
+
                     DestroyCharacter(index);
 
                     MoveCharacterTo(currentIndex, index);
@@ -125,9 +142,12 @@ namespace BAStoryPlayer
                     character[currentIndex] = null;
                 }
 
-                // 动作替换
-                character[index].AnimationState.SetAnimation(0, animationID, true);
-                SetWinkAction(name, animationID == "00" ? true : false);
+                // 动作替换（若启用差分）
+                if (BAStoryPlayerController.Instance.CharacterDataTable[name].spineEmotion)
+                {
+                    character[index].AnimationState.SetAnimation(0, animationID, true);
+                    SetWinkAction(name, animationID.Contains("01") ? true : false);
+                }
 
                 Highlight(index);
             }
@@ -191,8 +211,6 @@ namespace BAStoryPlayer
 
             SetWinkAction(character[index].name, false);
             character[index] = null;
-           
-
         }
 
         /// <summary>
@@ -202,6 +220,10 @@ namespace BAStoryPlayer
         /// <param name="enable">开启眨眼</param>
         void SetWinkAction(string name,bool enable)
         {
+            // 如果没差分则不启用
+            if (!BAStoryPlayerController.Instance.CharacterDataTable[name].spineEmotion)
+                return;
+
             Coroutine coroutine = null;
             winkAction.TryGetValue(name, out coroutine);
 
@@ -225,6 +247,19 @@ namespace BAStoryPlayer
         IEnumerator CCharacterWink(string name)
         {
             int index = CheckCharacterExist(name);
+
+            string ani_EyeClose_Name = "Eye_Close_01";
+            // 寻找眨眼动画的名字 一般以e开头
+            foreach (var i in character[index].SkeletonData.Animations)
+            {
+                if(i.Name[0] == 'E' || i.Name[0] == 'e')
+                {
+                    Debug.Log($"动画名更换为{i.Name}");
+                    break;
+                }
+            }
+
+
             if (index == -1)
             {
                 yield return null;
@@ -234,7 +269,7 @@ namespace BAStoryPlayer
                 yield return new WaitForSeconds(Random.Range(BAStoryPlayerController.Instance.Setting.Time_Character_Wink.x, BAStoryPlayerController.Instance.Setting.Time_Character_Wink.y));
                 while (true)
                 {
-                    character[index].AnimationState.SetAnimation(0, "Eye_Close_01", false);
+                    character[index].AnimationState.SetAnimation(0,ani_EyeClose_Name, false);
                     yield return new WaitForSeconds(Random.Range(BAStoryPlayerController.Instance.Setting.Time_Character_Wink.x, BAStoryPlayerController.Instance.Setting.Time_Character_Wink.y));
                 }
             }
@@ -332,7 +367,10 @@ namespace BAStoryPlayer
                 case CharacterAction.Disapper:
                     {
                         character[index].color = Color.white;
-                        character[index].DoColor(Color.black, BAStoryPlayerController.Instance.Setting.Time_Character_Fade);
+                        character[index].DoColor(Color.black, BAStoryPlayerController.Instance.Setting.Time_Character_Fade).onComplete=()=>{
+                            // 退场动画自动销毁角色 不过好像和hide指令有些功能上的重叠
+                            DestroyCharacter(index);
+                        };
                         OnAnimateCharacter?.Invoke(BAStoryPlayerController.Instance.Setting.Time_Character_Fade);
                         break;
                     }
@@ -414,7 +452,7 @@ namespace BAStoryPlayer
                     }
                 case CharacterAction.Hide:
                     {
-                        // TODO 立即删除还是渐变退出 先暂时立即删除
+                        // TODO 立即删除还是渐变退出 先暂时立即删除 与Disappear功能有些重叠
                         //character[index].DoColor(Color.black, TIME_TRANSITION).onComplete = () => { DestroyCharacter(index); };
                         DestroyCharacter(index);
                         OnAnimateCharacter?.Invoke(BAStoryPlayerController.Instance.Setting.Time_Character_Fade);
@@ -475,6 +513,12 @@ namespace BAStoryPlayer
             {
                 if (i == character[index] || i == null)
                     continue;
+                if (i.color == Color.black) // 执行过退场动画的角色不在点亮
+                    continue;
+
+                // 角色置顶
+                character[index].transform.SetSiblingIndex(transform.childCount - 1);
+
                 switch (transition)
                 {
                     case TransistionType.Instant:

@@ -67,8 +67,10 @@ namespace BAStoryPlayer
                         }
                     case ScriptTag.ClearSt:
                         {
-                            BAStoryPlayerController.Instance.StoryPlayer.UIModule.SetActive_UI_TextArea(false);
-                            storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.UIModule.SetActive_UI_Button(false); };
+                            storyUnit.action += () => { 
+                                BAStoryPlayerController.Instance.StoryPlayer.UIModule.SetActive_UI_TextArea(false);
+                                BAStoryPlayerController.Instance.StoryPlayer.UIModule.SetActive_UI_Button(false); 
+                            };
                             break;
                         }
                     default:continue;

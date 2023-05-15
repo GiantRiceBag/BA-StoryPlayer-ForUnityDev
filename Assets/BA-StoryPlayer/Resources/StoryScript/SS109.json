@@ -1,0 +1,237 @@
+{
+    "groupID": 109,
+    "content": [
+        {
+            "scripts": "4;shiroko;01;啊，找到了。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "2;rabu;01;什么？来找茬的？",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "4;shiroko;01;并不是，只是有事要拜托你。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "2;rabu;01;我都说过了那种事情不考虑吧！？",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "4;shiroko;01;你知道？",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "2;rabu;01;你们都找过我那么多次了，我还能不明白吗？",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "4;shiroko;01;……我想可能是有点误会。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "2;rabu;01;没有啦！我已经都知道了！",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "4;shiroko;01;看来没法沟通了呢。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "2;rabu;01;小的们！有人来找茬了！",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "#clearST\n#all;hide\n#wait;1501",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "#na;（转瞬即逝）",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "4;shiroko;01;人数少了不少，比起上次度假村的时候。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "2;rabu;01;可恶……对方只有一个人都打不过吗？",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "4;shiroko;01;那么该好好听我说话了。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "2;rabu;01;咕，你说吧！",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "4;shiroko;01;这个，你会缝的吧？",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "2;rabu;01;啊？",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "4;shiroko;01;你会缝的吧？",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "2;rabu;01;不是，为什么你会找我来缝一个布偶啊！",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "4;shiroko;01;正好撞上……啊不是，感觉你应该会。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "2;rabu;01;把我当成了什么啊！",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "4;shiroko;01;所以，你之前以为我是来做什么？",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "2;rabu;01;……告诉你也没关系，只是最近因为D.U白鸟区的不良学生大幅增加，所以有人想整合这些不良团伙，成立一个大的组织罢了，但是我们啪嗒啪嗒钢盔团……",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "4;shiroko;01;所以你能修好吗？",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "2;rabu;01;给我一点时间啦！",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "#all;hide\n#clearST\n#wait;1501",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "#na;（失去了「似曾相识的布偶」)",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "#na;(获得了「星野的鲸鱼布偶」）",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        }
+    ]
+}

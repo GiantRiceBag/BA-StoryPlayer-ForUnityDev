@@ -1,0 +1,189 @@
+{
+    "groupID": 225,
+    "content": [
+        {
+            "scripts": "3;wakamo;S2_01;还有人有胆子上前来吗？",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "3;sukeban;01;……",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "#3;hide\n4;shiroko;01;果然是你啊，你这狐狸精。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "2;wakamo;S2_01;你这家伙！你又要妨碍我吗？",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "4;rabu;01;……这家伙还是一如既往听不懂人话啊。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "4;hihumi;01;啊哈哈……",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "2;wakamo;S2_01;这次我已经集合了现在聚集在白鸟区的大部分不良，联邦学生会也没办法阻止我在这修建和老师的爱巢！",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "4;rabu;01;那可不行。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "4;rabu;01;别以为用钱就能买动我们啪嗒啪嗒钢盔团的成员，今天我们就要打倒你！",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "2;wakamo;S2_01;……你谁啊？",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "4;rabu;01;喂！",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "4;hihumi;01;总之，能不要干扰佩洛洛大人的活动就好……",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "2;wakamo;S2_01;你是说这个？反正是对老师没用的东西，已经把箱子都扔了，给我和老师的爱巢腾出空地了。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "4;hihumi;01;……………………………………………………",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "2;shiroko;01;总感觉，有种可怕的气氛。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "4;rabu;01;怎么回事，这圣三一的！",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "#na;日富美举起了拳头，随着她的呼唤，十字军坦克从空中落下，然后白子才听到空中夏莱直升机的声音。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "#clearST\n#all;hide\n#wait;1500",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "#na;紧急新闻：据报，夏莱老师成功在引发大规模破坏前阻止了D.U.白鸟区的不良学生暴动。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "#na;在暴动中仅有钟崎港附近一带被破坏，联邦学生会正在讨论修理方案。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "#na;另外，根据可靠消息，一位圣三一学生在阻止这次暴动过程中发挥了巨大作用，受到了茶话会渚的接见。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "#na;还有小道消息说事件的主犯被老师弄的哭着离开，不知道这其中……「哔——」紧急插播已结束。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "#na;今天的基沃托斯依然和平。",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        }
+    ]
+}
