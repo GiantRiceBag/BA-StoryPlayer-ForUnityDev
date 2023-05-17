@@ -8,13 +8,43 @@ namespace BAStoryPlayer.UI
     {
         const float TIME_TRANSITION = 0.2f;
 
-        public void Initlaize(Transform parent,Vector2 pos)
+        /// <summary>
+        /// 位置初始化 以左下角顶点为锚点
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="pos"></param>
+        public void Initlaize(Transform parent,Vector2 pos,LocateMode locateMode)
         {
-            var rect = GetComponent<RectTransform>();
-            rect.SetParent(parent);
-            //rect.anchorMin = rect.anchorMax = Vector2.zero;
-            rect.localScale = Vector2.one;
-            rect.anchoredPosition = pos;
+            if(locateMode == LocateMode.Auto)
+            {
+                var rect = GetComponent<RectTransform>();
+                rect.SetParent(parent);
+                rect.anchorMin = rect.anchorMax = Vector2.zero;
+                rect.localScale = Vector2.one;
+                rect.anchoredPosition = pos * parent.GetComponent<RectTransform>().sizeDelta;
+            }else if (locateMode == LocateMode.Manual)
+            {
+                Transform locator = parent.Find("HeadLocator");
+                Debug.Log(locator == null);
+                if (locator == null && parent.childCount != 0)
+                {
+                    Debug.LogWarning("未找到头部定位器 已使用首个子对象作为参考");
+                    locator = parent.GetChild(0);
+                }
+                if(locator == null)
+                {
+                    Debug.LogError($"角色 {parent} 不存在子对象作为定位器 请创建一个名为HeadLocator的子对象并拖动到角色脸部中央位置");
+                    return;
+                }
+
+                locator.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
+                var rect = GetComponent<RectTransform>();
+                rect.SetParent(locator);
+                rect.anchorMin = rect.anchorMax = Vector2.zero;
+                rect.localScale = Vector2.one;
+                rect.anchoredPosition = pos;
+            }
+
         }
 
         public void RunOnComplete()

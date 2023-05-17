@@ -39,7 +39,7 @@ MonoBehaviour:
     spineEmotion: 1
   - indexName: aru
     familyName: "\u9646\u516B\u9B54"
-    name: "\u963F\u9732"
+    name: "\u7231\u7460"
     collage: "\u683C\u9ED1\u5A1C"
     affiliation: "\u4FBF\u5229\u5C4B68"
     prefabUrl: aru

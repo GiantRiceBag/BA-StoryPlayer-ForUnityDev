@@ -1,0 +1,167 @@
+
+shiroko_spr.png
+size: 2048,2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+00_default
+  rotate: false
+  xy: 1534, 180
+  size: 240, 170
+  orig: 240, 170
+  offset: 0, 0
+  index: -1
+01_normal
+  rotate: false
+  xy: 1534, 180
+  size: 240, 170
+  orig: 240, 170
+  offset: 0, 0
+  index: -1
+02_respond
+  rotate: false
+  xy: 1342, 1366
+  size: 240, 172
+  orig: 240, 172
+  offset: 0, 0
+  index: -1
+03_smile
+  rotate: false
+  xy: 1188, 164
+  size: 240, 170
+  orig: 240, 170
+  offset: 0, 0
+  index: -1
+04_embarrassed
+  rotate: false
+  xy: 1058, 1192
+  size: 240, 178
+  orig: 240, 178
+  offset: 0, 0
+  index: -1
+05_serious
+  rotate: false
+  xy: 176, 98
+  size: 238, 162
+  orig: 238, 162
+  offset: 0, 0
+  index: -1
+06_shout
+  rotate: false
+  xy: 1098, 1374
+  size: 238, 176
+  orig: 238, 176
+  offset: 0, 0
+  index: -1
+07
+  rotate: true
+  xy: 4, 120
+  size: 240, 168
+  orig: 240, 168
+  offset: 0, 0
+  index: -1
+08
+  rotate: false
+  xy: 1112, 1560
+  size: 224, 154
+  orig: 224, 154
+  offset: 0, 0
+  index: -1
+09
+  rotate: false
+  xy: 702, 104
+  size: 238, 168
+  orig: 238, 168
+  offset: 0, 0
+  index: -1
+10
+  rotate: false
+  xy: 136, 1290
+  size: 238, 206
+  orig: 238, 206
+  offset: 0, 0
+  index: -1
+11
+  rotate: false
+  xy: 1738, 1408
+  size: 238, 206
+  orig: 238, 206
+  offset: 0, 0
+  index: -1
+12
+  rotate: false
+  xy: 458, 98
+  size: 240, 168
+  orig: 240, 168
+  offset: 0, 0
+  index: -1
+13
+  rotate: false
+  xy: 1778, 266
+  size: 240, 172
+  orig: 240, 172
+  offset: 0, 0
+  index: -1
+14
+  rotate: false
+  xy: 1342, 1542
+  size: 240, 174
+  orig: 240, 174
+  offset: 0, 0
+  index: -1
+15
+  rotate: false
+  xy: 944, 110
+  size: 240, 168
+  orig: 240, 168
+  offset: 0, 0
+  index: -1
+16
+  rotate: false
+  xy: 1778, 96
+  size: 238, 168
+  orig: 238, 168
+  offset: 0, 0
+  index: -1
+17
+  rotate: false
+  xy: 4, 1500
+  size: 238, 216
+  orig: 238, 216
+  offset: 0, 0
+  index: -1
+Hair_Cover
+  rotate: false
+  xy: 1302, 1258
+  size: 248, 114
+  orig: 248, 114
+  offset: 0, 0
+  index: -1
+eyeclose
+  rotate: false
+  xy: 1432, 8
+  size: 216, 170
+  orig: 216, 170
+  offset: 0, 0
+  index: -1
+halo
+  rotate: false
+  xy: 1254, 338
+  size: 520, 224
+  orig: 520, 224
+  offset: 0, 0
+  index: -1
+siroko
+  rotate: true
+  xy: 980, 442
+  size: 964, 1016
+  orig: 1246, 2416
+  offset: 210, 1400
+  index: -1
+siroko0
+  rotate: false
+  xy: 4, 262
+  size: 1246, 1454
+  orig: 1246, 2416
+  offset: 0, 0
+  index: -1

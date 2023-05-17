@@ -333,7 +333,7 @@ namespace BAStoryPlayer
                             gameObject.SetActive(false);
                             SetBackground();
                             UIModule.HideAllUI();
-                            CharacterModule.ClearAll();
+                            CharacterModule.ClearAllObject();
                             DoTweenS.DoTweenS.KillAll();
                             AudioModule.ClearAll();
                         }
@@ -345,12 +345,14 @@ namespace BAStoryPlayer
                 }
                 else
                 {
+                    OnFinishPlaying?.Invoke();
+
                     if (!destoryObject)
                     {
                         gameObject.SetActive(false);
                         SetBackground();
                         UIModule.HideAllUI();
-                        CharacterModule.ClearAll();
+                        CharacterModule.ClearAllObject();
                         DoTweenS.DoTweenS.KillAll();
                         AudioModule.ClearAll();
                     }
@@ -359,8 +361,6 @@ namespace BAStoryPlayer
                         Destroy(gameObject);
                     }
                 }
-
-
             }, 1f);
         }
 

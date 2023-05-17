@@ -136,4 +136,15 @@ namespace BAStoryPlayer
             LoadStory(url);
         }
     }
+
+    public static class ExtensionMethod
+    {
+        public static void ClearAllChild(this Transform transform)
+        {
+            for(int i = transform.childCount - 1; i >= 0; i--)
+            {
+                UnityEngine.GameObject.Destroy(transform.GetChild(i).gameObject);
+            }
+        }
+    }
 }

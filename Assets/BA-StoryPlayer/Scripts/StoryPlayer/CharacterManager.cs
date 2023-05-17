@@ -71,17 +71,18 @@ namespace BAStoryPlayer
                         Debug.LogError($"无法在 Resoucres文件夹中的路径 {BAStoryPlayerController.Instance.Setting.Path_Prefab} 找到对应角色预制体");
                         return;
                     }
-                        
 
                     obj.transform.SetParent(transform);
                     obj.name = name;
                     var rectTransform = obj.GetComponent<RectTransform>();
-                    rectTransform.sizeDelta = Vector2.zero;
-                    rectTransform.anchorMin = new Vector2(0, 0);
-                    rectTransform.anchorMax = new Vector2(0, 0);
+                    rectTransform.anchorMin = Vector2.zero;
+                    rectTransform.anchorMax = Vector2.zero;
                     rectTransform.pivot = new Vector2(0.5f, 0);
                     rectTransform.anchoredPosition = new Vector3((index + 1) * VALUE_INTERVAL_SLOT,0,0);
                     rectTransform.localScale = new Vector3(VALUE_CHARACTER_SCALE, VALUE_CHARACTER_SCALE, 1);
+
+                    obj.GetComponent<SkeletonGraphic>().MatchRectTransformWithBounds();
+
                     characterPool.Add(name, obj);
                 }
                 else
@@ -254,7 +255,7 @@ namespace BAStoryPlayer
             {
                 if(i.Name[0] == 'E' || i.Name[0] == 'e')
                 {
-                    Debug.Log($"动画名更换为{i.Name}");
+                    ani_EyeClose_Name = i.Name;
                     break;
                 }
             }
@@ -475,17 +476,6 @@ namespace BAStoryPlayer
         }
 
         /// <summary>
-        /// 完全删除角色
-        /// </summary>
-        public void ClearAll()
-        {
-            for (int i = 0; i < NUM_CHARACTER_SLOT; i++)
-            {
-                DestroyCharacter(i, true);
-            }
-        }
-
-        /// <summary>
         /// 设置角色情绪emoji
         /// </summary>
         /// <param name="index">下标</param>
@@ -494,8 +484,8 @@ namespace BAStoryPlayer
         {
             if (CheckSlotEmpty(index))
                 return;
-
-            EmotionFactory.SetEmotion(character[index].transform, emotion);
+            // TODO 先暂时使用手动定位的方式
+            EmotionFactory.SetEmotion(character[index].transform, emotion,LocateMode.Manual);
         }
 
         /// <summary>
@@ -562,6 +552,12 @@ namespace BAStoryPlayer
                     default: return;
                 }
             }
+        }
+
+        public void ClearAllObject()
+        {
+            characterPool.Clear();
+            transform.ClearAllChild();
         }
     }
 }
