@@ -2,7 +2,15 @@
     "groupID": 332,
     "content": [
         {
-            "scripts": "1;mutsuki;01\n5;kayoko;01\n3;aru;01;好不容易解决了吃饭问题，得抓紧时间赚钱……",
+            "scripts": "1;mutsuki;01\n5;kayoko;01\n3;aru;02;好不容易解决了吃饭问题，得抓紧时间赚钱……\n#3;em;...;",
+            "selectionGroup": 0,
+            "bgmURL": "Theme_07",
+            "soundURL": "",
+            "backgroundURL": "BG_SlumFront_Cloud",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "1;mutsuki;03;有什么东西可以轻松地炸掉来赚钱就好了呢。",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -10,15 +18,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "1;mutsuki;01;有什么东西可以轻松的炸掉来赚钱就好了呢。",
-            "selectionGroup": 0,
-            "bgmURL": "",
-            "soundURL": "",
-            "backgroundURL": "",
-            "popupFileURL": ""
-        },
-        {
-            "scripts": "5;kayoko;01;我们现在的存款除了子弹已经什么都买不起了……",
+            "scripts": "5;kayoko;06;我们现在的存款除了子弹已经什么都买不起了……\n#5;em;upset;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -34,7 +34,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "1;mutsuki;01\n5;kayoko;01\n3;aru;01;「一百万」！只要有那笔钱……",
+            "scripts": "1;mutsuki;01\n5;kayoko;01\n3;aru;04;「一百万」！只要有那笔钱……\n#3;stiff;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -42,7 +42,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "5;kayoko;01;还是先确认一下任务内容比较好。",
+            "scripts": "5;kayoko;05;还是先确认一下任务内容比较好。",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -50,7 +50,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "1;mutsuki;01;好像有趣起来了。",
+            "scripts": "1;mutsuki;00;好像有趣起来了～",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -66,7 +66,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "2;mutsuki;01;那是怎么惹上的仇家？\n#3;m4",
+            "scripts": "2;mutsuki;02;那是怎么惹上的仇家？\n#3;m4\n#2;em;?;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -74,7 +74,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "3;passerby;01;额……是商业竞争！是卑鄙的商业暗杀！",
+            "scripts": "3;passerby;01;呃……是商业竞争！是卑鄙的商业暗杀！\n#3;em;...;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -98,7 +98,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "5;shiroko;01\n1;hihumi;01\n3;azusa;01;目标已确认，2点钟方向。",
+            "scripts": "5;shiroko;05\n1;hihumi;05\n3;azusa;07;目标已确认，2点钟方向。",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -106,7 +106,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "5;shiroko;01;刚问你玩偶的事情就跑，不打自招呢。",
+            "scripts": "5;shiroko;06;刚问你玩偶的事情就跑，不打自招呢。",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -114,7 +114,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "1;hihumi;01;竟然私自偷走佩洛洛大人卖钱，就算是我也不会那么容易原谅你！",
+            "scripts": "1;hihumi;06;竟然私自偷走佩洛洛大人卖钱，就算是我也不会那么容易原谅你！\n#1;em;angry;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -122,7 +122,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "3;aru;01;唉！？",
+            "scripts": "3;aru;06;唉！？",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -130,7 +130,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "5;shiroko;01;啊，是便利屋的各位，拦住那家伙真是帮了大忙，事后我们七三分成。",
+            "scripts": "5;shiroko;02;啊，是便利屋的各位，拦住那家伙真是帮了大忙，事后我们七三分成。\n#5;em;respond;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -138,7 +138,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "1;hihumi;01;唉？",
+            "scripts": "1;aru;06;唉？\n#1;em;?!;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -146,7 +146,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "3;passerby;01;可恶，你们居然是一伙的，还好我没把钱全部给白鸟区的不良，而是雇佣了自己的打手……",
+            "scripts": "3;passerby;01;可恶，你们居然是一伙的，还好我没把钱全部给白鸟区的不良，而是雇佣了自己的打手……\n#3;em;...;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -154,7 +154,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "1;mutsuki;01;啊，危险，那里刚刚为了对抗坦克冲击布置了地雷……",
+            "scripts": "1;mutsuki;04;啊，危险，那里刚刚为了对抗坦克冲击布置了地雷……",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -170,7 +170,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "3;shiroko;01;抓活的……说晚了呢。",
+            "scripts": "3;shiroko;06;抓活的……说晚了呢。\n#3;em;...;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -178,7 +178,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "1;kayoko;01;昏过去了，看上去一时半会醒不过来，不过他说还雇佣了打手……",
+            "scripts": "1;kayoko;06;昏过去了，看上去一时半会醒不过来，不过他说还雇佣了打手……",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -186,7 +186,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "3;shiroko;01;那个啊，路上都被日富美解决了。",
+            "scripts": "3;shiroko;02;那个啊，路上都被日富美解决了。\n#3;em;respond;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -194,7 +194,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "5;hihumi;01;我只是开着十字军酱而已，如果它一时半会醒不过来的话，拿到限定佩洛洛大人的方法就……",
+            "scripts": "5;hihumi;04;我只是开着十字军酱而已，如果它一时半会醒不过来的话，拿到限定佩洛洛大人的方法就……\n#5;em;upset;\n#5;stiff;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -202,7 +202,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "1;azusa;01;如果要抢劫黑市的话，我觉得还是从二楼破窗而入比较好。",
+            "scripts": "1;azusa;07;如果要抢劫黑市的话，我觉得还是从二楼破窗而入比较好。",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -210,7 +210,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "3;shiroko;01;（刚刚那家伙说了「把钱给白鸟区的不良」……而且这家伙好像是凯撒的职员……）",
+            "scripts": "3;shiroko;01;（刚刚那家伙说了「把钱给白鸟区的不良」……而且这家伙好像是凯撒的职员……）\n#3;em;...;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -218,7 +218,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "3;shiroko;01;说不定有别的方法。嗯。",
+            "scripts": "3;shiroko;01;说不定有别的方法。嗯。\n#3;em;respond;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -226,7 +226,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "1;aru;01;唉？发生什么了？",
+            "scripts": "1;aru;04;唉？发生什么了？\n#1;em;upset;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -234,7 +234,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "3;shiroko;01;要走了。",
+            "scripts": "3;shiroko;03;我们走。\n#3;greeting;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",

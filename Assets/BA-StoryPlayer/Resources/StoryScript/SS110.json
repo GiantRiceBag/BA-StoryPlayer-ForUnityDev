@@ -2,7 +2,15 @@
     "groupID": 110,
     "content": [
         {
-            "scripts": "1;nonomi;01;白子酱，这里这里！",
+            "scripts": "1;nonomi;03;白子酱，这里这里！\n#1;em;h;",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "BG_FoodCartRamen_Night",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "5;ayane;03;白子前辈，辛苦了。",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -10,7 +18,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "5;ayane;01;白子前辈，辛苦了。",
+            "scripts": "3;shiroko;03;不，没有辛苦，倒不如说刚刚开始。\n#3;greeting;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -18,7 +26,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "3;shiroko;01;不，没有辛苦，倒不如说刚刚开始。",
+            "scripts": "5;serika;03;白子前辈你专门回来说明你也很闲吧？",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -26,7 +34,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "5;serika;01;白子前辈你专门回来说明你也很闲吧？",
+            "scripts": "3;shiroko;04;倒是没有特别的事……\n#3;em;sweat;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -34,7 +42,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "3;shiroko;01;倒是没有特别的事……",
+            "scripts": "1;nonomi;03;那么机会难得，大家一起吃面吧，老师也快到了。\n#1;em;h;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -42,7 +50,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "1;nonomi;01;那么机会难得，大家一起吃面吧，老师也快到了。",
+            "scripts": "5;ayane;01;唉，老师也要来吗？星野前辈什么时候……\n#5;stiff;\n#5;em;shy;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -50,7 +58,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "5;ayane;01;唉，老师也要来吗？星野前辈什么时候……",
+            "scripts": "3;shiroko;03;嗯，那么我就不客气了。\n#3;greeting;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -58,7 +66,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "3;shiroko;01;嗯，那么我就不客气了。",
+            "scripts": "5;serika;11;别说的好像是要老师请客一样啊！\n#5;em;sweat;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -66,15 +74,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "5;serika;01;别说的好像是要老师请客一样啊！",
-            "selectionGroup": 0,
-            "bgmURL": "",
-            "soundURL": "",
-            "backgroundURL": "",
-            "popupFileURL": ""
-        },
-        {
-            "scripts": "1;nonomi;01;那我先给老师留好位置了。",
+            "scripts": "1;nonomi;03;那我先给老师留好位置了。\n#1;greeting;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
