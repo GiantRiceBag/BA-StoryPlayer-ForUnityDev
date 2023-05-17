@@ -5,6 +5,7 @@ Shader "Hidden/ImageBlur"
         _MainTex ("Texture", 2D) = "white" {}
         _BlurAmount ("Blur Amount", Range(0, 10)) = 1
         _Weight("Weight",Range(0,1)) = 0
+        [IntRange]_CoreSizeR("CoreSizeR",Range(1,20)) = 3
     }
  
     SubShader
@@ -34,6 +35,7 @@ Shader "Hidden/ImageBlur"
             float _BlurAmount;
             float4 _MainTex_TexelSize;
             float _Weight;
+            int _CoreSizeR;
  
             v2f vert (appdata_t v)
             {
@@ -47,14 +49,14 @@ Shader "Hidden/ImageBlur"
             {
                 fixed4 col = 0;
                 float mix = lerp(0,_BlurAmount,_Weight);
-                for(int x = -10; x < 10; x++)
+                for(int x = -_CoreSizeR; x < _CoreSizeR; x++)
                 {
-                    for(int y = -10; y < 10; y++)
+                    for(int y = -_CoreSizeR; y < _CoreSizeR; y++)
                     {
                         col += tex2D(_MainTex, i.uv + float2(x, y) * _MainTex_TexelSize.xy * mix);
                     }
                 }
-                col /= 400;
+                col /= _CoreSizeR * _CoreSizeR * 4;
                 return col;
             }
             ENDCG

@@ -132,47 +132,10 @@ Shader "Hidden/ImageBlur_LowPerformance"
 			fixed4 frag(v2f IN) : SV_Target
 			{
 				half4 sum = half4(0,0,0,0);
-				// #define GRABPIXEL(weight, kernelx) (tex2D(_MainTex, half2(IN.texcoord.x + _MainTex_TexelSize.x * kernelx*_Size, IN.texcoord.y)) + _TextureSampleAdd) * weight
-				
-				// sum += GrabPixel(IN, 0.05, -4.0);
-				// sum += GrabPixel(IN, 0.09, -3.0);
-				// sum += GrabPixel(IN, 0.12, -2.0);
-				// sum += GrabPixel(IN, 0.15, -1.0);
-				// sum += GrabPixel(IN, 0.18,  0.0);
-				// sum += GrabPixel(IN, 0.15, +1.0);
-				// sum += GrabPixel(IN, 0.12, +2.0);
-				// sum += GrabPixel(IN, 0.09, +3.0);
-				// sum += GrabPixel(IN, 0.05, +4.0);
 
 				for(int i=0;i<9;i++){
 					sum += GrabPixel(IN, 1.0/9, i-4.0);
 				}
-
-				// half4 sumy = half4(0,0,0,0);
-				// for(int i=0;i<15;i++){
-				// 	sumy += GrabPixely(IN, 1.0/15, i-7.0);
-				// }
-				// half4 sum = (sumx + sumy) * 0.5;
-
-				// sum += GrabPixel(IN, 0.01, -9.0);
-				// sum += GrabPixel(IN, 0.02, -8.0);
-				// sum += GrabPixel(IN, 0.03, -7.0);
-				// sum += GrabPixel(IN, 0.04, -6.0);
-				// sum += GrabPixel(IN, 0.05, -5.0);
-				// sum += GrabPixel(IN, 0.06, -4.0);
-				// sum += GrabPixel(IN, 0.07, -3.0);
-				// sum += GrabPixel(IN, 0.08, -2.0);
-				// sum += GrabPixel(IN, 0.09, -1.0);
-				// sum += GrabPixel(IN, 0.10,  0.0);
-				// sum += GrabPixel(IN, 0.09, +1.0);
-				// sum += GrabPixel(IN, 0.08, +2.0);
-				// sum += GrabPixel(IN, 0.07, +3.0);
-				// sum += GrabPixel(IN, 0.06, +4.0);
-				// sum += GrabPixel(IN, 0.05, +5.0);
-				// sum += GrabPixel(IN, 0.04, +6.0);
-				// sum += GrabPixel(IN, 0.03, +7.0);
-				// sum += GrabPixel(IN, 0.02, +8.0);
-				// sum += GrabPixel(IN, 0.01, +9.0);
 
 				sum = sum * IN.color;
 				sum.a *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);
@@ -181,27 +144,6 @@ Shader "Hidden/ImageBlur_LowPerformance"
 				#endif
 				return sum;
 
-				// float distance = _Distance;
-
-				// fixed4 color = (tex2D(_MainTex, IN.texcoord) + _TextureSampleAdd) * IN.color;
-
-				// color += (tex2D(_MainTex, half2(IN.texcoord.x + distance, IN.texcoord.y + distance)) + _TextureSampleAdd) * IN.color;
-				// color += (tex2D(_MainTex, half2(IN.texcoord.x + distance, IN.texcoord.y)) + _TextureSampleAdd) * IN.color;
-				// color += (tex2D(_MainTex, half2(IN.texcoord.x + distance, IN.texcoord.y - distance)) + _TextureSampleAdd) * IN.color;
-				// color += (tex2D(_MainTex, half2(IN.texcoord.x, IN.texcoord.y - distance)) + _TextureSampleAdd) * IN.color;
-				// color += (tex2D(_MainTex, half2(IN.texcoord.x - distance, IN.texcoord.y - distance)) + _TextureSampleAdd) * IN.color;
-				// color += (tex2D(_MainTex, half2(IN.texcoord.x - distance, IN.texcoord.y)) + _TextureSampleAdd) * IN.color;
-				// color += (tex2D(_MainTex, half2(IN.texcoord.x - distance, IN.texcoord.y + distance)) + _TextureSampleAdd) * IN.color;
-				// color += (tex2D(_MainTex, half2(IN.texcoord.x, IN.texcoord.y + distance)) + _TextureSampleAdd) * IN.color;
-				// color /= 9;
-				
-				// color.a *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);
-				
-				// #ifdef UNITY_UI_ALPHACLIP
-				// clip (color.a - 0.001);
-				// #endif
-
-				// return color;
 			}
 		ENDCG
 		}
@@ -276,41 +218,10 @@ Shader "Hidden/ImageBlur_LowPerformance"
 			fixed4 frag(v2f IN) : SV_Target
 			{
 				half4 sum = half4(0,0,0,0);  
-				// #define GRABPIXEL(weight, kernely) (tex2D(_MainTex, half2(IN.texcoord.x, IN.texcoord.y + _MainTex_TexelSize.y * kernely*_Size)) + _TextureSampleAdd) * weight
-				
-				// sum += GrabPixel(IN, 0.05, -4.0);
-				// sum += GrabPixel(IN, 0.09, -3.0);
-				// sum += GrabPixel(IN, 0.12, -2.0);
-				// sum += GrabPixel(IN, 0.15, -1.0);
-				// sum += GrabPixel(IN, 0.18,  0.0);
-				// sum += GrabPixel(IN, 0.15, +1.0);
-				// sum += GrabPixel(IN, 0.12, +2.0);
-				// sum += GrabPixel(IN, 0.09, +3.0);
-				// sum += GrabPixel(IN, 0.05, +4.0);
 
 				for(int i=0;i<9;i++){
 					sum += GrabPixel(IN, 1.0/9, i-4.0);
 				}
-
-				// sum += GrabPixel(IN, 0.01, -9.0);
-				// sum += GrabPixel(IN, 0.02, -8.0);
-				// sum += GrabPixel(IN, 0.03, -7.0);
-				// sum += GrabPixel(IN, 0.04, -6.0);
-				// sum += GrabPixel(IN, 0.05, -5.0);
-				// sum += GrabPixel(IN, 0.06, -4.0);
-				// sum += GrabPixel(IN, 0.07, -3.0);
-				// sum += GrabPixel(IN, 0.08, -2.0);
-				// sum += GrabPixel(IN, 0.09, -1.0);
-				// sum += GrabPixel(IN, 0.10,  0.0);
-				// sum += GrabPixel(IN, 0.09, +1.0);
-				// sum += GrabPixel(IN, 0.08, +2.0);
-				// sum += GrabPixel(IN, 0.07, +3.0);
-				// sum += GrabPixel(IN, 0.06, +4.0);
-				// sum += GrabPixel(IN, 0.05, +5.0);
-				// sum += GrabPixel(IN, 0.04, +6.0);
-				// sum += GrabPixel(IN, 0.03, +7.0);
-				// sum += GrabPixel(IN, 0.02, +8.0);
-				// sum += GrabPixel(IN, 0.01, +9.0);
 
 				sum = sum * IN.color;
 				sum.a *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);
@@ -318,28 +229,6 @@ Shader "Hidden/ImageBlur_LowPerformance"
 				clip (sum.a - 0.001);
 				#endif
 				return sum;
-
-				// float distance = _Distance;
-
-				// fixed4 color = (tex2D(_MainTex, IN.texcoord) + _TextureSampleAdd) * IN.color;
-
-				// color += (tex2D(_MainTex, half2(IN.texcoord.x + distance, IN.texcoord.y + distance)) + _TextureSampleAdd) * IN.color;
-				// color += (tex2D(_MainTex, half2(IN.texcoord.x + distance, IN.texcoord.y)) + _TextureSampleAdd) * IN.color;
-				// color += (tex2D(_MainTex, half2(IN.texcoord.x + distance, IN.texcoord.y - distance)) + _TextureSampleAdd) * IN.color;
-				// color += (tex2D(_MainTex, half2(IN.texcoord.x, IN.texcoord.y - distance)) + _TextureSampleAdd) * IN.color;
-				// color += (tex2D(_MainTex, half2(IN.texcoord.x - distance, IN.texcoord.y - distance)) + _TextureSampleAdd) * IN.color;
-				// color += (tex2D(_MainTex, half2(IN.texcoord.x - distance, IN.texcoord.y)) + _TextureSampleAdd) * IN.color;
-				// color += (tex2D(_MainTex, half2(IN.texcoord.x - distance, IN.texcoord.y + distance)) + _TextureSampleAdd) * IN.color;
-				// color += (tex2D(_MainTex, half2(IN.texcoord.x, IN.texcoord.y + distance)) + _TextureSampleAdd) * IN.color;
-				// color /= 9;
-				
-				// color.a *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);
-				
-				// #ifdef UNITY_UI_ALPHACLIP
-				// clip (color.a - 0.001);
-				// #endif
-
-				// return color;
 			}
 		ENDCG
 		}

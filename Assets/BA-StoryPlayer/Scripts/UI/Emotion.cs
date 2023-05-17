@@ -25,7 +25,6 @@ namespace BAStoryPlayer.UI
             }else if (locateMode == LocateMode.Manual)
             {
                 Transform locator = parent.Find("HeadLocator");
-                Debug.Log(locator == null);
                 if (locator == null && parent.childCount != 0)
                 {
                     Debug.LogWarning("未找到头部定位器 已使用首个子对象作为参考");

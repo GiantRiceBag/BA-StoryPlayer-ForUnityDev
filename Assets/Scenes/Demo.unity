@@ -367,6 +367,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Canvas_BA-StoryPlayer
       objectReference: {fileID: 0}
+    - target: {fileID: 2203900013526818518, guid: 7c1218018e8d780428af747e098cb316, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4046783726208085466, guid: 7c1218018e8d780428af747e098cb316, type: 3}
       propertyPath: m_Pivot.x
       value: 0
