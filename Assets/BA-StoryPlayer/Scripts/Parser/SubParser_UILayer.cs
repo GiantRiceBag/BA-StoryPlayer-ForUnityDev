@@ -69,7 +69,6 @@ namespace BAStoryPlayer
                         {
                             storyUnit.action += () => { 
                                 BAStoryPlayerController.Instance.StoryPlayer.UIModule.SetActive_UI_TextArea(false);
-                                BAStoryPlayerController.Instance.StoryPlayer.UIModule.SetActive_UI_Button(false); 
                             };
                             break;
                         }

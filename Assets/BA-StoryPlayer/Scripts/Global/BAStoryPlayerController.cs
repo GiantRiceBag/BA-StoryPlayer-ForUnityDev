@@ -72,13 +72,20 @@ namespace BAStoryPlayer
         {
             if (isPlaying) { Debug.Log("剧情播放中"); return null; }
 
-            isPlaying = true;
-
             // TODO 不删除方案的选项
             StoryPlayer.gameObject.SetActive(true);
 
             StoryScript storyScript;
-            string json = Resources.Load<TextAsset>(Setting.Path_StoryScript+url).ToString();
+            var textAsset = Resources.Load<TextAsset>(Setting.Path_StoryScript + url);
+            if(textAsset == null)
+            {
+                Debug.LogError($"未能在 {Setting.Path_StoryScript + url } 找到剧情脚本");
+                return null;
+            }
+
+            isPlaying = true;
+
+            string json = textAsset.ToString();
             storyScript = JsonUtility.FromJson(json, typeof(StoryScript)) as StoryScript;
 
             MasterParser parser = new MasterParser(); // 实例化解析器
