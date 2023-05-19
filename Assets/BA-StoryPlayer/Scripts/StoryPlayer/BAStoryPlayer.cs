@@ -361,7 +361,7 @@ namespace BAStoryPlayer
                         Destroy(gameObject);
                     }
                 }
-            }, 1f);
+            }, 2f);
         }
 
         public enum CurtainType
