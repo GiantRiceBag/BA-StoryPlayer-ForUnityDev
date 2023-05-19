@@ -2,7 +2,15 @@
     "groupID": 108,
     "content": [
         {
-            "scripts": "5;shiroko;01;啊，是便利屋的各位，怎么会在这里？",
+            "scripts": "5;shiroko;04;啊，是便利屋的各位，怎么会在这里？",
+            "selectionGroup": 0,
+            "bgmURL": "Theme_08",
+            "soundURL": "",
+            "backgroundURL": "BG_DestructionFront",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "1;mutsuki;03;啊！是白子酱，欢迎欢迎！\n#1;hophop;\n#1;em;c;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -10,7 +18,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "1;mutsuki;01;啊！是白子酱，欢迎欢迎！",
+            "scripts": "3;kayoko;06;也没有欢迎的条件就是了……。\n#3;em;dot;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -18,7 +26,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "3;kayoko;01;也没有欢迎的条件就是了。",
+            "scripts": "1;haruka;07;非常抱歉非常抱歉非常抱歉……\n#1;em;u;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -26,7 +34,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "1;haruka;01;非常抱歉非常抱歉非常抱歉……",
+            "scripts": "1;mutsuki;03;如你所见，这个坑里现在就是我们的基地了，是不是很酷！\n#1;em;c;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -34,7 +42,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "1;mutsuki;01;如你所见，这个坑里现在就是我们的基地了，是不是很酷！",
+            "scripts": "5;shiroko;02;不错的设计，只是抗震方面需要加强。\n#5;em;respond;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -42,7 +50,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "5;shiroko;01;不错的设计，只是抗震方面需要加强。",
+            "scripts": "3;kayoko;06;比起抗震我倒是觉得更需要考虑别的东西就是了……。\n#3;em;sweat;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -50,7 +58,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "3;kayoko;01;比起抗震我倒是觉得更需要考虑别的东西就是了。",
+            "scripts": "3;aru;10;明明说是非常简单的任务，为什么会变成这样……\n#3;em;u;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -58,7 +66,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "3;aru;01;明明说是非常简单的任务，为什么会变成这样……",
+            "scripts": "1;kayoko;06;如果不把敌人和委托人一起炸飞的话确实挺简单的就是了。\n#1;em;dot;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -66,7 +74,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "1;kayoko;01;如果不把敌人和委托人一起炸飞的话确实挺简单的就是了。",
+            "scripts": "1;mutsuki;03;哈哈，非常有趣不是吗？\n#1;em;c;\n#1;hophop;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -74,7 +82,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "1;mutsuki;01;哈哈，非常有趣不是吗？",
+            "scripts": "5;shiroko;04;明明不是有预料之外的大集团混混就不会用到的……这样的话在有下次的任务之前只能在这个坑里……\n#5;em;sweat;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -82,7 +90,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "5;shiroko;01;明明不是有预料之外的大集团混混就不会用到的……这样的话在有下次的任务之前只能在这个坑里……",
+            "scripts": "1;haruka;03;没关系阿露大人，我已经尽可能捡来了废弃的布料和别的东西，一定有办法的！",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -90,7 +98,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "1;haruka;01;没关系阿露大人，我已经尽可能捡来了废弃的布料和别的东西，一定有办法的！",
+            "scripts": "3;kayoko;06;比起睡觉问题，伙食费……",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -98,15 +106,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "3;kayoko;01;比起睡觉问题，伙食费……",
-            "selectionGroup": 0,
-            "bgmURL": "",
-            "soundURL": "",
-            "backgroundURL": "",
-            "popupFileURL": ""
-        },
-        {
-            "scripts": "5;shiroko;01;如果你们不介意的话。",
+            "scripts": "5;shiroko;02;如果你们不介意的话。\n#5;em;respond;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -122,7 +122,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "3;aru;01;使用这个优惠的话，好像……",
+            "scripts": "3;aru;08;使用这个优惠的话，好像……\n#3;em;c;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -130,7 +130,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "1;kayoko;01;不够，还差一点。",
+            "scripts": "1;kayoko;06;不够，还差一点。\n#1;em;sweat;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -138,7 +138,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "3;aru;01;唉？我算下来应该够了的说？",
+            "scripts": "3;aru;11;唉？我算下来应该够了的说？\n#3;em;?!;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -154,7 +154,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "3;aru;01;噫！",
+            "scripts": "3;aru;11;噫！",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -162,7 +162,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "5;shiroko;01;……我要这个就可以了。",
+            "scripts": "5;shiroko;02;……我要这个就可以了。\n#5;em;respond;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -170,7 +170,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "1;kayoko;01;那个——原来如此啊。",
+            "scripts": "1;kayoko;03;那个——原来如此啊。",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -186,7 +186,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "3;aru;01;唉？你们在说什么，突然就可以了吗？",
+            "scripts": "3;aru;04;唉？你们在说什么，突然就可以了吗？",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -194,7 +194,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "5;shiroko;01;嗯，得到了满意的报酬，等价交换。",
+            "scripts": "5;shiroko;03;嗯，得到了满意的报酬，等价交换。",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -202,7 +202,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "1;mutsuki;01;太好了呢阿露酱，快点出发吧！",
+            "scripts": "1;mutsuki;03;太好了呢阿露酱，快点出发吧！\n#1;em;c;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -210,7 +210,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "3;aru;01;唉？唉唉唉？",
+            "scripts": "3;aru;04;唉？唉唉唉？",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",

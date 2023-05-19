@@ -4,13 +4,13 @@
         {
             "scripts": "#na;第二天————",
             "selectionGroup": 0,
-            "bgmURL": "",
+            "bgmURL": "Theme_08",
             "soundURL": "",
-            "backgroundURL": "",
+            "backgroundURL": "BG_SchoolFrontGate",
             "popupFileURL": ""
         },
         {
-            "scripts": "3;shiroko;01;星野前辈，这个。",
+            "scripts": "3;shiroko;03;星野前辈，这个。\n#3;greeting;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -18,7 +18,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "1;hoshino;01;！",
+            "scripts": "1;hoshino;01;！\n#1;em;!",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -26,7 +26,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "5;ayane;01;这个是，星野前辈的……",
+            "scripts": "5;ayane;06;这个是，星野前辈的……\n#5;stiff;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -34,7 +34,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "1;hoshino;01;啊呀，从哪里找到的，白子酱？",
+            "scripts": "1;hoshino;02;啊呀，从哪里找到的，白子酱？",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -50,7 +50,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "3;shiroko;01;捡到的。",
+            "scripts": "3;shiroko;02;捡到的。",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -58,7 +58,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "1;hoshino;01;看上去有很复杂的故事呢，不过还是谢谢你，白子酱，大叔我啊也到了思念过去的年纪，没有这个东西就睡不好觉呢……",
+            "scripts": "1;hoshino;08;看上去有很复杂的故事呢，不过还是谢谢你，白子酱，大叔我啊也到了思念过去的年纪，没有这个东西就睡不好觉呢……\n#1;em;sweat;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -66,7 +66,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "5;serika;01;你也没比我们大几岁吧！喂，别在这里睡觉啊星野前辈！",
+            "scripts": "5;serika;09;你也没比我们大几岁吧！喂，别在这里睡觉啊星野前辈！\n#5;em;angry;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",

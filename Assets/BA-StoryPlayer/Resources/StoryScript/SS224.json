@@ -4,13 +4,13 @@
         {
             "scripts": "#na;(听到隐藏在巷子中便利店方向传来吵闹声，白子靠了过去。)",
             "selectionGroup": 0,
-            "bgmURL": "",
+            "bgmURL": "Theme_08",
             "soundURL": "",
-            "backgroundURL": "",
+            "backgroundURL": "BG_VillaComplex",
             "popupFileURL": ""
         },
         {
-            "scripts": "4;rabu;01;什么啊，这就打烊了吗？",
+            "scripts": "4;rabu;06;什么啊，这就打烊了吗？",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -18,7 +18,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "2;master;01;抱歉，今天已经被抢劫走不少东西了，再开下去就要破产了！",
+            "scripts": "2;master;07;抱歉，今天已经被抢劫走不少东西了，再开下去就要破产了！",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -26,7 +26,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "#all;hide\n2;hihumi;01;说起来，白子同学你怎么进来的？",
+            "scripts": "#all;hide\n2;hihumi;02;说起来，白子同学你怎么进来的？\n#2;em;respond;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -42,7 +42,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "2;hihumi;01;啊哈哈，说的也是呢……怎么停下了？",
+            "scripts": "2;hihumi;04;啊哈哈，说的也是呢……怎么停下了？\n#2;em;sweat;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -58,7 +58,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "2;rabu;01;什么？是你啊。",
+            "scripts": "2;rabu;02;什么？是你啊。",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -66,7 +66,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "4;shiroko;01;有点事要问你。",
+            "scripts": "4;shiroko;02;有点事要问你。\n#4;em;respond;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -74,7 +74,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "2;rabu;01;你这家伙，把我当成什么了？",
+            "scripts": "2;rabu;08;你这家伙，把我当成什么了？\n#2;em;angry;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -82,7 +82,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "4;shiroko;01;认识的不良……之类的。总之，你知道这附近是怎么回事吗？",
+            "scripts": "4;shiroko;04;认识的不良……之类的。总之，你知道这附近是怎么回事吗？\n#4;em;sweat;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -90,7 +90,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "2;rabu;01;谁知道啊，本来还以为是像以前一样划分新地盘召集人手，结果看这架势整的要和联邦学生会宣战一样。",
+            "scripts": "2;rabu;06;谁知道啊，本来还以为是像以前一样划分新地盘召集人手，结果看这架势整的要和联邦学生会宣战一样。\n#2;em;upset;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -98,7 +98,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "4;hihumi;01;宣战！？",
+            "scripts": "4;hihumi;07;宣战！？\n#4;em;upset;\n#4;stiff;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -106,7 +106,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "2;rabu;01;怎么了？圣三一的大小姐？比起当初没有「老师」的时候，现在这种程度只是小打小闹而已。",
+            "scripts": "2;rabu;02;怎么了？圣三一的大小姐？比起当初没有「老师」的时候，现在这种程度只是小打小闹而已。\n#2;em;?;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -114,7 +114,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "4;shiroko;01;明明都被赶到这里来了,却还是嘴硬呢。",
+            "scripts": "4;shiroko;04;明明都被赶到这里来了,却还是嘴硬呢。\n#4;em;sweat;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -122,7 +122,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "2;rabu;01;你这家伙！",
+            "scripts": "2;rabu;08;你这家伙！\n#2;em;angry;\n#2;hophop;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -130,7 +130,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "3;master;01;没什么事的话我先走了！",
+            "scripts": "3;master;04;没什么事的话我先走了！",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -146,7 +146,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "4;shiroko;01;……",
+            "scripts": "4;shiroko;04;……",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -154,7 +154,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "2;rabu;01;可恶，让它跑了，这样的话午饭……",
+            "scripts": "2;rabu;06;可恶，让它跑了，这样的话午饭……\n#2;em;upset;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -162,7 +162,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "4;shiroko;01;你的午饭怎么了？",
+            "scripts": "4;shiroko;02;你的午饭怎么了？",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -170,7 +170,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "2;rabu;01;怎么，你要来嘲笑我吗？本来我是让小弟们去买午饭的，结果居然连人带钱都被那个家伙抢走了！",
+            "scripts": "2;rabu;06;怎么，你要来嘲笑我吗？本来我是让小弟们去买午饭的，结果居然连人带钱都被那个家伙抢走了！\n#2;em;upset;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -178,7 +178,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "4;shiroko;01;那个家伙是说……",
+            "scripts": "4;shiroko;05;那个家伙是说……",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -186,7 +186,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "2;rabu;01;就是那个家伙啊！现在正带人在 [港口] 不知道想干什么！",
+            "scripts": "2;rabu;08;就是那个家伙啊！现在正带人在 [港口] 不知道想干什么！\n#2;em;angry;\n#2;hophop;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -202,7 +202,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "4;hihumi;01;那个……听不懂难道是我的问题？",
+            "scripts": "4;hihumi;04;那个……听不懂难道是我的问题？\n#4;em;upset;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -210,7 +210,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "2;rabu;01;挺有种的啊，谁都不会想到这么短时间整个白鸟区就被清场了，现在我身上只剩昨天吃剩的面包了。",
+            "scripts": "2;rabu;06;挺有种的啊，谁都不会想到这么短时间整个白鸟区就被清场了，现在我身上只剩昨天吃剩的面包了。\n#2;em;sweat;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -218,7 +218,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "4;shiroko;01;说起来日富美同学，你还没吃午饭吧。",
+            "scripts": "4;shiroko;02;说起来日富美同学，你还没吃午饭吧。\n#4;em;respond;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -226,7 +226,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "2;hihumi;01;我没关系的……",
+            "scripts": "2;hihumi;07;我，我没关系的……\n#2;em;upset;\n#2;stiff;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -234,7 +234,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "4;shiroko;01;我想，我们必须教会这位不良小姐一个道理——想要的东西就要靠自己的双手去拿。",
+            "scripts": "4;shiroko;06;我想，我们必须教会这位不良小姐一个道理——想要的东西就要靠自己的双手去拿。",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -242,7 +242,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "2;rabu;01;哈？",
+            "scripts": "2;rabu;02;哈？\n#2;em;?;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",

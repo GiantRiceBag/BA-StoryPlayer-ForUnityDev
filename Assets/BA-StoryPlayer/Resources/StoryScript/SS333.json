@@ -2,7 +2,15 @@
     "groupID": 333,
     "content": [
         {
-            "scripts": "3;sukeban;01;咕！",
+            "scripts": "3;sukeban;03;咕！\n#3;falldownR;",
+            "selectionGroup": 0,
+            "bgmURL": "Theme_07",
+            "soundURL": "",
+            "backgroundURL": "BG_SlumFront_Night",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "3;kayoko;05;果然如此，在白鸟区商铺都关门的情况下，想要让不良维持战斗力，最快捷的方法就是从黑市运输呢。\n#3;em;...;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -10,7 +18,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "3;kayoko;01;果然如此，在白鸟区商铺都关门的情况下，想要让不良维持战斗力，最快捷的方法就是从黑市运输呢。",
+            "scripts": "5;shiroko;02;这样就把运输车队全都控制住了，放心好了，只要交出信用点，不会为难你们的。",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -18,7 +26,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "5;shiroko;01;这样就把运输车队全都控制住了，放心好了，只要交出信用点，不会为难你们的。",
+            "scripts": "1;azusa;07;都举起手来，不要想跑，你们的车已经全部被日富美处理掉了。",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -26,7 +34,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "1;azusa;01;都举起手来，不要想跑，你们的车已经被日富美都处理掉了。",
+            "scripts": "5;hihumi;04;啊哈哈……",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -34,7 +42,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "5;hihumi;01;啊哈哈……",
+            "scripts": "1;aru;00;臣服在我伟大的阿露大人脚下吧！",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -42,7 +50,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "1;aru;01;臣服在我伟大的阿露大人脚下吧！",
+            "scripts": "3;kayoko;05;总之，这样下去失去补给的不良应该到晚饭点就会散去了。",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -50,7 +58,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "3;kayoko;01;总之，这样下去失去补给的不良应该到晚饭点就会散去了。",
+            "scripts": "1;mutsuki;03;不愧是你啊，佳代子。\n#1;hophop;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -58,7 +66,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "1;mutsuki;01;不愧是你啊，佳代子。",
+            "scripts": "3;kayoko;06;不，我也没做什么……\n#3;em;sweat;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -66,7 +74,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "3;kayoko;01;不，我也没做什么……",
+            "scripts": "5;shiroko;00;说起来，从早上开始只在白鸟区店铺没关门的时候买了一点点心，现在能量有些不足。",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -74,7 +82,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "5;shiroko;01;说起来，从早上开始只在白鸟区店铺没关门的时候买了一点点心，现在能量有些不足。",
+            "scripts": "1;hihumi;04;我也有点饿了……\n#1;em;upset;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -82,7 +90,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "1;hihumi;01;我也有点饿了……",
+            "scripts": "3;kayoko;03;保险起见，我已经通知老师了，白鸟区的不良应该翻不起什么浪花了。",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -90,15 +98,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "3;kayoko;01;为了保险起见，我已经通知老师了，白鸟区的不良应该翻不起什么浪花了。",
-            "selectionGroup": 0,
-            "bgmURL": "",
-            "soundURL": "",
-            "backgroundURL": "",
-            "popupFileURL": ""
-        },
-        {
-            "scripts": "1;hihumi;01;希望佩洛洛的大人到时候还能拿到……",
+            "scripts": "1;hihumi;04;希望佩洛洛的大人到时候还能拿到……\n#1;em;sweat;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -114,7 +114,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "3;aru;01;幕后黑手？谁？",
+            "scripts": "3;aru;04;幕后黑手？谁？\n#3;em;?!;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -122,7 +122,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "1;azusa;01;运输车带的都是高级的军粮，我也没见到过几次呢。",
+            "scripts": "1;azusa;01;运输车带的都是高级的军粮，我也没见到过几次呢。\n#1;em;...;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -130,7 +130,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "1;hihumi;01;就这么开吃不太好吧……",
+            "scripts": "1;hihumi;04;就这么开吃不太好吧……\n#1;em;upset;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -138,7 +138,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "5;shiroko;01;这可是战利品。",
+            "scripts": "5;shiroko;03;这可是战利品。\n#5;greeting;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -146,7 +146,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "1;mutsuki;01;反正这些本来也不是用能见光的钱买的东西啦。",
+            "scripts": "1;mutsuki;00;反正这些本来也不是用能见光的钱买的东西啦。",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -154,7 +154,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "3;aru;01;这个铁片干啥用的？",
+            "scripts": "3;aru;02;这个铁片干啥用的？\n#3;em;?;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -170,7 +170,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "3;aru;01;也就是点火就行了吧！交给我了，阿露大人！",
+            "scripts": "3;haruka;01;也就是点火就行了吧！交给我了，阿露大人！",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -178,10 +178,18 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "#all;hide\n3;kayoko;01;等……",
+            "scripts": "#all;hide\n3;kayoko;04;等……\n#3;em;?!;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
+            "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "#all;hide\n#na;（轰！）",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "SE_Boom_01",
             "backgroundURL": "",
             "popupFileURL": ""
         },

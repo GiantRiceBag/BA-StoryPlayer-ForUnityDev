@@ -2,7 +2,15 @@
     "groupID": 330,
     "content": [
         {
-            "scripts": "2;master;01\n4;shiroko;01;这个，你们收吗？",
+            "scripts": "2;master;01\n4;shiroko;02;这个，你们收吗？\n#4;em;respond;",
+            "selectionGroup": 0,
+            "bgmURL": "Theme_08",
+            "soundURL": "",
+            "backgroundURL": "BG_UpperOffice",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "2;master;01;虽然这款式的佩洛洛因为数量有限而且大部分现在都被封在白鸟区出不来而价格暴涨，但是光是兑换券也无法给出过高价格……\n#2;em;...;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -10,15 +18,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "2;master;01;虽然这款式的佩洛洛因为数量有限而且大部分现在都被封在白鸟区出不来而价格暴涨，但是光是兑换券也无法给出过高价格……",
-            "selectionGroup": 0,
-            "bgmURL": "",
-            "soundURL": "",
-            "backgroundURL": "",
-            "popupFileURL": ""
-        },
-        {
-            "scripts": "2;hihumi;01;等等！",
+            "scripts": "2;hihumi;05;等等！\n#2;hophop;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -34,7 +34,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "2;hihumi;01;白子同学，那个兑换券应该只有在D.U.白鸟区的活动中才能获得的！但是兑换的话，应该在这附近就有兑换点才对！",
+            "scripts": "2;hihumi;06;白子同学，那个兑换券应该只有在D.U.白鸟区的活动中才能获得的！但是兑换的话，应该在这附近就有兑换点才对！",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -42,7 +42,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "4;master;01;那个小型兑换点应该早就关门了，这位客人如果你需要的话，我们这里有出售，只需要「一百万」信用点就够了。",
+            "scripts": "4;master;03;那个小型兑换点应该早就关门了，这位客人如果你需要的话，我们这里有出售，只需要「一百万」信用点就够了。",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -50,7 +50,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "2;shiroko;01;这点就够了吧。",
+            "scripts": "2;shiroko;02;这点就够了吧。\n#2;em;respond;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -58,7 +58,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "4;master;01;我们这一概不接受赊账……唉？",
+            "scripts": "4;master;03;我们这一概不接受赊账……唉？\n#4;em;...;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -66,7 +66,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "4;hihumi;01;唉唉唉唉！？这么多信用点，是怎么……",
+            "scripts": "4;hihumi;08;唉唉唉唉！？这么多信用点，是怎么……\n#4;em;upset;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -74,7 +74,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "2;shiroko;01;不知道，突然就有了，反正对阿比多斯的债务来说也是九牛一毛。",
+            "scripts": "2;shiroko;04;不知道，突然就有了，反正对阿比多斯的债务来说也是九牛一毛。\n#2;em;sweat;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -82,7 +82,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "4;hihumi;01;可是，这么多钱我一时也……",
+            "scripts": "4;hihumi;07;可是，这么多钱我一时也……\n#4;em;upset;\n#4;stiff;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -90,7 +90,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "2;shiroko;01;不用还也行的，浮士德。",
+            "scripts": "2;shiroko;03;不用还也行的，浮士德。\n#2;em;respond;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -98,7 +98,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "4;hihumi;01;唉？",
+            "scripts": "4;hihumi;04;唉？!\n#4;em;?!;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -114,7 +114,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "#na;就这样，浮士德在手下得力干将源源不断金钱的帮助下，产业渗透了黑市的方方面面，成为了真正的黑市之王。",
+            "scripts": "#na;就这样，浮士德在手下得力干将源源不断的金钱帮助下，产业渗透了黑市的方方面面，成为了真正的黑市之王。",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",

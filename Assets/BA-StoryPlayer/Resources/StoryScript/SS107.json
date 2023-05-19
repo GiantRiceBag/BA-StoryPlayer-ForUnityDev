@@ -2,7 +2,15 @@
     "groupID": 107,
     "content": [
         {
-            "scripts": "5;shiroko;01;芹香，上午好",
+            "scripts": "5;shiroko;01;芹香，上午好。",
+            "selectionGroup": 0,
+            "bgmURL": "Theme_04",
+            "soundURL": "",
+            "backgroundURL": "BG_FoodCartRamen",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "1;serika;03;白子前辈，今天也要骑车锻炼吗？\n#1;em;respond;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -10,7 +18,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "1;serika;01;白子前辈，今天也要骑车锻炼吗？",
+            "scripts": "5;shiroko;03;嗯，今天的风相当不错。",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -18,15 +26,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "5;shiroko;01;嗯，今天的风相当不错。",
-            "selectionGroup": 0,
-            "bgmURL": "",
-            "soundURL": "",
-            "backgroundURL": "",
-            "popupFileURL": ""
-        },
-        {
-            "scripts": "1;serika;01;白子前辈又在说这些听不懂的事……说起来，确实今天光顾的客人好像多了一点。",
+            "scripts": "1;serika;11;白子前辈又在说这些听不懂的事……说起来，确实今天光顾的客人好像多了一点。",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -42,7 +42,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "1;serika;01;真是的！我没有做什么啊！",
+            "scripts": "1;serika;07;真是的！我没有做什么啊！",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -50,7 +50,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "5;shiroko;01;嗯，努力了呢，芹香。",
+            "scripts": "5;shiroko;03;嗯，努力了呢，芹香。",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -58,7 +58,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "1;serika;01;都说了我没做什么啦！不过这几天好像确实少了不少不良学生的样子。",
+            "scripts": "1;serika;04;都说了我没做什么啦！不过这几天似乎不良学生确实少了许多。",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -74,7 +74,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "1;serika;01;如果星野前辈有空的话能一起来吃拉面就好了，可惜最近她好像一直不太有精神的样子。",
+            "scripts": "1;serika;05;如果星野前辈有空的话能一起来吃拉面就好了，可惜最近她好像一直不太有精神的样子。",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -90,7 +90,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "1;serika;01;不是啦！我是说最近她好像稍微有点更……",
+            "scripts": "1;serika;02;不是啦！我是说最近她好像稍微有点更……",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -98,7 +98,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "5;shiroko;01;嗯……女生的话，也会有这种时期啦。",
+            "scripts": "5;shiroko;02;嗯……女生的话，也会有这种时期啦。",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -106,7 +106,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "1;serika;01;？什么意思……啊！我……我没有说那种事啦！",
+            "scripts": "1;serika;07;？什么意思……啊！我……我没有说那种事啦！",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -114,7 +114,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "5;shiroko;01;嗯，那么再见了，芹香。",
+            "scripts": "5;shiroko;03;嗯，那么再见了，芹香。",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -122,7 +122,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "1;serika;01;喂！",
+            "scripts": "1;serika;10;喂！",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
