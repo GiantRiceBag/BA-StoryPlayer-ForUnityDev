@@ -242,7 +242,8 @@ namespace BAStoryPlayer
                 if(coroutine == null)
                 {
                     coroutine = StartCoroutine(CCharacterWink(name));
-                    winkAction.Add(name, coroutine);
+                    if (coroutine != null)
+                        winkAction.Add(name, coroutine);
                 }
             }
             else
@@ -258,7 +259,7 @@ namespace BAStoryPlayer
         {
             int index = CheckCharacterExist(name);
 
-            string ani_EyeClose_Name = "Eye_Close_01";
+            string ani_EyeClose_Name = "";
             // 寻找眨眼动画的名字 一般以e开头
             foreach (var i in character[index].SkeletonData.Animations)
             {
@@ -267,6 +268,10 @@ namespace BAStoryPlayer
                     ani_EyeClose_Name = i.Name;
                     break;
                 }
+            }
+            if(ani_EyeClose_Name == "")
+            {
+                yield break;
             }
 
 
@@ -495,6 +500,8 @@ namespace BAStoryPlayer
                 return;
             // TODO 先暂时使用手动定位的方式
             EmotionFactory.SetEmotion(character[index].transform, emotion,LocateMode.Manual);
+
+            OnAnimateCharacter?.Invoke(1.5f);
         }
 
         /// <summary>

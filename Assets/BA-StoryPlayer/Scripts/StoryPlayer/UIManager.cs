@@ -188,9 +188,9 @@ namespace BAStoryPlayer
                 image_Background.DoFloat("_Weight", enable ? 1 : 0, BAStoryPlayerController.Instance.Setting.Time_BlurBackground);
             else if(transition == TransistionType.Instant)
             {
-                Material mat = image_Background.material;
-                mat.SetFloat("_Weight", enable ? 1 : 0);
+                Material mat = new Material(image_Background.material);
                 image_Background.material = mat;
+                mat.SetFloat("_Weight", enable ? 1 : 0);
             }
                 
         }

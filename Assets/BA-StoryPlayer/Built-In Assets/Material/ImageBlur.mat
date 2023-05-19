@@ -47,7 +47,7 @@ Material:
     - _StencilReadMask: 255
     - _StencilWriteMask: 255
     - _UseUIAlphaClip: 0
-    - _Weight: 1
+    - _Weight: 0
     - _blurSizeXY: 0
     - hstep: 0.4
     - radius: 30
