@@ -4,7 +4,7 @@
         {
             "scripts": "1;nonomi;03;白子酱，这里这里！\n#1;em;h;",
             "selectionGroup": 0,
-            "bgmURL": "",
+            "bgmURL": "Theme_04",
             "soundURL": "",
             "backgroundURL": "BG_FoodCartRamen_Night",
             "popupFileURL": ""
