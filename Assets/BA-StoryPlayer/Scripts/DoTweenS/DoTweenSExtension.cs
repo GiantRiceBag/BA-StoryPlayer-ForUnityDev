@@ -224,8 +224,7 @@ namespace BAStoryPlayer.DoTweenS
         static IEnumerator DoFloat_Image_Material(this MonoBehaviour mono,TweenS tween)
         {
             Image image = tween.transform.GetComponent<Image>();
-            Material mat = image.material;
-            mat = GameObject.Instantiate(mat);
+            Material mat = new Material(image.material);
             image.material = mat;
             float target = (float)tween.target;
             float origin = mat.GetFloat(tween.targetName);

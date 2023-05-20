@@ -126,7 +126,7 @@ namespace BAStoryPlayer
             if (image_Background == null)
                 image_Background = transform.Find("Background").GetComponent<Image>();
 
-            // 动作事件订阅 锁定一定时间的操作
+            // 动作以及表情事件订阅 锁定一定时间的操作
             CharacterModule.OnAnimateCharacter.AddListener((duration)=> { Lock(duration + BAStoryPlayerController.Instance.Setting.Time_Lock_AfterAction); });
 
             // 选项事件订阅
@@ -361,7 +361,7 @@ namespace BAStoryPlayer
                         Destroy(gameObject);
                     }
                 }
-            }, 1f);
+            }, 2f);
         }
 
         public enum CurtainType
