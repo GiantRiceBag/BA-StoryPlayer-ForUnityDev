@@ -18,7 +18,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "1;serika;01;让我看看……",
+            "scripts": "1;serika_uniform;01;让我看看……",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -90,7 +90,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "1;serika;01;真的能回来吗？\n#1;em;?;",
+            "scripts": "1;serika_uniform;01;真的能回来吗？\n#1;em;?;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -138,7 +138,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "1;serika;07;不会吗！？\n#1;em;?!;",
+            "scripts": "1;serika_uniform;07;不会吗！？\n#1;em;?!;",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",

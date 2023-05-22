@@ -104,11 +104,14 @@ namespace BAStoryPlayer
         public BAStoryPlayer LoadStory(StoryScript storyScript)
         {
             if (isPlaying) { Debug.Log("剧情播放中"); return null; }
-
+            
             isPlaying = true;
 
             // TODO 不删除方案的选项
             StoryPlayer.gameObject.SetActive(true);
+
+            // 移除事件
+            StoryPlayer.OnFinishPlaying.RemoveAllListeners();
 
             MasterParser parser = new MasterParser(); // 实例化解析器
 

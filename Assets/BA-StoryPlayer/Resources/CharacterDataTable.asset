@@ -57,7 +57,7 @@ MonoBehaviour:
     familyName: 
     name: "\u5170\u821E"
     collage: "\u683C\u9ED1\u5A1C"
-    affiliation: "JumpJump\u94A2\u76D4\u56E2"
+    affiliation: "\u556A\u55D2\u556A\u55D2\u94A2\u76D4\u56E2"
     prefabUrl: rabu
     portraitUrl: 
     spineEmotion: 1
@@ -155,5 +155,13 @@ MonoBehaviour:
     collage: 
     affiliation: 
     prefabUrl: shiroko_alter
+    portraitUrl: 
+    spineEmotion: 1
+  - indexName: serika_uniform
+    familyName: "\u9ED1\u89C1"
+    name: "\u82B9\u9999"
+    collage: "\u963F\u62DC\u591A\u65AF"
+    affiliation: "\u5BF9\u7B56\u59D4\u5458\u4F1A"
+    prefabUrl: serika_uniform
     portraitUrl: 
     spineEmotion: 1

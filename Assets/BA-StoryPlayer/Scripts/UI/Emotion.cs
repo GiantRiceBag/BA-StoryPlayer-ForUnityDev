@@ -20,7 +20,7 @@ namespace BAStoryPlayer.UI
                 var rect = GetComponent<RectTransform>();
                 rect.SetParent(parent);
                 rect.anchorMin = rect.anchorMax = Vector2.zero;
-                rect.localScale = Vector2.one;
+                rect.localScale = Vector3.one;
                 rect.anchoredPosition = pos * parent.GetComponent<RectTransform>().sizeDelta;
             }else if (locateMode == LocateMode.Manual)
             {
@@ -40,7 +40,7 @@ namespace BAStoryPlayer.UI
                 var rect = GetComponent<RectTransform>();
                 rect.SetParent(locator);
                 rect.anchorMin = rect.anchorMax = Vector2.zero;
-                rect.localScale = Vector2.one;
+                rect.localScale = Vector3.one;
                 rect.anchoredPosition = pos;
             }
 
