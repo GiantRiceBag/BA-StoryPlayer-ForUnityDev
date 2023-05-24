@@ -27,38 +27,10 @@ namespace BAStoryPlayer
         Think
     }
 
-    public enum LocateMode
-    {
-        Auto,
-        Manual
-    }
-
     public static class EmotionFactory
     {
         /*
-       // 白子各表情坐标 自动
-       Heart 301 1989
-       Respond 326 1951
-       Music 461 1968
-       Twnikle 401 2015
-       Upset 341 2044
-       Sweat 484 1999
-       Dot 317 2094
-       Chat 414 1751
-       Exclaim 372 2049
-       Surprise 448 2071
-       Question 405 2067
-       Shy 311 2098
-       Angry 453 2036
-        Steam 314 1962
-        Sigh 388 1745
-        Sad 479 1990
-        Bulb 298 2104
-        Zzz 298 2061
-        Tear 399 1896
-       */
-        /*
-        // 白子各表情坐标 手动带定位器
+        // 白子各表情坐标 定位器下
         Heart -313 221
         Respond -268 165
         Music -157 165
@@ -79,10 +51,15 @@ namespace BAStoryPlayer
         Zzz -296 208
         Tear -202 -36
         */
-        static Vector2 ReferenceSize  { get { return new Vector2(1125.85f, 2271.2f); } } // 标准化参考人物尺寸（取自白子的标准大小）
+        const float COEFFICIENT = 254f / 1327f;
+        const int LIMIT_HEIGHT = 700;
+        static  Vector3 OFFSET_HEADLOCATOR {get{return new Vector3(0,-35f,0); } }
+        const float LIMIT_X_VERTEX = 300;
 
+        static System.Collections.Generic.Dictionary<CharacterEmotion, GameObject> emotionCache= new System.Collections.Generic.Dictionary<CharacterEmotion, GameObject>();
+        
         // TODO 表情全做完后可以删掉Case了
-        public static void SetEmotion(Transform target,CharacterEmotion emotion,LocateMode locateMode)
+        public static void SetEmotion(Transform target,CharacterEmotion emotion)
         {
             switch (emotion)
             {
@@ -106,9 +83,25 @@ namespace BAStoryPlayer
                 case CharacterEmotion.Zzz:
                 case CharacterEmotion.Tear:
                     {
-                        var emo = GameObject.Instantiate(Resources.Load<GameObject>($"Emotions/Emotion_{emotion.ToString()}")).GetComponent<Emotion>();
-                        emo.Initlaize(target, GetPos(emotion,locateMode),locateMode);
-                        BAStoryPlayerController.Instance.StoryPlayer.AudioModule.Play($"Emotion/Emotion_{emotion.ToString()}");
+                        Transform HeadLocator = target.Find("HeadLocator");
+                        if (HeadLocator == null)
+                            HeadLocator = SpawnHeadLocator(target);
+
+                        if (HeadLocator == null) return;
+
+                        try
+                        {
+                            if (!emotionCache.ContainsKey(emotion))
+                                emotionCache.Add(emotion, Resources.Load<GameObject>($"Emotions/Emotion_{emotion.ToString()}"));
+
+                            var emo = GameObject.Instantiate(emotionCache[emotion]).GetComponent<Emotion>();
+                            emo.Initlaize(HeadLocator, GetPos(emotion));
+                            BAStoryPlayerController.Instance.StoryPlayer.AudioModule.Play($"Emotion/Emotion_{emotion.ToString()}");
+                        }
+                        catch
+                        {
+                            return;
+                        }
                         break;
                     }
                 case CharacterEmotion.Think:
@@ -120,114 +113,114 @@ namespace BAStoryPlayer
             }
         }
 
-        // TODO 暂时使用手动坐标
         /// <summary>
-        /// 获取表情的标准化坐标
+        /// 获取表情在定位器下的坐标
         /// </summary>
         /// <param name="emotion"></param>
         /// <returns></returns>
-        static Vector2 GetPos(CharacterEmotion emotion,LocateMode locateMode)
+        static Vector2 GetPos(CharacterEmotion emotion)
         {
-            if(locateMode == LocateMode.Auto)
+            switch (emotion)
             {
-                switch (emotion)
-                {
-                    case CharacterEmotion.Heart:
-                        return new Vector2(301, 1989) / ReferenceSize;
-                    case CharacterEmotion.Respond:
-                        return new Vector2(326, 1951) / ReferenceSize;
-                    case CharacterEmotion.Music:
-                        return new Vector2(461, 1968) / ReferenceSize;
-                    case CharacterEmotion.Twinkle:
-                        return new Vector2(401, 2015) / ReferenceSize;
-                    case CharacterEmotion.Upset:
-                        return new Vector2(341, 2044) / ReferenceSize;
-                    case CharacterEmotion.Sweat:
-                        return new Vector2(484, 1999) / ReferenceSize;
-                    case CharacterEmotion.Dot:
-                        return new Vector2(317, 2094) / ReferenceSize;
-                    case CharacterEmotion.Chat:
-                        return new Vector2(400, 1751) / ReferenceSize;
-                    case CharacterEmotion.Exclaim:
-                        return new Vector2(372, 2049) / ReferenceSize;
-                    case CharacterEmotion.Surprise:
-                        return new Vector2(448, 2071) / ReferenceSize;
-                    case CharacterEmotion.Question:
-                        return new Vector2(405, 2067) / ReferenceSize;
-                    case CharacterEmotion.Shy:
-                        return new Vector2(311, 2098) / ReferenceSize;
-                    case CharacterEmotion.Angry:
-                        return new Vector2(453, 2036) / ReferenceSize;
-                    case CharacterEmotion.Steam:
-                        return new Vector2(314, 1962) / ReferenceSize;
-                    case CharacterEmotion.Sigh:
-                        return new Vector2(388, 1745) / ReferenceSize;
-                    case CharacterEmotion.Sad:
-                        return new Vector2(479, 1990) / ReferenceSize;
-                    case CharacterEmotion.Bulb:
-                        return new Vector2(298, 2104) / ReferenceSize;
-                    case CharacterEmotion.Zzz:
-                        return new Vector2(298, 2061) / ReferenceSize;
-                    case CharacterEmotion.Tear:
-                        return new Vector2(399, 1896) / ReferenceSize;
-                    case CharacterEmotion.Think:
-                    default:
-                        {
-                            Debug.Log($"情绪{emotion} 没做");
-                            return Vector2.zero;
-                        }
-                }
+                case CharacterEmotion.Heart:
+                    return new Vector2(-313, 221);
+                case CharacterEmotion.Respond:
+                    return new Vector2(-268, 165);
+                case CharacterEmotion.Music:
+                    return new Vector2(-157, 165);
+                case CharacterEmotion.Twinkle:
+                    return new Vector2(-153, 152);
+                case CharacterEmotion.Upset:
+                    return new Vector2(-319, 223);
+                case CharacterEmotion.Sweat:
+                    return new Vector2(-118, 158);
+                case CharacterEmotion.Dot:
+                    return new Vector2(-318, 224);
+                case CharacterEmotion.Chat:
+                    return new Vector2(-224, -90);
+                case CharacterEmotion.Exclaim:
+                    return new Vector2(-199, 188);
+                case CharacterEmotion.Surprise:
+                    return new Vector2(-163, 151);
+                case CharacterEmotion.Question:
+                    return new Vector2(-179, 165);
+                case CharacterEmotion.Shy:
+                    return new Vector2(-317, 225);
+                case CharacterEmotion.Angry:
+                    return new Vector2(-120, 133);
+                case CharacterEmotion.Steam:
+                    return new Vector2(-290, -20);
+                case CharacterEmotion.Sigh:
+                    return new Vector2(-199, -159);
+                case CharacterEmotion.Sad:
+                    return new Vector2(-151, 149);
+                case CharacterEmotion.Bulb:
+                    return new Vector2(-313, 226);
+                case CharacterEmotion.Zzz:
+                    return new Vector2(-296, 208);
+                case CharacterEmotion.Tear:
+                    return new Vector2(-202, -36);
+                case CharacterEmotion.Think:
+                default:
+                    {
+                        Debug.Log($"情绪{emotion} 没做");
+                        return Vector2.zero;
+                    }
             }
-            else
+        }
+
+        static Transform SpawnHeadLocator(Transform target)
+        {
+            Debug.Log($"未找到角色 {target.name} 头部定位器 [HeadLocator] 尝试自动生成");
+            try
             {
-                switch (emotion)
+                var skeletonGraphic = target.GetComponent<Spine.Unity.SkeletonGraphic>();
+                skeletonGraphic.UpdateMesh();
+                var rectTransform = target.GetComponent<RectTransform>();
+
+                GameObject pivot = new GameObject("pivot", typeof(RectTransform));
+                pivot.transform.SetParent(target);
+                pivot.transform.localScale = Vector3.one;
+                pivot.GetComponent<RectTransform>().anchorMin = pivot.GetComponent<RectTransform>().anchorMax = Vector2.zero;
+                pivot.GetComponent<RectTransform>().anchoredPosition = rectTransform.sizeDelta * rectTransform.pivot;
+
+                float heightAbovePivot = skeletonGraphic.GetLastMesh().bounds.size.y - pivot.GetComponent<RectTransform>().anchoredPosition.y;
+                GameObject.Destroy(pivot);
+
+                GameObject headLocator = new GameObject("HeadLocator", typeof(RectTransform));
+                headLocator.transform.SetParent(target);
+                headLocator.transform.localScale = Vector3.one;
+                Vector3 faceCenter = Vector3.zero;
+
+                int count = 0;
+                foreach (var vertex in skeletonGraphic.GetLastMesh().vertices)
                 {
-                    case CharacterEmotion.Heart:
-                        return new Vector2(-313,221);
-                    case CharacterEmotion.Respond:
-                        return new Vector2(-268, 165);
-                    case CharacterEmotion.Music:
-                        return new Vector2(-157, 165);
-                    case CharacterEmotion.Twinkle:
-                        return new Vector2(-153, 152);
-                    case CharacterEmotion.Upset:
-                        return new Vector2(-319, 223);
-                    case CharacterEmotion.Sweat:
-                        return new Vector2(-118, 158);
-                    case CharacterEmotion.Dot:
-                        return new Vector2(-318, 224);
-                    case CharacterEmotion.Chat:
-                        return new Vector2(-224, -90);
-                    case CharacterEmotion.Exclaim:
-                        return new Vector2(-199, 188);
-                    case CharacterEmotion.Surprise:
-                        return new Vector2(-163, 151);
-                    case CharacterEmotion.Question:
-                        return new Vector2(-179, 165);
-                    case CharacterEmotion.Shy:
-                        return new Vector2(-317, 225);
-                    case CharacterEmotion.Angry:
-                        return new Vector2(-120, 133);
-                    case CharacterEmotion.Steam:
-                        return new Vector2(-290, -20);
-                    case CharacterEmotion.Sigh:
-                        return new Vector2(-199, -159);
-                    case CharacterEmotion.Sad:
-                        return new Vector2(-151, 149);
-                    case CharacterEmotion.Bulb:
-                        return new Vector2(-313, 226);
-                    case CharacterEmotion.Zzz:
-                        return new Vector2(-296, 208);
-                    case CharacterEmotion.Tear:
-                        return new Vector2(-202, -36);
-                    case CharacterEmotion.Think:
-                    default:
-                        {
-                            Debug.Log($"情绪{emotion} 没做");
-                            return Vector2.zero;
-                        }
+                    if (vertex.y < LIMIT_HEIGHT || vertex.y > heightAbovePivot - heightAbovePivot * COEFFICIENT || Mathf.Abs(vertex.x) > LIMIT_X_VERTEX)
+                        continue;
+
+                    faceCenter += vertex;
+                    count++;
                 }
+                if (faceCenter == Vector3.zero)
+                {
+                    Debug.LogError($"角色 {target.name} 无法定位脸部位置 在匹配完RectTransform大小后 创建名为[HeadLocator]的空对象并拖动到角色脸部中央位置");
+                    GameObject.Destroy(headLocator);
+                    return null;
+                }
+
+                faceCenter /= count;
+                headLocator.transform.localPosition = faceCenter + OFFSET_HEADLOCATOR;
+                return headLocator.transform;
             }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public static void ClearCache()
+        {
+            emotionCache.Clear();
         }
     }
 }

@@ -8,17 +8,60 @@ using Spine.Unity.AttachmentTools;
 using Spine;
 public class Test : MonoBehaviour
 {
-    public int index = 0;
-    private void Start()
-    {
-        //BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.ActivateCharacter(2, "shiroko", "01");
-        //BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.ActivateCharacter(1, "azusa", "01");
-        //BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.ActivateCharacter(0, "hoshino", "01");
-        //BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.ActivateCharacter(3, "hihumi", "01");
-        //BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.ActivateCharacter(4, "aru", "01");
-    }
+    public List<SkeletonGraphic> skels;
+    public GameObject prefab;
 
-    // Update is called once per frame
+    public int index = 0;
+    //private void Start()
+    //{
+    //    //BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.ActivateCharacter(2, "shiroko", "01");
+    //    //BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.ActivateCharacter(1, "azusa", "01");
+    //    //BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.ActivateCharacter(0, "hoshino", "01");
+    //    //BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.ActivateCharacter(3, "hihumi", "01");
+    //    //BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.ActivateCharacter(4, "aru", "01");
+
+    //    //var slot = skel.Skeleton.FindSlot("eyeclose");
+
+    //    foreach (var skel in skels)
+    //    {
+    //        skel.UpdateMesh(true);
+    //        Vector3 sum = Vector3.zero;
+    //        int count = 0;
+    //        Debug.Log($"{skel.name} size {skel.GetLastMesh().bounds.size}");
+    //        Debug.Log($"{skel.name} center {skel.GetLastMesh().bounds.center}");
+
+    //        GameObject pivot = Instantiate(prefab, skel.transform);
+    //        pivot.GetComponent<RectTransform>().anchorMin = pivot.GetComponent<RectTransform>().anchorMax = Vector2.zero;
+    //        pivot.transform.localPosition = skel.GetLastMesh().GetSubMesh(0).bounds.center;
+    //        pivot.name = "pivot";
+
+    //        float heightAbovePivot = skel.GetLastMesh().bounds.size.y - pivot.GetComponent<RectTransform>().anchoredPosition.y;
+
+    //        float arg = 254f / 1327f;
+    //        float xRange = 300;
+    //        foreach (var i in skel.GetLastMesh().vertices)
+    //        {
+    //            if (i.y < 700 || i.y > heightAbovePivot - heightAbovePivot * arg || Mathf.Abs(i.x) > xRange)
+    //                continue;
+    //            Debug.Log(i);
+    //            GameObject point = Instantiate(prefab, skel.transform);
+    //            point.GetComponent<RectTransform>().anchorMin = point.GetComponent<RectTransform>().anchorMax = skel.GetComponent<RectTransform>().pivot;
+    //            point.transform.localPosition = i;
+    //            point.name = count.ToString();
+    //            point.GetComponent<Image>().color = Color.blue;
+    //            sum += i;
+    //            count++;
+    //        }
+
+    //        GameObject faceCenter = Instantiate(prefab, skel.transform);
+    //        faceCenter.GetComponent<RectTransform>().anchorMin = faceCenter.GetComponent<RectTransform>().anchorMax = skel.GetComponent<RectTransform>().pivot;
+    //        faceCenter.name = "faceCenter";
+    //        faceCenter.GetComponent<Image>().color = Color.green;
+    //        faceCenter.transform.localPosition = sum / count;
+
+    //    }
+    //}
+
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
@@ -39,6 +82,16 @@ public class Test : MonoBehaviour
             BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(3, (CharacterEmotion)index);
             BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(4, (CharacterEmotion)index);
             index %= 19;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            foreach(var i in skels)
+            {
+                EmotionFactory.SetEmotion(i.transform, (CharacterEmotion)index);
+                index++;
+                index %= 19;
+            }
         }
     }
 }

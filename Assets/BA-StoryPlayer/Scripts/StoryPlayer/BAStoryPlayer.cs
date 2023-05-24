@@ -327,7 +327,7 @@ namespace BAStoryPlayer
                     CreateCurtain(CurtainType.Out, 1, () =>
                     {
                         OnFinishPlaying?.Invoke();
-
+                        EmotionFactory.ClearCache();
                         if (!destoryObject)
                         {
                             gameObject.SetActive(false);
@@ -346,7 +346,7 @@ namespace BAStoryPlayer
                 else
                 {
                     OnFinishPlaying?.Invoke();
-
+                    EmotionFactory.ClearCache();
                     if (!destoryObject)
                     {
                         gameObject.SetActive(false);

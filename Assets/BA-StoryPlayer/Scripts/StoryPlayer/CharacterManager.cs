@@ -81,16 +81,7 @@ namespace BAStoryPlayer
                     rectTransform.anchoredPosition = new Vector3((index + 1) * VALUE_INTERVAL_SLOT,0,0);
                     rectTransform.localScale = new Vector3(VALUE_CHARACTER_SCALE, VALUE_CHARACTER_SCALE, 1);
 
-                    // TODO 表情定位器临时使用
-                    //Transform locator = obj.transform.Find("HeadLocator");
-                    //if (locator == null) locator = obj.transform.GetChild(0);
-                    //RectTransform locatorRect = locator.GetComponent<RectTransform>();
-                    //Vector2 origin = locatorRect.position;
-
                     obj.GetComponent<SkeletonGraphic>().MatchRectTransformWithBounds();
-
-                    // TODO 表情定位器临时使用
-                    //locatorRect.position = origin;
 
                     characterPool.Add(name, obj);
                 }
@@ -499,7 +490,7 @@ namespace BAStoryPlayer
             if (CheckSlotEmpty(index))
                 return;
             // TODO 先暂时使用手动定位的方式
-            EmotionFactory.SetEmotion(character[index].transform, emotion,LocateMode.Manual);
+            EmotionFactory.SetEmotion(character[index].transform, emotion);
 
             OnAnimateCharacter?.Invoke(1.5f);
         }
