@@ -174,7 +174,7 @@
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "SE_Boom_01",
-            "backgroundURL": "",
+            "backgroundURL": "BG_Black",
             "popupFileURL": ""
         },
         {
@@ -186,11 +186,19 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "2;hoshino;00;哈……啊……昨天还挺热闹的，不会是白子酱你袭击的吧？",
+            "scripts": "#wait;1500",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
             "backgroundURL": "BG_SchoolFrontGate",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "2;hoshino;00;哈……啊……昨天还挺热闹的，不会是白子酱你袭击的吧？",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "",
             "popupFileURL": ""
         },
         {

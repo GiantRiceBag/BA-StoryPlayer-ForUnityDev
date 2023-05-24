@@ -110,7 +110,7 @@
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
-            "backgroundURL": "",
+            "backgroundURL": "BG_Black",
             "popupFileURL": ""
         },
         {
@@ -118,7 +118,7 @@
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
-            "backgroundURL": "BG_Black",
+            "backgroundURL": "",
             "popupFileURL": ""
         },
         {

@@ -23,12 +23,14 @@ Shader "Hidden/ImageBlur"
             {
                 float4 vertex : POSITION;
                 float2 uv : TEXCOORD0;
+                float4 color    : COLOR;
             };
  
             struct v2f
             {
                 float2 uv : TEXCOORD0;
                 float4 vertex : SV_POSITION;
+                float4  color : COLOR;
             };
  
             sampler2D _MainTex;
@@ -36,12 +38,14 @@ Shader "Hidden/ImageBlur"
             float4 _MainTex_TexelSize;
             float _Weight;
             int _CoreSizeR;
+            float4 _Color;
  
             v2f vert (appdata_t v)
             {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = v.uv;
+                o.color = v.color;
                 return o;
             }
  
@@ -57,7 +61,7 @@ Shader "Hidden/ImageBlur"
                     }
                 }
                 col /= _CoreSizeR * _CoreSizeR * 4;
-                return col;
+                return col * i.color;
             }
             ENDCG
         }
