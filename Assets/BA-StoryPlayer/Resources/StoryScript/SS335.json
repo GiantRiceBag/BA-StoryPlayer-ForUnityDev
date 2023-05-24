@@ -174,7 +174,7 @@
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "SE_Boom_01",
-            "backgroundURL": "",
+            "backgroundURL": "BG_Black",
             "popupFileURL": ""
         },
         {
@@ -183,6 +183,14 @@
             "bgmURL": "",
             "soundURL": "",
             "backgroundURL": "",
+            "popupFileURL": ""
+        },
+        {
+            "scripts": "#wait;1500",
+            "selectionGroup": 0,
+            "bgmURL": "",
+            "soundURL": "",
+            "backgroundURL": "BG_SchoolFrontGate",
             "popupFileURL": ""
         },
         {

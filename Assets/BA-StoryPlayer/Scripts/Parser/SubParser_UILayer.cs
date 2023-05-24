@@ -18,7 +18,7 @@ namespace BAStoryPlayer
 
             if (rawStoryUnit.backgroundURL != string.Empty)
             {
-                storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.SetBackground(rawStoryUnit.backgroundURL); };
+                storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.SetBackground(rawStoryUnit.backgroundURL,TransistionType.Smooth); };
             }
 
             for(int i = 0; i < rawStoryUnit.scriptList.Count; i++) {

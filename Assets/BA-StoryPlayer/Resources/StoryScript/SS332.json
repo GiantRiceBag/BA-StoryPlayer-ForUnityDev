@@ -165,7 +165,7 @@
             "scripts": "#clearST\n#all;hide;\n#na;（轰！）",
             "selectionGroup": 0,
             "bgmURL": "",
-            "soundURL": "",
+            "soundURL": "SE_Boom_01",
             "backgroundURL": "",
             "popupFileURL": ""
         },
