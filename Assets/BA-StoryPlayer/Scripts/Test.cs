@@ -6,10 +6,13 @@ using Spine.Unity;
 using BAStoryPlayer;
 using Spine.Unity.AttachmentTools;
 using Spine;
+using BAStoryPlayer.DoTweenS;
 public class Test : MonoBehaviour
 {
     public List<SkeletonGraphic> skels;
     public GameObject prefab;
+    public SkeletonGraphic skel;
+    public Vector3 TestV3;
 
     public int index = 0;
     //private void Start()
@@ -64,25 +67,25 @@ public class Test : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(0, (CharacterEmotion)index);
-            BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(1, (CharacterEmotion)index);
-            BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(2, (CharacterEmotion)index);
-            BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(3, (CharacterEmotion)index);
-            BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(4, (CharacterEmotion)index);
-            index++;
-            index %= 19;
-        }
-        if (Input.GetMouseButtonDown(1))
-        {
-            BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(0, (CharacterEmotion)index);
-            BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(1, (CharacterEmotion)index);
-            BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(2, (CharacterEmotion)index);
-            BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(3, (CharacterEmotion)index);
-            BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(4, (CharacterEmotion)index);
-            index %= 19;
-        }
+        //if (Input.GetMouseButtonDown(0))
+        //{
+        //    BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(0, (CharacterEmotion)index);
+        //    BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(1, (CharacterEmotion)index);
+        //    BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(2, (CharacterEmotion)index);
+        //    BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(3, (CharacterEmotion)index);
+        //    BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(4, (CharacterEmotion)index);
+        //    index++;
+        //    index %= 19;
+        //}
+        //if (Input.GetMouseButtonDown(1))
+        //{
+        //    BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(0, (CharacterEmotion)index);
+        //    BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(1, (CharacterEmotion)index);
+        //    BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(2, (CharacterEmotion)index);
+        //    BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(3, (CharacterEmotion)index);
+        //    BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(4, (CharacterEmotion)index);
+        //    index %= 19;
+        //}
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
@@ -93,5 +96,29 @@ public class Test : MonoBehaviour
                 index %= 19;
             }
         }
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetAction(2, CharacterAction.falldownR);
+
+        }
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            skel.transform.rotation = oq;
+            BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.ActivateCharacter(2, "shiroko", "01");
+        }
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            BAStoryPlayerController.Instance.StoryPlayer.CloseStoryPlayer();
+        }
+
+
     }
+
+    private void Start()
+    {
+        //BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.ActivateCharacter(2, "shiroko", "01");
+    }
+    Quaternion oq;
+    Vector3 op;
+    Coroutine co;
 }

@@ -32,7 +32,7 @@ namespace BAStoryPlayer.UI
                 }
             });
 
-            BAStoryPlayerController.Instance.StoryPlayer.OnCancelAuto.AddListener(() =>
+            BAStoryPlayerController.Instance.StoryPlayer.onCancelAuto.AddListener(() =>
             {
                 selected = false;
                 GetComponent<Image>().color = Color.white;

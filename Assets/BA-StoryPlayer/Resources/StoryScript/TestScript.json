@@ -10,7 +10,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "3;shiroko;00;今天也要一起去抢银行吗?\n#place;银行劫案:行动准备\n#3;em;h\n#3;a",
+            "scripts": "3;shiroko;01;今天也要一起去抢银行吗?\n#place;银行劫案:行动准备\n#3;em;h\n#3;a",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -26,7 +26,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "3;shiroko;00;什么银行随你挑\n#3;em;c\n#3;greeting",
+            "scripts": "3;shiroko;01;什么银行随你挑\n#3;em;c\n#3;greeting",
             "selectionGroup": 1,
             "bgmURL": "",
             "soundURL": "",
@@ -58,7 +58,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "1;hoshino;00;是抢银行吗？我也来我也来我也来！\n#1;em;h\n#1;ar",
+            "scripts": "1;hoshino;01;是抢银行吗？我也来我也来我也来！\n#1;em;h\n#1;ar",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",
@@ -74,7 +74,7 @@
             "popupFileURL": ""
         },
         {
-            "scripts": "3;shiroko;00;走吧\n#3;jump\n#3;em;m",
+            "scripts": "3;shiroko;01;走吧\n#3;jump\n#3;em;m",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",

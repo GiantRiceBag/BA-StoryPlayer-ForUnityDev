@@ -36,12 +36,6 @@ namespace BAStoryPlayer.UI
             transform.localPosition = Vector3.zero;
         }
 
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
-
         public void AddOptions(System.Collections.Generic.List<OptionData> datas)
         {
             foreach (var i in datas)

@@ -1,11 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using BAStoryPlayer.DoTweenS;
 using BAStoryPlayer.UI;
+using BAStoryPlayer.Utility;
 
 namespace BAStoryPlayer
 {
@@ -29,18 +29,12 @@ namespace BAStoryPlayer
         string mainTextBuffer = null;
         bool isPrinting = false;
 
-        public bool IsPriting
-        {
-            get
-            {
-                return isPrinting;
-            }
-        }
+        public bool IsPrinting => isPrinting;
 
         BAStoryPlayer StoryPlayer { get { return BAStoryPlayerController.Instance.StoryPlayer; } }
 
-        [HideInInspector] public UnityEngine.Events.UnityEvent OnStartPrinting;
-        [HideInInspector] public UnityEngine.Events.UnityEvent  OnFinishPrinting;
+        [HideInInspector] public UnityEngine.Events.UnityEvent onStartPrinting;
+        [HideInInspector] public UnityEngine.Events.UnityEvent  onFinishPrinting;
         
 
         private void Start()
@@ -63,18 +57,18 @@ namespace BAStoryPlayer
                 btn_Menu = transform.Find("Button_Menu").GetComponent<Button>();
 
             // 事件绑定
-            OnFinishPrinting.AddListener(() => { 
+            onFinishPrinting.AddListener(() => { 
                 gameObject_Continued.SetActive(true);
 
                 // 若Auto则延缓两秒后继续
                 if (StoryPlayer.Auto)
-                    coroutine_Next = BAStoryPlayer.Delay(transform, () => { StoryPlayer.ReadyToNext(); }, 2);
+                    coroutine_Next = Timer.Delay(() => { StoryPlayer.ReadyToNext(); }, 2);
                 else
                     StoryPlayer.ReadyToNext();
             });
 
             // 若取消Auto 则删除当前执行的协程
-            StoryPlayer.OnCancelAuto.AddListener(() => {
+            StoryPlayer.onCancelAuto.AddListener(() => {
                 if(coroutine_Next != null)
                 {
                     StopCoroutine(coroutine_Next);
@@ -115,7 +109,7 @@ namespace BAStoryPlayer
         /// <param name="text"></param>
         public void PrintText(string text)
         {
-            OnStartPrinting?.Invoke();
+            onStartPrinting?.Invoke();
 
             text_Main.text = null;
             gameObject_Continued.SetActive(false);
@@ -139,7 +133,7 @@ namespace BAStoryPlayer
             isPrinting = false;
             mainTextBuffer = null;
 
-            OnFinishPrinting?.Invoke();
+            onFinishPrinting?.Invoke();
         }
 
         /// <summary>
@@ -155,7 +149,7 @@ namespace BAStoryPlayer
             mainTextBuffer = null;
             isPrinting = false;
 
-            OnFinishPrinting?.Invoke();
+            onFinishPrinting?.Invoke();
         }
 
         public void ClearText()

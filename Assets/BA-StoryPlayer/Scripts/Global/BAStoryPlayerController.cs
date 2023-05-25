@@ -94,7 +94,7 @@ namespace BAStoryPlayer
             StoryPlayer.Next(); // 开始播放第一个执行单元
 
             // 订阅播放结束事件
-            StoryPlayer.OnFinishPlaying.AddListener(() =>
+            StoryPlayer.onFinishPlaying.AddListener(() =>
             {
                 isPlaying = false;
             });
@@ -111,7 +111,7 @@ namespace BAStoryPlayer
             StoryPlayer.gameObject.SetActive(true);
 
             // 移除事件
-            StoryPlayer.OnFinishPlaying.RemoveAllListeners();
+            StoryPlayer.onFinishPlaying.RemoveAllListeners();
 
             MasterParser parser = new MasterParser(); // 实例化解析器
 
@@ -119,7 +119,7 @@ namespace BAStoryPlayer
             StoryPlayer.Next(); // 开始播放第一个执行单元
 
             // 订阅播放结束事件
-            StoryPlayer.OnFinishPlaying.AddListener(() =>
+            StoryPlayer.onFinishPlaying.AddListener(() =>
             {
                 isPlaying = false;
             });
@@ -127,7 +127,7 @@ namespace BAStoryPlayer
             return StoryPlayer;
         }
 
-        public GameObject LoadCharacter(string indexName)
+        public GameObject LoadCharacterPrefab(string indexName)
         {
             GameObject prefab = Resources.Load(Setting.Path_Prefab + CharacterDataTable[indexName].prefabUrl) as GameObject;
             prefab.name = indexName;

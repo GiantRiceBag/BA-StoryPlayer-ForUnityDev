@@ -20,14 +20,15 @@ namespace BAStoryPlayer.DoTweenS
         static List<TweenS> tweenList = new List<TweenS>();
 
         #region ÔöÉ¾¸Ä²éÍ£
-        public static void Add(TweenS tween)
+        public static void Add(TweenS tween,bool checkUniqueness = true)
         {
-            CheckUniqueness(tween, true);
+            CheckUniqueness(tween, checkUniqueness);
             tweenList.Add(tween);
         }
         public static void Remove(TweenS tween)
         {
-            tweenList.Remove(tween);
+            if(tweenList.Contains(tween))
+                tweenList.Remove(tween);
         }
         public static void KillAll()
         {

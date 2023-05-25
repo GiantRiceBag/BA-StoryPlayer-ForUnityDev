@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System;
 using BAStoryPlayer.DoTweenS;
 using BAStoryPlayer.UI;
+using Timer = BAStoryPlayer.Utility.Timer;
 
 namespace BAStoryPlayer
 {
@@ -17,7 +18,7 @@ namespace BAStoryPlayer
             {
                 auto = value;
                 if (!auto)
-                    OnCancelAuto?.Invoke();
+                    onCancelAuto?.Invoke();
                 if (auto && isPlaying && executable)
                     Next();
             }
@@ -43,6 +44,7 @@ namespace BAStoryPlayer
         [SerializeField] bool isPlaying = false;
         [SerializeField] bool executable = true;
         [SerializeField] bool isLocking = false;
+        [SerializeField] float lockTime = 0;
 
         public CharacterManager CharacterModule
         {
@@ -115,9 +117,9 @@ namespace BAStoryPlayer
             }
         }
 
-        [HideInInspector]public UnityEvent<int,int> OnUserSelect; // 第一个参数为选项ID 第二个参数为组ID
-        [HideInInspector] public UnityEvent OnCancelAuto;
-        [HideInInspector] public UnityEvent OnFinishPlaying;
+        [HideInInspector]public UnityEvent<int,int> onUserSelect; // 第一个参数为选项ID 第二个参数为组ID
+        [HideInInspector] public UnityEvent onCancelAuto;
+        [HideInInspector] public UnityEvent onFinishPlaying;
 
         Coroutine coroutine_Lock;
 
@@ -127,10 +129,10 @@ namespace BAStoryPlayer
                 image_Background = transform.Find("Background").GetComponent<Image>();
 
             // 动作以及表情事件订阅 锁定一定时间的操作
-            CharacterModule.OnAnimateCharacter.AddListener((duration)=> { Lock(duration + BAStoryPlayerController.Instance.Setting.Time_Lock_AfterAction); });
+            CharacterModule.onAnimateCharacter.AddListener((duration)=> { Lock(duration,BAStoryPlayerController.Instance.Setting.Time_Lock_AfterAction); });
 
             // 选项事件订阅
-            OnUserSelect.AddListener((selectionGroup,groupID) =>
+            onUserSelect.AddListener((selectionGroup,groupID) =>
             {
                 // 坐标前移寻找最近的选项下标 并放入优先下标队列 遇到-1则停止
                 for(int i = index_CurrentUnit; i < storyUnit.Count; i++)
@@ -148,9 +150,8 @@ namespace BAStoryPlayer
                 // 注意先切换下标
                 NextIndex();
             });
-
             // 文本输出结束时间订阅 锁定操作一段时间
-            UIModule.OnFinishPrinting.AddListener(() =>
+            UIModule.onFinishPrinting.AddListener(() =>
             {
                 Lock(BAStoryPlayerController.Instance.Setting.Time_Lock_AfterPrinting);
             });
@@ -229,7 +230,7 @@ namespace BAStoryPlayer
                 return;
 
             // 文本跳过
-            if(isPlaying && UIModule.IsPriting && !executable)
+            if(isPlaying && UIModule.IsPrinting && !executable)
             {
                 UIModule.Skip();
                 if (Auto)
@@ -245,6 +246,9 @@ namespace BAStoryPlayer
                 CloseStoryPlayer();
                 return;
             }
+
+            // 每一个单元刷新一次锁定时间
+            ReflashLockTime();
 
             switch (storyUnit[index_CurrentUnit].type)
             {
@@ -264,7 +268,7 @@ namespace BAStoryPlayer
                             // 根据单元等待时间执行等待完毕后自动执行下一单元
                             storyUnit[index_CurrentUnit].Execute();
                             executable = false;
-                            Delay(transform, () =>
+                            Timer.Delay( () =>
                             {
                                 executable = true;
                                 NextIndex();
@@ -315,18 +319,18 @@ namespace BAStoryPlayer
         /// </summary>
         /// <param name="fadeOut">是否启用幕布渐出</param>
         /// <param name="destoryObject">是否删除播放器Object</param>
-        void CloseStoryPlayer(bool fadeOut = true,bool destoryObject = false)
+        public void CloseStoryPlayer(bool fadeOut = true,bool destoryObject = false)
         {
             isPlaying = false;
             AudioModule.PauseBGM();
 
-            Delay(transform, () =>
+            Timer.Delay( () =>
             {
                 if (fadeOut)
                 {
                     CreateCurtain(CurtainType.Out, 1, () =>
                     {
-                        OnFinishPlaying?.Invoke();
+                        onFinishPlaying?.Invoke();
                         EmotionFactory.ClearCache();
                         if (!destoryObject)
                         {
@@ -345,7 +349,7 @@ namespace BAStoryPlayer
                 }
                 else
                 {
-                    OnFinishPlaying?.Invoke();
+                    onFinishPlaying?.Invoke();
                     EmotionFactory.ClearCache();
                     if (!destoryObject)
                     {
@@ -422,27 +426,28 @@ namespace BAStoryPlayer
         /// </summary>
         public void Lock(float duration,float extra = 0.5f)
         {
+            if (duration + extra > lockTime)
+                ReflashLockTime(duration + extra);
+            else
+                return;
+
             if (isLocking)
                 StopCoroutine(coroutine_Lock);
 
             isLocking = true;
-            coroutine_Lock = Delay(transform,() =>
+            coroutine_Lock = Timer.Delay(transform,() =>
             {
-                isLocking = false;
+                isLocking = false;  
             }, duration + extra);
         }
 
         /// <summary>
-        /// 延迟委托
+        /// 刷新当前单元锁定事件
         /// </summary>
-        public static Coroutine Delay(Transform obj, Action action, float duration)
+        /// <param name="value"></param>
+        public void ReflashLockTime(float value = 0)
         {
-            return obj.GetComponent<MonoBehaviour>().StartCoroutine(CDelay(action, duration));
-        }
-        static System.Collections.IEnumerator CDelay(Action action, float duration)
-        {
-            yield return new WaitForSeconds(duration);
-            action?.Invoke();
+            lockTime = value;
         }
     }
 }
