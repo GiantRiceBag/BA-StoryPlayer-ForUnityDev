@@ -6,7 +6,7 @@ namespace BAStoryPlayer
         const string PATH_SETTING = "Setting/";
         const string PATH_STORYPLAYER = "StoryPlayer";
 
-        [Header("References")]
+       [Header("References")]
        [SerializeField] CharacterData characterDataTable;
        [SerializeField] PlayerSetting playerSetting;
        [SerializeField]  BAStoryPlayer storyPlayer;
@@ -54,7 +54,7 @@ namespace BAStoryPlayer
             {
                 if (playerSetting == null)
                 {
-                    playerSetting = Resources.Load<PlayerSetting>(PATH_SETTING + "PlayerSetting");
+                    playerSetting = new PlayerSetting();
                     Debug.LogWarning($"未引用播放器设定表 已使用默认表");
                 }
 

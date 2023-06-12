@@ -106,15 +106,15 @@ namespace BAStoryPlayer
                 Highlight(index);
 
                 // 默认 动画01 启用眨眼动画 （用Contains是因为有些动画有前后缀）
-                if (animationID.Contains("01") && BAStoryPlayerController.Instance.CharacterDataTable[indexName].spineEmotion)
-                    SetWinkAction(indexName, true);
-
-                // 看配表角色是否启用差分
-                if (BAStoryPlayerController.Instance.CharacterDataTable[indexName].spineEmotion)
+                try
                 {
+                    if (animationID.Contains("01"))
+                        SetWinkAction(indexName, true);
+
                     character[index].AnimationState.SetAnimation(0, animationID, false); // 差分动画
                     character[index].AnimationState.SetAnimation(1, "Idle_01", true); // 呼吸轨道
                 }
+                catch { }
 
             }
             // 角色在场上
@@ -133,12 +133,12 @@ namespace BAStoryPlayer
                     character[currentIndex] = null;
                 }
 
-                // 动作替换（若启用差分）
-                if (BAStoryPlayerController.Instance.CharacterDataTable[indexName].spineEmotion)
+                try
                 {
                     character[index].AnimationState.SetAnimation(0, animationID, true);
                     SetWinkAction(indexName, animationID.Contains("01") ? true : false);
                 }
+                catch { }
 
                 Highlight(index);
             }
@@ -211,10 +211,6 @@ namespace BAStoryPlayer
         /// <param name="enable">开启眨眼</param>
         void SetWinkAction(string name,bool enable)
         {
-            // 如果没差分则不启用
-            if (!BAStoryPlayerController.Instance.CharacterDataTable[name].spineEmotion)
-                return;
-
             Coroutine coroutine = null;
             winkAction.TryGetValue(name, out coroutine);
 

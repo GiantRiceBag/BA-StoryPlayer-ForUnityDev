@@ -117,7 +117,7 @@ namespace BAStoryPlayer
             }
         }
 
-        [HideInInspector]public UnityEvent<int,int> onUserSelect; // 第一个参数为选项ID 第二个参数为组ID
+        [HideInInspector] public UnityEvent<int,int> onUserSelect; // 第一个参数为选项ID 第二个参数为组ID
         [HideInInspector] public UnityEvent onCancelAuto;
         [HideInInspector] public UnityEvent onFinishPlaying;
 

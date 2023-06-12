@@ -13,8 +13,6 @@ namespace BAStoryPlayer
         public string affiliation;
         public string prefabUrl;
         public string portraitUrl;
-        [Header("是否启用差分（角色没有差分的就不要勾上）")]
-        public bool spineEmotion = true;
 
         public override string ToString()
         {
