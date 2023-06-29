@@ -26,17 +26,28 @@ namespace BAStoryPlayer.UI
                 text_Subtitle = transform.Find("Text_Subtitle").GetComponent<TextMeshProUGUI>();
 
             var rect = transform.GetComponent<RectTransform>();
-            rect.anchorMin = new Vector2(0.5f, 0);
-            rect.anchorMax = new Vector2(0.5f, 0);
-            rect.pivot = new Vector2(0.5f, 0);
+            rect.anchorMin = Vector2.zero;
+            rect.anchorMax = Vector2.one;
+            rect.pivot = Vector2.zero;
+            rect.sizeDelta = Vector2.zero;
             rect.anchoredPosition = Vector2.zero;
             rect.localScale = Vector3.one;
         }
 
-        public void Initialize(string title ,string subtitle)
+        public void Initialize(string title ,string subtitle = "")
         {
             text_Title.text = title;
             text_Subtitle.text = subtitle;
+
+            if (subtitle == "")
+            {
+                text_Subtitle.gameObject.SetActive(false);
+                text_Title.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+                var mat = new Material(text_Title.fontSharedMaterial);
+                mat.SetColor("_FaceColor", new Color(.1f, .1f, .1f));
+                text_Title.fontSharedMaterial = mat;
+            }
+
         }
 
         public void RemoveBlurEffect()

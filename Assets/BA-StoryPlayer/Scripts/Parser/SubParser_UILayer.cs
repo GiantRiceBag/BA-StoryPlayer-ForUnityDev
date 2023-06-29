@@ -28,7 +28,10 @@ namespace BAStoryPlayer
                 {
                     case ScriptTag.Title:
                         {
-                            storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.UIModule.ShowTitle(args[1], args[2]); };
+                            if(args.Length == 3)
+                                storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.UIModule.ShowTitle(args[1], args[2]); };
+                            else
+                                storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.UIModule.ShowTitle("", args[1]); };
                             storyUnit.UpdateType(weight, UnitType.Title);
                             break;
                         }

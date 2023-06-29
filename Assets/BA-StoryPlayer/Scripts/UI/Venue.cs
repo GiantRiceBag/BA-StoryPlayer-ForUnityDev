@@ -11,7 +11,10 @@ namespace BAStoryPlayer.UI
 
         private void Start()
         {
-            GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 848);
+            var rect = GetComponent<RectTransform>();
+
+            rect.anchorMin = rect.anchorMax = Vector2.up;
+            rect.anchoredPosition = new Vector2(0, -232);
             transform.localScale = Vector3.one;
         }
 

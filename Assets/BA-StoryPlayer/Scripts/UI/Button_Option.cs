@@ -14,6 +14,9 @@ namespace BAStoryPlayer.UI
         Animator animator;
         [SerializeField] AudioClip sound_Click;
 
+        static float WIDTH_NORMAL = 0.701842f;
+        static float HEIGH_NORMAL = 0.0924069f;
+
         // Start is called before the first frame update
         void Start()
         {
@@ -22,6 +25,11 @@ namespace BAStoryPlayer.UI
 
             animator = GetComponent<Animator>();
             animator.enabled = false;
+
+            GetComponent<RectTransform>().sizeDelta = new Vector2(
+               WIDTH_NORMAL * BAStoryPlayerController.Instance.StoryPlayer.CanvasRect.sizeDelta.x,
+               HEIGH_NORMAL * BAStoryPlayerController.Instance.StoryPlayer.CanvasRect.sizeDelta.y
+               );
 
             transform.localScale = new Vector2(0.95f, 0.95f);
             transform.DoLocalScale(Vector2.one, 0.1f).onComplete = ()=> {

@@ -32,6 +32,10 @@ namespace BAStoryPlayer.UI
         // Start is called before the first frame update
         void Start()
         {
+            var rect = GetComponent<RectTransform>();
+            rect.anchorMin = Vector2.zero;
+            rect.anchorMax = Vector2.one;
+            rect.sizeDelta = rect.anchoredPosition = Vector2.zero;
             transform.localScale = Vector3.one;
             transform.localPosition = Vector3.zero;
         }
@@ -65,8 +69,10 @@ namespace BAStoryPlayer.UI
             GameObject obj = new GameObject();
             obj.name = "Block";
             obj.transform.SetParent(transform);
-            obj.transform.localPosition = Vector3.zero;
-            obj.AddComponent<RectTransform>().sizeDelta = GetComponent<RectTransform>().sizeDelta;
+            var rect = obj.AddComponent<RectTransform>();
+            rect.anchorMin = Vector2.zero;
+            rect.anchorMax = Vector2.one;
+            rect.sizeDelta = rect.anchoredPosition = Vector2.zero;
             obj.AddComponent<Image>().color = new Color(0, 0, 0, 0);
             obj.transform.localScale = Vector3.one;
             block = Instantiate(obj);

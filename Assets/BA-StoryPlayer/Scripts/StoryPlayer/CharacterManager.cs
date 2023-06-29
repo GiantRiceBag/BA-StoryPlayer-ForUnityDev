@@ -32,9 +32,9 @@ namespace BAStoryPlayer
     public class CharacterManager : MonoBehaviour
     {
         const int NUM_CHARACTER_SLOT = 5;
-        const float VALUE_CHARACTER_SCALE = 0.7f;
-        const int VALUE_INTERVAL_SLOT = 320;
-        const float VALUE_INTERVAL_SLOT_NORMAL = 320 / 1920f;
+        const float SCALE_CHARACTER = 0.7f;
+        const float INTERVAL_SLOT_NORMAL = 0.1666667f;
+        float INTERVAL_SLOT => StoryPlayer.CanvasRect.sizeDelta.x * INTERVAL_SLOT_NORMAL;
 
         Color COLOR_UNHIGHLIGHT { get { return new Color(0.6f, 0.6f, 0.6f);  } }
 
@@ -78,7 +78,7 @@ namespace BAStoryPlayer
                 }
                 else
                 {
-                    obj.GetComponent<RectTransform>().anchoredPosition = new Vector3((index + 1) * VALUE_INTERVAL_SLOT, 0, 0);
+                    obj.GetComponent<RectTransform>().anchoredPosition = new Vector3((index + 1) * INTERVAL_SLOT, 0, 0);
                     obj.transform.rotation = Quaternion.Euler(0, 0, 0);
                 }
 
@@ -282,12 +282,12 @@ namespace BAStoryPlayer
             {
                 case TransistionType.Instant:
                     {
-                        character[currentIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2((targetIndex+1) * VALUE_INTERVAL_SLOT, 0);
+                        character[currentIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2((targetIndex+1) * INTERVAL_SLOT, 0);
                         break;
                     }
                 case TransistionType.Smooth:
                     {
-                        character[currentIndex].transform.DoMove_Anchored(new Vector2((targetIndex + 1) * VALUE_INTERVAL_SLOT, 0), BAStoryPlayerController.Instance.Setting.Time_Character_Move);
+                        character[currentIndex].transform.DoMove_Anchored(new Vector2((targetIndex + 1) * INTERVAL_SLOT, 0), BAStoryPlayerController.Instance.Setting.Time_Character_Move);
                         break;
                     }
             default:break;
@@ -576,8 +576,8 @@ namespace BAStoryPlayer
             rectTransform.anchorMax = Vector2.zero;
             rectTransform.rotation = Quaternion.Euler(0, 0, 0);
             rectTransform.pivot = new Vector2(0.5f, 0);
-            rectTransform.anchoredPosition = new Vector3((index + 1) * VALUE_INTERVAL_SLOT, 0, 0);
-            rectTransform.localScale = new Vector3(VALUE_CHARACTER_SCALE, VALUE_CHARACTER_SCALE, 1);
+            rectTransform.anchoredPosition = new Vector3((index + 1) * INTERVAL_SLOT, 0, 0);
+            rectTransform.localScale = new Vector3(SCALE_CHARACTER, SCALE_CHARACTER, 1);
 
             obj.GetComponent<SkeletonGraphic>().MatchRectTransformWithBounds();
 

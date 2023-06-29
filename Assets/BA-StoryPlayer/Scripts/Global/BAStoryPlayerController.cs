@@ -91,6 +91,7 @@ namespace BAStoryPlayer
             MasterParser parser = new MasterParser(); // 实例化解析器
             
             StoryPlayer.LoadUnits(storyScript.groupID, parser.Parse(storyScript)); // 播放器初始化
+            StoryPlayer.ReadyToNext();
             StoryPlayer.Next(); // 开始播放第一个执行单元
 
             // 订阅播放结束事件
@@ -116,6 +117,7 @@ namespace BAStoryPlayer
             MasterParser parser = new MasterParser(); // 实例化解析器
 
             StoryPlayer.LoadUnits(storyScript.groupID, parser.Parse(storyScript)); // 播放器初始化
+            StoryPlayer.ReadyToNext();
             StoryPlayer.Next(); // 开始播放第一个执行单元
 
             // 订阅播放结束事件

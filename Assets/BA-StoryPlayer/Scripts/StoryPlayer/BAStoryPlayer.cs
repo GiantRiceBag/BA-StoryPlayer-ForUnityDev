@@ -37,8 +37,8 @@ namespace BAStoryPlayer
         [SerializeField] UIManager _UIModule;
         [SerializeField] AudioManager _audioModule;
 
-        [Header("Real-Time Data")]
         List<StoryUnit> storyUnit;
+        [Header("Real-Time Data")]
         [SerializeField] int index_CurrentUnit = 0;
         Queue<int> priorIndex = new Queue<int>(); // 优先下标队列 
         [SerializeField] bool isPlaying = false;
@@ -75,6 +75,7 @@ namespace BAStoryPlayer
                 return _audioModule;
             }
         }
+        public RectTransform CanvasRect => transform.parent.GetComponent<RectTransform>();
 
         public int GroupID
         {
@@ -161,7 +162,7 @@ namespace BAStoryPlayer
         /// 设置背景 并优先适应宽度
         /// </summary>
         /// <param name="url">相对URL</param>
-        /// <param name="type">平缓切换 对背景初次登场无效</param>
+        /// <param name="type">背景切换方式 首次无效</param>
         public void SetBackground(string url = null,TransistionType transition = TransistionType.Instant)
         {
             if(url == null)
@@ -174,7 +175,7 @@ namespace BAStoryPlayer
             Sprite sprite = Resources.Load<Sprite>(BAStoryPlayerController.Instance.Setting.Path_Background + url);
             Vector2 size = sprite.rect.size;
             float ratio = size.y / size.x;
-            size.x = 1920;
+            size.x = CanvasRect.rect.width;
             size.y = size.x * ratio;
 
             image_Background.GetComponent<RectTransform>().sizeDelta = size;
@@ -328,7 +329,7 @@ namespace BAStoryPlayer
             {
                 if (fadeOut)
                 {
-                    CreateCurtain(CurtainType.Out, 1, () =>
+                    RequireBackdrop(BackdropType.Out, 1, () =>
                     {
                         onFinishPlaying?.Invoke();
                         EmotionFactory.ClearCache();
@@ -368,7 +369,7 @@ namespace BAStoryPlayer
             }, 2f);
         }
 
-        public enum CurtainType
+        public enum BackdropType
         {
             In,
             Out,
@@ -381,39 +382,41 @@ namespace BAStoryPlayer
         /// <param name="type">幕布类型</param>
         /// <param name="duration">持续时间</param>
         /// <param name="feedback">回调函数</param>
-        public void CreateCurtain(CurtainType type,float duration,Action feedback = null)
+        public void RequireBackdrop(BackdropType type,float duration,Action feedback = null)
         {
-            GameObject curtain = new GameObject("Curtain");
-            curtain.transform.SetParent(transform);
-            curtain.transform.localPosition = Vector3.zero;
-            curtain.transform.localScale = Vector3.one;
-            curtain.AddComponent<RectTransform>().sizeDelta = GetComponent<RectTransform>().sizeDelta;
-            var image = curtain.AddComponent<Image>();
+            GameObject backdrop = new GameObject("Backdrop");
+            backdrop.transform.SetParent(transform);
+            backdrop.transform.localPosition = Vector3.zero;
+            backdrop.transform.localScale = Vector3.one;
+            backdrop.AddComponent<RectTransform>().anchorMin = Vector2.zero;
+            backdrop.GetComponent<RectTransform>().anchorMax = Vector2.one;
+            backdrop.GetComponent<RectTransform>().sizeDelta = backdrop.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+            var image = backdrop.AddComponent<Image>();
 
             switch (type)
             {
-                case CurtainType.In:
+                case BackdropType.In:
                     {
                         image.color = new Color(0, 0, 0, 1);
-                        image.DoAlpha(0, duration).onComplete = ()=> { feedback?.Invoke(); Destroy(curtain); };
+                        image.DoAlpha(0, duration).onComplete = ()=> { feedback?.Invoke(); Destroy(backdrop); };
                         break;
                     }
-                case CurtainType.Out:
+                case BackdropType.Out:
                     {
                         image.color = new Color(0, 0, 0, 0);
-                        image.DoAlpha(1, duration).onComplete = () => { feedback?.Invoke(); Destroy(curtain); };
+                        image.DoAlpha(1, duration).onComplete = () => { feedback?.Invoke(); Destroy(backdrop); };
                         break;
                     }
-                case CurtainType.OutIn:
+                case BackdropType.OutIn:
                     {
                         image.color = new Color(0, 0, 0, 0);
-                        image.DoAlpha(1, duration/2).onComplete = () => { feedback?.Invoke(); image.DoAlpha(0, duration/2).onComplete = ()=> { Destroy(curtain); }; };
+                        image.DoAlpha(1, duration/2).onComplete = () => { feedback?.Invoke(); image.DoAlpha(0, duration/2).onComplete = ()=> { Destroy(backdrop); }; };
                         break;
                     }
-                case CurtainType.InOut:
+                case BackdropType.InOut:
                     {
                         image.color = new Color(0, 0, 0, 1);
-                        image.DoAlpha(0, duration/2).onComplete = () => { feedback?.Invoke(); image.DoAlpha(1, duration/2).onComplete = ()=> { Destroy(curtain); }; };
+                        image.DoAlpha(0, duration/2).onComplete = () => { feedback?.Invoke(); image.DoAlpha(1, duration/2).onComplete = ()=> { Destroy(backdrop); }; };
                         break;
                     }
                 default:return;
