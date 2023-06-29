@@ -5,15 +5,17 @@ namespace BAStoryPlayer.UI
 {
     public class Button_Auto : MonoBehaviour
     {
-        [SerializeField] Color color_Selected = Color.red;
+        [SerializeField] Color color_Selected = new Color(1, 0.8784314f, 0.4235294f);
         [SerializeField] bool selected = false;
         [SerializeField] AudioClip sound_Click;
+        [SerializeField] GameObject flowLight;
 
-        // Start is called before the first frame update
         void Start()
         {
-            if (sound_Click == null)
+            if (!sound_Click)
                 sound_Click = Resources.Load("Sound/Button_Click") as AudioClip;
+            if (!flowLight)
+                flowLight = transform.Find("FlowLight").gameObject;
 
             // TODO 临时使用 后期在优化弄的好看点
             GetComponent<Button>().onClick.AddListener(() =>
@@ -25,10 +27,12 @@ namespace BAStoryPlayer.UI
                 if (selected)
                 {
                     GetComponent<Image>().color = color_Selected;
+                    flowLight.SetActive(true);
                 }
                 else
                 {
                     GetComponent<Image>().color = Color.white;
+                    flowLight.SetActive(false);
                 }
             });
 
@@ -36,6 +40,7 @@ namespace BAStoryPlayer.UI
             {
                 selected = false;
                 GetComponent<Image>().color = Color.white;
+                flowLight.SetActive(false);
             });
         }
 

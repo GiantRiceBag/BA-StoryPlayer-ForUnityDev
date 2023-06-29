@@ -9,7 +9,6 @@ Shader "Hidden/TextArea"
     }
     SubShader
     {
-        // No culling or depth
         Cull Off ZWrite Off ZTest Always
         Lighting Off
         Blend One OneMinusSrcAlpha
@@ -19,7 +18,6 @@ Shader "Hidden/TextArea"
             "Queue"="Transparent"
             "IgnoreProjector"="True"
             "RenderType"="Transparent"
-            "PreviewType"="Plane"
             "CanUseSpriteAtlas"="True"
         }
 
