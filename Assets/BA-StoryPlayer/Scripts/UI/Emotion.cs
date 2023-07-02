@@ -9,11 +9,6 @@ namespace BAStoryPlayer.UI
     {
         const float TIME_FADEOUT = 0.2f;
 
-        /// <summary>
-        /// 位置初始化 以左下角顶点为锚点
-        /// </summary>
-        /// <param name="headLocator"></param>
-        /// <param name="pos"></param>
         public void Initlaize(Transform headLocator,Vector2 pos)
         {
             headLocator.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
@@ -22,8 +17,9 @@ namespace BAStoryPlayer.UI
             rect.anchorMin = rect.anchorMax = Vector2.zero;
             rect.localScale = Vector3.one;
             rect.anchoredPosition = pos;
-
         }
+
+        public float GetClipLength() => GetComponent<Animator>().GetCurrentAnimatorClipInfo(0)[0].clip.length;
 
         public void RunOnComplete()
         {

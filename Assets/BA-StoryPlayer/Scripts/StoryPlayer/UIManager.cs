@@ -19,6 +19,7 @@ namespace BAStoryPlayer
         [Space]
         [SerializeField] GameObject gameObject_TextArea;
         [SerializeField] GameObject gameObject_Continued;
+        [SerializeField] GameObject gameObject_SubPanel_Synopsis;
         [SerializeField] Button btn_Auto;
         [SerializeField] Button btn_Menu;
 
@@ -51,6 +52,8 @@ namespace BAStoryPlayer
                 gameObject_TextArea = transform.Find("TextArea").gameObject;
             if (gameObject_Continued == null)
                 gameObject_Continued = transform.Find("Image_Continued").gameObject;
+            if(gameObject_SubPanel_Synopsis == null)
+                gameObject_SubPanel_Synopsis = transform.Find("SubPanel_Synopsis").gameObject;
             if (btn_Auto == null)
                 btn_Auto = transform.Find("Button_Auto").GetComponent<Button>();
             if (btn_Menu == null)
@@ -62,7 +65,7 @@ namespace BAStoryPlayer
 
                 // 若Auto则延缓两秒后继续
                 if (StoryPlayer.Auto)
-                    coroutine_Next = Timer.Delay(() => { StoryPlayer.ReadyToNext(); }, 2);
+                    coroutine_Next = Timer.Delay(transform,() => { StoryPlayer.ReadyToNext(); }, 2);
                 else
                     StoryPlayer.ReadyToNext();
             });
@@ -174,6 +177,7 @@ namespace BAStoryPlayer
         {
             SetActive_UI_Button(false);
             SetActive_UI_TextArea(false);
+            gameObject_SubPanel_Synopsis.SetActive(false);
         }
 
         public void SetBlurBackground(bool enable,TransistionType transition = TransistionType.Smooth)

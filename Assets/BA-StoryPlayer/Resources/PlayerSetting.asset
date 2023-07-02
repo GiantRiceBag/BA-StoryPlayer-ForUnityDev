@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: PlayerSetting
   m_EditorClassIdentifier: 
   num_Char_Persecond: 20
-  time_Lock_AfterPrinting: 0.5
-  time_Lock_AfterAction: 0.5
+  time_Lock_AfterPrinting: 0.2
+  time_Lock_AfterAction: 0.2
   time_BlurBackground: 0.7
   time_SwitchBackground: 1
   time_Character_Fade: 0.75

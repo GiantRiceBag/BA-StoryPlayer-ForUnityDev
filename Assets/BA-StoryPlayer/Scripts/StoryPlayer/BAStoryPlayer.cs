@@ -19,7 +19,7 @@ namespace BAStoryPlayer
                 auto = value;
                 if (!auto)
                     onCancelAuto?.Invoke();
-                if (auto && isPlaying && executable)
+                if (auto && isPlaying && isExecutable && !isLocking)
                     Next();
             }
             get
@@ -42,7 +42,7 @@ namespace BAStoryPlayer
         [SerializeField] int index_CurrentUnit = 0;
         Queue<int> priorIndex = new Queue<int>(); // 优先下标队列 
         [SerializeField] bool isPlaying = false;
-        [SerializeField] bool executable = true;
+        [SerializeField] bool isExecutable = true;
         [SerializeField] bool isLocking = false;
         [SerializeField] float lockTime = 0;
 
@@ -118,7 +118,7 @@ namespace BAStoryPlayer
             }
         }
 
-        [HideInInspector] public UnityEvent<int,int> onUserSelect; // 第一个参数为选项ID 第二个参数为组ID
+        [HideInInspector] public UnityEvent<int, int> onUserSelect; // 第一个参数为选项ID 第二个参数为组ID
         [HideInInspector] public UnityEvent onCancelAuto;
         [HideInInspector] public UnityEvent onFinishPlaying;
 
@@ -130,13 +130,13 @@ namespace BAStoryPlayer
                 image_Background = transform.Find("Background").GetComponent<Image>();
 
             // 动作以及表情事件订阅 锁定一定时间的操作
-            CharacterModule.onAnimateCharacter.AddListener((duration)=> { Lock(duration,BAStoryPlayerController.Instance.Setting.Time_Lock_AfterAction); });
+            CharacterModule.onAnimateCharacter.AddListener((duration) => { Lock(duration, BAStoryPlayerController.Instance.Setting.Time_Lock_AfterAction); });
 
             // 选项事件订阅
-            onUserSelect.AddListener((selectionGroup,groupID) =>
+            onUserSelect.AddListener((selectionGroup, groupID) =>
             {
                 // 坐标前移寻找最近的选项下标 并放入优先下标队列 遇到-1则停止
-                for(int i = index_CurrentUnit; i < storyUnit.Count; i++)
+                for (int i = index_CurrentUnit; i < storyUnit.Count; i++)
                 {
                     if (storyUnit[i].selectionGroup == selectionGroup)
                     {
@@ -163,9 +163,9 @@ namespace BAStoryPlayer
         /// </summary>
         /// <param name="url">相对URL</param>
         /// <param name="type">背景切换方式 首次无效</param>
-        public void SetBackground(string url = null,TransistionType transition = TransistionType.Instant)
+        public void SetBackground(string url = null, TransistionType transition = TransistionType.Instant)
         {
-            if(url == null)
+            if (url == null)
             {
                 image_Background.sprite = null;
                 image_Background.enabled = false;
@@ -202,7 +202,7 @@ namespace BAStoryPlayer
                             };
                             break;
                         }
-                    default:return;
+                    default: return;
                 }
             }
         }
@@ -210,7 +210,7 @@ namespace BAStoryPlayer
         /// <summary>
         /// 载入执行单元 数据初始化
         /// </summary>
-        public void LoadUnits(int groupID,List<StoryUnit> units)
+        public void LoadUnits(int groupID, List<StoryUnit> units)
         {
             priorIndex.Clear();
             this.groupID = groupID;
@@ -218,7 +218,7 @@ namespace BAStoryPlayer
             index_CurrentUnit = 0;
             isLocking = false;
             isPlaying = true;
-            executable = true;
+            isExecutable = true;
         }
 
         /// <summary>
@@ -226,12 +226,8 @@ namespace BAStoryPlayer
         /// </summary>
         public void Next(bool breakLock = false)
         {
-            // 操作锁 针对非Auto模式
-            if (isLocking && !Auto && !breakLock)
-                return;
-
             // 文本跳过
-            if(isPlaying && UIModule.IsPrinting && !executable)
+            if (isPlaying && UIModule.IsPrinting && !isExecutable)
             {
                 UIModule.Skip();
                 if (Auto)
@@ -239,7 +235,11 @@ namespace BAStoryPlayer
                 return;
             }
 
-            if (!executable || !isPlaying)
+            // 操作锁 针对非Auto模式
+            if (isLocking && !Auto && !breakLock)
+                return;
+
+            if (!isExecutable || !isPlaying)
                 return;
 
             if (index_CurrentUnit == storyUnit.Count)
@@ -259,22 +259,22 @@ namespace BAStoryPlayer
                     {
                         storyUnit[index_CurrentUnit].Execute();
                         NextIndex();
-                        executable = false;
+                        isExecutable = false;
                         break;
                     }
                 case UnitType.Command:
                     {
-                        if(storyUnit[index_CurrentUnit].wait != 0)
+                        if (storyUnit[index_CurrentUnit].wait != 0)
                         {
                             // 根据单元等待时间执行等待完毕后自动执行下一单元
                             storyUnit[index_CurrentUnit].Execute();
-                            executable = false;
-                            Timer.Delay( () =>
-                            {
-                                executable = true;
-                                NextIndex();
-                                Next(true);
-                            }, storyUnit[index_CurrentUnit].wait / 1000f);
+                            isExecutable = false;
+                            Timer.Delay(() =>
+                           {
+                               isExecutable = true;
+                               NextIndex();
+                               Next(true);
+                           }, storyUnit[index_CurrentUnit].wait / 1000f);
                             break;
                         }
                         else
@@ -286,7 +286,7 @@ namespace BAStoryPlayer
                         }
 
                     }
-                default:return;
+                default: return;
             }
         }
 
@@ -309,7 +309,7 @@ namespace BAStoryPlayer
         /// <param name="next">是否直接执行下一单元</param>
         public void ReadyToNext(bool next = false)
         {
-            executable = true;
+            isExecutable = true;
             // 若Auto则直接执行
             if (next || Auto)
                 Next();
@@ -320,54 +320,55 @@ namespace BAStoryPlayer
         /// </summary>
         /// <param name="fadeOut">是否启用幕布渐出</param>
         /// <param name="destoryObject">是否删除播放器Object</param>
-        public void CloseStoryPlayer(bool fadeOut = true,bool destoryObject = false)
+        public void CloseStoryPlayer(bool fadeOut = true, bool destoryObject = false)
         {
             isPlaying = false;
             AudioModule.PauseBGM();
 
-            Timer.Delay( () =>
-            {
-                if (fadeOut)
-                {
-                    RequireBackdrop(BackdropType.Out, 1, () =>
-                    {
-                        onFinishPlaying?.Invoke();
-                        EmotionFactory.ClearCache();
-                        if (!destoryObject)
-                        {
-                            gameObject.SetActive(false);
-                            SetBackground();
-                            UIModule.HideAllUI();
-                            CharacterModule.ClearAllObject();
-                            DoTweenS.DoTweenS.KillAll();
-                            AudioModule.ClearAll();
-                        }
-                        else
-                        {
-                            Destroy(gameObject);
-                        }
-                    });
-                }
-                else
-                {
-                    onFinishPlaying?.Invoke();
-                    EmotionFactory.ClearCache();
-                    if (!destoryObject)
-                    {
-                        gameObject.SetActive(false);
-                        SetBackground();
-                        UIModule.HideAllUI();
-                        CharacterModule.ClearAllObject();
-                        DoTweenS.DoTweenS.KillAll();
-                        AudioModule.ClearAll();
-                    }
-                    else
-                    {
-                        Destroy(gameObject);
-                    }
-                }
-            }, 2f);
+            Timer.Delay(() =>
+           {
+               if (fadeOut)
+               {
+                   RequireBackdrop(BackdropType.Out, 1, () =>
+                   {
+                       onFinishPlaying?.Invoke();
+                       EmotionFactory.ClearCache();
+                       if (!destoryObject)
+                       {
+                           gameObject.SetActive(false);
+                           SetBackground();
+                           UIModule.HideAllUI();
+                           CharacterModule.ClearAllObject();
+                           DoTweenS.DoTweenS.KillAll();
+                           AudioModule.ClearAll();
+                       }
+                       else
+                       {
+                           Destroy(gameObject);
+                       }
+                   });
+               }
+               else
+               {
+                   onFinishPlaying?.Invoke();
+                   EmotionFactory.ClearCache();
+                   if (!destoryObject)
+                   {
+                       gameObject.SetActive(false);
+                       SetBackground();
+                       UIModule.HideAllUI();
+                       CharacterModule.ClearAllObject();
+                       DoTweenS.DoTweenS.KillAll();
+                       AudioModule.ClearAll();
+                   }
+                   else
+                   {
+                       Destroy(gameObject);
+                   }
+               }
+           }, 2f);
         }
+        public void CloseStoryPlayer() => CloseStoryPlayer(true, false);
 
         public enum BackdropType
         {
@@ -427,7 +428,7 @@ namespace BAStoryPlayer
         /// <summary>
         /// 锁定操作一段时间 用于确保动作播放完毕
         /// </summary>
-        public void Lock(float duration,float extra = 0.5f)
+        public void Lock(float duration,float extra = 0.2f)
         {
             if (duration + extra > lockTime)
                 ReflashLockTime(duration + extra);

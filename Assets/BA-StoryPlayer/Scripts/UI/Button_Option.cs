@@ -17,7 +17,6 @@ namespace BAStoryPlayer.UI
         static float WIDTH_NORMAL = 0.701842f;
         static float HEIGH_NORMAL = 0.0924069f;
 
-        // Start is called before the first frame update
         void Start()
         {
             if (sound_Click == null)

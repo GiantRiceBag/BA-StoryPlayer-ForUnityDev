@@ -59,7 +59,7 @@ namespace BAStoryPlayer
         static System.Collections.Generic.Dictionary<CharacterEmotion, GameObject> emotionCache= new System.Collections.Generic.Dictionary<CharacterEmotion, GameObject>();
         
         // TODO 表情全做完后可以删掉Case了
-        public static void SetEmotion(Transform target,CharacterEmotion emotion)
+        public static void SetEmotion(Transform target,CharacterEmotion emotion,ref float time)
         {
             switch (emotion)
             {
@@ -96,6 +96,7 @@ namespace BAStoryPlayer
 
                             var emo = GameObject.Instantiate(emotionCache[emotion]).GetComponent<Emotion>();
                             emo.Initlaize(HeadLocator, GetPos(emotion));
+                            time = emo.GetClipLength();
                             BAStoryPlayerController.Instance.StoryPlayer.AudioModule.Play($"Emotion/Emotion_{emotion.ToString()}");
                         }
                         catch

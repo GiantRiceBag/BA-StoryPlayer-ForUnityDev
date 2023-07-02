@@ -486,9 +486,10 @@ namespace BAStoryPlayer
             if (CheckSlotEmpty(index))
                 return;
 
-            EmotionFactory.SetEmotion(character[index].transform, emotion);
+            float time = 1;
+            EmotionFactory.SetEmotion(character[index].transform, emotion,ref time);
 
-            onAnimateCharacter?.Invoke(1.5f);
+            onAnimateCharacter?.Invoke(time);
         }
 
         /// <summary>
