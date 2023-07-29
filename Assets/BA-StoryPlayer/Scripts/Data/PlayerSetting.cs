@@ -51,8 +51,8 @@ namespace BAStoryPlayer
         [SerializeField] string path_Sound = "Sound/";
         [Tooltip("背景图片路径")]
         [SerializeField] string path_Background = "Background/";
-        [Tooltip("角色预制体路径")]
-        [SerializeField] string path_Prefab = "CharacterPrefab/";
+        [Tooltip("角色Skel以及Prefab路径")]
+        [SerializeField] string path_Skel = "CharacterSkel/";
         [Tooltip("剧情脚本路径")]
         [SerializeField] string path_StoryScript = "StoryScript/";
 
@@ -80,7 +80,7 @@ namespace BAStoryPlayer
         public string Path_Music { get { return path_Music; } }
         public string Path_Sound { get { return path_Sound; } }
         public string Path_Background { get { return path_Background; } }
-        public string Path_Prefab { get { return path_Prefab; } }
+        public string Path_Prefab { get { return path_Skel; } }
         public string Path_StoryScript { get { return path_StoryScript; } }
     }
 }

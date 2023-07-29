@@ -511,7 +511,7 @@ namespace Spine.Unity {
 				Clear();
 				return;
 			}
-
+			
 			this.skeleton = new Skeleton(skeletonData) {
 				ScaleX = this.initialFlipX ? -1 : 1,
 				ScaleY = this.initialFlipY ? -1 : 1

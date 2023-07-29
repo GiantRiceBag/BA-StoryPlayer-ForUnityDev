@@ -262,21 +262,27 @@ namespace Spine.Unity.Editor {
 			}
 		}
 #endregion
-
 		public static void ImportSpineContent (string[] imported, List<string> texturesWithoutMetaFile,
 			bool reimport = false) {
-
 			var atlasPaths = new List<string>();
 			var imagePaths = new List<string>();
 			var skeletonPaths = new List<PathAndProblemInfo>();
 			CompatibilityProblemInfo compatibilityProblemInfo = null;
-
 			foreach (string str in imported) {
 				string extension = Path.GetExtension(str).ToLower();
 				switch (extension) {
 					case ".atlas":
-						if (SpineEditorUtilities.Preferences.atlasTxtImportWarning) {
+						if (SpineEditorUtilities.Preferences.atlasTxtImportWarning && !SpineEditorUtilities.Preferences.atlasConversion) {
 							Debug.LogWarningFormat("`{0}` : If this file is a Spine atlas, please change its extension to `.atlas.txt`. This is to allow Unity to recognize it and avoid filename collisions. You can also set this file extension when exporting from the Spine editor.", str);
+						}
+						else
+						{
+							string newStr = str + ".txt";
+							Debug.Log($"Connver {str} to {newStr}");
+							File.Move(str, newStr);
+							File.Delete(str + ".meta");
+							AssetDatabase.Refresh();
+							atlasPaths.Add(newStr);
 						}
 						break;
 					case ".txt":
@@ -288,24 +294,45 @@ namespace Spine.Unity.Editor {
 						imagePaths.Add(str);
 						break;
 					case ".json": {
-						var jsonAsset = AssetDatabase.LoadAssetAtPath<TextAsset>(str);
-						string problemDescription = null;
-						if (jsonAsset != null && IsSpineData(jsonAsset, out compatibilityProblemInfo, ref problemDescription))
-							skeletonPaths.Add(new PathAndProblemInfo(str, compatibilityProblemInfo, problemDescription));
-						if (problemDescription != null)
-							Debug.LogError(problemDescription, jsonAsset);
-						break;
-					}
+							var jsonAsset = AssetDatabase.LoadAssetAtPath<TextAsset>(str);
+							string problemDescription = null;
+							if (jsonAsset != null && IsSpineData(jsonAsset, out compatibilityProblemInfo, ref problemDescription))
+								skeletonPaths.Add(new PathAndProblemInfo(str, compatibilityProblemInfo, problemDescription));
+							if (problemDescription != null)
+								Debug.LogError(problemDescription, jsonAsset);
+							break;
+						}
+					case ".skel":
+                        {
+							if (!SpineEditorUtilities.Preferences.skelConversion)
+                            {
+								Debug.LogWarningFormat("`{0}` : If this file is a Spine skel, please change its extension to `.skel.bytes`. This is to allow Unity to recognize it and avoid filename collisions. You can also set this file extension when exporting from the Spine editor.", str);
+								break;
+                            }
+							string newStr = str + ".bytes";
+							Debug.Log($"Connver {str} to {newStr}");
+							File.Move(str, newStr);
+							File.Delete(str + ".meta");
+							AssetDatabase.Refresh();
+
+							var binaryAsset = AssetDatabase.LoadAssetAtPath<TextAsset>(newStr);
+							string problemDescription = null;
+							if (IsSpineData(binaryAsset, out compatibilityProblemInfo, ref problemDescription))
+								skeletonPaths.Add(new PathAndProblemInfo(newStr, compatibilityProblemInfo, problemDescription));
+							if (problemDescription != null)
+								Debug.LogError(problemDescription, binaryAsset);
+							break;
+						}
 					case ".bytes": {
-						if (str.ToLower().EndsWith(".skel.bytes", System.StringComparison.Ordinal)) {
+							if (str.ToLower().EndsWith(".skel.bytes", System.StringComparison.Ordinal)) {
 							var binaryAsset = AssetDatabase.LoadAssetAtPath<TextAsset>(str);
 							string problemDescription = null;
 							if (IsSpineData(binaryAsset, out compatibilityProblemInfo, ref problemDescription))
 								skeletonPaths.Add(new PathAndProblemInfo(str, compatibilityProblemInfo, problemDescription));
 							if (problemDescription != null)
 								Debug.LogError(problemDescription, binaryAsset);
-						}
-						break;
+							}
+							break;
 					}
 				}
 			}
@@ -1311,5 +1338,6 @@ namespace Spine.Unity.Editor {
 		}
 #endif
 #endregion
+
 	}
 }

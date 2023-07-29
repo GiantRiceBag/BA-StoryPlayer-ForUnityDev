@@ -75,7 +75,18 @@ namespace BAStoryPlayer
                 return _audioModule;
             }
         }
-        public RectTransform CanvasRect => transform.parent.GetComponent<RectTransform>();
+
+        public GameObject Canvas
+        {
+            get
+            {
+                Transform current = transform;
+                while(current.parent != null)
+                    current = transform.parent;
+                return current.gameObject;
+            }
+        }
+        public RectTransform CanvasRect => Canvas.GetComponent<RectTransform>();
 
         public int GroupID
         {

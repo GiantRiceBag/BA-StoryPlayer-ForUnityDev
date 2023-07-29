@@ -7,6 +7,7 @@ using BAStoryPlayer;
 using Spine.Unity.AttachmentTools;
 using Spine;
 using BAStoryPlayer.DoTweenS;
+using UnityEditor;
 
 [ExecuteAlways]
 public class Test : MonoBehaviour

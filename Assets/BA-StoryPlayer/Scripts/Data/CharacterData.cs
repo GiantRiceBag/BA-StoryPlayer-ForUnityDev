@@ -2,18 +2,26 @@ using UnityEngine;
 
 namespace BAStoryPlayer
 {
+    public enum LoadType
+    {
+        Prefab = 0,
+        SkeletonData
+    }
+
     [System.Serializable]
     public class CharacterDataUnit
     {
         [Tooltip("建议以角色罗马音作为主要索引名")]
         public string indexName;
-        public string familyName;
+        [HideInInspector] public string familyName;
         public string name;
-        public string collage;
+        [HideInInspector] public string collage;
         public string affiliation;
-        public string prefabUrl;
-        public string portraitUrl;
-
+        [Space]
+        public LoadType loadType = LoadType.SkeletonData;
+        public string skelUrl;
+        [HideInInspector] public string portraitUrl;
+            
         public override string ToString()
         {
             System.Text.StringBuilder result = new System.Text.StringBuilder();
@@ -26,6 +34,7 @@ namespace BAStoryPlayer
     }
 
     [CreateAssetMenu(menuName = "BAStoryPlayer/角色信息表",fileName = "CharacterDataTable")]
+    [SerializeField]
     public class CharacterData : ScriptableObject
     {
         [SerializeField]
@@ -40,7 +49,7 @@ namespace BAStoryPlayer
                     if (i.indexName == indexName)
                         return i;
                 }
-                Debug.LogError($"未能在查询表中找到 角色[{indexName}] 的数据");
+                Debug.LogError($"未能在查询表中找到 角色 [{indexName}] 的数据");
                 return null;
             }
         }

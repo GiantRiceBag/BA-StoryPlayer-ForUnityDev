@@ -108,11 +108,11 @@ namespace BAStoryPlayer
                 // 默认 动画01 启用眨眼动画 （用Contains是因为有些动画有前后缀）
                 try
                 {
+                    character[index].AnimationState.SetAnimation(1, "Idle_01", true); // 呼吸轨道
+
                     if (animationID.Contains("01"))
                         SetWinkAction(indexName, true);
-
                     character[index].AnimationState.SetAnimation(0, animationID, false); // 差分动画
-                    character[index].AnimationState.SetAnimation(1, "Idle_01", true); // 呼吸轨道
                 }
                 catch { }
 

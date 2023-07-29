@@ -172,7 +172,7 @@ namespace BAStoryPlayer
 
         static Transform SpawnHeadLocator(Transform target)
         {
-            Debug.Log($"未找到角色 {target.name} 头部定位器 [HeadLocator] 尝试自动生成");
+            Debug.Log($"尝试自动定位角色 {target.name} 脸部位置");
             try
             {
                 var skeletonGraphic = target.GetComponent<Spine.Unity.SkeletonGraphic>();

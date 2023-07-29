@@ -9,7 +9,7 @@ namespace BAStoryPlayer
        [Header("References")]
        [SerializeField] CharacterData characterDataTable;
        [SerializeField] PlayerSetting playerSetting;
-       [SerializeField]  BAStoryPlayer storyPlayer;
+       [SerializeField] BAStoryPlayer storyPlayer;
 
         public BAStoryPlayer StoryPlayer
         {
@@ -131,15 +131,41 @@ namespace BAStoryPlayer
 
         public GameObject LoadCharacterPrefab(string indexName)
         {
-            GameObject prefab = Resources.Load(Setting.Path_Prefab + CharacterDataTable[indexName].prefabUrl) as GameObject;
-            prefab.name = indexName;
-            if(prefab == null)
+            GameObject prefab = null;
+
+            try
             {
-                Debug.LogError($"未在路径{Setting.Path_Prefab + CharacterDataTable[indexName].prefabUrl}中找到角色预制体");
+                switch (CharacterDataTable[indexName].loadType)
+                {
+                    case LoadType.Prefab:
+                        {
+                            prefab = Instantiate(Resources.Load(Setting.Path_Prefab + CharacterDataTable[indexName].skelUrl) as GameObject);
+                            break;
+                        }
+                    case LoadType.SkeletonData:
+                        {
+                            Spine.Unity.SkeletonDataAsset skelData = Resources.Load<Spine.Unity.SkeletonDataAsset>(Setting.Path_Prefab
+                                + CharacterDataTable[indexName].skelUrl);
+                            Material mat = new Material(Shader.Find("Spine/SkeletonGraphic"));
+                            UnityEngine.Rendering.LocalKeyword keyword = new UnityEngine.Rendering.LocalKeyword(mat.shader, "_STRAIGHT_ALPHA_INPUT");
+                            mat.SetKeyword(keyword, true);
+                            prefab = Spine.Unity.SkeletonGraphic.NewSkeletonGraphicGameObject(skelData, transform, mat).gameObject;
+                            break;
+                        }
+                }
+            }
+            catch
+            {
                 return null;
             }
-            GameObject obj = Instantiate(prefab);
-            return obj;
+
+            if(prefab == null)
+            {
+                Debug.LogError($"未在路径{Setting.Path_Prefab + CharacterDataTable[indexName].skelUrl}中找到角色Ske");
+                return null;
+            }
+            prefab.name = indexName;
+            return prefab;
         }
 
         //TEST

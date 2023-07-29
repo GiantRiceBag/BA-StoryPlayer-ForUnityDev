@@ -140,6 +140,11 @@ namespace Spine.Unity.Editor {
 		internal const bool DEFAULT_ATLASTXT_WARNING = true;
 		public bool atlasTxtImportWarning = DEFAULT_ATLASTXT_WARNING;
 
+		internal const bool DEFAULT_ATLAS_CONVERSION = true;
+		public bool atlasConversion = DEFAULT_ATLAS_CONVERSION;
+		internal const bool DEFAULT_SKEL_CONVERSION = true;
+		public bool skelConversion = DEFAULT_SKEL_CONVERSION;
+
 		internal const bool DEFAULT_TEXTUREIMPORTER_WARNING = true;
 		public bool textureImporterWarning = DEFAULT_TEXTUREIMPORTER_WARNING;
 
@@ -251,6 +256,8 @@ namespace Spine.Unity.Editor {
 				EditorGUILayout.LabelField("Warnings", EditorStyles.boldLabel);
 				{
 					EditorGUILayout.PropertyField(settings.FindProperty("atlasTxtImportWarning"), new GUIContent("Atlas Extension Warning", "Log a warning and recommendation whenever a `.atlas` file is found."));
+					EditorGUILayout.PropertyField(settings.FindProperty("atlasConversion"), new GUIContent("Atlas Extension Conversion", "Convert '.atlas' to '.atlas.txt' automatically."));
+					EditorGUILayout.PropertyField(settings.FindProperty("skelConversion"), new GUIContent("Skel Extension Conversion", "Convert '.skel' to '.skel.bytes' automatically."));
 					EditorGUILayout.PropertyField(settings.FindProperty("textureImporterWarning"), new GUIContent("Texture Settings Warning", "Log a warning and recommendation whenever Texture Import Settings are detected that could lead to undesired effects, e.g. white border artifacts."));
 					EditorGUILayout.PropertyField(settings.FindProperty("componentMaterialWarning"), new GUIContent("Component & Material Warning", "Log a warning and recommendation whenever Component and Material settings are not compatible."));
 				}
