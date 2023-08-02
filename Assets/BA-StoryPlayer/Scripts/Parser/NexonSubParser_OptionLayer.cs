@@ -1,14 +1,14 @@
 using BAStoryPlayer.UI;
-namespace BAStoryPlayer
+namespace BAStoryPlayer.NexonCommandParser
 {
-    public class SubParser_OptionLayer : BSubParser
+    public class NexonSubParser_OptionLayer : BNexonSubParser
     {
         /*
          处理选项部分
          */
-       public SubParser_OptionLayer(int weight) { this.weight = weight; }
+       public NexonSubParser_OptionLayer(int weight) { this.weight = weight; }
 
-        public override StoryUnit Parse(RawStoryUnit rawStoryUnit, StoryUnit storyUnit = null)
+        public override StoryUnit Parse(RawNexonStoryUnit rawStoryUnit, StoryUnit storyUnit = null)
         {
             if (storyUnit == null)
                 storyUnit = new StoryUnit();
@@ -24,7 +24,7 @@ namespace BAStoryPlayer
                     // 有编号选项
                     if (args[0].Length == 2)
                     {
-                        optionIndex = int.Parse((args[0][1]).ToString());
+                        optionIndex = int.Parse((args[0][1]).ToString()); // TODO 这里暂时只支持0-9的选项编号
                         datas.Add(new OptionData(optionIndex, args[1]));
                     }
                     else

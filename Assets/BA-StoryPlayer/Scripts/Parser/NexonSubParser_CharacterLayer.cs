@@ -1,20 +1,20 @@
-namespace BAStoryPlayer
+namespace BAStoryPlayer.NexonCommandParser
 {
     /*
      处理角色操作以及文本对话部分
-    脚本:character,character,na,hide
+    脚本:character,na,hide
      */
-    public class SubParser_CharacterLayer : BSubParser
+    public class NexonSubParser_CharacterLayer : BNexonSubParser
     {
-        public SubParser_CharacterLayer(int weight) { this.weight = weight; }
+        public NexonSubParser_CharacterLayer(int weight) { this.weight = weight; }
 
-        public override StoryUnit Parse(RawStoryUnit rawStoryUnit, StoryUnit storyUnit = null)
+        public override StoryUnit Parse(RawNexonStoryUnit rawStoryUnit, StoryUnit storyUnit = null)
         {
             if (storyUnit == null)
                 storyUnit = new StoryUnit();
 
             // 防止多人说话
-            bool occupied = false;
+            bool isOccupied = false;
 
             for (int i = 0; i <rawStoryUnit.scriptList.Count; i++)
             {
@@ -26,13 +26,17 @@ namespace BAStoryPlayer
                         {
                             // 注意下标减1
                             if (args.Length == 3) // 无台词
-                                storyUnit.action += () => {  BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.ActivateCharacter(int.Parse(args[0]) - 1, args[1], args[2]); };
+                                storyUnit.action += () => {  
+                                    BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.ActivateCharacter(int.Parse(args[0]) - 1, args[1], args[2]);
+                                };
                             else if (args.Length == 4) // 有台词
                             {
-                                if (occupied) continue;
+                                if (isOccupied) continue;
                                 storyUnit.UpdateType(weight, UnitType.Text);
-                                storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.ActivateCharacter(int.Parse(args[0]) - 1, args[1], args[2], args[3]); };
-                                occupied = true;
+                                storyUnit.action += () => { 
+                                    BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.ActivateCharacter(int.Parse(args[0]) - 1, args[1], args[2], args[3]);
+                                };
+                                isOccupied = true;
                             }
                             break;
                         }
@@ -60,9 +64,12 @@ namespace BAStoryPlayer
                         }
                     case ScriptTag.Na:
                         {
-                            if (occupied) continue;
-                            storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.UIModule.SetSpeaker(); BAStoryPlayerController.Instance.StoryPlayer.UIModule.PrintText(args[1]); };
-                            occupied = true;
+                            if (isOccupied) continue;
+                            storyUnit.action += () => { 
+                                BAStoryPlayerController.Instance.StoryPlayer.UIModule.SetSpeaker(); 
+                                BAStoryPlayerController.Instance.StoryPlayer.UIModule.PrintText(args[1]); 
+                            };
+                            isOccupied = true;
                             storyUnit.UpdateType(weight, UnitType.Text);
                             break;
                         }

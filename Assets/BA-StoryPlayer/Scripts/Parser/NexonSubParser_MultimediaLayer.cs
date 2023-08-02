@@ -1,18 +1,17 @@
-using System.Text.RegularExpressions;
-
-namespace BAStoryPlayer{
+namespace BAStoryPlayer.NexonCommandParser
+{
     /*
      处理背景音乐,音效等
     脚本处理:Video
      */
-    public class SubParser_MultimediaLayer : BSubParser
+    public class NexonSubParser_MultimediaLayer : BNexonSubParser
     {
-        public SubParser_MultimediaLayer(int weight)
+        public NexonSubParser_MultimediaLayer(int weight)
         {
             this.weight = weight;
         }
 
-        public override StoryUnit Parse(RawStoryUnit rawStoryUnit, StoryUnit storyUnit = null)
+        public override StoryUnit Parse(RawNexonStoryUnit rawStoryUnit, StoryUnit storyUnit = null)
         {
             if (storyUnit == null)
                 storyUnit = new StoryUnit();

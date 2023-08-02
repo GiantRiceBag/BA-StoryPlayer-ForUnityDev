@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace BAStoryPlayer
+namespace BAStoryPlayer.NexonCommandParser
 {
     public enum ScriptTag
     {
@@ -26,7 +26,7 @@ namespace BAStoryPlayer
         Option
     }
 
-    public class MasterParser
+    public class NexonCommandParser
     {
         const string REG_TITLE = @"#title;([^;\n]+);?([^;\n]+)?;?";
         const string REG_PLACE = @"#place;([^;\n]+);?";
@@ -49,16 +49,16 @@ namespace BAStoryPlayer
         const string REG_OPTION = @"\[n?s(\d{0,2})?]([^;\n]+)";
 
         StoryUnit storyUnit;
-        BSubParser nextParser;
+        BNexonSubParser nextParser;
 
-        public MasterParser()
+        public NexonCommandParser()
         {
             // ½âÎöÆ÷×é×°
-            BSubParser multimediaLayer = new SubParser_MultimediaLayer(0);
-            BSubParser uiLayer = new SubParser_UILayer(4);
-            BSubParser characterLayer = new SubParser_CharacterLayer(2);
-            BSubParser optionLayer = new SubParser_OptionLayer(3);
-            BSubParser systemLayer = new SubParser_SystemLayer(0);
+            BNexonSubParser multimediaLayer = new NexonSubParser_MultimediaLayer(0);
+            BNexonSubParser uiLayer = new NexonSubParser_UILayer(4);
+            BNexonSubParser characterLayer = new NexonSubParser_CharacterLayer(2);
+            BNexonSubParser optionLayer = new NexonSubParser_OptionLayer(3);
+            BNexonSubParser systemLayer = new NexonSubParser_SystemLayer(0);
 
             nextParser = multimediaLayer;
             multimediaLayer.nextParser = uiLayer;
@@ -67,7 +67,7 @@ namespace BAStoryPlayer
             characterLayer.nextParser = systemLayer;
         }
 
-        public System.Collections.Generic.List<StoryUnit> Parse(StoryScript storyScript)
+        public System.Collections.Generic.List<StoryUnit> Parse(NexonStoryScript storyScript)
         {
             Regex.CacheSize = 20;
 

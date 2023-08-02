@@ -23,6 +23,10 @@ public class Test : MonoBehaviour
             if(Application.isPlaying)
                 BAStoryPlayerController.Instance.LoadStoryTest(storyScriptName);
         }
-        GUILayout.Label("                           ");
+        GUILayout.Label("！！！！！！！！");
+        if(GUILayout.Button("Test"))
+            BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetAction("shiroko", CharacterAction.Appear);
+        if(GUILayout.Button("Test2"))
+            Debug.Log(BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.CharacterPool["shiroko"] == null);
     }
 }

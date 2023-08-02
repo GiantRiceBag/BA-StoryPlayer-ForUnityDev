@@ -1,17 +1,17 @@
-namespace BAStoryPlayer
+namespace BAStoryPlayer.NexonCommandParser
 {
     /*
      处理背景变换以及UI部分
     脚本处理 : Title,Place,NextEpisode,Continued,Show/HideMenu,BgShake,ClearSt
      */
-    public class SubParser_UILayer : BSubParser
+    public class NexonSubParser_UILayer : BNexonSubParser
     {
-        public SubParser_UILayer(int weight)
+        public NexonSubParser_UILayer(int weight)
         {
             this.weight = weight;
         }
 
-        public override StoryUnit Parse(RawStoryUnit rawStoryUnit, StoryUnit storyUnit = null)
+        public override StoryUnit Parse(RawNexonStoryUnit rawStoryUnit, StoryUnit storyUnit = null)
         {
             if (storyUnit == null)
                 storyUnit = new StoryUnit();

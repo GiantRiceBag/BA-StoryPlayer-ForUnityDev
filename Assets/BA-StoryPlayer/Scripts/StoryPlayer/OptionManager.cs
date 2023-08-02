@@ -29,7 +29,7 @@ namespace BAStoryPlayer.UI
         }
 
         GameObject block;
-        // Start is called before the first frame update
+
         void Start()
         {
             var rect = GetComponent<RectTransform>();

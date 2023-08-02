@@ -39,7 +39,7 @@ namespace BAStoryPlayer.UI
             });
         }
 
-        void SwitchState(bool selected)
+        void SwitchState(bool selected,bool instant = false)
         {
             if (selected)
             {
@@ -83,13 +83,21 @@ namespace BAStoryPlayer.UI
 
                 Image image_Subpanel = subpanel.GetComponent<Image>();
                 Image[] image_SubButton = subpanel.GetComponentsInChildren<Image>();
-                if (image_Subpanel.gameObject.activeSelf)
+                if (instant)
                 {
-                    image_Subpanel.DoAlpha(0, 0.2f).onComplete =()=>{ subpanel.SetActive(false); };
+                    image_Subpanel.color = new Color(image_Subpanel.color.r, image_Subpanel.color.g, image_Subpanel.color.b, 0);
+                    subpanel.SetActive(false);
                 }
+                else
+                {
+                    image_Subpanel.DoAlpha(0, 0.2f).onComplete = () => { subpanel.SetActive(false); };
+                }
+
                 foreach (var i in image_SubButton)
                 {
-                    if (i.gameObject.activeSelf)
+                    if (instant)
+                        i.color = new Color(i.color.r, i.color.g, i.color.b, 0);
+                    else
                         i.DoAlpha(0, 0.1f);
                 }
             }
@@ -100,11 +108,10 @@ namespace BAStoryPlayer.UI
             if (Application.isEditor)
                 return;
             selected = false;
-            SwitchState(selected);
+            SwitchState(selected,true);
         }
 
         public void PlaySound() { BAStoryPlayerController.Instance.StoryPlayer.AudioModule.Play(sound_Click); }
-
         System.Collections.IEnumerator CDisableObject(float time)
         {
             yield return new WaitForSeconds(time);

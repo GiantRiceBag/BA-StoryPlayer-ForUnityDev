@@ -1,13 +1,13 @@
-namespace BAStoryPlayer
+namespace BAStoryPlayer.NexonCommandParser
 {
     /*
     处理等待部分
      */
-    public class SubParser_SystemLayer : BSubParser
+    public class NexonSubParser_SystemLayer : BNexonSubParser
     {
-        public SubParser_SystemLayer(int weight) { this.weight = weight; }
+        public NexonSubParser_SystemLayer(int weight) { this.weight = weight; }
 
-        public override StoryUnit Parse(RawStoryUnit rawStoryUnit, StoryUnit storyUnit = null)
+        public override StoryUnit Parse(RawNexonStoryUnit rawStoryUnit, StoryUnit storyUnit = null)
         {
             if (storyUnit == null)
                 storyUnit = new StoryUnit();

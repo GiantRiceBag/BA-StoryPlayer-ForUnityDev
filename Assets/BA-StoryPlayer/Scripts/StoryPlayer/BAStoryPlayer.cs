@@ -39,8 +39,8 @@ namespace BAStoryPlayer
 
         List<StoryUnit> storyUnit;
         [Header("Real-Time Data")]
-        [SerializeField] int index_CurrentUnit = 0;
-        Queue<int> priorIndex = new Queue<int>(); // 优先下标队列 
+        [SerializeField] int currentUnitIndex = 0;
+        Queue<int> priorUnitIndexes = new Queue<int>(); // 优先下标队列 
         [SerializeField] bool isPlaying = false;
         [SerializeField] bool isExecutable = true;
         [SerializeField] bool isLocking = false;
@@ -76,7 +76,7 @@ namespace BAStoryPlayer
             }
         }
 
-        public GameObject Canvas
+        public GameObject CanvasObject
         {
             get
             {
@@ -86,15 +86,9 @@ namespace BAStoryPlayer
                 return current.gameObject;
             }
         }
-        public RectTransform CanvasRect => Canvas.GetComponent<RectTransform>();
+        public RectTransform CanvasRect => CanvasObject.GetComponent<RectTransform>();
 
-        public int GroupID
-        {
-            get
-            {
-                return groupID;
-            }
-        }
+        public int GroupID => groupID;
         public float Volume_Music
         {
             set
@@ -147,15 +141,15 @@ namespace BAStoryPlayer
             onUserSelect.AddListener((selectionGroup, groupID) =>
             {
                 // 坐标前移寻找最近的选项下标 并放入优先下标队列 遇到-1则停止
-                for (int i = index_CurrentUnit; i < storyUnit.Count; i++)
+                for (int i = currentUnitIndex; i < storyUnit.Count; i++)
                 {
                     if (storyUnit[i].selectionGroup == selectionGroup)
                     {
-                        priorIndex.Enqueue(i);
+                        priorUnitIndexes.Enqueue(i);
                     }
                     else if (storyUnit[i].selectionGroup == 0) // 注意添加最后一个无选项组的单元
                     {
-                        priorIndex.Enqueue(i);
+                        priorUnitIndexes.Enqueue(i);
                         break;
                     }
                 }
@@ -223,10 +217,10 @@ namespace BAStoryPlayer
         /// </summary>
         public void LoadUnits(int groupID, List<StoryUnit> units)
         {
-            priorIndex.Clear();
+            priorUnitIndexes.Clear();
             this.groupID = groupID;
             storyUnit = units;
-            index_CurrentUnit = 0;
+            currentUnitIndex = 0;
             isLocking = false;
             isPlaying = true;
             isExecutable = true;
@@ -253,7 +247,7 @@ namespace BAStoryPlayer
             if (!isExecutable || !isPlaying)
                 return;
 
-            if (index_CurrentUnit == storyUnit.Count)
+            if (currentUnitIndex == storyUnit.Count)
             {
                 CloseStoryPlayer();
                 return;
@@ -262,35 +256,35 @@ namespace BAStoryPlayer
             // 每一个单元刷新一次锁定时间
             ReflashLockTime();
 
-            switch (storyUnit[index_CurrentUnit].type)
+            switch (storyUnit[currentUnitIndex].type)
             {
                 case UnitType.Text:
                 case UnitType.Title:
                 case UnitType.Option:
                     {
-                        storyUnit[index_CurrentUnit].Execute();
+                        storyUnit[currentUnitIndex].Execute();
                         NextIndex();
                         isExecutable = false;
                         break;
                     }
                 case UnitType.Command:
                     {
-                        if (storyUnit[index_CurrentUnit].wait != 0)
+                        if (storyUnit[currentUnitIndex].wait != 0)
                         {
                             // 根据单元等待时间执行等待完毕后自动执行下一单元
-                            storyUnit[index_CurrentUnit].Execute();
+                            storyUnit[currentUnitIndex].Execute();
                             isExecutable = false;
                             Timer.Delay(() =>
                            {
                                isExecutable = true;
                                NextIndex();
                                Next(true);
-                           }, storyUnit[index_CurrentUnit].wait / 1000f);
+                           }, storyUnit[currentUnitIndex].wait / 1000f);
                             break;
                         }
                         else
                         {
-                            storyUnit[index_CurrentUnit].Execute();
+                            storyUnit[currentUnitIndex].Execute();
                             NextIndex();
                             Next(true);
                             break;
@@ -306,12 +300,12 @@ namespace BAStoryPlayer
         /// </summary>
         void NextIndex()
         {
-            if (priorIndex.Count != 0)
+            if (priorUnitIndexes.Count != 0)
             {
-                index_CurrentUnit = priorIndex.Dequeue();
+                currentUnitIndex = priorUnitIndexes.Dequeue();
             }
             else
-                index_CurrentUnit++;
+                currentUnitIndex++;
         }
 
         /// <summary>

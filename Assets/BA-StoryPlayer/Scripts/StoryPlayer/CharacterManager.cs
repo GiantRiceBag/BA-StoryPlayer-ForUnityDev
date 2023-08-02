@@ -42,21 +42,18 @@ namespace BAStoryPlayer
         Dictionary<string, GameObject> characterPool = new Dictionary<string, GameObject>();
         Dictionary<string, Coroutine> winkAction = new Dictionary<string, Coroutine>();
 
-        public SkeletonGraphic[] Character { get { return character; } }
-        BAStoryPlayer StoryPlayer { get { return BAStoryPlayerController.Instance.StoryPlayer; } }
+        public SkeletonGraphic[] Character => character;
+        public Dictionary<string, GameObject> CharacterPool => characterPool;
+        BAStoryPlayer StoryPlayer => BAStoryPlayerController.Instance.StoryPlayer;
 
         [HideInInspector] public UnityEngine.Events.UnityEvent<float> onAnimateCharacter;
 
         /// <summary>
         /// 激活角色(若有动作,一定要先于动作前调用)
         /// </summary>
-        /// <param name="index">初始位置/角色编号</param>
-        /// <param name="indexName">角色索引名</param>
-        /// <param name="animationID">播放动画的编号</param>
-        /// <param name="transistion">出场方式[仅首次出场有效]</param>
-        public void ActivateCharacter(int index,string indexName,string animationID,TransistionType transistion = TransistionType.Instant)
+        public void ActivateCharacter(int index,string indexName,string animationID)
         {
-            int currentIndex = CheckCharacterExist(indexName);
+            int currentIndex = CheckIfCharacterOnSlot(indexName);
             // 角色不在场上
             if (currentIndex == -1)
             {
@@ -66,18 +63,11 @@ namespace BAStoryPlayer
                 // 对象池中不存在则载入预制体并初始化相关数据
                 if(obj == null)
                 {
-                    try
-                    {
-                        obj = CreateCharacterObj(indexName, index);
-                    }
-                    catch(System.NullReferenceException)
-                    {
-                        Debug.LogError($"无法在 Resoucres文件夹中的路径 {BAStoryPlayerController.Instance.Setting.Path_Prefab} 找到对应角色预制体");
-                        return;
-                    }
+                    obj = CreateCharacterObj(indexName, index);
                 }
                 else
                 {
+                    obj.gameObject.SetActive(true);
                     obj.GetComponent<RectTransform>().anchoredPosition = new Vector3((index + 1) * INTERVAL_SLOT, 0, 0);
                     obj.transform.rotation = Quaternion.Euler(0, 0, 0);
                 }
@@ -85,37 +75,6 @@ namespace BAStoryPlayer
                 // 对应槽位有其他角色则删除
                 DestroyCharacter(index);
                 character[index] = obj.GetComponent<SkeletonGraphic>();
-
-                // 首次出场方式
-                switch (transistion)
-                {
-                    case TransistionType.Instant:
-                        {
-                            obj.SetActive(true);
-                            break;
-                        }
-                    case TransistionType.Smooth:
-                        {
-                            character[index].color = Color.black;
-                            character[index].DoColor(Color.white, BAStoryPlayerController.Instance.Setting.Time_Character_Fade);
-                            break;
-                        }
-                    default:break;
-                }
-
-                Highlight(index);
-
-                // 默认 动画01 启用眨眼动画 （用Contains是因为有些动画有前后缀）
-                try
-                {
-                    character[index].AnimationState.SetAnimation(1, "Idle_01", true); // 呼吸轨道
-
-                    if (animationID.Contains("01"))
-                        SetWinkAction(indexName, true);
-                    character[index].AnimationState.SetAnimation(0, animationID, false); // 差分动画
-                }
-                catch { }
-
             }
             // 角色在场上
             else
@@ -123,85 +82,72 @@ namespace BAStoryPlayer
                 // 位置更替 若目标位置有其他角色则直接删除
                 if(currentIndex != index)
                 {
-                    // 先停掉角色的眨眼动画在变换位置
-                    SetWinkAction(indexName, false);
-
                     DestroyCharacter(index);
-
                     MoveCharacterTo(currentIndex, index);
                     character[index] = character[currentIndex];
                     character[currentIndex] = null;
                 }
-
-                try
-                {
-                    character[index].AnimationState.SetAnimation(0, animationID, true);
-                    SetWinkAction(indexName, animationID.Contains("01") ? true : false);
-                }
-                catch { }
-
-                Highlight(index);
             }
+
+            SetAnimation(index, animationID);
+            Highlight(index);
         }
-        public void ActivateCharacter(int index, string name, string animationID, string lines,TransistionType transistion = TransistionType.Instant)
+        public void ActivateCharacter(int index, string indexName, string animationID, string lines)
         {
-            ActivateCharacter(index, name, animationID, transistion);
-            StoryPlayer.UIModule.SetSpeaker(name);
+            ActivateCharacter(index, indexName, animationID);
+            StoryPlayer.UIModule.SetSpeaker(indexName);
             StoryPlayer.UIModule.PrintText(lines);
         }
-        /// <summary>
-        /// 检查角色是否存在并返回对应下标 若不存在则返回-1
-        /// </summary>
-        /// <param name="name">角色名</param>
-        /// <returns></returns>
-        int CheckCharacterExist(string name)
+
+        bool CheckIfCharacterInPool(string indexName) => characterPool.ContainsKey(indexName) ? characterPool[indexName] != null : false;
+        int CheckIfCharacterOnSlot(string indexName)
         {
             for(int i = 0; i < NUM_CHARACTER_SLOT; i++)
             {
                 if (Character[i] == null)
                     continue;
-                if (Character[i].gameObject.name == name)
+                if (Character[i].gameObject.name == indexName)
                     return i;
             }
 
             return -1;
         }
-
-        /// <summary>
-        /// 检查角色槽位是否为空
-        /// </summary>
-        /// <param name="index">下标</param>
-        /// <returns></returns>
-        bool CheckSlotEmpty(int index)
-        {
-            if (!ValidateIndex(index))
-                return false;
-
-            return (Character[index] == null);
-        }
+        bool CheckIfSlotEmpty(int index) => CheckIfIndexValid(index) ? Character[index] == null : false;
+        bool CheckIfIndexValid(int index) => (index >= 0 && index < NUM_CHARACTER_SLOT);
 
         /// <summary>
         /// 尝试删除在场上的角色(不删除对象仅取消编号)
         /// </summary>
         /// <param name="index">下标</param>
-        /// <param name="destoryObject">完全删除角色</param>
-        void DestroyCharacter(int index,bool destoryObject = false)
+        /// <param name="destroyObject">完全删除角色</param>
+        void DestroyCharacter(int index,bool destroyObject = false)
         {
-            if (CheckSlotEmpty(index))
+            if (CheckIfSlotEmpty(index))
                 return;
-
+            // 先停掉角色的眨眼动画在变换位置
+            SetWinkAction(Character[index].name, false);
+            DestroyCharacter(Character[index].gameObject);
+            character[index] = null;
+        }
+        void DestroyCharacter(string indexName,bool destroyObject = false)
+        {
+            if (!CheckIfCharacterInPool(indexName))
+                return;
+            Destroy(characterPool[indexName]);
+        }
+        void DestroyCharacter(GameObject obj,bool destoryObject = false)
+        {
             if (destoryObject)
             {
-                characterPool.Remove(character[index].name);
-                Destroy(character[index].gameObject);
+                characterPool.Remove(obj.name);
+                Destroy(obj);
             }
             else
             {
-                character[index].gameObject.SetActive(false);
+                obj.SetActive(false);
             }
 
-            SetWinkAction(character[index].name, false);
-            character[index] = null;
+            SetWinkAction(obj.name, false);
         }
 
         /// <summary>
@@ -213,28 +159,35 @@ namespace BAStoryPlayer
         {
             Coroutine coroutine = null;
             winkAction.TryGetValue(name, out coroutine);
-
-            if (enable)
+            try
             {
-                if(coroutine == null)
+                if (enable)
                 {
-                    coroutine = StartCoroutine(CCharacterWink(name));
+                    if (coroutine == null)
+                    {
+                        coroutine = StartCoroutine(CCharacterWink(name));
+                        if (coroutine != null)
+                            winkAction.Add(name, coroutine);
+                    }
+                }
+                else
+                {
                     if (coroutine != null)
-                        winkAction.Add(name, coroutine);
+                    {
+                        StopCoroutine(coroutine);
+                        winkAction.Remove(name);
+                    }
                 }
             }
-            else
+            catch
             {
-                if (coroutine != null)
-                {
-                    StopCoroutine(coroutine);
-                    winkAction.Remove(name);
-                }
+                StopCoroutine(coroutine);
             }
+            
         }
         IEnumerator CCharacterWink(string name)
         {
-            int index = CheckCharacterExist(name);
+            int index = CheckIfCharacterOnSlot(name);
 
             string ani_EyeClose_Name = "";
             // 寻找眨眼动画的名字 一般以e开头
@@ -275,65 +228,65 @@ namespace BAStoryPlayer
         /// <param name="transition">过渡方式</param>
         void MoveCharacterTo(int currentIndex,int targetIndex,TransistionType transition = TransistionType.Instant)
         {
-            if (!ValidateIndex(currentIndex) || !ValidateIndex(targetIndex))
+            if (!CheckIfIndexValid(currentIndex) || !CheckIfIndexValid(targetIndex))
                 return;
-
-            switch (transition)
-            {
-                case TransistionType.Instant:
-                    {
-                        character[currentIndex].GetComponent<RectTransform>().anchoredPosition = new Vector2((targetIndex+1) * INTERVAL_SLOT, 0);
-                        break;
-                    }
-                case TransistionType.Smooth:
-                    {
-                        character[currentIndex].transform.DoMove_Anchored(new Vector2((targetIndex + 1) * INTERVAL_SLOT, 0), BAStoryPlayerController.Instance.Setting.Time_Character_Move);
-                        break;
-                    }
-            default:break;
-            }
-        }
-        void MoveCharacterTo(string name, int index, TransistionType transition = TransistionType.Instant)
-        {
-            int currentIndex = CheckCharacterExist(name);
-            if (currentIndex == -1)
+            if (CheckIfSlotEmpty(currentIndex))
                 return;
-            MoveCharacterTo(currentIndex, index, transition);
+            MoveCharacterTo(Character[currentIndex].gameObject, targetIndex, transition);
         }
         void MoveCharacterTo(int currentIndex,Vector2 pos,TransistionType transition = TransistionType.Instant)
         {
-            if (!ValidateIndex(currentIndex))
+            if (CheckIfSlotEmpty(currentIndex))
                 return;
-
+            MoveCharacterTo(Character[currentIndex].gameObject, pos, transition);
+        }
+        void MoveCharacterTo(string indexName, int targetIndex, TransistionType transition = TransistionType.Instant)
+        {
+            if (!CheckIfCharacterInPool(indexName))
+                CreateCharacterObj(indexName);
+            characterPool[indexName].SetActive(true);
+            MoveCharacterTo(characterPool[indexName], targetIndex, transition);
+        }
+        void MoveCharacterTo(string indexName, Vector2 pos, TransistionType transition = TransistionType.Instant)
+        {
+            if (!CheckIfCharacterInPool(indexName))
+                CreateCharacterObj(indexName);
+            characterPool[indexName].SetActive(true);
+            MoveCharacterTo(characterPool[indexName], pos, transition);
+        }
+        void MoveCharacterTo(GameObject obj, int targetIndex, TransistionType transition = TransistionType.Instant)
+        {
             switch (transition)
             {
                 case TransistionType.Instant:
                     {
-                        character[currentIndex].GetComponent<RectTransform>().anchoredPosition = pos;
+                        obj.GetComponent<RectTransform>().anchoredPosition = new Vector2((targetIndex + 1) * INTERVAL_SLOT, 0);
                         break;
                     }
                 case TransistionType.Smooth:
                     {
-                        character[currentIndex].transform.DoMove_Anchored(pos, BAStoryPlayerController.Instance.Setting.Time_Character_Move);
+                        obj.transform.DoMove_Anchored(new Vector2((targetIndex + 1) * INTERVAL_SLOT, 0), BAStoryPlayerController.Instance.Setting.Time_Character_Move);
                         break;
                     }
                 default: break;
             }
         }
-        void MoveCharacterTo(string name, Vector2 pos, TransistionType transition = TransistionType.Instant)
+        void MoveCharacterTo(GameObject obj, Vector2 pos, TransistionType transition = TransistionType.Instant)
         {
-            int currentIndex = CheckCharacterExist(name);
-            if (currentIndex == -1)
-                return;
-            MoveCharacterTo(currentIndex, pos, transition);
-        }
-
-        bool ValidateIndex(int index)
-        {
-            if (index >= 0 && index < NUM_CHARACTER_SLOT)
-                return true;
-            Debug.LogError($"角色槽位下标 {index} 超出范围[0-4]");
-            return false;
+            switch (transition)
+            {
+                case TransistionType.Instant:
+                    {
+                        obj.GetComponent<RectTransform>().anchoredPosition = pos;
+                        break;
+                    }
+                case TransistionType.Smooth:
+                    {
+                        obj.transform.DoMove_Anchored(pos, BAStoryPlayerController.Instance.Setting.Time_Character_Move);
+                        break;
+                    }
+                default: break;
+            }
         }
 
         /// <summary>
@@ -344,83 +297,92 @@ namespace BAStoryPlayer
         /// <param name="arg">参数(可选)</param>
         public void SetAction(int index,CharacterAction action,int arg = -1)
         {
-            if (CheckSlotEmpty(index))
+            if (CheckIfSlotEmpty(index))
                 return;
+            SetAction(Character[index].gameObject, action, arg);
+        }
+        public void SetAction(string indexName,CharacterAction action,int arg = -1)
+        {
+            if (!CheckIfCharacterInPool(indexName))
+                CreateCharacterObj(indexName);
+            characterPool[indexName].SetActive(true);
+            SetAction(characterPool[indexName], action);
+        }
+        public void SetAction(GameObject obj,CharacterAction action,int arg = -1)
+        {
+            SkeletonGraphic skelGraphic = obj.GetComponent<SkeletonGraphic>();
 
             switch (action)
             {
-                case CharacterAction.Appear:
+                case CharacterAction.Appear: //黑色剪影渐变进场
                     {
-                        character[index].color = Color.black;
-                        character[index].DoColor(Color.white, BAStoryPlayerController.Instance.Setting.Time_Character_Fade);
+                        skelGraphic.color = Color.black;
+                        skelGraphic.DoColor(Color.white, BAStoryPlayerController.Instance.Setting.Time_Character_Fade);
                         onAnimateCharacter?.Invoke(BAStoryPlayerController.Instance.Setting.Time_Character_Fade);
                         break;
                     }
-                case CharacterAction.Disapper:
+                case CharacterAction.Disapper: // 渐变至黑色剪影但不离场 离场靠Hide指令
                     {
-                        character[index].color = Color.white;
-                        character[index].DoColor(Color.black, BAStoryPlayerController.Instance.Setting.Time_Character_Fade).onComplete=()=>{
-                            // 退场动画自动销毁角色 不过好像和hide指令有些功能上的重叠
-                            DestroyCharacter(index);
-                        };
+                        skelGraphic.color = Color.white;
+                        skelGraphic.DoColor(Color.black, BAStoryPlayerController.Instance.Setting.Time_Character_Fade);
                         onAnimateCharacter?.Invoke(BAStoryPlayerController.Instance.Setting.Time_Character_Fade);
                         break;
                     }
                 case CharacterAction.Disapper2Left:
                     {
-                        MoveCharacterTo(index, new Vector2(-500, 0), TransistionType.Smooth);
+                        MoveCharacterTo(obj, new Vector2(-500, 0), TransistionType.Smooth);
                         onAnimateCharacter?.Invoke(BAStoryPlayerController.Instance.Setting.Time_Character_Move);
                         break;
                     }
                 case CharacterAction.Disapper2Right:
                     {
-                        MoveCharacterTo(index, new Vector2(2420, 0), TransistionType.Smooth);
+                        MoveCharacterTo(obj, new Vector2(2420, 0), TransistionType.Smooth);
                         onAnimateCharacter?.Invoke(BAStoryPlayerController.Instance.Setting.Time_Character_Move);
                         break;
                     }
                 case CharacterAction.AppearL2R:
                     {
-                        character[index].color = Color.white;
-                        MoveCharacterTo(index, new Vector2(-500, 0));
-                        MoveCharacterTo(index, arg, TransistionType.Smooth);
+                        skelGraphic.color = Color.white;
+                        MoveCharacterTo(obj, new Vector2(-500, 0));
+                        MoveCharacterTo(obj, arg, TransistionType.Smooth);
                         onAnimateCharacter?.Invoke(BAStoryPlayerController.Instance.Setting.Time_Character_Move);
                         break;
                     }
                 case CharacterAction.AppearR2L:
                     {
-                        character[index].color = Color.white;
-                        MoveCharacterTo(index, new Vector2(2420, 0));
-                        MoveCharacterTo(index, arg, TransistionType.Smooth);
+                        skelGraphic.color = Color.white;
+                        MoveCharacterTo(obj, new Vector2(2420, 0));
+                        MoveCharacterTo(obj, arg, TransistionType.Smooth);
                         onAnimateCharacter?.Invoke(BAStoryPlayerController.Instance.Setting.Time_Character_Move);
                         break;
                     }
                 case CharacterAction.Hophop:
                     {
-                        character[index].transform.DoBound_Anchored_Relative(new Vector2(0, 50), BAStoryPlayerController.Instance.Setting.Time_Character_Hophop, 2);
+                        obj.transform.DoBound_Anchored_Relative(new Vector2(0, 50), BAStoryPlayerController.Instance.Setting.Time_Character_Hophop, 2);
                         onAnimateCharacter?.Invoke(BAStoryPlayerController.Instance.Setting.Time_Character_Hophop);
                         break;
                     }
                 case CharacterAction.Greeting:
                     {
-                        character[index].transform.DoBound_Anchored_Relative(new Vector2(0, -70), BAStoryPlayerController.Instance.Setting.Time_Character_Greeting);
+                        obj.transform.DoBound_Anchored_Relative(new Vector2(0, -70), BAStoryPlayerController.Instance.Setting.Time_Character_Greeting);
                         onAnimateCharacter?.Invoke(BAStoryPlayerController.Instance.Setting.Time_Character_Greeting);
                         break;
                     }
                 case CharacterAction.Shake:
                     {
-                        character[index].transform.DoShakeX(40, BAStoryPlayerController.Instance.Setting.Time_Character_Shake, 2);
+                        obj.transform.DoShakeX(40, BAStoryPlayerController.Instance.Setting.Time_Character_Shake, 2);
                         onAnimateCharacter?.Invoke(BAStoryPlayerController.Instance.Setting.Time_Character_Shake);
                         break;
                     }
                 case CharacterAction.Move:
                     {
-                        MoveCharacterTo(index, arg, TransistionType.Smooth);
+                        MoveCharacterTo(obj, arg, TransistionType.Smooth);
                         onAnimateCharacter?.Invoke(BAStoryPlayerController.Instance.Setting.Time_Character_Move);
                         break;
                     }
                 case CharacterAction.Stiff:
                     {
-                        character[index].transform.DoShakeX(10, BAStoryPlayerController.Instance.Setting.Time_Character_Stiff, 4);
+                        obj.transform.DoShakeX(10, BAStoryPlayerController.Instance.Setting.Time_Character_Stiff, 4);
                         onAnimateCharacter?.Invoke(BAStoryPlayerController.Instance.Setting.Time_Character_Stiff);
                         break;
                     }
@@ -432,38 +394,34 @@ namespace BAStoryPlayer
                     }
                 case CharacterAction.Jump:
                     {
-                        character[index].transform.DoBound_Anchored_Relative(new Vector2(0, 70), BAStoryPlayerController.Instance.Setting.Time_Character_Jump);
+                        obj.transform.DoBound_Anchored_Relative(new Vector2(0, 70), BAStoryPlayerController.Instance.Setting.Time_Character_Jump);
                         onAnimateCharacter?.Invoke(BAStoryPlayerController.Instance.Setting.Time_Character_Jump);
                         break;
                     }
                 case CharacterAction.falldownR:
                     {
                         TweenSequence sequence_Rotation = new TweenSequence();
-                        sequence_Rotation.Append(character[index].transform.DoEuler(new Vector3(0, 0, -10), 0.3f));
-                        sequence_Rotation.Append(character[index].transform.DoEuler(new Vector3(0, 0, 5), 0.5f));
+                        sequence_Rotation.Append(obj.transform.DoEuler(new Vector3(0, 0, -10), 0.3f));
+                        sequence_Rotation.Append(obj.transform.DoEuler(new Vector3(0, 0, 5), 0.5f));
                         sequence_Rotation.Wait(0.3f);
-                        sequence_Rotation.Append(character[index].transform.DoLocalMove(character[index].transform.localPosition - new Vector3(0, 1500, 0), 0.3f));
-                        sequence_Rotation.Append(() => { DestroyCharacter(index); });
+                        sequence_Rotation.Append(obj.transform.DoLocalMove(obj.transform.localPosition - new Vector3(0, 1500, 0), 0.3f));
+                        sequence_Rotation.Append(() => { DestroyCharacter(obj); });
 
                         TweenSequence sequence_Position = new TweenSequence();
-                        sequence_Position.Append(character[index].transform.DoLocalMove(character[index].transform.localPosition + new Vector3(15, 0, 0), 0.3f));
-                        sequence_Position.Append(character[index].transform.DoLocalMove(character[index].transform.localPosition - new Vector3(30, 0, 0), 0.5f));
+                        sequence_Position.Append(obj.transform.DoLocalMove(obj.transform.localPosition + new Vector3(15, 0, 0), 0.3f));
+                        sequence_Position.Append(obj.transform.DoLocalMove(obj.transform.localPosition - new Vector3(30, 0, 0), 0.5f));
 
                         onAnimateCharacter?.Invoke(1.4f);
                         break;
                     }
-                case CharacterAction.Hide:
+                case CharacterAction.Hide: // 立即让角色离场
                     {
-                        // TODO 立即删除还是渐变退出 先暂时立即删除 与Disappear功能有些重叠
-                        //character[index].DoColor(Color.black, TIME_TRANSITION).onComplete = () => { DestroyCharacter(index); };
-                        DestroyCharacter(index);
-                        onAnimateCharacter?.Invoke(BAStoryPlayerController.Instance.Setting.Time_Character_Fade);
+                        DestroyCharacter(obj);
                         break;
-                }
-                default:return;
+                    }
+                default: return;
             }
         }
-
 
         /// <summary>
         /// 立即隐藏场上角色
@@ -483,46 +441,65 @@ namespace BAStoryPlayer
         /// <param name="emotion">表情</param>
         public void SetEmotion(int index,CharacterEmotion emotion)
         {
-            if (CheckSlotEmpty(index))
+            if (CheckIfSlotEmpty(index))
                 return;
-
+            SetEmotion(Character[index].gameObject,emotion);
+        }
+        public void SetEmotion(string indexName, CharacterEmotion emotion)
+        {
+            if (!CheckIfCharacterInPool(indexName))
+                CreateCharacterObj(indexName);
+            characterPool[indexName].SetActive(true);
+            SetEmotion(characterPool[indexName], emotion);
+        }
+        public void SetEmotion(GameObject obj,CharacterEmotion emotion)
+        {
             float time = 1;
-            EmotionFactory.SetEmotion(character[index].transform, emotion,ref time);
-
+            EmotionFactory.SetEmotion(obj.transform, emotion, ref time);
             onAnimateCharacter?.Invoke(time);
         }
 
         /// <summary>
-        /// 高亮某个角色
+        /// 高亮并置顶某个角色
         /// </summary>
-        /// <param name="index">角色下标</param>
-        /// <param name="transition">过渡方式</param>
         public void Highlight(int index,TransistionType transition = TransistionType.Instant)
         {
-            if (CheckSlotEmpty(index))
+            if (CheckIfSlotEmpty(index))
                 return;
+            Highlight(Character[index].gameObject, transition);
+        }
+        public void Highlight(string indexName, TransistionType transition = TransistionType.Instant)
+        {
+            if (!CheckIfCharacterInPool(indexName))
+                CreateCharacterObj(indexName);
+            characterPool[indexName].SetActive(true);
+            Highlight(characterPool[indexName], transition);
+        }
+        public void Highlight(GameObject obj, TransistionType transition = TransistionType.Instant)
+        {
+            SkeletonGraphic skelGraphic = obj.GetComponent<SkeletonGraphic>();
 
-            character[index].color = Color.white;
-            foreach(var i in character)
+            skelGraphic.color = Color.white;
+            obj.transform.SetSiblingIndex(transform.childCount - 1);
+
+            foreach (var chr in characterPool.Values)
             {
-                if (i == character[index] || i == null)
+                if (chr == obj || !chr.activeSelf)
                     continue;
-                if (i.color == Color.black) // 执行过退场动画的角色不在点亮
+                SkeletonGraphic skg = chr.GetComponent<SkeletonGraphic>();
+                if (skg.color == Color.black)
                     continue;
-
-                // 角色置顶
-                character[index].transform.SetSiblingIndex(transform.childCount - 1);
 
                 switch (transition)
                 {
                     case TransistionType.Instant:
                         {
-                            i.color = COLOR_UNHIGHLIGHT;
+                            skg.color = COLOR_UNHIGHLIGHT;
                             break;
                         }
                     case TransistionType.Smooth:
                         {
-                            i.DoColor(COLOR_UNHIGHLIGHT, BAStoryPlayerController.Instance.Setting.Time_Character_Highlight);
+                            skg.DoColor(COLOR_UNHIGHLIGHT, BAStoryPlayerController.Instance.Setting.Time_Character_Highlight);
                             break;
                         }
                     default: return;
@@ -531,27 +508,28 @@ namespace BAStoryPlayer
         }
 
         /// <summary>
-        /// 设置是否高亮所有角色
+        /// 高亮所有角色
         /// </summary>
         /// <param name="enable"></param>
         /// <param name="transition"></param>
-        public void SetHighlightAll(bool enable,TransistionType transition = TransistionType.Instant)
+        public void HighlightAll(TransistionType transition = TransistionType.Instant)
         {
-            foreach (var i in character)
+            foreach (var chr in characterPool.Values)
             {
-                if (i == null)
+                if (!chr.activeSelf)
                     continue;
 
+                SkeletonGraphic skelGraphic = chr.GetComponent<SkeletonGraphic>();
                 switch (transition)
                 {
                     case TransistionType.Instant:
                         {
-                            i.color = COLOR_UNHIGHLIGHT;
+                            skelGraphic.color = COLOR_UNHIGHLIGHT;
                             break;
                         }
                     case TransistionType.Smooth:
                         {
-                            i.DoColor(COLOR_UNHIGHLIGHT, BAStoryPlayerController.Instance.Setting.Time_Character_Highlight);
+                            skelGraphic.DoColor(COLOR_UNHIGHLIGHT, BAStoryPlayerController.Instance.Setting.Time_Character_Highlight);
                             break;
                         }
                     default: return;
@@ -560,12 +538,12 @@ namespace BAStoryPlayer
         }
 
         /// <summary>
-        /// 创建角色并初始化位置
+        /// 创建角色并初始化
         /// </summary>
         /// <param name="indexName">索引名</param>
         /// <param name="index">角色下标</param>
         /// <returns></returns>
-        GameObject CreateCharacterObj(string indexName,int index)
+        GameObject CreateCharacterObj(string indexName,int index = 2)
         {
             GameObject obj;
             obj = BAStoryPlayerController.Instance.LoadCharacterPrefab(indexName);
@@ -582,14 +560,51 @@ namespace BAStoryPlayer
 
             obj.GetComponent<SkeletonGraphic>().MatchRectTransformWithBounds();
 
+            SetAnimation(obj.GetComponent<SkeletonGraphic>(), "Idle_01", 1, true); // 呼吸轨道
+
+            characterPool.Remove(indexName);
             characterPool.Add(indexName, obj);
 
             return obj;
         }
 
+        /// <summary>
+        /// 设置Spine动画
+        /// </summary>
+        public void SetAnimation(int index, string animationID, int track = 0, bool loop = false)
+        {
+            if (CheckIfSlotEmpty(index))
+                return;
+            SetAnimation(Character[index], animationID, track, loop);
+            SetWinkAction(Character[index].name, animationID.Contains("01") ? true : false);
+        }
+        public void SetAnimation(string indexName,string animationID, int track = 0, bool loop = false)
+        {
+            if (!CheckIfCharacterInPool(indexName))
+                CreateCharacterObj(indexName);
+            characterPool[indexName].SetActive(true);
+            SetAnimation(characterPool[indexName].GetComponent<SkeletonGraphic>(),animationID,track,loop);
+            SetWinkAction(indexName, animationID.Contains("01") ? true : false);
+        }
+        public void SetAnimation(SkeletonGraphic skel,string animationID,int track = 0,bool loop = false)
+        {
+            try
+            {
+                skel.AnimationState.SetAnimation(track, animationID, loop);
+            }
+            catch { }
+        }
+
         public void ClearAllObject()
         {
+            foreach(var i in winkAction.Values)
+            {
+                StopCoroutine(i);
+            }
+            winkAction.Clear();
+
             characterPool.Clear();
+            character = new SkeletonGraphic[NUM_CHARACTER_SLOT];
             transform.ClearAllChild();
         }
     }

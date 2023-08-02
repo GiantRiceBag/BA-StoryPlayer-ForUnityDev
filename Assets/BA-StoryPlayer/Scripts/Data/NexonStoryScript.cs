@@ -1,10 +1,10 @@
 namespace BAStoryPlayer
 {
     [System.Serializable]
-    public class StoryScript
+    public class NexonStoryScript
     {
         public int groupID;
-        public System.Collections.Generic.List<RawStoryUnit> content = new System.Collections.Generic.List<RawStoryUnit>();
+        public System.Collections.Generic.List<RawNexonStoryUnit> content = new System.Collections.Generic.List<RawNexonStoryUnit>();
 
         public void Print()
         {
@@ -25,5 +25,4 @@ namespace BAStoryPlayer
             return UnityEngine.JsonUtility.ToJson(this, true);
         }
     }
-
 }

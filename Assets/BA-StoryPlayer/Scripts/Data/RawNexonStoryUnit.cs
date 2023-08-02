@@ -1,3 +1,4 @@
+using BAStoryPlayer.NexonCommandParser;
 namespace BAStoryPlayer
 {
     public class ScriptData
@@ -13,7 +14,7 @@ namespace BAStoryPlayer
     }
 
     [System.Serializable]
-    public class RawStoryUnit
+    public class RawNexonStoryUnit
     {
         public string scripts;
         public int selectionGroup;
