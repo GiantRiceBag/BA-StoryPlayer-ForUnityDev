@@ -1,4 +1,4 @@
-namespace BAStoryPlayer.NexonCommandParser
+namespace BAStoryPlayer.NexonScriptParser
 {
     public class BNexonSubParser
     {

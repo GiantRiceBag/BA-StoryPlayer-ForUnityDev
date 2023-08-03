@@ -1,5 +1,5 @@
 using BAStoryPlayer.UI;
-namespace BAStoryPlayer.NexonCommandParser
+namespace BAStoryPlayer.NexonScriptParser
 {
     public class NexonSubParser_OptionLayer : BNexonSubParser
     {

@@ -62,7 +62,7 @@ namespace BAStoryPlayer
         public float Time_Lock_AfterAction { get { return time_Lock_AfterAction; } }
 
         public float Time_BlurBackground { get { return time_BlurBackground; } }
-        public float Time_SwitchBAckground { get { return time_SwitchBackground; } }
+        public float Time_SwitchBackground { get { return time_SwitchBackground; } }
         
         public float Time_Character_Fade { get { return time_Character_Fade; } }
         public float Time_Character_Highlight { get { return time_Character_Highlight; } }

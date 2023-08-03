@@ -1,4 +1,4 @@
-using BAStoryPlayer.NexonCommandParser;
+using BAStoryPlayer.NexonScriptParser;
 namespace BAStoryPlayer
 {
     public class ScriptData

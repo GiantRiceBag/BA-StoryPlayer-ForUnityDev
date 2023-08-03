@@ -198,7 +198,7 @@ namespace BAStoryPlayer
         /// </summary>
         public void ShowTitle(string subtitle,string title)
         {
-            GameObject obj = Instantiate( Resources.Load("UI/Title") as GameObject);
+            GameObject obj = Instantiate(Resources.Load("UI/Title") as GameObject);
             obj.transform.SetParent(transform);
             obj.GetComponent<Title>().Initialize(title, subtitle);
 

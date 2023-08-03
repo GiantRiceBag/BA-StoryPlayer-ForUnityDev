@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace BAStoryPlayer.NexonCommandParser
+namespace BAStoryPlayer.NexonScriptParser
 {
     public enum ScriptTag
     {

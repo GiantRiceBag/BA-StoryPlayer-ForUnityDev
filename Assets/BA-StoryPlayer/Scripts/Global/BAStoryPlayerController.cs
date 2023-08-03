@@ -1,5 +1,6 @@
 using UnityEngine;
-using BAStoryPlayer.NexonCommandParser;
+using BAStoryPlayer.NexonScriptParser;
+using BAStoryPlayer.AsScriptParser;
 
 namespace BAStoryPlayer
 {
@@ -77,35 +78,35 @@ namespace BAStoryPlayer
             // TODO 不删除方案的选项
             StoryPlayer.gameObject.SetActive(true);
 
-            NexonStoryScript storyScript;
+            
             var textAsset = Resources.Load<TextAsset>(Setting.Path_StoryScript + url);
             if(textAsset == null)
             {
                 Debug.LogError($"未能在 {Setting.Path_StoryScript + url } 找到剧情脚本");
                 return null;
             }
-            string json = textAsset.ToString();
-            storyScript = JsonUtility.FromJson(json, typeof(NexonStoryScript)) as NexonStoryScript;
 
-            return LoadStory(storyScript);
-        }
-        public BAStoryPlayer LoadStory(NexonStoryScript storyScript)
-        {
-            if (isPlaying) { Debug.Log("剧情播放中"); return null; }
-            
+            if(textAsset.text[0] == '{') // Nexon
+            {
+                string json = textAsset.ToString();
+                NexonStoryScript storyScript = JsonUtility.FromJson(json, typeof(NexonStoryScript)) as NexonStoryScript;
+                NexonCommandParser parser = new NexonCommandParser();
+                StoryPlayer.LoadUnits(storyScript.groupID, parser.Parse(storyScript)); 
+                StoryPlayer.ReadyToNext();
+                StoryPlayer.Next(); 
+            }
+            else // As
+            {
+                AsCommandParaser parser = new AsCommandParaser();
+                var units = parser.Parse(textAsset);
+                StoryPlayer.LoadUnits(0, units);
+                StoryPlayer.ReadyToNext();
+                StoryPlayer.Next(); 
+            }
+
             isPlaying = true;
-
-            // TODO 不删除方案的选项
             StoryPlayer.gameObject.SetActive(true);
-
-            // 移除事件
             StoryPlayer.onFinishPlaying.RemoveAllListeners();
-
-            NexonCommandParser.NexonCommandParser parser = new NexonCommandParser.NexonCommandParser(); // 实例化解析器
-
-            StoryPlayer.LoadUnits(storyScript.groupID, parser.Parse(storyScript)); // 播放器初始化
-            StoryPlayer.ReadyToNext();
-            StoryPlayer.Next(); // 开始播放第一个执行单元
 
             // 订阅播放结束事件
             StoryPlayer.onFinishPlaying.AddListener(() =>

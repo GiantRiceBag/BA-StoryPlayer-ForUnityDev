@@ -2,7 +2,7 @@
     "groupID": 1,
     "content": [
         {
-            "scripts": "3;shiroko;00\n#showmenu",
+            "scripts": "3;shiroko;00\n#showmenu\n#3;al\n#wait;1500",
             "selectionGroup": 0,
             "bgmURL": "",
             "soundURL": "",

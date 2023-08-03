@@ -1,4 +1,4 @@
-namespace BAStoryPlayer.NexonCommandParser
+namespace BAStoryPlayer.NexonScriptParser
 {
     /*
      处理背景变换以及UI部分

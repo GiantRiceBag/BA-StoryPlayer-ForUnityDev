@@ -172,8 +172,20 @@ namespace BAStoryPlayer
         {
             if (url == null)
             {
-                image_Background.sprite = null;
-                image_Background.enabled = false;
+                switch (transition)
+                {
+                    case TransistionType.Instant:
+                        image_Background.sprite = null;
+                        image_Background.enabled = false;
+                        break;
+                    case TransistionType.Smooth:
+                        image_Background.DoColor(Color.black, BAStoryPlayerController.Instance.Setting.Time_SwitchBackground).onComplete = () =>
+                         {
+                             image_Background.sprite = null;
+                             image_Background.enabled = false;
+                         };
+                        break;
+                }
                 return;
             }
 
@@ -188,6 +200,7 @@ namespace BAStoryPlayer
             {
                 image_Background.enabled = true;
                 image_Background.sprite = sprite;
+                image_Background.color = Color.white;
             }
             else
             {
@@ -200,10 +213,10 @@ namespace BAStoryPlayer
                         }
                     case TransistionType.Smooth:
                         {
-                            image_Background.DoColor(Color.black, BAStoryPlayerController.Instance.Setting.Time_SwitchBAckground / 2).onComplete = () =>
+                            image_Background.DoColor(Color.black, BAStoryPlayerController.Instance.Setting.Time_SwitchBackground / 2).onComplete = () =>
                             {
                                 image_Background.sprite = sprite;
-                                image_Background.DoColor(Color.white, BAStoryPlayerController.Instance.Setting.Time_SwitchBAckground / 2);
+                                image_Background.DoColor(Color.white, BAStoryPlayerController.Instance.Setting.Time_SwitchBackground / 2);
                             };
                             break;
                         }
