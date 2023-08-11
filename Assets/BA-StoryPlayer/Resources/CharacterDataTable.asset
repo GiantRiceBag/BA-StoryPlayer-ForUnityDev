@@ -21,14 +21,16 @@ MonoBehaviour:
     loadType: 1
     skelUrl: shiroko
     portraitUrl: 
+    facePosition: {x: 22.379984, y: 1032.0273}
   - indexName: hoshino
     familyName: "\u5C0F\u9E1F\u6E38"
     name: "\u661F\u91CE"
     collage: "\u963F\u62DC\u591A\u65AF"
     affiliation: "\u5BF9\u7B56\u59D4\u5458\u4F1A"
-    loadType: 0
+    loadType: 1
     skelUrl: hoshino
     portraitUrl: 
+    facePosition: {x: 17.975986, y: 924.4399}
   - indexName: serika
     familyName: "\u9ED1\u89C1"
     name: "\u82B9\u9999"
@@ -37,14 +39,16 @@ MonoBehaviour:
     loadType: 0
     skelUrl: serika
     portraitUrl: 
+    facePosition: {x: 0, y: 0}
   - indexName: aru
     familyName: "\u9646\u516B\u9B54"
     name: "\u963F\u9732"
     collage: "\u683C\u9ED1\u5A1C"
     affiliation: "\u4FBF\u5229\u5C4B68"
-    loadType: 0
+    loadType: 1
     skelUrl: aru
     portraitUrl: 
+    facePosition: {x: 34.322628, y: 1068.5945}
   - indexName: kayoko
     familyName: "\u9B3C\u65B9"
     name: "\u4F73\u4EE3\u5B50"
@@ -53,6 +57,7 @@ MonoBehaviour:
     loadType: 0
     skelUrl: kayoko
     portraitUrl: 
+    facePosition: {x: 0, y: 0}
   - indexName: rabu
     familyName: 
     name: "\u5170\u821E"
@@ -61,6 +66,7 @@ MonoBehaviour:
     loadType: 0
     skelUrl: rabu
     portraitUrl: 
+    facePosition: {x: 0, y: 0}
   - indexName: master_shibaseki
     familyName: 
     name: "\u67F4\u5927\u5C06"
@@ -69,6 +75,7 @@ MonoBehaviour:
     loadType: 0
     skelUrl: master_shibaseki
     portraitUrl: 
+    facePosition: {x: 0, y: 0}
   - indexName: haruka
     familyName: "\u4F0A\u8349"
     name: "\u6625\u9999"
@@ -77,6 +84,7 @@ MonoBehaviour:
     loadType: 0
     skelUrl: haruka
     portraitUrl: 
+    facePosition: {x: 0, y: 0}
   - indexName: mutsuki
     familyName: "\u6D45\u9EC4"
     name: "\u7766\u6708"
@@ -85,6 +93,7 @@ MonoBehaviour:
     loadType: 0
     skelUrl: mutsuki
     portraitUrl: 
+    facePosition: {x: 0, y: 0}
   - indexName: nonomi
     familyName: "\u5341\u516D\u591C"
     name: "\u91CE\u5BAB"
@@ -93,6 +102,7 @@ MonoBehaviour:
     loadType: 0
     skelUrl: nonomi
     portraitUrl: 
+    facePosition: {x: 0, y: 0}
   - indexName: ayane
     familyName: "\u5965\u7A7A"
     name: "\u7EEB\u97F3"
@@ -101,7 +111,8 @@ MonoBehaviour:
     loadType: 0
     skelUrl: ayane
     portraitUrl: 
-  - indexName: "\u65E5\u5BCC\u7F8E"
+    facePosition: {x: 0, y: 0}
+  - indexName: hihumi
     familyName: "\u963F\u6148\u8C37"
     name: "\u65E5\u5BCC\u7F8E"
     collage: "\u4E09\u4E00\u7EFC\u5408\u5B66\u56ED"
@@ -109,6 +120,7 @@ MonoBehaviour:
     loadType: 0
     skelUrl: hihumi
     portraitUrl: 
+    facePosition: {x: 0, y: 0}
   - indexName: wakamo
     familyName: "\u72D0\u5742"
     name: "\u82E5\u85FB"
@@ -117,6 +129,7 @@ MonoBehaviour:
     loadType: 0
     skelUrl: wakamo
     portraitUrl: 
+    facePosition: {x: 0, y: 0}
   - indexName: master
     familyName: 
     name: "\u8001\u677F"
@@ -125,6 +138,7 @@ MonoBehaviour:
     loadType: 0
     skelUrl: master
     portraitUrl: 
+    facePosition: {x: 0, y: 0}
   - indexName: passerby
     familyName: 
     name: "\u8DEF\u4EBA"
@@ -133,6 +147,7 @@ MonoBehaviour:
     loadType: 0
     skelUrl: passerby
     portraitUrl: 
+    facePosition: {x: 0, y: 0}
   - indexName: sukeban
     familyName: 
     name: "\u6DF7\u6DF7"
@@ -141,6 +156,7 @@ MonoBehaviour:
     loadType: 0
     skelUrl: sukeban
     portraitUrl: 
+    facePosition: {x: 0, y: 0}
   - indexName: azusa
     familyName: "\u767D\u6D32"
     name: "\u6893"
@@ -149,6 +165,7 @@ MonoBehaviour:
     loadType: 0
     skelUrl: azusa
     portraitUrl: 
+    facePosition: {x: 0, y: 0}
   - indexName: shiroko_alter
     familyName: 
     name: ???
@@ -157,6 +174,7 @@ MonoBehaviour:
     loadType: 0
     skelUrl: shiroko_alter
     portraitUrl: 
+    facePosition: {x: 0, y: 0}
   - indexName: serika_uniform
     familyName: "\u9ED1\u89C1"
     name: "\u82B9\u9999"
@@ -165,3 +183,13 @@ MonoBehaviour:
     loadType: 0
     skelUrl: serika_uniform
     portraitUrl: 
+    facePosition: {x: 0, y: 0}
+  - indexName: "\u65E5\u5BCC\u7F8E"
+    familyName: "\u963F\u6148\u8C37"
+    name: "\u65E5\u5BCC\u7F8E"
+    collage: "\u4E09\u4E00\u7EFC\u5408\u5B66\u56ED"
+    affiliation: "\u8865\u4E60\u6388\u8BFE\u90E8"
+    loadType: 1
+    skelUrl: hihumi
+    portraitUrl: 
+    facePosition: {x: -14.901485, y: 1027.6925}

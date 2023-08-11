@@ -255,16 +255,17 @@ namespace BAStoryPlayer
         void MoveCharacterTo(GameObject obj, int targetIndex, TransistionType transition = TransistionType.Instant)
         {
             targetIndex = Mathf.Clamp(targetIndex, 0, 4);
+            RectTransform rect = obj.GetComponent<RectTransform>();
             switch (transition)
             {
                 case TransistionType.Instant:
                     {
-                        obj.GetComponent<RectTransform>().anchoredPosition = new Vector2((targetIndex + 1) * INTERVAL_SLOT, 0);
+                        rect.anchoredPosition = new Vector2((targetIndex + 1) * INTERVAL_SLOT, rect.anchoredPosition.y);
                         break;
                     }
                 case TransistionType.Smooth:
                     {
-                        obj.transform.DoMove_Anchored(new Vector2((targetIndex + 1) * INTERVAL_SLOT, 0), BAStoryPlayerController.Instance.Setting.Time_Character_Move);
+                        obj.transform.DoMove_Anchored(new Vector2((targetIndex + 1) * INTERVAL_SLOT, rect.anchoredPosition.y), BAStoryPlayerController.Instance.Setting.Time_Character_Move);
                         break;
                     }
                 default: break;

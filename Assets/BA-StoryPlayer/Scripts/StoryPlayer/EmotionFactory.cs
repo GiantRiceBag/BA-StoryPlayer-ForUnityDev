@@ -51,11 +51,7 @@ namespace BAStoryPlayer
         Zzz -296 208
         Tear -202 -36
         */
-        const float COEFFICIENT = 254f / 1327f;
-        const int LIMIT_HEIGHT = 700;
-        static  Vector3 OFFSET_HEADLOCATOR {get{return new Vector3(0,-35f,0); } }
-        const float LIMIT_X_VERTEX = 300;
-
+        static  Vector3 Offset_FacePosition {get{return new Vector3(0,-35f,0); } }
         static System.Collections.Generic.Dictionary<CharacterEmotion, GameObject> emotionCache= new System.Collections.Generic.Dictionary<CharacterEmotion, GameObject>();
         
         // TODO 表情全做完后可以删掉Case了
@@ -85,9 +81,8 @@ namespace BAStoryPlayer
                     {
                         Transform HeadLocator = target.Find("HeadLocator");
                         if (HeadLocator == null)
-                            HeadLocator = SpawnHeadLocator(target);
-
-                        if (HeadLocator == null) return;
+                            HeadLocator = GenerateHeadLocator(target).transform;
+                        if (HeadLocator == null) throw new System.NullReferenceException($"Can't locate face position of character[{target.name}]");
 
                         try
                         {
@@ -115,7 +110,7 @@ namespace BAStoryPlayer
         }
 
         /// <summary>
-        /// 获取表情在定位器下的坐标
+        /// 获取表情在脸部位置的相对坐标
         /// </summary>
         /// <param name="emotion"></param>
         /// <returns></returns>
@@ -170,53 +165,22 @@ namespace BAStoryPlayer
             }
         }
 
-        static Transform SpawnHeadLocator(Transform target)
+        static GameObject GenerateHeadLocator(Transform target)
         {
-            Debug.Log($"尝试自动定位角色 {target.name} 脸部位置");
-            try
-            {
-                var skeletonGraphic = target.GetComponent<Spine.Unity.SkeletonGraphic>();
-                skeletonGraphic.UpdateMesh();
-                var rectTransform = target.GetComponent<RectTransform>();
-
-                GameObject pivot = new GameObject("pivot", typeof(RectTransform));
-                pivot.transform.SetParent(target);
-                pivot.transform.localScale = Vector3.one;
-                pivot.GetComponent<RectTransform>().anchorMin = pivot.GetComponent<RectTransform>().anchorMax = Vector2.zero;
-                pivot.GetComponent<RectTransform>().anchoredPosition = rectTransform.sizeDelta * rectTransform.pivot;
-
-                float heightAbovePivot = skeletonGraphic.GetLastMesh().bounds.size.y - pivot.GetComponent<RectTransform>().anchoredPosition.y;
-                GameObject.Destroy(pivot);
-
-                GameObject headLocator = new GameObject("HeadLocator", typeof(RectTransform));
-                headLocator.transform.SetParent(target);
-                headLocator.transform.localScale = Vector3.one;
-                Vector3 faceCenter = Vector3.zero;
-
-                int count = 0;
-                foreach (var vertex in skeletonGraphic.GetLastMesh().vertices)
-                {
-                    if (vertex.y < LIMIT_HEIGHT || vertex.y > heightAbovePivot - heightAbovePivot * COEFFICIENT || Mathf.Abs(vertex.x) > LIMIT_X_VERTEX)
-                        continue;
-
-                    faceCenter += vertex;
-                    count++;
-                }
-                if (faceCenter == Vector3.zero)
-                {
-                    Debug.LogError($"角色 {target.name} 无法定位脸部位置 在匹配完RectTransform大小后 创建名为[HeadLocator]的空对象并拖动到角色脸部中央位置");
-                    GameObject.Destroy(headLocator);
-                    return null;
-                }
-
-                faceCenter /= count;
-                headLocator.transform.localPosition = faceCenter + OFFSET_HEADLOCATOR;
-                return headLocator.transform;
-            }
-            catch
-            {
+            string indexName = target.name;
+            CharacterDataUnit chrData = BAStoryPlayerController.Instance.CharacterDataTable[indexName];
+            if (chrData.loadType == LoadType.Prefab)
                 return null;
-            }
+
+            GameObject obj = new GameObject("HeadLocator",typeof(RectTransform));
+            RectTransform rectOfParent = target.GetComponent<RectTransform>();
+            RectTransform rect = obj.GetComponent<RectTransform>();
+            obj.transform.SetParent(target);
+            obj.transform.localScale = Vector3.one;
+            rect.anchorMin = rect.anchorMax = rectOfParent.pivot;
+            rect.anchoredPosition = chrData.facePosition;
+
+            return obj;
         }
 
         public static void ClearCache()

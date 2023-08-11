@@ -142,16 +142,12 @@ namespace BAStoryPlayer
                         }
                 }
             }
-            catch
+            catch(System.Exception e)
             {
+                Debug.LogError(e.Message);
                 return null;
             }
 
-            if(prefab == null)
-            {
-                Debug.LogError($"未在路径{Setting.Path_Prefab + CharacterDataTable[indexName].skelUrl}中找到角色Ske");
-                return null;
-            }
             prefab.name = indexName;
             return prefab;
         }
