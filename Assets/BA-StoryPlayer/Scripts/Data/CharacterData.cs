@@ -1,4 +1,6 @@
 using UnityEngine;
+using System.Collections.Generic;
+using System.Linq;
 using Spine.Unity;
 using Spine;
 
@@ -6,7 +8,7 @@ namespace BAStoryPlayer
 {
     public enum LoadType
     {
-        Prefab = 0,
+        Prefab = 0, // Legacy
         SkeletonData
     }
 
@@ -92,11 +94,17 @@ namespace BAStoryPlayer
                 BoneData rootBoneData = skel.RootBone.Data;
                 Vector2 rootPos = new Vector2(rootBoneData.X, rootBoneData.Y) * skelScale;
 
+                string[] validSlotName = new string[4]; // Fuck nexon
+                validSlotName[0] = "00";
+                validSlotName[1] = "00_default";
+                validSlotName[2] = "defalt";
+                validSlotName[3] = "default";
+
                 foreach (var kvPair in skelData.DefaultSkin.Attachments)
                 {
                     SlotData slotData = skelData.Slots.Items[kvPair.Key.SlotIndex];
                     Slot slot = skel.Slots.Items[kvPair.Key.SlotIndex];
-                    if (slotData.Name != ("00") && slotData.Name != ("00_default")) // Fuck nexon
+                    if (!validSlotName.Any(x=>x == slotData.Name)) // Fuck nexon
                         continue;
 
                     float boneScaleX = slotData.BoneData.ScaleX * skelScale;
@@ -116,7 +124,10 @@ namespace BAStoryPlayer
                     }
                 }
 
-                chrData.facePosition = count == 0 ? Vector2.zero : sum / count;
+                if (count == 0)
+                    continue;
+
+                chrData.facePosition = sum / count;
             }
         }
     }

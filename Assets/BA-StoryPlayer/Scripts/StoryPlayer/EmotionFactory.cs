@@ -103,7 +103,7 @@ namespace BAStoryPlayer
                 case CharacterEmotion.Think:
                 default:
                     {
-                        Debug.Log($"情绪{emotion} 没做");
+                        Debug.Log($"Emoji {emotion} 没做");
                         break;
                     }
             }

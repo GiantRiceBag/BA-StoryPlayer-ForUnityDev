@@ -52,11 +52,11 @@ public class Test : MonoBehaviour
 
                 float scale = 1f / skelg.SkeletonDataAsset.scale;
                 Vector2 rootPos = new Vector2(skelg.Skeleton.RootBone.X, skelg.Skeleton.RootBone.Y) * scale;
-                Debug.Log(rootPos);
+
                 foreach (var kv in skelg.Skeleton.Skin.Attachments)
                 {
                     var slot = skelg.Skeleton.Slots.Items[kv.Key.SlotIndex];
-                    if (!slot.Data.Name .Contains("00"))
+                    if (slot.Data.Name != ("00") && slot.Data.Name != ("00_default") && slot.Data.Name != ("defalt")) // Fuck nexon
                         continue;
                     
                     float scaleX = slot.Bone.Data.ScaleX;

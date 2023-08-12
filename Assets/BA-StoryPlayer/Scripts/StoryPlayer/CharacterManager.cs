@@ -155,6 +155,9 @@ namespace BAStoryPlayer
             }
 
             SetWinkAction(obj.name, false);
+            int slotIndex = CheckIfCharacterOnSlot(obj.name);
+            if (slotIndex != -1)
+                character[slotIndex] = null;
         }
 
         /// <summary>
@@ -320,9 +323,9 @@ namespace BAStoryPlayer
                     skelGraphic.DoColor(Color.white, BAStoryPlayerController.Instance.Setting.Time_Character_Fade);
                     onAnimateCharacter?.Invoke(BAStoryPlayerController.Instance.Setting.Time_Character_Fade);
                     break;
-                case CharacterAction.Disapper: // 渐变至黑色剪影但不离场 离场靠Hide指令
+                case CharacterAction.Disapper: // 渐变至黑色剪影同时离场
                     skelGraphic.color = Color.white;
-                    skelGraphic.DoColor(Color.black, BAStoryPlayerController.Instance.Setting.Time_Character_Fade);
+                    skelGraphic.DoColor(Color.black, BAStoryPlayerController.Instance.Setting.Time_Character_Fade).onComplete = ()=> { SetAction(obj, CharacterAction.Hide); };
                     onAnimateCharacter?.Invoke(BAStoryPlayerController.Instance.Setting.Time_Character_Fade);
                     break;
                 case CharacterAction.Disapper2Left:

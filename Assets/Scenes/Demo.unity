@@ -154,9 +154,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   storyScriptName: TestScript
   skelg: {fileID: 0}
-  gizmosSize: 1
-  scale: 1
-  offset: {x: 0, y: 0}
 --- !u!4 &413803919
 Transform:
   m_ObjectHideFlags: 0

@@ -6,8 +6,8 @@ namespace BAStoryPlayer
 {
     public class BAStoryPlayerController : BSingleton<BAStoryPlayerController>
     {
-        const string PATH_SETTING = "Setting/";
-        const string PATH_STORYPLAYER = "StoryPlayer";
+        const string Path_Setting = "Setting/";
+        const string Path_StoryPlayer = "StoryPlayer";
 
        [Header("References")]
        [SerializeField] CharacterData characterDataTable;
@@ -26,7 +26,7 @@ namespace BAStoryPlayer
                 }
                 if (storyPlayer == null)
                 {
-                    storyPlayer = Instantiate(Resources.Load(PATH_STORYPLAYER) as GameObject).GetComponent<BAStoryPlayer>();
+                    storyPlayer = Instantiate(Resources.Load(Path_StoryPlayer) as GameObject).GetComponent<BAStoryPlayer>();
                     storyPlayer.transform.SetParent(transform);
                     storyPlayer.name = "StoryPlayer";
                     storyPlayer.transform.localPosition = Vector3.zero;
@@ -44,7 +44,7 @@ namespace BAStoryPlayer
                 if (characterDataTable == null)
                 {
                     // TODO 日后引入较为全面的学生数据表
-                    characterDataTable = Resources.Load<CharacterData>(PATH_SETTING + "CharacterDataTable");
+                    characterDataTable = Resources.Load<CharacterData>(Path_Setting + "CharacterDataTable");
                     Debug.LogWarning($"未配置角色信息表!");
                 }
 

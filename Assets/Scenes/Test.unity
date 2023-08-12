@@ -221,6 +221,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   storyScriptName: TestScript
+  skelg: {fileID: 0}
 --- !u!4 &1270762860
 Transform:
   m_ObjectHideFlags: 0

@@ -8,34 +8,31 @@ namespace BAStoryPlayer
 {
     public class AudioManager : MonoBehaviour
     {
-        int mPlayerID = 0;
+        int playerID = 0;
 
         List<AudioSource> playingPool = new List<AudioSource>();
         Queue<AudioSource> sourcePool = new Queue<AudioSource>();
 
-        AudioSource mSourceBGM;
+        AudioSource sourceBGM;
         AudioSource SourceBGM
         {
             get
             {
-                if (mSourceBGM == null)
+                if (sourceBGM == null)
                 {
-                    mSourceBGM = gameObject.AddComponent<AudioSource>();
-                    mSourceBGM.loop = true;
-                    mSourceBGM.volume = Volume_Music;
-                    mSourceBGM.spatialBlend = 0;
+                    sourceBGM = gameObject.AddComponent<AudioSource>();
+                    sourceBGM.loop = true;
+                    sourceBGM.volume = Volume_Music;
+                    sourceBGM.spatialBlend = 0;
                 }
 
-                return mSourceBGM;
+                return sourceBGM;
             }
         }
 
-        [SerializeField]
-        [Range(0, 1f)] float mVolume_Master = 1;
-        [SerializeField]
-        [Range(0, 1f)] float mVolume_Music = 0.6f;
-        [SerializeField]
-        [Range(0, 1f)] float mVolume_Sound = 1;
+        [SerializeField,Range(0, 1f)] float mVolume_Master = 1;
+        [SerializeField,Range(0, 1f)] float mVolume_Music = 0.6f;
+        [SerializeField,Range(0, 1f)] float mVolume_Sound = 1;
 
         public float Volume_Master
         {
@@ -61,7 +58,7 @@ namespace BAStoryPlayer
             }
             get
             {
-                return mVolume_Music * mVolume_Master * (Mute ? 0 : 1);
+                return mVolume_Music * mVolume_Master * (IsMute ? 0 : 1);
             }
         }
         public float Volume_Sound
@@ -77,34 +74,35 @@ namespace BAStoryPlayer
             }
             get
             {
-                return mVolume_Sound * mVolume_Master * (Mute ? 0 : 1);
+                return mVolume_Sound * mVolume_Master * (IsMute ? 0 : 1);
             }
         }
 
         [SerializeField]
-        bool mMute = false;
-        protected bool Mute
+        bool isMute = false;
+        protected bool IsMute
         {
             set
             {
-                if (mMute != value)
+                if (isMute != value)
                 {
-                    mMute = value;
+                    isMute = value;
                 }
             }
 
             get
             {
-                return mMute;
+                return isMute;
             }
         }
 
         public void PlayBGM(string audioURL, bool fade = true, float fadeScale = 2)
         {
             AudioClip clip = Resources.Load<AudioClip>(BAStoryPlayerController.Instance.Setting.Path_Music + audioURL);
+            if (clip == null)
+                Debug.LogError($"未能在路径 [{BAStoryPlayerController.Instance.Setting.Path_Music + audioURL}] 找到AudioClip");
             PlayBGM(clip, fade, fadeScale);
         }
-
         public void PlayBGM(AudioClip audioClip, bool fade = true, float fadeScale = 2)
         {
             if (fade)
@@ -135,7 +133,6 @@ namespace BAStoryPlayer
                 SourceBGM.Play();
             }
         }
-
         public void PauseBGM(bool fade = true, float fadeScale = 2)
         {
             if (!SourceBGM.isPlaying)
@@ -157,12 +154,13 @@ namespace BAStoryPlayer
         public int Play(string audioURL, bool isOneShot = true, float scale = 1)
         {
             AudioClip clip = Resources.Load<AudioClip>(BAStoryPlayerController.Instance.Setting.Path_Sound + audioURL);
+            if (clip == null)
+                Debug.LogError($"未能在路径 [{BAStoryPlayerController.Instance.Setting.Path_Sound + audioURL}] 找到AudioClip");
             return Play(clip, isOneShot, scale);
         }
-
         public int Play(AudioClip audioClip, bool isOneShot = true, float scale = 1)
         {
-            int id = mPlayerID++;
+            int id = playerID++;
             AudioSource source = GetSource();
 
             //source.volume = isOneShot ? Volume_Sound : Volume_Music;
@@ -188,13 +186,11 @@ namespace BAStoryPlayer
         {
             StartCoroutine(CReleaseSource(source, time));
         }
-
         IEnumerator CReleaseSource(AudioSource source, float time)
         {
             yield return new WaitForSeconds(time);
             ReleaseSource(source);
         }
-
         void ReleaseSource(AudioSource source)
         {
             if (sourcePool.Count >= BAStoryPlayerController.Instance.Setting.Num_Max_AudioSource)
@@ -214,7 +210,6 @@ namespace BAStoryPlayer
         {
             return transform.Find(playerID.ToString()).GetComponent<AudioSource>();
         }
-
         AudioSource GetSource()
         {
             AudioSource source;
@@ -246,5 +241,4 @@ namespace BAStoryPlayer
             SourceBGM.clip = null;
         }
     }
-
 }
