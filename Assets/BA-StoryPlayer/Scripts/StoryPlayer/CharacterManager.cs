@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using Spine.Unity;
 using BAStoryPlayer.DoTweenS;
+using BAStoryPlayer.Event;
 namespace BAStoryPlayer
 {
     public enum TransistionType
@@ -32,22 +33,20 @@ namespace BAStoryPlayer
 
     public class CharacterManager : MonoBehaviour
     {
-        const int NUM_CHARACTER_SLOT = 5;
-        const float SCALE_CHARACTER = 0.7f;
-        const float INTERVAL_SLOT_NORMAL = 0.1666667f;
-        float INTERVAL_SLOT => StoryPlayer.CanvasRect.sizeDelta.x * INTERVAL_SLOT_NORMAL;
+        private const int Num_Character_Slot = 5;
+        private const float Scale_Character = 0.7f;
+        private const float Interval_Slot_Normal = 0.1666667f;
+        private float Interval_Slot => StoryPlayer.CanvasRect.sizeDelta.x * Interval_Slot_Normal;
 
-        Color COLOR_UNHIGHLIGHT { get { return new Color(0.6f, 0.6f, 0.6f);  } }
+        private Color COLOR_UNHIGHLIGHT { get { return new Color(0.6f, 0.6f, 0.6f);  } }
 
-        [SerializeField] SkeletonGraphic[] character = new SkeletonGraphic[NUM_CHARACTER_SLOT];
-        Dictionary<string, GameObject> characterPool = new Dictionary<string, GameObject>();
-        Dictionary<string, Coroutine> winkAction = new Dictionary<string, Coroutine>();
+        [SerializeField] private SkeletonGraphic[] character = new SkeletonGraphic[Num_Character_Slot];
+        private Dictionary<string, GameObject> characterPool = new Dictionary<string, GameObject>();
+        private Dictionary<string, Coroutine> winkAction = new Dictionary<string, Coroutine>();
+        private BAStoryPlayer StoryPlayer => BAStoryPlayerController.Instance.StoryPlayer;
 
         public SkeletonGraphic[] Character => character;
         public Dictionary<string, GameObject> CharacterPool => characterPool;
-        BAStoryPlayer StoryPlayer => BAStoryPlayerController.Instance.StoryPlayer;
-
-        [HideInInspector] public UnityEngine.Events.UnityEvent<float> onAnimateCharacter;
 
         /// <summary>
         /// 激活角色 仅Nexon格式用 (若有动作,一定要先于动作前调用)
@@ -69,7 +68,7 @@ namespace BAStoryPlayer
                 else
                 {
                     obj.gameObject.SetActive(true);
-                    obj.GetComponent<RectTransform>().anchoredPosition = new Vector3((index + 1) * INTERVAL_SLOT, 0, 0);
+                    obj.GetComponent<RectTransform>().anchoredPosition = new Vector3((index + 1) * Interval_Slot, 0, 0);
                     obj.transform.rotation = Quaternion.Euler(0, 0, 0);
                 }
 
@@ -109,7 +108,7 @@ namespace BAStoryPlayer
         bool CheckIfCharacterInPool(string indexName) => characterPool.ContainsKey(indexName) ? characterPool[indexName] != null : false;
         int CheckIfCharacterOnSlot(string indexName)
         {
-            for(int i = 0; i < NUM_CHARACTER_SLOT; i++)
+            for(int i = 0; i < Num_Character_Slot; i++)
             {
                 if (Character[i] == null)
                     continue;
@@ -120,7 +119,7 @@ namespace BAStoryPlayer
             return -1;
         }
         bool CheckIfSlotEmpty(int index) => CheckIfIndexValid(index) ? Character[index] == null : false;
-        bool CheckIfIndexValid(int index) => (index >= 0 && index < NUM_CHARACTER_SLOT);
+        bool CheckIfIndexValid(int index) => (index >= 0 && index < Num_Character_Slot);
 
         /// <summary>
         /// 尝试删除在场上的角色(不删除对象仅取消编号)
@@ -263,12 +262,12 @@ namespace BAStoryPlayer
             {
                 case TransistionType.Instant:
                     {
-                        rect.anchoredPosition = new Vector2((targetIndex + 1) * INTERVAL_SLOT, rect.anchoredPosition.y);
+                        rect.anchoredPosition = new Vector2((targetIndex + 1) * Interval_Slot, rect.anchoredPosition.y);
                         break;
                     }
                 case TransistionType.Smooth:
                     {
-                        obj.transform.DoMove_Anchored(new Vector2((targetIndex + 1) * INTERVAL_SLOT, rect.anchoredPosition.y), BAStoryPlayerController.Instance.Setting.Time_Character_Move);
+                        obj.transform.DoMove_Anchored(new Vector2((targetIndex + 1) * Interval_Slot, rect.anchoredPosition.y), BAStoryPlayerController.Instance.Setting.Time_Character_Move);
                         break;
                     }
                 default: break;
@@ -286,7 +285,7 @@ namespace BAStoryPlayer
                 case TransistionType.Smooth:
                     {
                         obj.transform.DoMove_Anchored(pos, BAStoryPlayerController.Instance.Setting.Time_Character_Move);
-                        onAnimateCharacter?.Invoke(BAStoryPlayerController.Instance.Setting.Time_Character_Move);
+                        EventBus<OnMoveCharacter>.Raise(new OnMoveCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Move });
                         break;
                     }
                 default: break;
@@ -321,56 +320,56 @@ namespace BAStoryPlayer
                 case CharacterAction.Appear: //黑色剪影渐变进场
                     skelGraphic.color = Color.black;
                     skelGraphic.DoColor(Color.white, BAStoryPlayerController.Instance.Setting.Time_Character_Fade);
-                    onAnimateCharacter?.Invoke(BAStoryPlayerController.Instance.Setting.Time_Character_Fade);
+                    EventBus<OnMoveCharacter>.Raise(new OnMoveCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Fade });
                     break;
                 case CharacterAction.Disapper: // 渐变至黑色剪影同时离场
                     skelGraphic.color = Color.white;
                     skelGraphic.DoColor(Color.black, BAStoryPlayerController.Instance.Setting.Time_Character_Fade).onComplete = ()=> { SetAction(obj, CharacterAction.Hide); };
-                    onAnimateCharacter?.Invoke(BAStoryPlayerController.Instance.Setting.Time_Character_Fade);
+                    EventBus<OnMoveCharacter>.Raise(new OnMoveCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Fade });
                     break;
                 case CharacterAction.Disapper2Left:
                     MoveCharacterTo(obj, new Vector2(-500, 0), TransistionType.Smooth);
-                    onAnimateCharacter?.Invoke(BAStoryPlayerController.Instance.Setting.Time_Character_Move);
+                    EventBus<OnMoveCharacter>.Raise(new OnMoveCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Move });
                     break;
                 case CharacterAction.Disapper2Right:
                     MoveCharacterTo(obj, new Vector2(2420, 0), TransistionType.Smooth);
-                    onAnimateCharacter?.Invoke(BAStoryPlayerController.Instance.Setting.Time_Character_Move);
+                    EventBus<OnMoveCharacter>.Raise(new OnMoveCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Move });
                     break;
                 case CharacterAction.AppearL2R:
                     skelGraphic.color = Color.white;
                     MoveCharacterTo(obj, new Vector2(-500, 0));
                     MoveCharacterTo(obj, arg, TransistionType.Smooth);
-                    onAnimateCharacter?.Invoke(BAStoryPlayerController.Instance.Setting.Time_Character_Move);
+                    EventBus<OnMoveCharacter>.Raise(new OnMoveCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Move });
                     break;
                 case CharacterAction.AppearR2L:
                     skelGraphic.color = Color.white;
                     MoveCharacterTo(obj, new Vector2(2420, 0));
                     MoveCharacterTo(obj, arg, TransistionType.Smooth);
-                    onAnimateCharacter?.Invoke(BAStoryPlayerController.Instance.Setting.Time_Character_Move);
+                    EventBus<OnMoveCharacter>.Raise(new OnMoveCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Move });
                     break;
                 case CharacterAction.Hophop:
                     obj.transform.DoBound_Anchored_Relative(new Vector2(0, 50), BAStoryPlayerController.Instance.Setting.Time_Character_Hophop, 2);
-                    onAnimateCharacter?.Invoke(BAStoryPlayerController.Instance.Setting.Time_Character_Hophop);
+                    EventBus<OnMoveCharacter>.Raise(new OnMoveCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Hophop });
                     break;
                 case CharacterAction.Greeting:
                     obj.transform.DoBound_Anchored_Relative(new Vector2(0, -70), BAStoryPlayerController.Instance.Setting.Time_Character_Greeting);
-                    onAnimateCharacter?.Invoke(BAStoryPlayerController.Instance.Setting.Time_Character_Greeting);
+                    EventBus<OnMoveCharacter>.Raise(new OnMoveCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Greeting });
                     break;
                 case CharacterAction.Shake:
                     obj.transform.DoShakeX(40, BAStoryPlayerController.Instance.Setting.Time_Character_Shake, 2);
-                    onAnimateCharacter?.Invoke(BAStoryPlayerController.Instance.Setting.Time_Character_Shake);
+                    EventBus<OnMoveCharacter>.Raise(new OnMoveCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Shake });
                     break;
                 case CharacterAction.Move:
                     MoveCharacterTo(obj, arg, TransistionType.Smooth);
-                    onAnimateCharacter?.Invoke(BAStoryPlayerController.Instance.Setting.Time_Character_Move);
+                    EventBus<OnMoveCharacter>.Raise(new OnMoveCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Move });
                     break;
                 case CharacterAction.Stiff:
                     obj.transform.DoShakeX(10, BAStoryPlayerController.Instance.Setting.Time_Character_Stiff, 4);
-                    onAnimateCharacter?.Invoke(BAStoryPlayerController.Instance.Setting.Time_Character_Stiff);
+                    EventBus<OnMoveCharacter>.Raise(new OnMoveCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Stiff });
                     break;
                 case CharacterAction.Jump:
                     obj.transform.DoBound_Anchored_Relative(new Vector2(0, 70), BAStoryPlayerController.Instance.Setting.Time_Character_Jump);
-                    onAnimateCharacter?.Invoke(BAStoryPlayerController.Instance.Setting.Time_Character_Jump);
+                    EventBus<OnMoveCharacter>.Raise(new OnMoveCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Jump });
                     break;
                 case CharacterAction.falldownR:
                     TweenSequence sequence_Rotation = new TweenSequence();
@@ -384,7 +383,7 @@ namespace BAStoryPlayer
                     sequence_Position.Append(obj.transform.DoLocalMove(obj.transform.localPosition + new Vector3(15, 0, 0), 0.3f));
                     sequence_Position.Append(obj.transform.DoLocalMove(obj.transform.localPosition - new Vector3(30, 0, 0), 0.5f));
 
-                    onAnimateCharacter?.Invoke(1.4f);
+                    EventBus<OnMoveCharacter>.Raise(new OnMoveCharacter() { time = 1.4f});
                     break;
                 case CharacterAction.Hide: // 立即让角色离场
                     DestroyCharacter(obj);
@@ -407,7 +406,7 @@ namespace BAStoryPlayer
         /// </summary>
         public void HideAll()
         {
-            for(int i = 0; i < NUM_CHARACTER_SLOT; i++)
+            for(int i = 0; i < Num_Character_Slot; i++)
             {
                 SetAction(i, CharacterAction.Hide);
             }
@@ -435,7 +434,7 @@ namespace BAStoryPlayer
         {
             float time = 1;
             EmotionFactory.SetEmotion(obj.transform, emotion, ref time);
-            onAnimateCharacter?.Invoke(time);
+            EventBus<OnMoveCharacter>.Raise(new OnMoveCharacter() { time = time });
         }
 
         /// <summary>
@@ -534,8 +533,8 @@ namespace BAStoryPlayer
             rectTransform.anchorMax = Vector2.zero;
             rectTransform.rotation = Quaternion.Euler(0, 0, 0);
             rectTransform.pivot = new Vector2(0.5f, 0);
-            rectTransform.anchoredPosition = new Vector3((index + 1) * INTERVAL_SLOT, 0, 0);
-            rectTransform.localScale = new Vector3(SCALE_CHARACTER, SCALE_CHARACTER, 1);
+            rectTransform.anchoredPosition = new Vector3((index + 1) * Interval_Slot, 0, 0);
+            rectTransform.localScale = new Vector3(Scale_Character, Scale_Character, 1);
 
             obj.GetComponent<SkeletonGraphic>().MatchRectTransformWithBounds();
 
@@ -583,7 +582,7 @@ namespace BAStoryPlayer
             winkAction.Clear();
 
             characterPool.Clear();
-            character = new SkeletonGraphic[NUM_CHARACTER_SLOT];
+            character = new SkeletonGraphic[Num_Character_Slot];
             transform.ClearAllChild();
         }
     }

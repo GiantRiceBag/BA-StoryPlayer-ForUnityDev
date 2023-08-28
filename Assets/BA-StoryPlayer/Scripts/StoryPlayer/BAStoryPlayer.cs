@@ -5,20 +5,42 @@ using System.Collections.Generic;
 using System;
 using BAStoryPlayer.DoTweenS;
 using BAStoryPlayer.UI;
+using BAStoryPlayer.Event;
 using Timer = BAStoryPlayer.Utility.Timer;
 
 namespace BAStoryPlayer
 {
     public class BAStoryPlayer : MonoBehaviour
     {
-        bool auto = false;
+        private bool auto = false;
+        [Space]
+        private int groupID = -1;
+
+        [Header("References")]
+        [SerializeField] private Image image_Background;
+        [Space]
+        [SerializeField] private CharacterManager _characterModule;
+        [SerializeField] private UIManager _UIModule;
+        [SerializeField] private AudioManager _audioModule;
+
+        private List<StoryUnit> storyUnit;
+        [Header("Real-Time Data")]
+        [SerializeField] private int currentUnitIndex = 0;
+        private Queue<int> priorUnitIndexes = new Queue<int>(); // 优先下标队列 
+        [SerializeField] private bool isPlaying = false;
+        [SerializeField] private bool isExecutable = true;
+        [SerializeField] private bool isLocking = false;
+        [SerializeField] private float lockTime = 0;
+
+        private Coroutine coroutine_Lock;
+
         public bool Auto
         {
             set
             {
                 auto = value;
                 if (!auto)
-                    onCancelAuto?.Invoke();
+                    EventBus<OnPlayerCancelAuto>.Raise();
                 if (auto && isPlaying && isExecutable && !isLocking)
                     Next();
             }
@@ -27,24 +49,6 @@ namespace BAStoryPlayer
                 return auto;
             }
         }
-        [Space]
-        int groupID = -1;
-
-        [Header("References")]
-        [SerializeField] Image image_Background;
-        [Space]
-        [SerializeField] CharacterManager _characterModule;
-        [SerializeField] UIManager _UIModule;
-        [SerializeField] AudioManager _audioModule;
-
-        List<StoryUnit> storyUnit;
-        [Header("Real-Time Data")]
-        [SerializeField] int currentUnitIndex = 0;
-        Queue<int> priorUnitIndexes = new Queue<int>(); // 优先下标队列 
-        [SerializeField] bool isPlaying = false;
-        [SerializeField] bool isExecutable = true;
-        [SerializeField] bool isLocking = false;
-        [SerializeField] float lockTime = 0;
 
         public CharacterManager CharacterModule
         {
@@ -123,27 +127,23 @@ namespace BAStoryPlayer
             }
         }
 
-        [HideInInspector] public UnityEvent<int, int> onUserSelect; // 第一个参数为选项ID 第二个参数为组ID
-        [HideInInspector] public UnityEvent onCancelAuto;
-        [HideInInspector] public UnityEvent onFinishPlaying;
-
-        Coroutine coroutine_Lock;
-
         void Start()
         {
             if (image_Background == null)
                 image_Background = transform.Find("Background").GetComponent<Image>();
 
             // 动作以及表情事件订阅 锁定一定时间的操作
-            CharacterModule.onAnimateCharacter.AddListener((duration) => { Lock(duration, BAStoryPlayerController.Instance.Setting.Time_Lock_AfterAction); });
-
+            EventBus<OnMoveCharacter>.Binding.Add((data) =>
+            {
+                Lock(data.time, BAStoryPlayerController.Instance.Setting.Time_Lock_AfterAction);
+            });
             // 选项事件订阅
-            onUserSelect.AddListener((selectionGroup, groupID) =>
+            EventBus<OnPlayerSelect>.Binding.Add((data) =>
             {
                 // 坐标前移寻找最近的选项下标 并放入优先下标队列 遇到-1则停止
                 for (int i = currentUnitIndex; i < storyUnit.Count; i++)
                 {
-                    if (storyUnit[i].selectionGroup == selectionGroup)
+                    if (storyUnit[i].selectionGroup == data.selectionGroup)
                     {
                         priorUnitIndexes.Enqueue(i);
                     }
@@ -349,7 +349,7 @@ namespace BAStoryPlayer
                {
                    RequireBackdrop(BackdropType.Out, 1, () =>
                    {
-                       onFinishPlaying?.Invoke();
+                       EventBus<OnCloseStoryPlayer>.Raise();
                        EmotionFactory.ClearCache();
                        if (!destoryObject)
                        {
@@ -368,7 +368,7 @@ namespace BAStoryPlayer
                }
                else
                {
-                   onFinishPlaying?.Invoke();
+                   EventBus<OnCloseStoryPlayer>.Raise();
                    EmotionFactory.ClearCache();
                    if (!destoryObject)
                    {

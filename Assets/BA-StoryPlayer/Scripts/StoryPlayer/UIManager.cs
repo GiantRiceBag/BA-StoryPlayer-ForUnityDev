@@ -6,6 +6,7 @@ using TMPro;
 using BAStoryPlayer.DoTweenS;
 using BAStoryPlayer.UI;
 using BAStoryPlayer.Utility;
+using BAStoryPlayer.Event;
 
 namespace BAStoryPlayer
 {
@@ -36,23 +37,23 @@ namespace BAStoryPlayer
 
         [HideInInspector] public UnityEngine.Events.UnityEvent onStartPrinting;
         [HideInInspector] public UnityEngine.Events.UnityEvent  onFinishPrinting;
-        
+
 
         private void Start()
         {
-            if(image_Background == null)
+            if (image_Background == null)
                 image_Background = transform.parent.Find("Background").GetComponent<Image>();
 
             if (text_Speaker == null)
                 text_Speaker = transform.Find("TextArea").Find("Text_Speaker").GetComponent<TextMeshProUGUI>();
-            if(text_Main == null)
+            if (text_Main == null)
                 text_Speaker = transform.Find("TextArea").Find("Text_Main").GetComponent<TextMeshProUGUI>();
 
             if (gameObject_TextArea == null)
                 gameObject_TextArea = transform.Find("TextArea").gameObject;
             if (gameObject_Continued == null)
                 gameObject_Continued = transform.Find("Image_Continued").gameObject;
-            if(gameObject_SubPanel_Synopsis == null)
+            if (gameObject_SubPanel_Synopsis == null)
                 gameObject_SubPanel_Synopsis = transform.Find("SubPanel_Synopsis").gameObject;
             if (btn_Auto == null)
                 btn_Auto = transform.Find("Button_Auto").GetComponent<Button>();
@@ -60,25 +61,25 @@ namespace BAStoryPlayer
                 btn_Menu = transform.Find("Button_Menu").GetComponent<Button>();
 
             // 事件绑定
-            onFinishPrinting.AddListener(() => { 
+            onFinishPrinting.AddListener(() => {
                 gameObject_Continued.SetActive(true);
 
                 // 若Auto则延缓两秒后继续
                 if (StoryPlayer.Auto)
-                    coroutine_Next = Timer.Delay(transform,() => { StoryPlayer.ReadyToNext(); }, 2);
+                    coroutine_Next = Timer.Delay(transform, () => { StoryPlayer.ReadyToNext(); }, 2);
                 else
                     StoryPlayer.ReadyToNext();
             });
 
             // 若取消Auto 则删除当前执行的协程
-            StoryPlayer.onCancelAuto.AddListener(() => {
-                if(coroutine_Next != null)
+            EventBus<OnPlayerCancelAuto>.Binding.Add(() =>
+            {
+                if (coroutine_Next != null)
                 {
                     StopCoroutine(coroutine_Next);
                     coroutine_Next = null;
                     StoryPlayer.ReadyToNext();
                 }
-                    
             });
         }
 

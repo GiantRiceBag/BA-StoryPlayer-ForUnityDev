@@ -7,16 +7,16 @@ namespace BAStoryPlayer.UI
 {
     public class Button_Menu : MonoBehaviour
     {
-        [SerializeField] Color color_Selected_Background = new Color(0.2f,0.2f,0.2f,1);
-        [SerializeField] Color color_Selected_Text;
-        Color color_Unselected_Text;
-        [SerializeField] TextMeshProUGUI text;
-        [SerializeField] GameObject subpanel;
+        [SerializeField] private Color color_Selected_Background = new Color(0.2f,0.2f,0.2f,1);
+        [SerializeField] private Color color_Selected_Text;
+        private Color color_Unselected_Text;
+        [SerializeField] private TextMeshProUGUI text;
+        [SerializeField] private GameObject subpanel;
         [Space]
-        [SerializeField] bool selected = false;
-        [SerializeField] AudioClip sound_Click;
+        [SerializeField] private bool selected = false;
+        [SerializeField] private AudioClip sound_Click;
 
-        Coroutine coroutine_DisableObject;
+        private Coroutine coroutine_DisableObject;
 
         void Start()
         {

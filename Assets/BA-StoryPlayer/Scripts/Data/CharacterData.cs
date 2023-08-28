@@ -112,9 +112,13 @@ namespace BAStoryPlayer
 
                     Vector2 offset = rootPos + new Vector2(slotData.BoneData.X * skelScale, slotData.BoneData.Y * skelScale); // Fuck nexon
 
-                    Vector2[] buffer = new Vector2[((VertexAttachment)kvPair.Value).WorldVerticesLength];
+                    VertexAttachment vertAttachment = kvPair.Value as VertexAttachment; // Fuck nexon
+                    if (vertAttachment == null)
+                        continue;
 
-                    foreach (var v2 in ((VertexAttachment)kvPair.Value).GetLocalVertices(slot, buffer))
+                    Vector2[] buffer = new Vector2[vertAttachment.WorldVerticesLength];
+
+                    foreach (var v2 in vertAttachment.GetLocalVertices(slot, buffer))
                     {
                         if (v2 == Vector2.zero)
                             continue;

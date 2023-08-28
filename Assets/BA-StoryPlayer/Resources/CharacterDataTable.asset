@@ -108,10 +108,10 @@ MonoBehaviour:
     name: "\u7EEB\u97F3"
     collage: "\u963F\u62DC\u591A\u65AF"
     affiliation: "\u5BF9\u7B56\u59D4\u5458\u4F1A"
-    loadType: 0
+    loadType: 1
     skelUrl: ayane
     portraitUrl: 
-    facePosition: {x: 0, y: 0}
+    facePosition: {x: 34.06952, y: 1025.6346}
   - indexName: hihumi
     familyName: "\u963F\u6148\u8C37"
     name: "\u65E5\u5BCC\u7F8E"

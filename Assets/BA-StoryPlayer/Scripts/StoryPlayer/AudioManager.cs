@@ -8,13 +8,13 @@ namespace BAStoryPlayer
 {
     public class AudioManager : MonoBehaviour
     {
-        int playerID = 0;
+        private int playerID = 0;
 
-        List<AudioSource> playingPool = new List<AudioSource>();
-        Queue<AudioSource> sourcePool = new Queue<AudioSource>();
+        private List<AudioSource> playingPool = new List<AudioSource>();
+        private Queue<AudioSource> sourcePool = new Queue<AudioSource>();
 
-        AudioSource sourceBGM;
-        AudioSource SourceBGM
+        private AudioSource sourceBGM;
+        private AudioSource SourceBGM
         {
             get
             {
@@ -30,9 +30,26 @@ namespace BAStoryPlayer
             }
         }
 
-        [SerializeField,Range(0, 1f)] float mVolume_Master = 1;
-        [SerializeField,Range(0, 1f)] float mVolume_Music = 0.6f;
-        [SerializeField,Range(0, 1f)] float mVolume_Sound = 1;
+        [SerializeField,Range(0, 1f)] private float mVolume_Master = 1;
+        [SerializeField,Range(0, 1f)] private float mVolume_Music = 0.6f;
+        [SerializeField,Range(0, 1f)] private float mVolume_Sound = 1;
+
+        [SerializeField] private bool isMute = false;
+        protected bool IsMute
+        {
+            set
+            {
+                if (isMute != value)
+                {
+                    isMute = value;
+                }
+            }
+
+            get
+            {
+                return isMute;
+            }
+        }
 
         public float Volume_Master
         {
@@ -75,24 +92,6 @@ namespace BAStoryPlayer
             get
             {
                 return mVolume_Sound * mVolume_Master * (IsMute ? 0 : 1);
-            }
-        }
-
-        [SerializeField]
-        bool isMute = false;
-        protected bool IsMute
-        {
-            set
-            {
-                if (isMute != value)
-                {
-                    isMute = value;
-                }
-            }
-
-            get
-            {
-                return isMute;
             }
         }
 
@@ -182,16 +181,16 @@ namespace BAStoryPlayer
             return id;
         }
 
-        void ReleaseSource(AudioSource source, float time)
+        private void ReleaseSource(AudioSource source, float time)
         {
             StartCoroutine(CReleaseSource(source, time));
         }
-        IEnumerator CReleaseSource(AudioSource source, float time)
+        private IEnumerator CReleaseSource(AudioSource source, float time)
         {
             yield return new WaitForSeconds(time);
             ReleaseSource(source);
         }
-        void ReleaseSource(AudioSource source)
+        private void ReleaseSource(AudioSource source)
         {
             if (sourcePool.Count >= BAStoryPlayerController.Instance.Setting.Num_Max_AudioSource)
             {
@@ -206,11 +205,11 @@ namespace BAStoryPlayer
             playingPool.Remove(source);
         }
 
-        AudioSource GetSource(int playerID)
+        private AudioSource GetSource(int playerID)
         {
             return transform.Find(playerID.ToString()).GetComponent<AudioSource>();
         }
-        AudioSource GetSource()
+        private AudioSource GetSource()
         {
             AudioSource source;
 

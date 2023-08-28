@@ -1,18 +1,23 @@
 using UnityEngine;
 using BAStoryPlayer.NexonScriptParser;
 using BAStoryPlayer.AsScriptParser;
+using BAStoryPlayer.Event;
 
 namespace BAStoryPlayer
 {
     public class BAStoryPlayerController : BSingleton<BAStoryPlayerController>
     {
-        const string Path_Setting = "Setting/";
-        const string Path_StoryPlayer = "StoryPlayer";
+        private const string Path_Setting = "Setting/";
+        private const string Path_StoryPlayer = "StoryPlayer";
 
        [Header("References")]
-       [SerializeField] CharacterData characterDataTable;
-       [SerializeField] PlayerSetting playerSetting;
-       [SerializeField] BAStoryPlayer storyPlayer;
+       [SerializeField] private CharacterData characterDataTable;
+       [SerializeField] private PlayerSetting playerSetting;
+       [SerializeField] private BAStoryPlayer storyPlayer;
+
+        private bool isPlaying = false;
+
+        public bool IsPlaying => isPlaying;
 
         public BAStoryPlayer StoryPlayer
         {
@@ -67,8 +72,6 @@ namespace BAStoryPlayer
             }
         }
 
-        bool isPlaying = false;
-
         /// <summary>
         /// 故事载入
         /// </summary>
@@ -108,10 +111,11 @@ namespace BAStoryPlayer
 
             isPlaying = true;
             StoryPlayer.gameObject.SetActive(true);
-            StoryPlayer.onFinishPlaying.RemoveAllListeners();
+
+            EventBus<OnCloseStoryPlayer>.ClearCallBack();
 
             // 订阅播放结束事件
-            StoryPlayer.onFinishPlaying.AddListener(() =>
+            EventBus<OnCloseStoryPlayer>.AddCallback(() =>
             {
                 isPlaying = false;
             });

@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using BAStoryPlayer.DoTweenS;
+using BAStoryPlayer.Event;
 using TMPro;
 
 namespace BAStoryPlayer.UI
@@ -42,7 +43,11 @@ namespace BAStoryPlayer.UI
                 BAStoryPlayerController.Instance.StoryPlayer.AudioModule.Play(sound_Click);
                 animator.SetBool("Interactable", false);
                 transform.parent.GetComponent<OptionManager>().RevokeInteractablilty(transform);
-                BAStoryPlayerController.Instance.StoryPlayer.onUserSelect?.Invoke(optionID, BAStoryPlayerController.Instance.StoryPlayer.GroupID);
+                EventBus<OnPlayerSelect>.Raise(new OnPlayerSelect()
+                {
+                    scriptGourpID = BAStoryPlayerController.Instance.StoryPlayer.GroupID,
+                    selectionGroup = optionID
+                });
             });
         }
 

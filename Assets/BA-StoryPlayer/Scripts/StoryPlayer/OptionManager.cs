@@ -17,20 +17,20 @@ namespace BAStoryPlayer.UI
 
     public class OptionManager : MonoBehaviour
     {
-        GameObject _btnPrefab;
-        GameObject BtnPrefab
+        private GameObject btnPrefab;
+        private GameObject BtnPrefab
         {
             get
             {
-                if (_btnPrefab == null)
-                    _btnPrefab = Resources.Load<GameObject>("UI/Option");
-                return _btnPrefab;
+                if (btnPrefab == null)
+                    btnPrefab = Resources.Load<GameObject>("UI/Option");
+                return btnPrefab;
             }
         }
 
-        GameObject block;
+        private GameObject block;
 
-        void Start()
+        private void Start()
         {
             var rect = GetComponent<RectTransform>();
             rect.anchorMin = Vector2.zero;
@@ -40,18 +40,18 @@ namespace BAStoryPlayer.UI
             transform.localPosition = Vector3.zero;
         }
 
-        public void AddOptions(System.Collections.Generic.List<OptionData> datas)
-        {
-            foreach (var i in datas)
-                AddOption(i);
-        }
-        void AddOption(OptionData data)
+        private void AddOption(OptionData data)
         {
             GameObject obj = Instantiate(BtnPrefab);
             obj.transform.SetParent(transform);
 
             var option = obj.GetComponent<Button_Option>();
             option.Initialize(data.optionID, $"\"{ data.text}\"");
+        }
+        public void AddOptions(System.Collections.Generic.List<OptionData> datas)
+        {
+            foreach (var i in datas)
+                AddOption(i);
         }
 
         public void RevokeInteractablilty(Transform exception = null)
@@ -64,7 +64,7 @@ namespace BAStoryPlayer.UI
                     i.interactable = false;
         }
 
-       void CreateMouseBlock()
+       private void CreateMouseBlock()
         {
             GameObject obj = new GameObject();
             obj.name = "Block";

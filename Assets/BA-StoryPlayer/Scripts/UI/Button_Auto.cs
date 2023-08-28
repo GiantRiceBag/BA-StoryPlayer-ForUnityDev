@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using BAStoryPlayer.Event;
 
 namespace BAStoryPlayer.UI
 {
@@ -36,7 +37,7 @@ namespace BAStoryPlayer.UI
                 }
             });
 
-            BAStoryPlayerController.Instance.StoryPlayer.onCancelAuto.AddListener(() =>
+            EventBus<OnPlayerCancelAuto>.AddCallback(() =>
             {
                 selected = false;
                 GetComponent<Image>().color = Color.white;

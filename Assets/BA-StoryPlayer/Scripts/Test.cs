@@ -12,6 +12,7 @@ using System;
 using BAStoryPlayer.AsScriptParser;
 using System.Linq;
 using System.IO;
+using BAStoryPlayer.Event;
 
 [ExecuteAlways]
 public class Test : MonoBehaviour
@@ -94,16 +95,13 @@ public class Test : MonoBehaviour
                 ps.Add(face);
             }
         }
-        if (GUILayout.Button("Test3"))
+        if (GUILayout.Button("TestEvent"))
         {
-            TextAsset demo = Resources.Load("demo") as TextAsset;
-            List<string> AsCommandList = new List<string>(demo.ToString().Split('\n'));
-            AsCommandList.RemoveAll(string.IsNullOrEmpty);
-            AsCommandList = AsCommandList.Where(item => !item.StartsWith("//")).ToList();
-            foreach (var i in AsCommandList)
-            {
-                Debug.Log(i+"#"+i.Length);
-            }
+            
         }
+    }
+    private void Start()
+    {
+
     }
 }
