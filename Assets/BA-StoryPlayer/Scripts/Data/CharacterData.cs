@@ -15,8 +15,7 @@ namespace BAStoryPlayer
     [System.Serializable]
     public class CharacterDataUnit
     {
-        [Tooltip("建议以角色罗马音作为主要索引名")]
-        public string indexName;
+        [Tooltip("建议以角色罗马音作为主要索引名")] public string indexName;
         [HideInInspector] public string familyName;
         public string name;
         [HideInInspector] public string collage;
@@ -26,8 +25,7 @@ namespace BAStoryPlayer
         public string skelUrl;
         [HideInInspector] public string portraitUrl;
         [Space]
-        [Tooltip("仅在载入类型为 'SkeletonData' 时有效")]
-        public Vector2 facePosition;
+        [Tooltip("仅在载入类型为 'SkeletonData' 时有效")] public Vector2 facePosition;
             
         public override string ToString()
         {
@@ -74,6 +72,8 @@ namespace BAStoryPlayer
             foreach(var chrData in Datas)
             {
                 if (chrData.loadType == LoadType.Prefab)
+                    continue;
+                if (FindObjectOfType<BAStoryPlayerController>() == null)
                     continue;
 
                 SkeletonDataAsset skelDataAsset = Resources.Load<SkeletonDataAsset>(BAStoryPlayerController.Instance.Setting.Path_Prefab

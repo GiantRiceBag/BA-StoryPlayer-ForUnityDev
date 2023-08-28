@@ -43,7 +43,7 @@ namespace BAStoryPlayer
             {
                 if (characterDataTable == null)
                 {
-                    // TODO 日后引入较为全面的学生数据表
+                    // TODO 日后引入较为全面的学生数据表 --> 算了 引入的P 就那么点人 手输得了
                     characterDataTable = Resources.Load<CharacterData>(Path_Setting + "CharacterDataTable");
                     Debug.LogWarning($"未配置角色信息表!");
                 }
@@ -57,8 +57,10 @@ namespace BAStoryPlayer
             {
                 if (playerSetting == null)
                 {
-                    playerSetting = new PlayerSetting();
                     Debug.LogWarning($"未引用播放器设定表 已使用默认表");
+                    if (Application.isEditor)
+                        return new PlayerSetting();
+                    playerSetting = new PlayerSetting();
                 }
 
                 return playerSetting;
