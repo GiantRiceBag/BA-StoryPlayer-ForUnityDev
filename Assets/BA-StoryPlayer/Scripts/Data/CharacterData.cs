@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using System.Collections;
 using Spine.Unity;
 using Spine;
 
@@ -42,26 +43,28 @@ namespace BAStoryPlayer
     [SerializeField]
     public class CharacterData : ScriptableObject
     {
-        [SerializeField]
-        System.Collections.Generic.List<CharacterDataUnit> Datas = new System.Collections.Generic.List<CharacterDataUnit>();
+        [SerializeField] private System.Collections.Generic.List<CharacterDataUnit> rawData = new System.Collections.Generic.List<CharacterDataUnit>();
+        private IReadOnlyDictionary<int, CharacterDataUnit> hashTable = new Dictionary<int, CharacterDataUnit>();
 
         public CharacterDataUnit this[string indexName]
         {
             get
             {
-                foreach(var i in Datas)
+                try
                 {
-                    if (i.indexName == indexName)
-                        return i;
+                    return hashTable[indexName.GetHashCode()];
                 }
-                Debug.LogError($"未能在查询表中找到 角色 [{indexName}] 的数据");
-                return null;
+                catch
+                {
+                    Debug.LogError($"未能在查询表中找到 角色 [{indexName}] 的数据");
+                    return null;
+                }
             }
         }
-
+        
         public void Print()
         {
-            foreach(var i in Datas)
+            foreach(var i in rawData)
             {
                 Debug.Log(i.ToString());
             }
@@ -69,8 +72,13 @@ namespace BAStoryPlayer
 
         private void OnValidate()
         {
-            foreach(var chrData in Datas)
+            Dictionary<int, CharacterDataUnit> dict = new Dictionary<int, CharacterDataUnit>();
+
+            foreach (var chrData in rawData)
             {
+                int hash = chrData.indexName.GetHashCode();
+                dict.Add(hash, chrData);
+
                 if (chrData.loadType == LoadType.Prefab)
                     continue;
                 if (FindObjectOfType<BAStoryPlayerController>() == null)
@@ -133,6 +141,8 @@ namespace BAStoryPlayer
 
                 chrData.facePosition = sum / count;
             }
+
+            hashTable = dict;
         }
     }
 }

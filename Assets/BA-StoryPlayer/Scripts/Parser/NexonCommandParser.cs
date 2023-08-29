@@ -28,32 +28,31 @@ namespace BAStoryPlayer.NexonScriptParser
 
     public class NexonCommandParser
     {
-        const string REG_TITLE = @"#title;([^;\n]+);?([^;\n]+)?;?";
-        const string REG_PLACE = @"#place;([^;\n]+);?";
-        const string REG_NEXTEPISODE = @"#nextepisode;([^;\n]+);([^;\n]+);?";
-        const string REG_CONTINUED = "#continued;?";
-        const string REG_NA = @"#na;([^;\n]+);?";
-        const string REG_ST = @"#st;(\[-?\d+,-?\d+]);(serial|instant|smooth);(\d+);?";
-        const string REG_STM = @"#stm;(\[0,-?\d+]);(serial|instant|smooth);(\d+);([^;\n]+);?";
-        const string REG_CLEARST = @"#clearST;?";
-        const string REG_WAIT = @"#wait;(\d+);?";
-        const string REG_FONTSIZE = @"#fontsize;(\d+);?";
-        const string REG_ALL = @"#all;([^;\n]+);?";
-        const string REG_HIDEMENU = @"#hidemenu;?";
-        const string REG_SHOWMENU = @"#showmenu;?";
-        const string REG_ZMC = @"#zmc;(instant|instnat|move);(-?\d+,-?\d+);(\d+);?(\d+)?;?";
-        const string REG_BGSHAKE = @"#bgshake;?";
-        const string REG_VIDEO = @"#video;([^;\n]+);([^;\n]+);?";
-        const string REG_CHARACTER = @"^(?!#)([1-5]);([^;\n]+);([^;\n]+);?([^;\n]+)?";
-        const string REG_CHARACTEREFFECT = @"#([1-5]);(((em|fx);([^;\n]+))|\w+);?";
-        const string REG_OPTION = @"\[n?s(\d{0,2})?]([^;\n]+)";
+        private const string REG_TITLE = @"#title;([^;\n]+);?([^;\n]+)?;?";
+        private const string REG_PLACE = @"#place;([^;\n]+);?";
+        private const string REG_NEXTEPISODE = @"#nextepisode;([^;\n]+);([^;\n]+);?";
+        private const string REG_CONTINUED = "#continued;?";
+        private const string REG_NA = @"#na;([^;\n]+);?";
+        private const string REG_ST = @"#st;(\[-?\d+,-?\d+]);(serial|instant|smooth);(\d+);?";
+        private const string REG_STM = @"#stm;(\[0,-?\d+]);(serial|instant|smooth);(\d+);([^;\n]+);?";
+        private const string REG_CLEARST = @"#clearST;?";
+        private const string REG_WAIT = @"#wait;(\d+);?";
+        private const string REG_FONTSIZE = @"#fontsize;(\d+);?";
+        private const string REG_ALL = @"#all;([^;\n]+);?";
+        private const string REG_HIDEMENU = @"#hidemenu;?";
+        private const string REG_SHOWMENU = @"#showmenu;?";
+        private const string REG_ZMC = @"#zmc;(instant|instnat|move);(-?\d+,-?\d+);(\d+);?(\d+)?;?";
+        private const string REG_BGSHAKE = @"#bgshake;?";
+        private const string REG_VIDEO = @"#video;([^;\n]+);([^;\n]+);?";
+        private const string REG_CHARACTER = @"^(?!#)([1-5]);([^;\n]+);([^;\n]+);?([^;\n]+)?";
+        private const string REG_CHARACTEREFFECT = @"#([1-5]);(((em|fx);([^;\n]+))|\w+);?";
+        private const string REG_OPTION = @"\[n?s(\d{0,2})?]([^;\n]+)";
 
-        StoryUnit storyUnit;
-        BNexonSubParser nextParser;
+        private StoryUnit storyUnit;
+        private BNexonSubParser nextParser;
 
         public NexonCommandParser()
         {
-            // 解析器组装
             BNexonSubParser multimediaLayer = new NexonSubParser_MultimediaLayer(0);
             BNexonSubParser uiLayer = new NexonSubParser_UILayer(4);
             BNexonSubParser characterLayer = new NexonSubParser_CharacterLayer(2);
@@ -74,7 +73,7 @@ namespace BAStoryPlayer.NexonScriptParser
             System.Collections.Generic.List<StoryUnit> storyUnits = new System.Collections.Generic.List<StoryUnit>();
 
             // 单元转换
-            foreach (var rawUnit in storyScript.content)
+            foreach (var rawUnit in storyScript.Content)
             {
                 StoryUnit unit = new StoryUnit();
                 unit.selectionGroup = rawUnit.selectionGroup;

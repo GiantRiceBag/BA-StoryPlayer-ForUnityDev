@@ -22,7 +22,7 @@ namespace BAStoryPlayer.DoTweenS
         #region 增删改查停
         public static void Add(TweenS tween,bool checkUniqueness = true)
         {
-            CheckUniqueness(tween, checkUniqueness);
+            CheckIfUnique(tween, checkUniqueness);
             tweenList.Add(tween);
         }
         public static void Remove(TweenS tween)
@@ -58,7 +58,7 @@ namespace BAStoryPlayer.DoTweenS
         /// <param name="transform">目标对象</param>
         /// <param name="kill">冲突时是否删除</param>
         /// <returns></returns>
-        static bool CheckUniqueness(TweenS tween,bool kill = false)
+        static bool CheckIfUnique(TweenS tween,bool kill = false)
         {
             int index = 0;
             foreach(var i in tweenList)

@@ -10,7 +10,7 @@ namespace BAStoryPlayer.Event
     public struct OnPlayerCancelAuto : IEvent { }
     public struct OnCloseStoryPlayer : IEvent { }
 
-    public struct OnMoveCharacter : IEvent
+    public struct OnAnimateCharacter : IEvent
     {
         public float time;
     }

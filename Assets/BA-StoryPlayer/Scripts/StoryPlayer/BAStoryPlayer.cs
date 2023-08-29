@@ -133,7 +133,7 @@ namespace BAStoryPlayer
                 image_Background = transform.Find("Background").GetComponent<Image>();
 
             // 动作以及表情事件订阅 锁定一定时间的操作
-            EventBus<OnMoveCharacter>.Binding.Add((data) =>
+            EventBus<OnAnimateCharacter>.Binding.Add((data) =>
             {
                 Lock(data.time, BAStoryPlayerController.Instance.Setting.Time_Lock_AfterAction);
             });

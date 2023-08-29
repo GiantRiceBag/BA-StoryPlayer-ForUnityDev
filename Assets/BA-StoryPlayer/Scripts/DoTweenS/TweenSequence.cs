@@ -11,26 +11,26 @@ namespace BAStoryPlayer.DoTweenS
 
     public class TweenUnit
     {
-        public TweenUnitType unitType;
-        public TweenS tween;
-        public System.Action action;
-        public float wait;
+        public TweenUnitType UnitType;
+        public TweenS Tween;
+        public System.Action Action;
+        public float Wait;
 
         public TweenUnit(TweenS tween)
         {
-            this.tween = tween;
-            unitType = TweenUnitType.Tween;
+            this.Tween = tween;
+            UnitType = TweenUnitType.Tween;
         }
         public TweenUnit(float wait)
         {
             wait = Mathf.Abs(wait);
-            this.wait = wait;
-            unitType = TweenUnitType.Cmd;
+            this.Wait = wait;
+            UnitType = TweenUnitType.Cmd;
         }
         public TweenUnit(System.Action action)
         {
-            this.action = action;
-            unitType = TweenUnitType.Event;
+            this.Action = action;
+            UnitType = TweenUnitType.Event;
         }
     }
 
@@ -83,16 +83,16 @@ namespace BAStoryPlayer.DoTweenS
             if (tweenQueue.Count.Equals(0))
                 return;
 
-            switch (tweenQueue.Peek().unitType)
+            switch (tweenQueue.Peek().UnitType)
             {
                 case TweenUnitType.Cmd:
                     {
-                        Timer.Delay(Next, tweenQueue.Dequeue().wait);
+                        Timer.Delay(Next, tweenQueue.Dequeue().Wait);
                         break;
                     }
                 case TweenUnitType.Tween:
                     {
-                        tweenQueue.Dequeue().tween.Resume().onComplete += () =>
+                        tweenQueue.Dequeue().Tween.Resume().onComplete += () =>
                         {
                             Next();
                         };
@@ -100,7 +100,7 @@ namespace BAStoryPlayer.DoTweenS
                     }
                 case TweenUnitType.Event:
                     {
-                        tweenQueue.Dequeue().action?.Invoke();
+                        tweenQueue.Dequeue().Action?.Invoke();
                         Next();
                         break;
                     }

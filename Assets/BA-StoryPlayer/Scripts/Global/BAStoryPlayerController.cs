@@ -72,10 +72,6 @@ namespace BAStoryPlayer
             }
         }
 
-        /// <summary>
-        /// 故事载入
-        /// </summary>
-        /// <param name="url">故事脚本URL 默认放于Resources下的StoryScript文件夹中</param>
         public BAStoryPlayer LoadStory(string url)
         {
             if (isPlaying) { Debug.Log("剧情播放中"); return null; }
@@ -96,7 +92,7 @@ namespace BAStoryPlayer
                 string json = textAsset.ToString();
                 NexonStoryScript storyScript = JsonUtility.FromJson(json, typeof(NexonStoryScript)) as NexonStoryScript;
                 NexonCommandParser parser = new NexonCommandParser();
-                StoryPlayer.LoadUnits(storyScript.groupID, parser.Parse(storyScript)); 
+                StoryPlayer.LoadUnits(storyScript.GroupID, parser.Parse(storyScript)); 
                 StoryPlayer.ReadyToNext();
                 StoryPlayer.Next(); 
             }
@@ -112,7 +108,7 @@ namespace BAStoryPlayer
             isPlaying = true;
             StoryPlayer.gameObject.SetActive(true);
 
-            EventBus<OnCloseStoryPlayer>.ClearCallBack();
+            EventBus<OnCloseStoryPlayer>.ClearCallback();
 
             // 订阅播放结束事件
             EventBus<OnCloseStoryPlayer>.AddCallback(() =>

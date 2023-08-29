@@ -90,7 +90,7 @@ namespace BAStoryPlayer.Event
             StaticEventBusesTypes = staticEventBusesTypes;
         }
         
-        // TODO 如果播放完毕选择删除播放器 建议载入播放器前使用
+        // NOTE 如果播放完毕选择删除播放器 建议载入播放器前使用
         public static void ClearAllBuses()
         {
             for (int i = 0; i < StaticEventBusesTypes.Count; i++)
@@ -160,7 +160,7 @@ namespace BAStoryPlayer.Event
             callbacks.Add(new Callback() { onEvent = callback });
         }
 
-        public static void ClearCallBack()
+        public static void ClearCallback()
         {
             callbacks.Clear();
         }
@@ -192,14 +192,8 @@ namespace BAStoryPlayer.Event
             callbacks.Clear();
         }
 
-        /// <summary>
-        /// Allocates an Awaiter : EventBinding<T>
-        /// Use to await event in coroutines
-        /// </summary>
-        /// <returns></returns>
         public static Awaiter NewAwaiter()
         {
-            // TODO: do it non alloc
             return new Awaiter();
         }
     }

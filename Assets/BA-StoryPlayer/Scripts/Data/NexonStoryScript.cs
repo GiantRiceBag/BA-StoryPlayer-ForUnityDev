@@ -1,16 +1,21 @@
+using System.Collections.Generic;
+
 namespace BAStoryPlayer
 {
     [System.Serializable]
     public class NexonStoryScript
     {
-        public int groupID;
-        public System.Collections.Generic.List<RawNexonStoryUnit> content = new System.Collections.Generic.List<RawNexonStoryUnit>();
+        [UnityEngine.SerializeField] int groupID;
+        [UnityEngine.SerializeField] List<RawNexonStoryUnit> content = new List<RawNexonStoryUnit>();
+
+        public int GroupID => groupID;
+        public List<RawNexonStoryUnit> Content => content;
 
         public void Print()
         {
-            UnityEngine.Debug.Log($"组ID : {groupID}");
-            UnityEngine.Debug.Log($"单元数 : {content.Count}");
-            foreach (var i in content)
+            UnityEngine.Debug.Log($"组ID : {GroupID}");
+            UnityEngine.Debug.Log($"单元数 : {Content.Count}");
+            foreach (var i in Content)
                 UnityEngine.Debug.Log(i.ToString());
         }
 

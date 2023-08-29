@@ -285,7 +285,7 @@ namespace BAStoryPlayer
                 case TransistionType.Smooth:
                     {
                         obj.transform.DoMove_Anchored(pos, BAStoryPlayerController.Instance.Setting.Time_Character_Move);
-                        EventBus<OnMoveCharacter>.Raise(new OnMoveCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Move });
+                        EventBus<OnAnimateCharacter>.Raise(new OnAnimateCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Move });
                         break;
                     }
                 default: break;
@@ -320,56 +320,56 @@ namespace BAStoryPlayer
                 case CharacterAction.Appear: //黑色剪影渐变进场
                     skelGraphic.color = Color.black;
                     skelGraphic.DoColor(Color.white, BAStoryPlayerController.Instance.Setting.Time_Character_Fade);
-                    EventBus<OnMoveCharacter>.Raise(new OnMoveCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Fade });
+                    EventBus<OnAnimateCharacter>.Raise(new OnAnimateCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Fade });
                     break;
                 case CharacterAction.Disapper: // 渐变至黑色剪影同时离场
                     skelGraphic.color = Color.white;
                     skelGraphic.DoColor(Color.black, BAStoryPlayerController.Instance.Setting.Time_Character_Fade).onComplete = ()=> { SetAction(obj, CharacterAction.Hide); };
-                    EventBus<OnMoveCharacter>.Raise(new OnMoveCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Fade });
+                    EventBus<OnAnimateCharacter>.Raise(new OnAnimateCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Fade });
                     break;
                 case CharacterAction.Disapper2Left:
                     MoveCharacterTo(obj, new Vector2(-500, 0), TransistionType.Smooth);
-                    EventBus<OnMoveCharacter>.Raise(new OnMoveCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Move });
+                    EventBus<OnAnimateCharacter>.Raise(new OnAnimateCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Move });
                     break;
                 case CharacterAction.Disapper2Right:
                     MoveCharacterTo(obj, new Vector2(2420, 0), TransistionType.Smooth);
-                    EventBus<OnMoveCharacter>.Raise(new OnMoveCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Move });
+                    EventBus<OnAnimateCharacter>.Raise(new OnAnimateCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Move });
                     break;
                 case CharacterAction.AppearL2R:
                     skelGraphic.color = Color.white;
                     MoveCharacterTo(obj, new Vector2(-500, 0));
                     MoveCharacterTo(obj, arg, TransistionType.Smooth);
-                    EventBus<OnMoveCharacter>.Raise(new OnMoveCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Move });
+                    EventBus<OnAnimateCharacter>.Raise(new OnAnimateCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Move });
                     break;
                 case CharacterAction.AppearR2L:
                     skelGraphic.color = Color.white;
                     MoveCharacterTo(obj, new Vector2(2420, 0));
                     MoveCharacterTo(obj, arg, TransistionType.Smooth);
-                    EventBus<OnMoveCharacter>.Raise(new OnMoveCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Move });
+                    EventBus<OnAnimateCharacter>.Raise(new OnAnimateCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Move });
                     break;
                 case CharacterAction.Hophop:
                     obj.transform.DoBound_Anchored_Relative(new Vector2(0, 50), BAStoryPlayerController.Instance.Setting.Time_Character_Hophop, 2);
-                    EventBus<OnMoveCharacter>.Raise(new OnMoveCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Hophop });
+                    EventBus<OnAnimateCharacter>.Raise(new OnAnimateCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Hophop });
                     break;
                 case CharacterAction.Greeting:
                     obj.transform.DoBound_Anchored_Relative(new Vector2(0, -70), BAStoryPlayerController.Instance.Setting.Time_Character_Greeting);
-                    EventBus<OnMoveCharacter>.Raise(new OnMoveCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Greeting });
+                    EventBus<OnAnimateCharacter>.Raise(new OnAnimateCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Greeting });
                     break;
                 case CharacterAction.Shake:
                     obj.transform.DoShakeX(40, BAStoryPlayerController.Instance.Setting.Time_Character_Shake, 2);
-                    EventBus<OnMoveCharacter>.Raise(new OnMoveCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Shake });
+                    EventBus<OnAnimateCharacter>.Raise(new OnAnimateCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Shake });
                     break;
                 case CharacterAction.Move:
                     MoveCharacterTo(obj, arg, TransistionType.Smooth);
-                    EventBus<OnMoveCharacter>.Raise(new OnMoveCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Move });
+                    EventBus<OnAnimateCharacter>.Raise(new OnAnimateCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Move });
                     break;
                 case CharacterAction.Stiff:
                     obj.transform.DoShakeX(10, BAStoryPlayerController.Instance.Setting.Time_Character_Stiff, 4);
-                    EventBus<OnMoveCharacter>.Raise(new OnMoveCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Stiff });
+                    EventBus<OnAnimateCharacter>.Raise(new OnAnimateCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Stiff });
                     break;
                 case CharacterAction.Jump:
                     obj.transform.DoBound_Anchored_Relative(new Vector2(0, 70), BAStoryPlayerController.Instance.Setting.Time_Character_Jump);
-                    EventBus<OnMoveCharacter>.Raise(new OnMoveCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Jump });
+                    EventBus<OnAnimateCharacter>.Raise(new OnAnimateCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Jump });
                     break;
                 case CharacterAction.falldownR:
                     TweenSequence sequence_Rotation = new TweenSequence();
@@ -383,7 +383,7 @@ namespace BAStoryPlayer
                     sequence_Position.Append(obj.transform.DoLocalMove(obj.transform.localPosition + new Vector3(15, 0, 0), 0.3f));
                     sequence_Position.Append(obj.transform.DoLocalMove(obj.transform.localPosition - new Vector3(30, 0, 0), 0.5f));
 
-                    EventBus<OnMoveCharacter>.Raise(new OnMoveCharacter() { time = 1.4f});
+                    EventBus<OnAnimateCharacter>.Raise(new OnAnimateCharacter() { time = 1.4f});
                     break;
                 case CharacterAction.Hide: // 立即让角色离场
                     DestroyCharacter(obj);
@@ -434,7 +434,7 @@ namespace BAStoryPlayer
         {
             float time = 1;
             EmotionFactory.SetEmotion(obj.transform, emotion, ref time);
-            EventBus<OnMoveCharacter>.Raise(new OnMoveCharacter() { time = time });
+            EventBus<OnAnimateCharacter>.Raise(new OnAnimateCharacter() { time = time });
         }
 
         /// <summary>
