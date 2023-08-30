@@ -43,7 +43,7 @@ namespace BAStoryPlayer.UI
                 BAStoryPlayerController.Instance.StoryPlayer.AudioModule.Play(sound_Click);
                 animator.SetBool("Interactable", false);
                 transform.parent.GetComponent<OptionManager>().RevokeInteractablilty(transform);
-                EventBus<OnPlayerSelect>.Raise(new OnPlayerSelect()
+                EventBus<OnPlayerSelectedBranch>.Raise(new OnPlayerSelectedBranch()
                 {
                     scriptGourpID = BAStoryPlayerController.Instance.StoryPlayer.GroupID,
                     selectionGroup = optionID

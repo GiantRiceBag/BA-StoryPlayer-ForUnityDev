@@ -13,31 +13,27 @@ namespace BAStoryPlayer
     public class UIManager : MonoBehaviour
     {
         [Header("References")]
-        [SerializeField] Image image_Background;
+        [SerializeField] private Image image_Background;
         [Space]
-        [SerializeField] TextMeshProUGUI text_Speaker;
-        [SerializeField] TextMeshProUGUI text_Main;
+        [SerializeField] private TextMeshProUGUI text_Speaker;
+        [SerializeField] private TextMeshProUGUI text_Main;
         [Space]
-        [SerializeField] GameObject gameObject_TextArea;
-        [SerializeField] GameObject gameObject_Continued;
-        [SerializeField] GameObject gameObject_SubPanel_Synopsis;
-        [SerializeField] Button btn_Auto;
-        [SerializeField] Button btn_Menu;
+        [SerializeField] private GameObject gameObject_TextArea;
+        [SerializeField] private GameObject gameObject_Continued;
+        [SerializeField] private GameObject gameObject_SubPanel_Synopsis;
+        [SerializeField] private Button btn_Auto;
+        [SerializeField] private Button btn_Menu;
 
-        Coroutine coroutine_Print;
-        Coroutine coroutine_Next;
+        private Coroutine coroutine_Print;
+        private Coroutine coroutine_Next;
 
-        string currentSpeaker = null;
-        string mainTextBuffer = null;
-        bool isPrinting = false;
+        private string currentSpeaker = null;
+        private string mainTextBuffer = null;
+        private bool isPrinting = false;
+
+        private BAStoryPlayer StoryPlayer { get { return BAStoryPlayerController.Instance.StoryPlayer; } }
 
         public bool IsPrinting => isPrinting;
-
-        BAStoryPlayer StoryPlayer { get { return BAStoryPlayerController.Instance.StoryPlayer; } }
-
-        [HideInInspector] public UnityEngine.Events.UnityEvent onStartPrinting;
-        [HideInInspector] public UnityEngine.Events.UnityEvent  onFinishPrinting;
-
 
         private void Start()
         {
@@ -61,18 +57,19 @@ namespace BAStoryPlayer
                 btn_Menu = transform.Find("Button_Menu").GetComponent<Button>();
 
             // 事件绑定
-            onFinishPrinting.AddListener(() => {
-                gameObject_Continued.SetActive(true);
+            EventBus<OnPrintedLine>.Binding.Add(() =>
+                {
+                    gameObject_Continued.SetActive(true);
 
-                // 若Auto则延缓两秒后继续
-                if (StoryPlayer.Auto)
-                    coroutine_Next = Timer.Delay(transform, () => { StoryPlayer.ReadyToNext(); }, 2);
-                else
-                    StoryPlayer.ReadyToNext();
-            });
+                    // 若Auto则延缓两秒后继续
+                    if (StoryPlayer.IsAuto)
+                        coroutine_Next = Timer.Delay(transform, () => { StoryPlayer.ReadyToNext();}, 2);
+                    else
+                        StoryPlayer.ReadyToNext();
+                });
 
             // 若取消Auto 则删除当前执行的协程
-            EventBus<OnPlayerCancelAuto>.Binding.Add(() =>
+            EventBus<OnPlayerCanceledAuto>.Binding.Add(() =>
             {
                 if (coroutine_Next != null)
                 {
@@ -111,9 +108,9 @@ namespace BAStoryPlayer
         /// 输出主文本
         /// </summary>
         /// <param name="text"></param>
-        public void PrintText(string text)
+        public void PrintLine(string text)
         {
-            onStartPrinting?.Invoke();
+            EventBus<OnPrintingLine>.Raise();
 
             text_Main.text = null;
             gameObject_Continued.SetActive(false);
@@ -137,7 +134,7 @@ namespace BAStoryPlayer
             isPrinting = false;
             mainTextBuffer = null;
 
-            onFinishPrinting?.Invoke();
+            EventBus<OnPrintedLine>.Raise();
         }
 
         /// <summary>
@@ -153,7 +150,7 @@ namespace BAStoryPlayer
             mainTextBuffer = null;
             isPrinting = false;
 
-            onFinishPrinting?.Invoke();
+            EventBus<OnPrintedLine>.Raise();
         }
 
         public void ClearText()

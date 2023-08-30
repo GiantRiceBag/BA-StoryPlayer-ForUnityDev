@@ -2,21 +2,23 @@ using UnityEngine;
 namespace BAStoryPlayer.Event
 {
     #region Events
-    public struct OnPlayerSelect : IEvent 
+    public struct OnPlayerSelectedBranch : IEvent 
     {
         public int scriptGourpID;
         public int selectionGroup;
     }
-    public struct OnPlayerCancelAuto : IEvent { }
-    public struct OnCloseStoryPlayer : IEvent { }
+    public struct OnPlayerCanceledAuto : IEvent { }
 
-    public struct OnAnimateCharacter : IEvent
+    public struct OnClosedStoryPlayer : IEvent { }
+    public struct OnUnlockedPlayerInput : IEvent { }
+
+    public struct OnAnimatedCharacter : IEvent
     {
         public float time;
     }
 
-    public struct OnStartPrintLine : IEvent { }
-    public struct OnFinishPrintLine : IEvent { }
+    public struct OnPrintingLine : IEvent { }
+    public struct OnPrintedLine : IEvent { }
     #endregion
 
     static class EventCollection { }

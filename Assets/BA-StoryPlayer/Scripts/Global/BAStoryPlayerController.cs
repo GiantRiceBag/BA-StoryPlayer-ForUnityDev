@@ -25,19 +25,17 @@ namespace BAStoryPlayer
             {
                 if (storyPlayer == null)
                 {
-                    var temp = transform.Find("StoryPlayer");
-                    if(temp!=null)
-                        temp.TryGetComponent<BAStoryPlayer>(out storyPlayer);
-                }
-                if (storyPlayer == null)
-                {
-                    storyPlayer = Instantiate(Resources.Load(Path_StoryPlayer) as GameObject).GetComponent<BAStoryPlayer>();
-                    storyPlayer.transform.SetParent(transform);
-                    storyPlayer.name = "StoryPlayer";
-                    storyPlayer.transform.localPosition = Vector3.zero;
-                    storyPlayer.transform.localScale = Vector3.one;
-                }
+                    storyPlayer = FindObjectOfType<BAStoryPlayer>();
 
+                    if (storyPlayer == null)
+                    {
+                        storyPlayer = Instantiate(Resources.Load(Path_StoryPlayer) as GameObject).GetComponent<BAStoryPlayer>();
+                        storyPlayer.transform.SetParent(transform);
+                        storyPlayer.name = "StoryPlayer";
+                        storyPlayer.transform.localPosition = Vector3.zero;
+                        storyPlayer.transform.localScale = Vector3.one;
+                    }
+                }
 
                 return storyPlayer;
             }
@@ -62,10 +60,10 @@ namespace BAStoryPlayer
             {
                 if (playerSetting == null)
                 {
-                    Debug.LogWarning($"未引用播放器设定表 已使用默认表");
                     if (Application.isEditor)
-                        return new PlayerSetting();
-                    playerSetting = new PlayerSetting();
+                        return ScriptableObject.CreateInstance<PlayerSetting>();
+                    Debug.LogWarning($"未引用播放器设定表 已使用默认表");
+                    playerSetting = ScriptableObject.CreateInstance<PlayerSetting>();
                 }
 
                 return playerSetting;
@@ -108,10 +106,10 @@ namespace BAStoryPlayer
             isPlaying = true;
             StoryPlayer.gameObject.SetActive(true);
 
-            EventBus<OnCloseStoryPlayer>.ClearCallback();
+            EventBus<OnClosedStoryPlayer>.ClearCallback();
 
             // 订阅播放结束事件
-            EventBus<OnCloseStoryPlayer>.AddCallback(() =>
+            EventBus<OnClosedStoryPlayer>.AddCallback(() =>
             {
                 isPlaying = false;
             });

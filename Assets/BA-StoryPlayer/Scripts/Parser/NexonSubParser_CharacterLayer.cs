@@ -56,7 +56,7 @@ namespace BAStoryPlayer.NexonScriptParser
                             if (isOccupied) continue;
                             storyUnit.action += () => { 
                                 BAStoryPlayerController.Instance.StoryPlayer.UIModule.SetSpeaker(); 
-                                BAStoryPlayerController.Instance.StoryPlayer.UIModule.PrintText(args[1]); 
+                                BAStoryPlayerController.Instance.StoryPlayer.UIModule.PrintLine(args[1]); 
                             };
                             isOccupied = true;
                             storyUnit.UpdateType(weight, UnitType.Text);

@@ -6,50 +6,64 @@ namespace BAStoryPlayer.UI
 {
     public class Button_Auto : MonoBehaviour
     {
-        [SerializeField] Color color_Selected = new Color(1, 0.8784314f, 0.4235294f);
-        [SerializeField] bool selected = false;
-        [SerializeField] AudioClip sound_Click;
-        [SerializeField] GameObject flowLight;
+        [SerializeField] private Color color_Selected = new Color(1, 0.8784314f, 0.4235294f);
+        [SerializeField] private bool isSelected = false;
+        [SerializeField] private AudioClip sound_Click;
+        [SerializeField] private GameObject obj_FlowLight;
+
+        public AudioClip Sound_Click
+        {
+            get
+            {
+                if (sound_Click == null)
+                    sound_Click = Resources.Load("Sound/Button_Click") as AudioClip;
+                return sound_Click;
+            }
+        }
+        public GameObject FlowLight 
+        {
+            get
+            {
+                if(obj_FlowLight == null)
+                    obj_FlowLight = transform.Find("FlowLight").gameObject;
+                return obj_FlowLight;
+            }
+         }
 
         void Start()
         {
-            if (!sound_Click)
-                sound_Click = Resources.Load("Sound/Button_Click") as AudioClip;
-            if (!flowLight)
-                flowLight = transform.Find("FlowLight").gameObject;
-
             // TODO 临时使用 后期在优化弄的好看点
             GetComponent<Button>().onClick.AddListener(() =>
             {
-                selected = !selected;
-                BAStoryPlayerController.Instance.StoryPlayer.Auto = selected;
-                BAStoryPlayerController.Instance.StoryPlayer.AudioModule.Play(sound_Click);
+                isSelected = !isSelected;
+                BAStoryPlayerController.Instance.StoryPlayer.IsAuto = isSelected;
+                BAStoryPlayerController.Instance.StoryPlayer.AudioModule.Play(Sound_Click);
 
-                if (selected)
+                if (isSelected)
                 {
                     GetComponent<Image>().color = color_Selected;
-                    flowLight.SetActive(true);
+                    FlowLight.SetActive(true);
                 }
                 else
                 {
                     GetComponent<Image>().color = Color.white;
-                    flowLight.SetActive(false);
+                    FlowLight.SetActive(false);
                 }
             });
 
-            EventBus<OnPlayerCancelAuto>.AddCallback(() =>
+            EventBus<OnPlayerCanceledAuto>.Binding.Add(() =>
             {
-                selected = false;
+                isSelected = false;
                 GetComponent<Image>().color = Color.white;
-                flowLight.SetActive(false);
+                FlowLight.SetActive(false);
             });
         }
 
         private void OnEnable()
         {
-            selected = BAStoryPlayerController.Instance.StoryPlayer.Auto = false;
+            isSelected = BAStoryPlayerController.Instance.StoryPlayer.IsAuto = false;
+            FlowLight.SetActive(false);
             GetComponent<Image>().color = Color.white;
         }
     }
-
 }

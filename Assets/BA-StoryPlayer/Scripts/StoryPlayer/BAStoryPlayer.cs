@@ -12,41 +12,70 @@ namespace BAStoryPlayer
 {
     public class BAStoryPlayer : MonoBehaviour
     {
-        private bool auto = false;
+        private bool isAuto = false;
         [Space]
         private int groupID = -1;
 
         [Header("References")]
-        [SerializeField] private Image image_Background;
+        [SerializeField] private Image imageBackground;
         [Space]
-        [SerializeField] private CharacterManager _characterModule;
-        [SerializeField] private UIManager _UIModule;
-        [SerializeField] private AudioManager _audioModule;
+        [SerializeField] private CharacterManager characterModule;
+        [SerializeField] private UIManager uiModule;
+        [SerializeField] private AudioManager audioModule;
 
         private List<StoryUnit> storyUnit;
         [Header("Real-Time Data")]
         [SerializeField] private int currentUnitIndex = 0;
         private Queue<int> priorUnitIndexes = new Queue<int>(); // 优先下标队列 
+        [SerializeField] private float lockTime = 0;
+
         [SerializeField] private bool isPlaying = false;
         [SerializeField] private bool isExecutable = true;
         [SerializeField] private bool isLocking = false;
-        [SerializeField] private float lockTime = 0;
 
         private Coroutine coroutine_Lock;
 
-        public bool Auto
+        public bool IsAuto
         {
             set
             {
-                auto = value;
-                if (!auto)
-                    EventBus<OnPlayerCancelAuto>.Raise();
-                if (auto && isPlaying && isExecutable && !isLocking)
-                    Next();
+                isAuto = value;
+                if (!isAuto)
+                {
+                    EventBus<OnPlayerCanceledAuto>.Raise();
+                    EventBus<OnUnlockedPlayerInput>.ClearCallback();
+                }
+                if (isAuto && isPlaying && isExecutable) // 文本输出完毕后的状态
+                {
+                    if (!IsLocking)
+                        Next();
+                    else
+                        EventBus<OnUnlockedPlayerInput>.AddCallback(() =>
+                        {
+                            Timer.Delay(() =>
+                            {
+                                ReadyToNext();
+                                EventBus<OnUnlockedPlayerInput>.ClearCallback();
+                            }, 1);
+                        });
+                }
             }
             get
             {
-                return auto;
+                return isAuto;
+            }
+        }
+        public bool IsLocking
+        {
+            set
+            {
+                isLocking = value;
+                if (isLocking == false)
+                    EventBus<OnUnlockedPlayerInput>.Raise();
+            }
+            get
+            {
+                return isLocking;
             }
         }
 
@@ -54,29 +83,29 @@ namespace BAStoryPlayer
         {
             get
             {
-                if (_characterModule == null)
-                    _characterModule = transform.GetComponentInChildren<CharacterManager>();
-                return _characterModule;
+                if (characterModule == null)
+                    characterModule = transform.GetComponentInChildren<CharacterManager>();
+                return characterModule;
             }
         }
         public UIManager UIModule
         {
             get
             {
-                if (_UIModule == null)
-                    _UIModule = transform.GetComponentInChildren<UIManager>();
-                return _UIModule;
+                if (uiModule == null)
+                    uiModule = transform.GetComponentInChildren<UIManager>();
+                return uiModule;
             }
         }
         public AudioManager AudioModule
         {
             get
             {
-                if (_audioModule == null)
-                    _audioModule = transform.GetComponent<AudioManager>();
-                if (_audioModule == null)
-                    _audioModule = gameObject.AddComponent<AudioManager>();
-                return _audioModule;
+                if (audioModule == null)
+                    audioModule = transform.GetComponent<AudioManager>();
+                if (audioModule == null)
+                    audioModule = gameObject.AddComponent<AudioManager>();
+                return audioModule;
             }
         }
 
@@ -129,18 +158,18 @@ namespace BAStoryPlayer
 
         void Start()
         {
-            if (image_Background == null)
-                image_Background = transform.Find("Background").GetComponent<Image>();
+            if (imageBackground == null)
+                imageBackground = transform.Find("Background").GetComponent<Image>();
 
             // 动作以及表情事件订阅 锁定一定时间的操作
-            EventBus<OnAnimateCharacter>.Binding.Add((data) =>
+            EventBus<OnAnimatedCharacter>.Binding.Add((data) =>
             {
                 Lock(data.time, BAStoryPlayerController.Instance.Setting.Time_Lock_AfterAction);
             });
             // 选项事件订阅
-            EventBus<OnPlayerSelect>.Binding.Add((data) =>
+            EventBus<OnPlayerSelectedBranch>.Binding.Add((data) =>
             {
-                // 坐标前移寻找最近的选项下标 并放入优先下标队列 遇到-1则停止
+                // 坐标前移寻找最近的选项下标 并放入优先下标队列 遇到0则停止
                 for (int i = currentUnitIndex; i < storyUnit.Count; i++)
                 {
                     if (storyUnit[i].selectionGroup == data.selectionGroup)
@@ -157,7 +186,7 @@ namespace BAStoryPlayer
                 NextIndex();
             });
             // 文本输出结束时间订阅 锁定操作一段时间
-            UIModule.onFinishPrinting.AddListener(() =>
+            EventBus<OnPrintedLine>.Binding.Add(() =>
             {
                 Lock(BAStoryPlayerController.Instance.Setting.Time_Lock_AfterPrinting);
             });
@@ -175,14 +204,14 @@ namespace BAStoryPlayer
                 switch (transition)
                 {
                     case TransistionType.Instant:
-                        image_Background.sprite = null;
-                        image_Background.enabled = false;
+                        imageBackground.sprite = null;
+                        imageBackground.enabled = false;
                         break;
                     case TransistionType.Smooth:
-                        image_Background.DoColor(Color.black, BAStoryPlayerController.Instance.Setting.Time_SwitchBackground).onComplete = () =>
+                        imageBackground.DoColor(Color.black, BAStoryPlayerController.Instance.Setting.Time_SwitchBackground).onComplete = () =>
                          {
-                             image_Background.sprite = null;
-                             image_Background.enabled = false;
+                             imageBackground.sprite = null;
+                             imageBackground.enabled = false;
                          };
                         break;
                 }
@@ -195,12 +224,12 @@ namespace BAStoryPlayer
             size.x = CanvasRect.rect.width;
             size.y = size.x * ratio;
 
-            image_Background.GetComponent<RectTransform>().sizeDelta = size;
-            if (!image_Background.enabled)
+            imageBackground.GetComponent<RectTransform>().sizeDelta = size;
+            if (!imageBackground.enabled)
             {
-                image_Background.enabled = true;
-                image_Background.sprite = sprite;
-                image_Background.color = Color.white;
+                imageBackground.enabled = true;
+                imageBackground.sprite = sprite;
+                imageBackground.color = Color.white;
             }
             else
             {
@@ -208,15 +237,15 @@ namespace BAStoryPlayer
                 {
                     case TransistionType.Instant:
                         {
-                            image_Background.sprite = sprite;
+                            imageBackground.sprite = sprite;
                             break;
                         }
                     case TransistionType.Smooth:
                         {
-                            image_Background.DoColor(Color.black, BAStoryPlayerController.Instance.Setting.Time_SwitchBackground / 2).onComplete = () =>
+                            imageBackground.DoColor(Color.black, BAStoryPlayerController.Instance.Setting.Time_SwitchBackground / 2).onComplete = () =>
                             {
-                                image_Background.sprite = sprite;
-                                image_Background.DoColor(Color.white, BAStoryPlayerController.Instance.Setting.Time_SwitchBackground / 2);
+                                imageBackground.sprite = sprite;
+                                imageBackground.DoColor(Color.white, BAStoryPlayerController.Instance.Setting.Time_SwitchBackground / 2);
                             };
                             break;
                         }
@@ -234,7 +263,7 @@ namespace BAStoryPlayer
             this.groupID = groupID;
             storyUnit = units;
             currentUnitIndex = 0;
-            isLocking = false;
+            IsLocking = false;
             isPlaying = true;
             isExecutable = true;
         }
@@ -248,13 +277,13 @@ namespace BAStoryPlayer
             if (isPlaying && UIModule.IsPrinting && !isExecutable)
             {
                 UIModule.Skip();
-                if (Auto)
-                    Auto = false;
+                if (IsAuto)
+                    IsAuto = false;
                 return;
             }
 
             // 操作锁 针对非Auto模式
-            if (isLocking && !Auto && !breakLock)
+            if (IsLocking && !IsAuto && !breakLock)
                 return;
 
             if (!isExecutable || !isPlaying)
@@ -329,7 +358,7 @@ namespace BAStoryPlayer
         {
             isExecutable = true;
             // 若Auto则直接执行
-            if (next || Auto)
+            if (next || IsAuto)
                 Next();
         }
 
@@ -349,7 +378,7 @@ namespace BAStoryPlayer
                {
                    RequireBackdrop(BackdropType.Out, 1, () =>
                    {
-                       EventBus<OnCloseStoryPlayer>.Raise();
+                       EventBus<OnClosedStoryPlayer>.Raise();
                        EmotionFactory.ClearCache();
                        if (!destoryObject)
                        {
@@ -368,7 +397,7 @@ namespace BAStoryPlayer
                }
                else
                {
-                   EventBus<OnCloseStoryPlayer>.Raise();
+                   EventBus<OnClosedStoryPlayer>.Raise();
                    EmotionFactory.ClearCache();
                    if (!destoryObject)
                    {
@@ -453,13 +482,13 @@ namespace BAStoryPlayer
             else
                 return;
 
-            if (isLocking)
+            if (IsLocking)
                 StopCoroutine(coroutine_Lock);
 
-            isLocking = true;
+            IsLocking = true;
             coroutine_Lock = Timer.Delay(transform,() =>
             {
-                isLocking = false;  
+                IsLocking = false;
             }, duration + extra);
         }
 

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9059376da301de345a9a085a547c8315, type: 3}
   m_Name: CharacterDataTable
   m_EditorClassIdentifier: 
-  Datas:
+  rawData:
   - indexName: shiroko
     familyName: "\u7802\u72FC"
     name: "\u767D\u5B50"

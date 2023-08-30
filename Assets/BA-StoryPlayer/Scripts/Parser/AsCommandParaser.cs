@@ -96,14 +96,14 @@ namespace BAStoryPlayer.AsScriptParser
                     case "btc":
                         storyUnit.UpdateType(1, UnitType.Text);
                         storyUnit.action += () => BAStoryPlayerController.Instance.StoryPlayer.UIModule.SetSpeaker(command[1]);
-                        storyUnit.action += () => BAStoryPlayerController.Instance.StoryPlayer.UIModule.PrintText(command[3]);
+                        storyUnit.action += () => BAStoryPlayerController.Instance.StoryPlayer.UIModule.PrintLine(command[3]);
                         break;
 
                     case "th":
                     case "thc":
                         storyUnit.UpdateType(1, UnitType.Text);
                         storyUnit.action += () => BAStoryPlayerController.Instance.StoryPlayer.UIModule.SetSpeaker(command[1]);
-                        storyUnit.action += () => BAStoryPlayerController.Instance.StoryPlayer.UIModule.PrintText(command[3]);
+                        storyUnit.action += () => BAStoryPlayerController.Instance.StoryPlayer.UIModule.PrintLine(command[3]);
                         storyUnit.action += () => BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.Highlight(command[1]);
                         break;
 

@@ -4,20 +4,21 @@ namespace BAStoryPlayer.DoTweenS
 {
     public class DoTweenS
     {
-        static DoTweenS _instance;
-        static int usableTid = 0;
+        private static DoTweenS instance;
+        private static int usableTid = 0;
+        private static List<TweenS> tweenList = new List<TweenS>();
+
         public static int UsableTid { get { return usableTid++; } }
         public static DoTweenS Instance
         {
             get
             {
-                if (_instance == null)
-                    _instance = new DoTweenS();
+                if (instance == null)
+                    instance = new DoTweenS();
 
-                return _instance;
+                return instance;
             }
         }
-        static List<TweenS> tweenList = new List<TweenS>();
 
         #region ÔöÉ¾¸Ä²éÍ£
         public static void Add(TweenS tween,bool checkUniqueness = true)
