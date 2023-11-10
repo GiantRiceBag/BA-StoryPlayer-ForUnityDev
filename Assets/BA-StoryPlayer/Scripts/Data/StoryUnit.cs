@@ -2,8 +2,8 @@ namespace BAStoryPlayer
 {
     public enum UnitType
     {
+        Command = 0,
         Text,
-        Command,
         Option,
         Title,
     }
@@ -20,23 +20,26 @@ namespace BAStoryPlayer
         /// <summary>
         /// 根据新权重值更新单元标签
         /// </summary>
-        public void UpdateType(int nWeight, UnitType type) {
-            if (nWeight >= weight)
+        public void UpdateType(UnitType type)
+        {
+            if (type >= this.type)
             {
                 this.type = type;
-                weight = nWeight;
             } 
         }
+
+#if UNITY_EDITOR
         public override string ToString()
         {
             System.Text.StringBuilder text = new System.Text.StringBuilder();
-            text.Append($"单元类型 : {type}\n");
-            text.Append($"权重 : {weight}\n");
-            text.Append($"空 : { action == null }\n");
-            text.Append($"执行后等待时间 : {wait}\n");
-            text.Append($"选项组 : {selectionGroup}");
+            text.Append($"type : {type}\n");
+            text.Append($"weight : {weight}\n");
+            text.Append($"action : { action == null }\n");
+            text.Append($"wait : {wait}\n");
+            text.Append($"selectionGroup : {selectionGroup}");
             return text.ToString();
         }
+#endif
     }
 
 }

@@ -18,20 +18,17 @@ namespace BAStoryPlayer
     [System.Serializable]
     public class NexonStoryScript
     {
-        [UnityEngine.SerializeField] int groupID;
-        [UnityEngine.SerializeField] List<RawNexonStoryUnit> content = new List<RawNexonStoryUnit>();
+        public int groupID;
+        public List<RawNexonStoryUnit> content = new List<RawNexonStoryUnit>();
 
-        public int GroupID => groupID;
-        public List<RawNexonStoryUnit> Content => content;
-
+#if UNITY_EDITOR
         public void Print()
         {
-            UnityEngine.Debug.Log($"组ID : {GroupID}");
-            UnityEngine.Debug.Log($"单元数 : {Content.Count}");
-            foreach (var i in Content)
+            UnityEngine.Debug.Log($"组ID : {groupID}");
+            UnityEngine.Debug.Log($"单元数 : {content.Count}");
+            foreach (var i in content)
                 UnityEngine.Debug.Log(i.ToString());
         }
-
         public void ToJsonFile(string url)
         {
             System.IO.StreamWriter sw = new System.IO.StreamWriter(UnityEngine.Application.dataPath + $"/{url}");
@@ -42,6 +39,7 @@ namespace BAStoryPlayer
         {
             return UnityEngine.JsonUtility.ToJson(this, true);
         }
+#endif
     }
 
     [System.Serializable]
@@ -59,12 +57,14 @@ namespace BAStoryPlayer
         public override string ToString()
         {
             System.Text.StringBuilder text = new System.Text.StringBuilder();
-            text.Append($"脚本 : {scripts}\n");
-            text.Append($"选项组 : {selectionGroup}\n");
-            text.Append($"背景音乐URL : {bgmURL}\n");
-            text.Append($"音效URL : {soundURL}\n");
-            text.Append($"背景URL : {backgroundURL}\n");
-            text.Append($"文件URL : {popupFileURL}");
+
+            text.AppendLine($"脚本 : {scripts}");
+            text.AppendLine($"选项组 : {selectionGroup}");
+            text.AppendLine($"背景音乐URL : {bgmURL}");
+            text.AppendLine($"音效URL : {soundURL}");
+            text.AppendLine($"背景URL : {backgroundURL}");
+            text.AppendLine($"文件URL : {popupFileURL}");
+
             return text.ToString();
         }
 #endif

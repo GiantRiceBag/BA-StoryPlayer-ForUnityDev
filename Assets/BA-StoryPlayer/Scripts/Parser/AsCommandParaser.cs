@@ -19,7 +19,7 @@ namespace BAStoryPlayer.AsScriptParser
         public string value;
     }
 
-    public class AsCommandParaser
+    public class AsCommandParaser : ICommandParser
     {
         readonly Dictionary<string, AsCommandContainer> nameIdList = new Dictionary<string, AsCommandContainer>();
 
@@ -94,16 +94,16 @@ namespace BAStoryPlayer.AsScriptParser
                     case "tc":
                     case "mtc":
                     case "btc":
-                        storyUnit.UpdateType(1, UnitType.Text);
+                        storyUnit.UpdateType(UnitType.Text);
                         storyUnit.action += () => BAStoryPlayerController.Instance.StoryPlayer.UIModule.SetSpeaker(command[1]);
-                        storyUnit.action += () => BAStoryPlayerController.Instance.StoryPlayer.UIModule.PrintLine(command[3]);
+                        storyUnit.action += () => BAStoryPlayerController.Instance.StoryPlayer.UIModule.PrintMainText(command[3]);
                         break;
 
                     case "th":
                     case "thc":
-                        storyUnit.UpdateType(1, UnitType.Text);
+                        storyUnit.UpdateType(UnitType.Text);
                         storyUnit.action += () => BAStoryPlayerController.Instance.StoryPlayer.UIModule.SetSpeaker(command[1]);
-                        storyUnit.action += () => BAStoryPlayerController.Instance.StoryPlayer.UIModule.PrintLine(command[3]);
+                        storyUnit.action += () => BAStoryPlayerController.Instance.StoryPlayer.UIModule.PrintMainText(command[3]);
                         storyUnit.action += () => BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.Highlight(command[1]);
                         break;
 
@@ -113,7 +113,7 @@ namespace BAStoryPlayer.AsScriptParser
                         break;
 
                     case "banner":
-                        storyUnit.UpdateType(10, UnitType.Title);
+                        storyUnit.UpdateType(UnitType.Title);
                         if (command.Length == 2)
                             storyUnit.action += () => BAStoryPlayerController.Instance.StoryPlayer.UIModule.ShowTitle("", command[1]);
                         else if (command.Length == 3)
@@ -319,18 +319,18 @@ namespace BAStoryPlayer.AsScriptParser
             {
                 // Image State
                 case "show":
-                    storyUnit.action += () => BAStoryPlayerController.Instance.StoryPlayer.SetBackground(imgUrl,TransistionType.Smooth);
+                    storyUnit.action += () => BAStoryPlayerController.Instance.StoryPlayer.SetBackground(imgUrl,BackgroundTransistionType.Smooth);
                     break;
                 case "hide":
-                    storyUnit.action += () => BAStoryPlayerController.Instance.StoryPlayer.SetBackground(null, TransistionType.Smooth);
+                    storyUnit.action += () => BAStoryPlayerController.Instance.StoryPlayer.SetBackground(null, BackgroundTransistionType.Smooth);
                     break;
                 case "showD": // Legacy
                 case "appear":
-                    storyUnit.action += () => BAStoryPlayerController.Instance.StoryPlayer.SetBackground(imgUrl, TransistionType.Instant);
+                    storyUnit.action += () => BAStoryPlayerController.Instance.StoryPlayer.SetBackground(imgUrl, BackgroundTransistionType.Instant);
                     break;
                 case "hideD": // Legacy
                 case "disappear":
-                    storyUnit.action += () => BAStoryPlayerController.Instance.StoryPlayer.SetBackground(null, TransistionType.Instant);
+                    storyUnit.action += () => BAStoryPlayerController.Instance.StoryPlayer.SetBackground(null, BackgroundTransistionType.Instant);
                     break;
                 case "hl":
                 case "highlight":
@@ -430,7 +430,7 @@ namespace BAStoryPlayer.AsScriptParser
 
             if (datas.Count != 0)
             {
-                storyUnit.UpdateType(7, UnitType.Option);
+                storyUnit.UpdateType(UnitType.Option);
                 storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.UIModule.ShowOption(datas); };
             }
         }

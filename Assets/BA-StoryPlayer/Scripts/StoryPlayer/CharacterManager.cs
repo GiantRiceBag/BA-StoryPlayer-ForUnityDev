@@ -6,7 +6,7 @@ using BAStoryPlayer.DoTweenS;
 using BAStoryPlayer.Event;
 namespace BAStoryPlayer
 {
-    public enum TransistionType
+    public enum BackgroundTransistionType
     {
         Instant = 0,
         Smooth
@@ -96,7 +96,7 @@ namespace BAStoryPlayer
         {
             ActivateCharacter(index, indexName, animationID);
             StoryPlayer.UIModule.SetSpeaker(indexName);
-            StoryPlayer.UIModule.PrintLine(lines);
+            StoryPlayer.UIModule.PrintMainText(lines);
         }
         public void ActivateCharacter(string indexName)
         {
@@ -226,7 +226,7 @@ namespace BAStoryPlayer
         /// <param name="currentIndex">角色编号</param>
         /// <param name="targetIndex">目标位置编号</param>
         /// <param name="transition">过渡方式</param>
-        void MoveCharacterTo(int currentIndex,int targetIndex,TransistionType transition = TransistionType.Instant)
+        void MoveCharacterTo(int currentIndex,int targetIndex,BackgroundTransistionType transition = BackgroundTransistionType.Instant)
         {
             if (!CheckIfIndexValid(currentIndex) || !CheckIfIndexValid(targetIndex))
                 return;
@@ -234,38 +234,38 @@ namespace BAStoryPlayer
                 return;
             MoveCharacterTo(Character[currentIndex].gameObject, targetIndex, transition);
         }
-        void MoveCharacterTo(int currentIndex,Vector2 pos,TransistionType transition = TransistionType.Instant)
+        void MoveCharacterTo(int currentIndex,Vector2 pos,BackgroundTransistionType transition = BackgroundTransistionType.Instant)
         {
             if (CheckIfSlotEmpty(currentIndex))
                 return;
             MoveCharacterTo(Character[currentIndex].gameObject, pos, transition);
         }
-        public void MoveCharacterTo(string indexName, int targetIndex, TransistionType transition = TransistionType.Instant)
+        public void MoveCharacterTo(string indexName, int targetIndex, BackgroundTransistionType transition = BackgroundTransistionType.Instant)
         {
             if (!CheckIfCharacterInPool(indexName))
                 CreateCharacterObj(indexName);
             characterPool[indexName].SetActive(true);
             MoveCharacterTo(characterPool[indexName], targetIndex, transition);
         }
-        void MoveCharacterTo(string indexName, Vector2 pos, TransistionType transition = TransistionType.Instant)
+        void MoveCharacterTo(string indexName, Vector2 pos, BackgroundTransistionType transition = BackgroundTransistionType.Instant)
         {
             if (!CheckIfCharacterInPool(indexName))
                 CreateCharacterObj(indexName);
             characterPool[indexName].SetActive(true);
             MoveCharacterTo(characterPool[indexName], pos, transition);
         }
-        void MoveCharacterTo(GameObject obj, int targetIndex, TransistionType transition = TransistionType.Instant)
+        void MoveCharacterTo(GameObject obj, int targetIndex, BackgroundTransistionType transition = BackgroundTransistionType.Instant)
         {
             targetIndex = Mathf.Clamp(targetIndex, 0, 4);
             RectTransform rect = obj.GetComponent<RectTransform>();
             switch (transition)
             {
-                case TransistionType.Instant:
+                case BackgroundTransistionType.Instant:
                     {
                         rect.anchoredPosition = new Vector2((targetIndex + 1) * Interval_Slot, rect.anchoredPosition.y);
                         break;
                     }
-                case TransistionType.Smooth:
+                case BackgroundTransistionType.Smooth:
                     {
                         obj.transform.DoMove_Anchored(new Vector2((targetIndex + 1) * Interval_Slot, rect.anchoredPosition.y), BAStoryPlayerController.Instance.Setting.Time_Character_Move);
                         break;
@@ -273,16 +273,16 @@ namespace BAStoryPlayer
                 default: break;
             }
         }
-        void MoveCharacterTo(GameObject obj, Vector2 pos, TransistionType transition = TransistionType.Instant)
+        void MoveCharacterTo(GameObject obj, Vector2 pos, BackgroundTransistionType transition = BackgroundTransistionType.Instant)
         {
             switch (transition)
             {
-                case TransistionType.Instant:
+                case BackgroundTransistionType.Instant:
                     {
                         obj.GetComponent<RectTransform>().anchoredPosition = pos;
                         break;
                     }
-                case TransistionType.Smooth:
+                case BackgroundTransistionType.Smooth:
                     {
                         obj.transform.DoMove_Anchored(pos, BAStoryPlayerController.Instance.Setting.Time_Character_Move);
                         EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Move });
@@ -328,23 +328,23 @@ namespace BAStoryPlayer
                     EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Fade });
                     break;
                 case CharacterAction.Disapper2Left:
-                    MoveCharacterTo(obj, new Vector2(-500, 0), TransistionType.Smooth);
+                    MoveCharacterTo(obj, new Vector2(-500, 0), BackgroundTransistionType.Smooth);
                     EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Move });
                     break;
                 case CharacterAction.Disapper2Right:
-                    MoveCharacterTo(obj, new Vector2(2420, 0), TransistionType.Smooth);
+                    MoveCharacterTo(obj, new Vector2(2420, 0), BackgroundTransistionType.Smooth);
                     EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Move });
                     break;
                 case CharacterAction.AppearL2R:
                     skelGraphic.color = Color.white;
                     MoveCharacterTo(obj, new Vector2(-500, 0));
-                    MoveCharacterTo(obj, arg, TransistionType.Smooth);
+                    MoveCharacterTo(obj, arg, BackgroundTransistionType.Smooth);
                     EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Move });
                     break;
                 case CharacterAction.AppearR2L:
                     skelGraphic.color = Color.white;
                     MoveCharacterTo(obj, new Vector2(2420, 0));
-                    MoveCharacterTo(obj, arg, TransistionType.Smooth);
+                    MoveCharacterTo(obj, arg, BackgroundTransistionType.Smooth);
                     EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Move });
                     break;
                 case CharacterAction.Hophop:
@@ -360,7 +360,7 @@ namespace BAStoryPlayer
                     EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Shake });
                     break;
                 case CharacterAction.Move:
-                    MoveCharacterTo(obj, arg, TransistionType.Smooth);
+                    MoveCharacterTo(obj, arg, BackgroundTransistionType.Smooth);
                     EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Move });
                     break;
                 case CharacterAction.Stiff:
@@ -440,20 +440,20 @@ namespace BAStoryPlayer
         /// <summary>
         /// 高亮并置顶某个角色
         /// </summary>
-        public void Highlight(int index,TransistionType transition = TransistionType.Instant)
+        public void Highlight(int index,BackgroundTransistionType transition = BackgroundTransistionType.Instant)
         {
             if (CheckIfSlotEmpty(index))
                 return;
             Highlight(Character[index].gameObject, transition);
         }
-        public void Highlight(string indexName, TransistionType transition = TransistionType.Instant)
+        public void Highlight(string indexName, BackgroundTransistionType transition = BackgroundTransistionType.Instant)
         {
             if (!CheckIfCharacterInPool(indexName))
                 CreateCharacterObj(indexName);
             characterPool[indexName].SetActive(true);
             Highlight(characterPool[indexName], transition);
         }
-        public void Highlight(GameObject obj, TransistionType transition = TransistionType.Instant)
+        public void Highlight(GameObject obj, BackgroundTransistionType transition = BackgroundTransistionType.Instant)
         {
             SkeletonGraphic skelGraphic = obj.GetComponent<SkeletonGraphic>();
 
@@ -470,12 +470,12 @@ namespace BAStoryPlayer
 
                 switch (transition)
                 {
-                    case TransistionType.Instant:
+                    case BackgroundTransistionType.Instant:
                         {
                             skg.color = COLOR_UNHIGHLIGHT;
                             break;
                         }
-                    case TransistionType.Smooth:
+                    case BackgroundTransistionType.Smooth:
                         {
                             skg.DoColor(COLOR_UNHIGHLIGHT, BAStoryPlayerController.Instance.Setting.Time_Character_Highlight);
                             break;
@@ -490,7 +490,7 @@ namespace BAStoryPlayer
         /// </summary>
         /// <param name="enable"></param>
         /// <param name="transition"></param>
-        public void HighlightAll(TransistionType transition = TransistionType.Instant)
+        public void HighlightAll(BackgroundTransistionType transition = BackgroundTransistionType.Instant)
         {
             foreach (var chr in characterPool.Values)
             {
@@ -500,12 +500,12 @@ namespace BAStoryPlayer
                 SkeletonGraphic skelGraphic = chr.GetComponent<SkeletonGraphic>();
                 switch (transition)
                 {
-                    case TransistionType.Instant:
+                    case BackgroundTransistionType.Instant:
                         {
                             skelGraphic.color = COLOR_UNHIGHLIGHT;
                             break;
                         }
-                    case TransistionType.Smooth:
+                    case BackgroundTransistionType.Smooth:
                         {
                             skelGraphic.DoColor(COLOR_UNHIGHLIGHT, BAStoryPlayerController.Instance.Setting.Time_Character_Highlight);
                             break;

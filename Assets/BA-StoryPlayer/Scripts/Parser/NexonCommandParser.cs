@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using BAStoryPlayer.UI;
+using UnityEngine;
 
 namespace BAStoryPlayer.NexonScriptParser
 {
@@ -27,7 +29,7 @@ namespace BAStoryPlayer.NexonScriptParser
         Option
     }
 
-    public class NexonCommandParser
+    public class NexonCommandParser : ICommandParser
     {
         private const string REG_TITLE = @"#title;([^;\n]+);?([^;\n]+)?;?";
         private const string REG_PLACE = @"#place;([^;\n]+);?";
@@ -49,7 +51,6 @@ namespace BAStoryPlayer.NexonScriptParser
         private const string REG_CHARACTEREFFECT = @"#([1-5]);(((em|fx);([^;\n]+))|\w+);?";
         private const string REG_OPTION = @"\[n?s(\d{0,2})?]([^;\n]+)";
 
-        private StoryUnit storyUnit;
         private BNexonSubParser nextParser;
 
         public NexonCommandParser()
@@ -67,14 +68,15 @@ namespace BAStoryPlayer.NexonScriptParser
             characterLayer.nextParser = systemLayer;
         }
 
-        public System.Collections.Generic.List<StoryUnit> Parse(NexonStoryScript storyScript)
+        public List<StoryUnit> Parse(TextAsset rawStoryScript)
         {
             Regex.CacheSize = 20;
 
-            System.Collections.Generic.List<StoryUnit> storyUnits = new System.Collections.Generic.List<StoryUnit>();
+            NexonStoryScript storyScript = JsonUtility.FromJson(rawStoryScript.ToString(), typeof(NexonStoryScript)) as NexonStoryScript;
+            List<StoryUnit> storyUnits = new List<StoryUnit>();
 
             // 单元转换
-            foreach (var rawUnit in storyScript.Content)
+            foreach (var rawUnit in storyScript.content)
             {
                 StoryUnit unit = new StoryUnit();
                 unit.selectionGroup = rawUnit.selectionGroup;
@@ -181,7 +183,7 @@ namespace BAStoryPlayer.NexonScriptParser
                         else if (args.Length == 4) // 有台词
                         {
                             if (isOccupied) continue;
-                            storyUnit.UpdateType(weight, UnitType.Text);
+                            storyUnit.UpdateType(UnitType.Text);
                             storyUnit.action += () => {
                                 BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.ActivateCharacter(int.Parse(args[0]) - 1, args[1], args[2], args[3]);
                             };
@@ -206,10 +208,10 @@ namespace BAStoryPlayer.NexonScriptParser
                         if (isOccupied) continue;
                         storyUnit.action += () => {
                             BAStoryPlayerController.Instance.StoryPlayer.UIModule.SetSpeaker();
-                            BAStoryPlayerController.Instance.StoryPlayer.UIModule.PrintLine(args[1]);
+                            BAStoryPlayerController.Instance.StoryPlayer.UIModule.PrintMainText(args[1]);
                         };
                         isOccupied = true;
-                        storyUnit.UpdateType(weight, UnitType.Text);
+                        storyUnit.UpdateType(UnitType.Text);
                         break;
                     case ScriptTag.All:
                         switch (args[1])
@@ -228,7 +230,7 @@ namespace BAStoryPlayer.NexonScriptParser
         }
 
 
-        void HandleEmotion(StoryUnit storyUnit, int characterIndex, string emotionName)
+        private void HandleEmotion(StoryUnit storyUnit, int characterIndex, string emotionName)
         {
             switch (emotionName)
             {
@@ -314,7 +316,7 @@ namespace BAStoryPlayer.NexonScriptParser
                 default: return;
             }
         }
-        void HandleAction(StoryUnit storyUnit, int characterIndex, string actionName)
+        private void HandleAction(StoryUnit storyUnit, int characterIndex, string actionName)
         {
             switch (actionName)
             {
@@ -459,7 +461,7 @@ namespace BAStoryPlayer.NexonScriptParser
 
             if (datas.Count != 0)
             {
-                storyUnit.UpdateType(weight, UnitType.Option);
+                storyUnit.UpdateType(UnitType.Option);
                 storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.UIModule.ShowOption(datas); };
             }
 
@@ -516,7 +518,7 @@ namespace BAStoryPlayer.NexonScriptParser
 
             if (rawStoryUnit.backgroundURL != string.Empty)
             {
-                storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.SetBackground(rawStoryUnit.backgroundURL, TransistionType.Smooth); };
+                storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.SetBackground(rawStoryUnit.backgroundURL, BackgroundTransistionType.Smooth); };
             }
 
             for (int i = 0; i < rawStoryUnit.scriptList.Count; i++)
@@ -531,7 +533,7 @@ namespace BAStoryPlayer.NexonScriptParser
                                 storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.UIModule.ShowTitle(args[1], args[2]); };
                             else
                                 storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.UIModule.ShowTitle("", args[1]); };
-                            storyUnit.UpdateType(weight, UnitType.Title);
+                            storyUnit.UpdateType(UnitType.Title);
                             break;
                         }
                     case ScriptTag.Place:
@@ -542,35 +544,35 @@ namespace BAStoryPlayer.NexonScriptParser
                     case ScriptTag.NextEpisode:
                         {
                             //TODO
-                            UnityEngine.Debug.Log("没做");
+                            Debug.Log("没做");
                             break;
                         }
                     case ScriptTag.Continued:
                         {
                             //TODO
-                            UnityEngine.Debug.Log("没做");
+                            Debug.Log("没做");
                             break;
                         }
                     case ScriptTag.ShowMenu:
                         {
-                            storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.UIModule.SetActive_UI_Button(true); };
+                            storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.UIModule.SetActiveButton(true); };
                             break;
                         }
                     case ScriptTag.HideMenu:
                         {
-                            storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.UIModule.SetActive_UI_Button(false); };
+                            storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.UIModule.SetActiveButton(false); };
                             break;
                         }
                     case ScriptTag.BgShake:
                         {
                             //TODO
-                            UnityEngine.Debug.Log("没做");
+                            Debug.Log("没做");
                             break;
                         }
                     case ScriptTag.ClearSt:
                         {
                             storyUnit.action += () => {
-                                BAStoryPlayerController.Instance.StoryPlayer.UIModule.SetActive_UI_TextArea(false);
+                                BAStoryPlayerController.Instance.StoryPlayer.UIModule.SetActiveTextArea(false);
                             };
                             break;
                         }

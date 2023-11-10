@@ -13,57 +13,59 @@ namespace BAStoryPlayer
     public class UIManager : MonoBehaviour
     {
         [Header("References")]
-        [SerializeField] private Image image_Background;
+        [SerializeField] private Image _imgBackground;
         [Space]
-        [SerializeField] private TextMeshProUGUI text_Speaker;
-        [SerializeField] private TextMeshProUGUI text_Main;
+        [SerializeField] private TextMeshProUGUI _txtSpeaker;
+        [SerializeField] private TextMeshProUGUI _txtMain;
+        [SerializeField] private TextMeshProUGUI _txtTitle;
+        [SerializeField] private TextMeshProUGUI _txtSynopsis;
         [Space]
-        [SerializeField] private GameObject gameObject_TextArea;
-        [SerializeField] private GameObject gameObject_Continued;
-        [SerializeField] private GameObject gameObject_SubPanel_Synopsis;
-        [SerializeField] private Button btn_Auto;
-        [SerializeField] private Button btn_Menu;
+        [SerializeField] private GameObject _objTextArea;
+        [SerializeField] private GameObject _objContinued;
+        [SerializeField] private GameObject _objSubPanelSynopsis;
+        [SerializeField] private Button _btnAuto;
+        [SerializeField] private Button _btnMenu;
 
-        private Coroutine coroutine_Print;
-        private Coroutine coroutine_Next;
+        private Coroutine _crtPrint;
+        private Coroutine _crtNext;
 
-        private string currentSpeaker = null;
-        private string mainTextBuffer = null;
-        private bool isPrinting = false;
+        private string _currentSpeaker = null;
+        private string _mainTextBuffer = null;
+        private bool _isPrinting = false;
 
         private BAStoryPlayer StoryPlayer { get { return BAStoryPlayerController.Instance.StoryPlayer; } }
 
-        public bool IsPrinting => isPrinting;
+        public bool IsPrinting => _isPrinting;
 
         private void Start()
         {
-            if (image_Background == null)
-                image_Background = transform.parent.Find("Background").GetComponent<Image>();
+            if (_imgBackground == null)
+                _imgBackground = transform.parent.Find("Background").GetComponent<Image>();
 
-            if (text_Speaker == null)
-                text_Speaker = transform.Find("TextArea").Find("Text_Speaker").GetComponent<TextMeshProUGUI>();
-            if (text_Main == null)
-                text_Speaker = transform.Find("TextArea").Find("Text_Main").GetComponent<TextMeshProUGUI>();
+            if (_txtSpeaker == null)
+                _txtSpeaker = transform.Find("TextArea").Find("Text_Speaker").GetComponent<TextMeshProUGUI>();
+            if (_txtMain == null)
+                _txtSpeaker = transform.Find("TextArea").Find("Text_Main").GetComponent<TextMeshProUGUI>();
 
-            if (gameObject_TextArea == null)
-                gameObject_TextArea = transform.Find("TextArea").gameObject;
-            if (gameObject_Continued == null)
-                gameObject_Continued = transform.Find("Image_Continued").gameObject;
-            if (gameObject_SubPanel_Synopsis == null)
-                gameObject_SubPanel_Synopsis = transform.Find("SubPanel_Synopsis").gameObject;
-            if (btn_Auto == null)
-                btn_Auto = transform.Find("Button_Auto").GetComponent<Button>();
-            if (btn_Menu == null)
-                btn_Menu = transform.Find("Button_Menu").GetComponent<Button>();
+            if (_objTextArea == null)
+                _objTextArea = transform.Find("TextArea").gameObject;
+            if (_objContinued == null)
+                _objContinued = transform.Find("Image_Continued").gameObject;
+            if (_objSubPanelSynopsis == null)
+                _objSubPanelSynopsis = transform.Find("SubPanel_Synopsis").gameObject;
+            if (_btnAuto == null)
+                _btnAuto = transform.Find("Button_Auto").GetComponent<Button>();
+            if (_btnMenu == null)
+                _btnMenu = transform.Find("Button_Menu").GetComponent<Button>();
 
             // 事件绑定
             EventBus<OnPrintedLine>.Binding.Add(() =>
                 {
-                    gameObject_Continued.SetActive(true);
+                    _objContinued.SetActive(true);
 
                     // 若Auto则延缓两秒后继续
                     if (StoryPlayer.IsAuto)
-                        coroutine_Next = Timer.Delay(transform, () => { StoryPlayer.ReadyToNext();}, 2);
+                        _crtNext = Timer.Delay(transform, () => { StoryPlayer.ReadyToNext();}, 2);
                     else
                         StoryPlayer.ReadyToNext();
                 });
@@ -71,10 +73,10 @@ namespace BAStoryPlayer
             // 若取消Auto 则删除当前执行的协程
             EventBus<OnPlayerCanceledAuto>.Binding.Add(() =>
             {
-                if (coroutine_Next != null)
+                if (_crtNext != null)
                 {
-                    StopCoroutine(coroutine_Next);
-                    coroutine_Next = null;
+                    StopCoroutine(_crtNext);
+                    _crtNext = null;
                     StoryPlayer.ReadyToNext();
                 }
             });
@@ -86,53 +88,57 @@ namespace BAStoryPlayer
         /// <param name="indexName">说话者索引名/若为空则不显示说话者信息</param>
         public void SetSpeaker(string indexName = null)
         {
-            if (currentSpeaker == indexName && indexName != null)
+            if (_currentSpeaker == indexName && indexName != null)
                 return;
 
             // 角色说话
             if(indexName != null)
             {
                 var data = BAStoryPlayerController.Instance.CharacterDataTable[indexName];
-                string result = $"{data.name} <color=#9CD7EF><size=39>{data.affiliation}</size></color>";
-                text_Speaker.text = result;
+                SetSpeaker(data.name, data.affiliation);
             }
-            // 旁边
+            // 旁白
             else
             {
-                text_Speaker.text = null;
+                _txtSpeaker.text = null;
             }
 
-            currentSpeaker = indexName;
+            _currentSpeaker = indexName;
         }
+        public void SetSpeaker(string speakerName,string affiliation)
+        {
+            _txtSpeaker.text = $"{speakerName} <color=#9CD7EF><size=39>{affiliation}</size></color>";
+        }
+
         /// <summary>
         /// 输出主文本
         /// </summary>
         /// <param name="text"></param>
-        public void PrintLine(string text)
+        public void PrintMainText(string text)
         {
             EventBus<OnPrintingLine>.Raise();
 
-            text_Main.text = null;
-            gameObject_Continued.SetActive(false);
-            SetActive_UI_TextArea();
-            SetActive_UI_Button();
+            _txtMain.text = null;
+            _objContinued.SetActive(false);
+            SetActiveTextArea();
+            SetActiveButton();
 
-            isPrinting = true;
-            mainTextBuffer = text;
-            if (coroutine_Print != null)
-                StopCoroutine(coroutine_Print);
-            coroutine_Print = StartCoroutine(CPrint());
+            _isPrinting = true;
+            _mainTextBuffer = text;
+            if (_crtPrint != null)
+                StopCoroutine(_crtPrint);
+            _crtPrint = StartCoroutine(CPrint());
         }
         IEnumerator CPrint()
         {
-            for(int i = 0; i < mainTextBuffer.Length; i++)
+            for(int i = 0; i < _mainTextBuffer.Length; i++)
             {
-                text_Main.text += mainTextBuffer[i];
+                _txtMain.text += _mainTextBuffer[i];
                 yield return new WaitForSeconds(BAStoryPlayerController.Instance.Setting.Interval_Print);
             }
-            coroutine_Print = null;
-            isPrinting = false;
-            mainTextBuffer = null;
+            _crtPrint = null;
+            _isPrinting = false;
+            _mainTextBuffer = null;
 
             EventBus<OnPrintedLine>.Raise();
         }
@@ -142,50 +148,52 @@ namespace BAStoryPlayer
         /// </summary>
         public void Skip()
         {
-            if (!isPrinting)
+            if (!_isPrinting)
                 return;
 
-            StopCoroutine(coroutine_Print);
-            text_Main.text = mainTextBuffer;
-            mainTextBuffer = null;
-            isPrinting = false;
+            StopCoroutine(_crtPrint);
+            _txtMain.text = _mainTextBuffer;
+            _mainTextBuffer = null;
+            _isPrinting = false;
 
             EventBus<OnPrintedLine>.Raise();
         }
 
         public void ClearText()
         {
-            text_Main.text = null;
-            text_Speaker.text = null;
+            _txtMain.text = null;
+            _txtSpeaker.text = null;
         }
 
-        public void SetActive_UI_Button(bool enable = true)
+        public void SetActiveButton(bool enable = true)
         {
-            btn_Auto.gameObject.SetActive(enable);
-            btn_Menu.gameObject.SetActive(enable);
+            _btnAuto.gameObject.SetActive(enable);
+            _btnMenu.gameObject.SetActive(enable);
         }
-        public void SetActive_UI_TextArea(bool enable = true)
+        public void SetActiveTextArea(bool enable = true)
         {
-            gameObject_TextArea.SetActive(enable);
+            _objTextArea.SetActive(enable);
             if (!enable)
-                gameObject_Continued.SetActive(enable);
+            {
+                _objContinued.SetActive(enable);
+            }
         }
 
         public void HideAllUI()
         {
-            SetActive_UI_Button(false);
-            SetActive_UI_TextArea(false);
-            gameObject_SubPanel_Synopsis.SetActive(false);
+            SetActiveButton(false);
+            SetActiveTextArea(false);
+            _objSubPanelSynopsis.SetActive(false);
         }
 
-        public void SetBlurBackground(bool enable,TransistionType transition = TransistionType.Smooth)
+        public void SetBlurBackground(bool enable,BackgroundTransistionType transition = BackgroundTransistionType.Smooth)
         {
-            if(transition == TransistionType.Smooth)
-                image_Background.DoFloat("_Weight", enable ? 1 : 0, BAStoryPlayerController.Instance.Setting.Time_BlurBackground);
-            else if(transition == TransistionType.Instant)
+            if(transition == BackgroundTransistionType.Smooth)
+                _imgBackground.DoFloat("_Weight", enable ? 1 : 0, BAStoryPlayerController.Instance.Setting.Time_BlurBackground);
+            else if(transition == BackgroundTransistionType.Instant)
             {
-                Material mat = new Material(image_Background.material);
-                image_Background.material = mat;
+                Material mat = new Material(_imgBackground.material);
+                _imgBackground.material = mat;
                 mat.SetFloat("_Weight", enable ? 1 : 0);
             }
                 
@@ -213,6 +221,15 @@ namespace BAStoryPlayer
             GameObject obj = Instantiate(Resources.Load("UI/Venue") as GameObject);
             obj.transform.SetParent(StoryPlayer.transform);
             obj.GetComponent<Venue>().SetText(venue);
+        }
+
+        public void SetSynopsis(string synopsis = "")
+        {
+            _txtSynopsis.text = synopsis;
+        }
+        public void SetTitle(string title = "") 
+        {
+            _txtTitle.text = title;
         }
     }
 }

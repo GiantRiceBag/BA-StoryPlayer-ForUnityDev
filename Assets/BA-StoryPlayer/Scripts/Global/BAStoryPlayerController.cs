@@ -1,5 +1,6 @@
 using UnityEngine;
 using BAStoryPlayer.NexonScriptParser;
+using BAStoryPlayer.UniversalCommandParser;
 using BAStoryPlayer.AsScriptParser;
 using BAStoryPlayer.Event;
 
@@ -87,16 +88,15 @@ namespace BAStoryPlayer
 
             if(textAsset.text[0] == '{') // Nexon
             {
-                string json = textAsset.ToString();
-                NexonStoryScript storyScript = JsonUtility.FromJson(json, typeof(NexonStoryScript)) as NexonStoryScript;
-                NexonCommandParser parser = new NexonCommandParser();
-                StoryPlayer.LoadUnits(storyScript.GroupID, parser.Parse(storyScript)); 
+                NexonStoryScript storyScript = JsonUtility.FromJson<NexonStoryScript>(textAsset.ToString());
+                ICommandParser parser = new UniversalCommandParser.UniversalCommandParser();
+                StoryPlayer.LoadUnits(storyScript.groupID, parser.Parse(textAsset)); 
                 StoryPlayer.ReadyToNext();
                 StoryPlayer.Next(); 
             }
             else // As
             {
-                AsCommandParaser parser = new AsCommandParaser();
+                ICommandParser parser = new AsCommandParaser();
                 var units = parser.Parse(textAsset);
                 StoryPlayer.LoadUnits(0, units);
                 StoryPlayer.ReadyToNext();
@@ -152,11 +152,12 @@ namespace BAStoryPlayer
             return prefab;
         }
 
-        //TEST
+#if UNITY_EDITOR
         public void LoadStoryTest(string url)
         {
             LoadStory(url);
         }
+#endif
     }
 
     public static class ExtensionMethod
