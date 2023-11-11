@@ -34,20 +34,20 @@ namespace BAStoryPlayer
 
     public class CharacterManager : MonoBehaviour
     {
-        private const int Num_Character_Slot = 5;
-        private const float Scale_Character = 0.7f;
-        private const float Interval_Slot_Normal = 0.1666667f;
-        private float Interval_Slot => StoryPlayer.CanvasRect.sizeDelta.x * Interval_Slot_Normal;
+        private const int CharacterSlotCount = 5;
+        private const float CharacterScale = 0.7f;
+        private const float SlotIntervalNormal = 0.1666667f;
+        private float SlotInterval => StoryPlayer.CanvasRect.sizeDelta.x * SlotIntervalNormal;
 
-        private Color COLOR_UNHIGHLIGHT { get { return new Color(0.6f, 0.6f, 0.6f);  } }
+        private Color ColorUnhighlight { get { return new Color(0.6f, 0.6f, 0.6f);  } }
 
-        [SerializeField] private SkeletonGraphic[] character = new SkeletonGraphic[Num_Character_Slot];
-        private Dictionary<string, GameObject> characterPool = new Dictionary<string, GameObject>();
-        private Dictionary<string, Coroutine> winkAction = new Dictionary<string, Coroutine>();
+        [SerializeField] private SkeletonGraphic[] _character = new SkeletonGraphic[CharacterSlotCount];
+        private Dictionary<string, GameObject> _characterPool = new Dictionary<string, GameObject>();
+        private Dictionary<string, Coroutine> _winkAction = new Dictionary<string, Coroutine>();
         private BAStoryPlayer StoryPlayer => BAStoryPlayerController.Instance.StoryPlayer;
 
-        public SkeletonGraphic[] Character => character;
-        public Dictionary<string, GameObject> CharacterPool => characterPool;
+        public SkeletonGraphic[] Character => _character;
+        public Dictionary<string, GameObject> CharacterPool => _characterPool;
 
         /// <summary>
         /// 激活角色 仅Nexon格式用 (若有动作,一定要先于动作前调用)
@@ -59,7 +59,7 @@ namespace BAStoryPlayer
             if (currentIndex == -1)
             {
                 GameObject obj = null;
-                characterPool.TryGetValue(indexName,out obj);
+                _characterPool.TryGetValue(indexName,out obj);
 
                 // 对象池中不存在则载入预制体并初始化相关数据
                 if(obj == null)
@@ -69,13 +69,13 @@ namespace BAStoryPlayer
                 else
                 {
                     obj.gameObject.SetActive(true);
-                    obj.GetComponent<RectTransform>().anchoredPosition = new Vector3((index + 1) * Interval_Slot, 0, 0);
+                    obj.GetComponent<RectTransform>().anchoredPosition = new Vector3((index + 1) * SlotInterval, 0, 0);
                     obj.transform.rotation = Quaternion.Euler(0, 0, 0);
                 }
 
                 // 对应槽位有其他角色则删除
                 DestroyCharacter(index);
-                character[index] = obj.GetComponent<SkeletonGraphic>();
+                _character[index] = obj.GetComponent<SkeletonGraphic>();
             }
             // 角色在场上
             else
@@ -85,8 +85,8 @@ namespace BAStoryPlayer
                 {
                     DestroyCharacter(index);
                     MoveCharacterTo(currentIndex, index);
-                    character[index] = character[currentIndex];
-                    character[currentIndex] = null;
+                    _character[index] = _character[currentIndex];
+                    _character[currentIndex] = null;
                 }
             }
 
@@ -103,13 +103,13 @@ namespace BAStoryPlayer
         {
             if (!CheckIfCharacterInPool(indexName))
                 CreateCharacterObj(indexName);
-            characterPool[indexName].SetActive(true);
+            _characterPool[indexName].SetActive(true);
         }
 
-        bool CheckIfCharacterInPool(string indexName) => characterPool.ContainsKey(indexName) ? characterPool[indexName] != null : false;
+        bool CheckIfCharacterInPool(string indexName) => _characterPool.ContainsKey(indexName) ? _characterPool[indexName] != null : false;
         int CheckIfCharacterOnSlot(string indexName)
         {
-            for(int i = 0; i < Num_Character_Slot; i++)
+            for(int i = 0; i < CharacterSlotCount; i++)
             {
                 if (Character[i] == null)
                     continue;
@@ -120,7 +120,7 @@ namespace BAStoryPlayer
             return -1;
         }
         bool CheckIfSlotEmpty(int index) => CheckIfIndexValid(index) ? Character[index] == null : false;
-        bool CheckIfIndexValid(int index) => (index >= 0 && index < Num_Character_Slot);
+        bool CheckIfIndexValid(int index) => (index >= 0 && index < CharacterSlotCount);
 
         /// <summary>
         /// 尝试删除在场上的角色(不删除对象仅取消编号)
@@ -134,19 +134,19 @@ namespace BAStoryPlayer
             // 先停掉角色的眨眼动画在变换位置
             SetWinkAction(Character[index].name, false);
             DestroyCharacter(Character[index].gameObject);
-            character[index] = null;
+            _character[index] = null;
         }
         void DestroyCharacter(string indexName,bool destroyObject = false)
         {
             if (!CheckIfCharacterInPool(indexName))
                 return;
-            Destroy(characterPool[indexName]);
+            Destroy(_characterPool[indexName]);
         }
         void DestroyCharacter(GameObject obj,bool destoryObject = false)
         {
             if (destoryObject)
             {
-                characterPool.Remove(obj.name);
+                _characterPool.Remove(obj.name);
                 Destroy(obj);
             }
             else
@@ -157,7 +157,7 @@ namespace BAStoryPlayer
             SetWinkAction(obj.name, false);
             int slotIndex = CheckIfCharacterOnSlot(obj.name);
             if (slotIndex != -1)
-                character[slotIndex] = null;
+                _character[slotIndex] = null;
         }
 
         /// <summary>
@@ -168,7 +168,7 @@ namespace BAStoryPlayer
         void SetWinkAction(string indexName,bool enable)
         {
             Coroutine coroutine = null;
-            winkAction.TryGetValue(indexName, out coroutine);
+            _winkAction.TryGetValue(indexName, out coroutine);
             try
             {
                 if (enable)
@@ -177,7 +177,7 @@ namespace BAStoryPlayer
                     {
                         coroutine = StartCoroutine(CCharacterWink(indexName));
                         if (coroutine != null)
-                            winkAction.Add(indexName, coroutine);
+                            _winkAction.Add(indexName, coroutine);
                     }
                 }
                 else
@@ -185,7 +185,7 @@ namespace BAStoryPlayer
                     if (coroutine != null)
                     {
                         StopCoroutine(coroutine);
-                        winkAction.Remove(indexName);
+                        _winkAction.Remove(indexName);
                     }
                 }
             }
@@ -245,15 +245,15 @@ namespace BAStoryPlayer
         {
             if (!CheckIfCharacterInPool(indexName))
                 CreateCharacterObj(indexName);
-            characterPool[indexName].SetActive(true);
-            MoveCharacterTo(characterPool[indexName], targetIndex, transition);
+            _characterPool[indexName].SetActive(true);
+            MoveCharacterTo(_characterPool[indexName], targetIndex, transition);
         }
         void MoveCharacterTo(string indexName, Vector2 pos, BackgroundTransistionType transition = BackgroundTransistionType.Instant)
         {
             if (!CheckIfCharacterInPool(indexName))
                 CreateCharacterObj(indexName);
-            characterPool[indexName].SetActive(true);
-            MoveCharacterTo(characterPool[indexName], pos, transition);
+            _characterPool[indexName].SetActive(true);
+            MoveCharacterTo(_characterPool[indexName], pos, transition);
         }
         void MoveCharacterTo(GameObject obj, int targetIndex, BackgroundTransistionType transition = BackgroundTransistionType.Instant)
         {
@@ -263,12 +263,12 @@ namespace BAStoryPlayer
             {
                 case BackgroundTransistionType.Instant:
                     {
-                        rect.anchoredPosition = new Vector2((targetIndex + 1) * Interval_Slot, rect.anchoredPosition.y);
+                        rect.anchoredPosition = new Vector2((targetIndex + 1) * SlotInterval, rect.anchoredPosition.y);
                         break;
                     }
                 case BackgroundTransistionType.Smooth:
                     {
-                        obj.transform.DoMove_Anchored(new Vector2((targetIndex + 1) * Interval_Slot, rect.anchoredPosition.y), BAStoryPlayerController.Instance.Setting.Time_Character_Move);
+                        obj.transform.DoMove_Anchored(new Vector2((targetIndex + 1) * SlotInterval, rect.anchoredPosition.y), BAStoryPlayerController.Instance.Setting.Time_Character_Move);
                         break;
                     }
                 default: break;
@@ -309,8 +309,8 @@ namespace BAStoryPlayer
         {
             if (!CheckIfCharacterInPool(indexName))
                 CreateCharacterObj(indexName);
-            characterPool[indexName].SetActive(true);
-            SetAction(characterPool[indexName], action,arg);
+            _characterPool[indexName].SetActive(true);
+            SetAction(_characterPool[indexName], action,arg);
         }
         public void SetAction(GameObject obj,CharacterAction action,int arg = -1)
         {
@@ -427,7 +427,7 @@ namespace BAStoryPlayer
         /// </summary>
         public void HideAll()
         {
-            for(int i = 0; i < Num_Character_Slot; i++)
+            for(int i = 0; i < CharacterSlotCount; i++)
             {
                 SetAction(i, CharacterAction.Hide);
             }
@@ -448,8 +448,8 @@ namespace BAStoryPlayer
         {
             if (!CheckIfCharacterInPool(indexName))
                 CreateCharacterObj(indexName);
-            characterPool[indexName].SetActive(true);
-            SetEmotion(characterPool[indexName], emotion);
+            _characterPool[indexName].SetActive(true);
+            SetEmotion(_characterPool[indexName], emotion);
         }
         public void SetEmotion(GameObject obj,CharacterEmotion emotion)
         {
@@ -471,8 +471,8 @@ namespace BAStoryPlayer
         {
             if (!CheckIfCharacterInPool(indexName))
                 CreateCharacterObj(indexName);
-            characterPool[indexName].SetActive(true);
-            Highlight(characterPool[indexName], transition);
+            _characterPool[indexName].SetActive(true);
+            Highlight(_characterPool[indexName], transition);
         }
         public void Highlight(GameObject obj, BackgroundTransistionType transition = BackgroundTransistionType.Instant)
         {
@@ -481,7 +481,7 @@ namespace BAStoryPlayer
             skelGraphic.color = Color.white;
             obj.transform.SetSiblingIndex(transform.childCount - 1);
 
-            foreach (var chr in characterPool.Values)
+            foreach (var chr in _characterPool.Values)
             {
                 if (chr == obj || !chr.activeSelf)
                     continue;
@@ -493,12 +493,12 @@ namespace BAStoryPlayer
                 {
                     case BackgroundTransistionType.Instant:
                         {
-                            skg.color = COLOR_UNHIGHLIGHT;
+                            skg.color = ColorUnhighlight;
                             break;
                         }
                     case BackgroundTransistionType.Smooth:
                         {
-                            skg.DoColor(COLOR_UNHIGHLIGHT, BAStoryPlayerController.Instance.Setting.Time_Character_Highlight);
+                            skg.DoColor(ColorUnhighlight, BAStoryPlayerController.Instance.Setting.Time_Character_Highlight);
                             break;
                         }
                     default: return;
@@ -513,7 +513,7 @@ namespace BAStoryPlayer
         /// <param name="transition"></param>
         public void HighlightAll(BackgroundTransistionType transition = BackgroundTransistionType.Instant)
         {
-            foreach (var chr in characterPool.Values)
+            foreach (var chr in _characterPool.Values)
             {
                 if (!chr.activeSelf)
                     continue;
@@ -523,12 +523,12 @@ namespace BAStoryPlayer
                 {
                     case BackgroundTransistionType.Instant:
                         {
-                            skelGraphic.color = COLOR_UNHIGHLIGHT;
+                            skelGraphic.color = ColorUnhighlight;
                             break;
                         }
                     case BackgroundTransistionType.Smooth:
                         {
-                            skelGraphic.DoColor(COLOR_UNHIGHLIGHT, BAStoryPlayerController.Instance.Setting.Time_Character_Highlight);
+                            skelGraphic.DoColor(ColorUnhighlight, BAStoryPlayerController.Instance.Setting.Time_Character_Highlight);
                             break;
                         }
                     default: return;
@@ -554,15 +554,15 @@ namespace BAStoryPlayer
             rectTransform.anchorMax = Vector2.zero;
             rectTransform.rotation = Quaternion.Euler(0, 0, 0);
             rectTransform.pivot = new Vector2(0.5f, 0);
-            rectTransform.anchoredPosition = new Vector3((index + 1) * Interval_Slot, 0, 0);
-            rectTransform.localScale = new Vector3(Scale_Character, Scale_Character, 1);
+            rectTransform.anchoredPosition = new Vector3((index + 1) * SlotInterval, 0, 0);
+            rectTransform.localScale = new Vector3(CharacterScale, CharacterScale, 1);
 
             obj.GetComponent<SkeletonGraphic>().MatchRectTransformWithBounds();
 
             SetAnimation(obj.GetComponent<SkeletonGraphic>(), "Idle_01", 1, true); // 呼吸轨道
 
-            characterPool.Remove(indexName);
-            characterPool.Add(indexName, obj);
+            _characterPool.Remove(indexName);
+            _characterPool.Add(indexName, obj);
 
             return obj;
         }
@@ -625,8 +625,8 @@ namespace BAStoryPlayer
         {
             if (!CheckIfCharacterInPool(indexName))
                 CreateCharacterObj(indexName);
-            characterPool[indexName].SetActive(true);
-            SetAnimation(characterPool[indexName].GetComponent<SkeletonGraphic>(),animationID,track,loop);
+            _characterPool[indexName].SetActive(true);
+            SetAnimation(_characterPool[indexName].GetComponent<SkeletonGraphic>(),animationID,track,loop);
             SetWinkAction(indexName, animationID.Contains("01") ? true : false);
         }
         public void SetAnimation(SkeletonGraphic skel,string animationID,int track = 0,bool loop = true)
@@ -640,14 +640,14 @@ namespace BAStoryPlayer
 
         public void ClearAllObject()
         {
-            foreach(var i in winkAction.Values)
+            foreach(var i in _winkAction.Values)
             {
                 StopCoroutine(i);
             }
-            winkAction.Clear();
+            _winkAction.Clear();
 
-            characterPool.Clear();
-            character = new SkeletonGraphic[Num_Character_Slot];
+            _characterPool.Clear();
+            _character = new SkeletonGraphic[CharacterSlotCount];
             transform.ClearAllChild();
         }
     }

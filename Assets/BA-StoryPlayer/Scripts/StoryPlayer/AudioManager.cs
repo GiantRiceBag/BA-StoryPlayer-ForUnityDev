@@ -8,46 +8,46 @@ namespace BAStoryPlayer
 {
     public class AudioManager : MonoBehaviour
     {
-        private int playerID = 0;
+        private int _playerID = 0;
 
-        private List<AudioSource> playingPool = new List<AudioSource>();
-        private Queue<AudioSource> sourcePool = new Queue<AudioSource>();
+        private List<AudioSource> _playingPool = new List<AudioSource>();
+        private Queue<AudioSource> _sourcePool = new Queue<AudioSource>();
 
-        private AudioSource sourceBGM;
+        private AudioSource _sourceBGM;
         private AudioSource SourceBGM
         {
             get
             {
-                if (sourceBGM == null)
+                if (_sourceBGM == null)
                 {
-                    sourceBGM = gameObject.AddComponent<AudioSource>();
-                    sourceBGM.loop = true;
-                    sourceBGM.volume = VolumeMusic;
-                    sourceBGM.spatialBlend = 0;
+                    _sourceBGM = gameObject.AddComponent<AudioSource>();
+                    _sourceBGM.loop = true;
+                    _sourceBGM.volume = VolumeMusic;
+                    _sourceBGM.spatialBlend = 0;
                 }
 
-                return sourceBGM;
+                return _sourceBGM;
             }
         }
 
-        [SerializeField,Range(0, 1f)] private float mVolume_Master = 1;
-        [SerializeField,Range(0, 1f)] private float mVolume_Music = 0.6f;
-        [SerializeField,Range(0, 1f)] private float mVolume_Sound = 1;
+        [SerializeField,Range(0, 1f)] private float _volumeMaster = 1;
+        [SerializeField,Range(0, 1f)] private float _volumeMusic = 0.6f;
+        [SerializeField,Range(0, 1f)] private float _volumeSound = 1;
 
-        [SerializeField] private bool isMute = false;
+        [SerializeField] private bool _isMute = false;
         protected bool IsMute
         {
             set
             {
-                if (isMute != value)
+                if (_isMute != value)
                 {
-                    isMute = value;
+                    _isMute = value;
                 }
             }
 
             get
             {
-                return isMute;
+                return _isMute;
             }
         }
 
@@ -55,43 +55,43 @@ namespace BAStoryPlayer
         {
             set
             {
-                mVolume_Master = Mathf.Clamp(value,0,1);
+                _volumeMaster = Mathf.Clamp(value,0,1);
 
-                VolumeMusic = mVolume_Music;
-                VolumeSound = mVolume_Sound;
+                VolumeMusic = _volumeMusic;
+                VolumeSound = _volumeSound;
             }
             get
             {
-                return mVolume_Master;
+                return _volumeMaster;
             }
         }
         public float VolumeMusic
         {
             set
             {
-                mVolume_Music = Mathf.Clamp(value, 0, 1);
+                _volumeMusic = Mathf.Clamp(value, 0, 1);
 
                 SourceBGM.volume = VolumeMusic;
             }
             get
             {
-                return mVolume_Music * mVolume_Master * (IsMute ? 0 : 1);
+                return _volumeMusic * _volumeMaster * (IsMute ? 0 : 1);
             }
         }
         public float VolumeSound
         {
             set
             {
-                mVolume_Sound = Mathf.Clamp(value, 0, 1);
+                _volumeSound = Mathf.Clamp(value, 0, 1);
 
-                foreach (var i in playingPool)
+                foreach (var i in _playingPool)
                 {
                     i.volume = VolumeSound;
                 }
             }
             get
             {
-                return mVolume_Sound * mVolume_Master * (IsMute ? 0 : 1);
+                return _volumeSound * _volumeMaster * (IsMute ? 0 : 1);
             }
         }
 
@@ -159,7 +159,7 @@ namespace BAStoryPlayer
         }
         public int Play(AudioClip audioClip, bool isOneShot = true, float scale = 1)
         {
-            int id = playerID++;
+            int id = _playerID++;
             AudioSource source = GetSource();
 
             //source.volume = isOneShot ? Volume_Sound : Volume_Music;
@@ -192,17 +192,17 @@ namespace BAStoryPlayer
         }
         private void ReleaseSource(AudioSource source)
         {
-            if (sourcePool.Count >= BAStoryPlayerController.Instance.Setting.Num_Max_AudioSource)
+            if (_sourcePool.Count >= BAStoryPlayerController.Instance.Setting.Num_Max_AudioSource)
             {
                 Destroy(source.gameObject);
             }
             else
             {
                 source.clip = null;
-                sourcePool.Enqueue(source);
+                _sourcePool.Enqueue(source);
             }
 
-            playingPool.Remove(source);
+            _playingPool.Remove(source);
         }
 
         private AudioSource GetSource(int playerID)
@@ -213,9 +213,9 @@ namespace BAStoryPlayer
         {
             AudioSource source;
 
-            if (sourcePool.Count != 0)
+            if (_sourcePool.Count != 0)
             {
-                source = sourcePool.Dequeue();
+                source = _sourcePool.Dequeue();
             }
             else
             {
@@ -227,15 +227,15 @@ namespace BAStoryPlayer
                 source.spatialBlend = 0;
             }
 
-            playingPool.Add(source);
+            _playingPool.Add(source);
             return source;
         }
 
         public void ClearAll()
         {
-            for(int i = playingPool.Count - 1; i >= 0; i--)
+            for(int i = _playingPool.Count - 1; i >= 0; i--)
             {
-                Destroy(playingPool[i].gameObject);
+                Destroy(_playingPool[i].gameObject);
             }
             SourceBGM.clip = null;
         }

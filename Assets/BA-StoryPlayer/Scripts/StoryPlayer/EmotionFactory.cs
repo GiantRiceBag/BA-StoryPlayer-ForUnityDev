@@ -51,8 +51,8 @@ namespace BAStoryPlayer
         Zzz -296 208
         Tear -202 -36
         */
-        static  Vector3 Offset_FacePosition {get{return new Vector3(0,-35f,0); } }
-        static System.Collections.Generic.Dictionary<CharacterEmotion, GameObject> emotionCache= new System.Collections.Generic.Dictionary<CharacterEmotion, GameObject>();
+        private static  Vector3 FacePositionOffset =>new Vector3(0,-35f,0);
+        private static System.Collections.Generic.Dictionary<CharacterEmotion, GameObject> emotionCache= new System.Collections.Generic.Dictionary<CharacterEmotion, GameObject>();
         
         // TODO 表情全做完后可以删掉Case了
         public static void SetEmotion(Transform target,CharacterEmotion emotion,ref float time)
@@ -114,7 +114,7 @@ namespace BAStoryPlayer
         /// </summary>
         /// <param name="emotion"></param>
         /// <returns></returns>
-        static Vector2 GetPos(CharacterEmotion emotion)
+        private static Vector2 GetPos(CharacterEmotion emotion)
         {
             switch (emotion)
             {
@@ -165,7 +165,7 @@ namespace BAStoryPlayer
             }
         }
 
-        static GameObject GenerateHeadLocator(Transform target)
+        private static GameObject GenerateHeadLocator(Transform target)
         {
             string indexName = target.name;
             CharacterDataUnit chrData = BAStoryPlayerController.Instance.CharacterDataTable[indexName];

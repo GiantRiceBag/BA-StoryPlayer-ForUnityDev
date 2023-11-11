@@ -17,18 +17,17 @@ namespace BAStoryPlayer.UI
 
     public class OptionManager : MonoBehaviour
     {
-        private GameObject btnPrefab;
+        private GameObject _block;
+        private GameObject _btnPrefab;
         private GameObject BtnPrefab
         {
             get
             {
-                if (btnPrefab == null)
-                    btnPrefab = Resources.Load<GameObject>("UI/Option");
-                return btnPrefab;
+                if (_btnPrefab == null)
+                    _btnPrefab = Resources.Load<GameObject>("UI/Option");
+                return _btnPrefab;
             }
         }
-
-        private GameObject block;
 
         private void Start()
         {
@@ -75,13 +74,13 @@ namespace BAStoryPlayer.UI
             rect.sizeDelta = rect.anchoredPosition = Vector2.zero;
             obj.AddComponent<Image>().color = new Color(0, 0, 0, 0);
             obj.transform.localScale = Vector3.one;
-            block = Instantiate(obj);
+            _block = Instantiate(obj);
         }
 
         public void FinishSelecting()
         {
-            if (block != null)
-                Destroy(block);
+            if (_block != null)
+                Destroy(_block);
 
             // 一般来说选完后自动执行下一个单元
             BAStoryPlayerController.Instance.StoryPlayer.ReadyToNext(true);
