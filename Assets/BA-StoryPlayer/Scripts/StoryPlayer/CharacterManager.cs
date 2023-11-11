@@ -542,10 +542,10 @@ namespace BAStoryPlayer
         /// <param name="indexName">索引名</param>
         /// <param name="index">角色下标</param>
         /// <returns></returns>
-        GameObject CreateCharacterObj(string indexName,int index = 2)
+        private GameObject CreateCharacterObj(string indexName,int index = 2)
         {
             GameObject obj;
-            obj = BAStoryPlayerController.Instance.LoadCharacterPrefab(indexName);
+            obj = LoadCharacterPrefab(indexName);
 
             obj.transform.SetParent(transform);
             obj.name = indexName;
@@ -565,6 +565,50 @@ namespace BAStoryPlayer
             characterPool.Add(indexName, obj);
 
             return obj;
+        }
+
+        /// <summary>
+        /// 加载角色实体
+        /// </summary>
+        /// <param name="indexName"></param>
+        /// <returns></returns>
+        public GameObject LoadCharacterPrefab(string indexName)
+        {
+            GameObject prefab = null;
+
+            try
+            {
+                var controller = BAStoryPlayerController.Instance;
+
+                switch (controller.CharacterDataTable[indexName].loadType)
+                {
+                    case LoadType.Prefab:
+                        {
+                            prefab = Instantiate(Resources.Load(controller.Setting.Path_Prefab + controller.CharacterDataTable[indexName].skelUrl) as GameObject);
+                            break;
+                        }
+                    case LoadType.SkeletonData:
+                        {
+                            SkeletonDataAsset skelData = 
+                                Resources.Load<SkeletonDataAsset>(controller.Setting.Path_Prefab
+                                    + controller.CharacterDataTable[indexName].skelUrl);
+
+                            Material mat = new Material(Shader.Find("Spine/SkeletonGraphic"));
+                            UnityEngine.Rendering.LocalKeyword keyword = new UnityEngine.Rendering.LocalKeyword(mat.shader, "_STRAIGHT_ALPHA_INPUT");
+                            mat.SetKeyword(keyword, true);
+                            prefab = SkeletonGraphic.NewSkeletonGraphicGameObject(skelData, transform, mat).gameObject;
+                            break;
+                        }
+                }
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError(e.Message);
+                return null;
+            }
+
+            prefab.name = indexName;
+            return prefab;
         }
 
         /// <summary>

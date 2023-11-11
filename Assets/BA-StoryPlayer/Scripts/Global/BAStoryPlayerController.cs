@@ -1,11 +1,18 @@
 using UnityEngine;
 using BAStoryPlayer.NexonScriptParser;
-using BAStoryPlayer.UniversalCommandParser;
+using BAStoryPlayer.UniversaScriptParser;
 using BAStoryPlayer.AsScriptParser;
 using BAStoryPlayer.Event;
 
 namespace BAStoryPlayer
 {
+    public enum StoryScriptType
+    {
+        Universal,
+        Nexon,
+        As
+    }
+
     public class BAStoryPlayerController : BSingleton<BAStoryPlayerController>
     {
         private const string Path_Setting = "Setting/";
@@ -71,9 +78,13 @@ namespace BAStoryPlayer
             }
         }
 
-        public BAStoryPlayer LoadStory(string url)
+        public BAStoryPlayer LoadStory(string url,StoryScriptType type = StoryScriptType.Universal)
         {
-            if (isPlaying) { Debug.Log("剧情播放中"); return null; }
+            if (isPlaying)
+            {
+                Debug.Log("剧情播放中");
+                return null;
+            }
 
             // TODO 不删除方案的选项
             StoryPlayer.gameObject.SetActive(true);
@@ -86,22 +97,23 @@ namespace BAStoryPlayer
                 return null;
             }
 
-            if(textAsset.text[0] == '{') // Nexon
+            ICommandParser parser = null;
+            switch (type)
             {
-                NexonStoryScript storyScript = JsonUtility.FromJson<NexonStoryScript>(textAsset.ToString());
-                ICommandParser parser = new UniversalCommandParser.UniversalCommandParser();
-                StoryPlayer.LoadUnits(storyScript.groupID, parser.Parse(textAsset)); 
-                StoryPlayer.ReadyToNext();
-                StoryPlayer.Next(); 
+                case StoryScriptType.Universal:
+                    parser = new UniversalCommandParser();
+                    break;
+                case StoryScriptType.Nexon:
+                    parser = new NexonCommandParser();
+                    break;
+                case StoryScriptType.As:
+                    parser = new AsCommandParser();
+                    break;
             }
-            else // As
-            {
-                ICommandParser parser = new AsCommandParaser();
-                var units = parser.Parse(textAsset);
-                StoryPlayer.LoadUnits(0, units);
-                StoryPlayer.ReadyToNext();
-                StoryPlayer.Next(); 
-            }
+
+            StoryPlayer.LoadUnits(0, parser.Parse(textAsset));
+            StoryPlayer.ReadyToNext();
+            StoryPlayer.Next();
 
             isPlaying = true;
             StoryPlayer.gameObject.SetActive(true);
@@ -116,48 +128,6 @@ namespace BAStoryPlayer
 
             return StoryPlayer;
         }
-
-        public GameObject LoadCharacterPrefab(string indexName)
-        {
-            GameObject prefab = null;
-
-            try
-            {
-                switch (CharacterDataTable[indexName].loadType)
-                {
-                    case LoadType.Prefab:
-                        {
-                            prefab = Instantiate(Resources.Load(Setting.Path_Prefab + CharacterDataTable[indexName].skelUrl) as GameObject);
-                            break;
-                        }
-                    case LoadType.SkeletonData:
-                        {
-                            Spine.Unity.SkeletonDataAsset skelData = Resources.Load<Spine.Unity.SkeletonDataAsset>(Setting.Path_Prefab
-                                + CharacterDataTable[indexName].skelUrl);
-                            Material mat = new Material(Shader.Find("Spine/SkeletonGraphic"));
-                            UnityEngine.Rendering.LocalKeyword keyword = new UnityEngine.Rendering.LocalKeyword(mat.shader, "_STRAIGHT_ALPHA_INPUT");
-                            mat.SetKeyword(keyword, true);
-                            prefab = Spine.Unity.SkeletonGraphic.NewSkeletonGraphicGameObject(skelData, transform, mat).gameObject;
-                            break;
-                        }
-                }
-            }
-            catch(System.Exception e)
-            {
-                Debug.LogError(e.Message);
-                return null;
-            }
-
-            prefab.name = indexName;
-            return prefab;
-        }
-
-#if UNITY_EDITOR
-        public void LoadStoryTest(string url)
-        {
-            LoadStory(url);
-        }
-#endif
     }
 
     public static class ExtensionMethod

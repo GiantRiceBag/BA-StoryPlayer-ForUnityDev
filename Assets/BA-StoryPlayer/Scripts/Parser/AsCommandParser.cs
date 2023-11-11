@@ -19,11 +19,11 @@ namespace BAStoryPlayer.AsScriptParser
         public string value;
     }
 
-    public class AsCommandParaser : ICommandParser
+    public class AsCommandParser : ICommandParser
     {
         readonly Dictionary<string, AsCommandContainer> nameIdList = new Dictionary<string, AsCommandContainer>();
 
-        public AsCommandParaser() { }
+        public AsCommandParser() { }
 
         public List<StoryUnit> Parse(TextAsset storyScript)
         {

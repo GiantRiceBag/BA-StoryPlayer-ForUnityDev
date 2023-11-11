@@ -122,41 +122,41 @@ namespace BAStoryPlayer
         public RectTransform CanvasRect => CanvasObject.GetComponent<RectTransform>();
 
         public int GroupID => _groupID;
-        public float Volume_Music
+        public float VolumeMusic
         {
             set
             {
-                AudioModule.Volume_Music = value;
+                AudioModule.VolumeMusic = value;
             }
             get
             {
-                return AudioModule.Volume_Music;
+                return AudioModule.VolumeMusic;
             }
         }
-        public float Volume_Sound
+        public float VolumeSound
         {
             set
             {
-                AudioModule.Volume_Sound = value;
+                AudioModule.VolumeSound = value;
             }
             get
             {
-                return AudioModule.Volume_Sound;
+                return AudioModule.VolumeSound;
             }
         }
-        public float Volume_Master
+        public float VolumeMaster
         {
             set
             {
-                AudioModule.Volume_Master = value;
+                AudioModule.VolumeMaster = value;
             }
             get
             {
-                return AudioModule.Volume_Master;
+                return AudioModule.VolumeMaster;
             }
         }
 
-        void Start()
+        private void Start()
         {
             if (_imgBackground == null)
                 _imgBackground = transform.Find("Background").GetComponent<Image>();

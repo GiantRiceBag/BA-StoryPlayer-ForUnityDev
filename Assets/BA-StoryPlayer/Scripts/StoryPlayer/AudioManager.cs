@@ -22,7 +22,7 @@ namespace BAStoryPlayer
                 {
                     sourceBGM = gameObject.AddComponent<AudioSource>();
                     sourceBGM.loop = true;
-                    sourceBGM.volume = Volume_Music;
+                    sourceBGM.volume = VolumeMusic;
                     sourceBGM.spatialBlend = 0;
                 }
 
@@ -51,34 +51,34 @@ namespace BAStoryPlayer
             }
         }
 
-        public float Volume_Master
+        public float VolumeMaster
         {
             set
             {
                 mVolume_Master = Mathf.Clamp(value,0,1);
 
-                Volume_Music = mVolume_Music;
-                Volume_Sound = mVolume_Sound;
+                VolumeMusic = mVolume_Music;
+                VolumeSound = mVolume_Sound;
             }
             get
             {
                 return mVolume_Master;
             }
         }
-        public float Volume_Music
+        public float VolumeMusic
         {
             set
             {
                 mVolume_Music = Mathf.Clamp(value, 0, 1);
 
-                SourceBGM.volume = Volume_Music;
+                SourceBGM.volume = VolumeMusic;
             }
             get
             {
                 return mVolume_Music * mVolume_Master * (IsMute ? 0 : 1);
             }
         }
-        public float Volume_Sound
+        public float VolumeSound
         {
             set
             {
@@ -86,7 +86,7 @@ namespace BAStoryPlayer
 
                 foreach (var i in playingPool)
                 {
-                    i.volume = Volume_Sound;
+                    i.volume = VolumeSound;
                 }
             }
             get
@@ -112,7 +112,7 @@ namespace BAStoryPlayer
                     SourceBGM.volume = 0;
                     SourceBGM.clip = audioClip;
                     SourceBGM.Play();
-                    SourceBGM.DoVolume(Volume_Music, BAStoryPlayerController.Instance.Setting.Time_Bgm_Fade * fadeScale);
+                    SourceBGM.DoVolume(VolumeMusic, BAStoryPlayerController.Instance.Setting.Time_Bgm_Fade * fadeScale);
                 }
                 else
                 {
@@ -121,14 +121,14 @@ namespace BAStoryPlayer
                         SourceBGM.Stop();
                         SourceBGM.clip = audioClip;
                         SourceBGM.Play();
-                        SourceBGM.DoVolume(Volume_Music, BAStoryPlayerController.Instance.Setting.Time_Bgm_Fade * fadeScale);
+                        SourceBGM.DoVolume(VolumeMusic, BAStoryPlayerController.Instance.Setting.Time_Bgm_Fade * fadeScale);
                     };
                 }
             }
             else
             {
                 SourceBGM.clip = audioClip;
-                SourceBGM.volume = Volume_Music;
+                SourceBGM.volume = VolumeMusic;
                 SourceBGM.Play();
             }
         }
@@ -163,7 +163,7 @@ namespace BAStoryPlayer
             AudioSource source = GetSource();
 
             //source.volume = isOneShot ? Volume_Sound : Volume_Music;
-            source.volume = Volume_Sound;
+            source.volume = VolumeSound;
             source.name = id.ToString();
             source.loop = !isOneShot;
 

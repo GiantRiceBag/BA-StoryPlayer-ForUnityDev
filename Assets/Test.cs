@@ -32,12 +32,22 @@ public class Test : MonoBehaviour
         if (GUILayout.Button("Play"))
         {
             if(Application.isPlaying)
-                BAStoryPlayerController.Instance.LoadStoryTest(storyScriptName);
+                BAStoryPlayerController.Instance.LoadStory(storyScriptName);
+        }
+        if (GUILayout.Button("Play (Nexon)"))
+        {
+            if (Application.isPlaying)
+                BAStoryPlayerController.Instance.LoadStory(storyScriptName,StoryScriptType.Nexon);
+        }
+        if (GUILayout.Button("Play (As)"))
+        {
+            if (Application.isPlaying)
+                BAStoryPlayerController.Instance.LoadStory(storyScriptName,StoryScriptType.As);
         }
         GUILayout.Label("！！！！！！！！！！！！！！！！");
         if (GUILayout.Button("Test  As Story Script"))
             if (Application.isPlaying)
-                BAStoryPlayerController.Instance.LoadStoryTest("demo");
+                BAStoryPlayerController.Instance.LoadStory("demo",StoryScriptType.As);
         if (GUILayout.Button("Test Universal Story Script"))
         {
             var rss = Resources.Load<TextAsset>("StoryScript/UniversalStoryScriptSample");
@@ -45,39 +55,7 @@ public class Test : MonoBehaviour
             Debug.Log(ss.ToString());
 
             if (Application.isPlaying)
-                BAStoryPlayerController.Instance.LoadStoryTest("UniversalStoryScriptSample");
+                BAStoryPlayerController.Instance.LoadStory("UniversalStoryScriptSample");
         }
-
-        if(GUILayout.Button("Test Sequence"))
-        {
-            ASD();
-        }
-        if (GUILayout.Button("Test Ease"))
-        {
-            obj.transform.DoLocalMove(obj.transform.position + Vector3.right * 5, 1).SetEase(Ease.InOutCubic);
-        }
-    }
-
-    private void Start()
-    {
-        if (!Application.isPlaying)
-            return;
-
-        ASD();
-    }
-
-    void ASD()
-    {
-        TweenSequence sequence_Rotation = new TweenSequence();
-        sequence_Rotation.Append(obj.transform.DoEuler(new Vector3(0, 0, -10), 0.3f).SetEase(Ease.OutCubic));
-        sequence_Rotation.Wait(0.1f);
-        sequence_Rotation.Append(obj.transform.DoEuler(new Vector3(0, 0, 5), 0.5f).SetEase(Ease.OutCubic));
-        sequence_Rotation.Wait(0.3f);
-        sequence_Rotation.Append(obj.transform.DoLocalMove(obj.transform.localPosition - new Vector3(0, 1500, 0), 0.3f).SetEase(Ease.InCirc));
-
-        TweenSequence sequence_Position = new TweenSequence();
-        sequence_Position.Append(obj.transform.DoLocalMove(obj.transform.localPosition + new Vector3(30, 0, 0), 0.3f).SetEase(Ease.OutCubic));
-        sequence_Position.Wait(0.1f);
-        sequence_Position.Append(obj.transform.DoLocalMove(obj.transform.localPosition - new Vector3(60, 0, 0), 0.5f).SetEase(Ease.OutCubic));
     }
 }

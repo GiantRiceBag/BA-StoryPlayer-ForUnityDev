@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace BAStoryPlayer.UniversalCommandParser
+namespace BAStoryPlayer.UniversaScriptParser
 {
     public class UniversalCommandParser : ICommandParser
     {
