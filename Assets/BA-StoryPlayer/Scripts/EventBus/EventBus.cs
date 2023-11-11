@@ -104,16 +104,16 @@ namespace BAStoryPlayer.Event
 
     public static class EventBus<T> where T : struct, IEvent
     {
-        private static EventBinding<T> binding = new EventBinding<T>();
-        private static List<Callback> callbacks = new List<Callback>();
+        private static EventBinding<T> s_binding = new EventBinding<T>();
+        private static List<Callback> s_callbacks = new List<Callback>();
 
         public static EventBinding<T> Binding
         {
             get
             {
-                if (binding == null)
-                    binding = new EventBinding<T>();
-                return binding;
+                if (s_binding == null)
+                    s_binding = new EventBinding<T>();
+                return s_binding;
             }
         }
 
@@ -142,27 +142,27 @@ namespace BAStoryPlayer.Event
 
         public static void Clear()
         {
-            binding = null;
-            callbacks.Clear();
+            s_binding = null;
+            s_callbacks.Clear();
         }
 
         public static void AddCallback(Action callback)
         {
             if (callback == null)
                 return;
-            callbacks.Add(new Callback() { onEventNoArg = callback });
+            s_callbacks.Add(new Callback() { onEventNoArg = callback });
         }
 
         public static void AddCallback(Action<T> callback)
         {
             if (callback == null)
                 return;
-            callbacks.Add(new Callback() { onEvent = callback });
+            s_callbacks.Add(new Callback() { onEvent = callback });
         }
 
         public static void ClearCallback()
         {
-            callbacks.Clear();
+            s_callbacks.Clear();
         }
 
         public static void Raise()
@@ -179,17 +179,17 @@ namespace BAStoryPlayer.Event
             if (!Binding.IsBeingListen)
                 return;
 
-            IEventBindingInternal<T> internalBind = binding;
+            IEventBindingInternal<T> internalBind = s_binding;
             internalBind.OnEvent?.Invoke(ev);
             internalBind.OnEventArgs?.Invoke();
 
-            for (int i = 0; i < callbacks.Count; i++)
+            for (int i = 0; i < s_callbacks.Count; i++)
             {
-                callbacks[i].onEvent?.Invoke(ev);
-                callbacks[i].onEventNoArg?.Invoke();
+                s_callbacks[i].onEvent?.Invoke(ev);
+                s_callbacks[i].onEventNoArg?.Invoke();
             }
 
-            callbacks.Clear();
+            s_callbacks.Clear();
         }
 
         public static Awaiter NewAwaiter()

@@ -116,7 +116,7 @@ namespace BAStoryPlayer
                 }
                 else
                 {
-                    SourceBGM.DoVolume(0, BAStoryPlayerController.Instance.Setting.Time_Bgm_Fade * fadeScale).onComplete = () =>
+                    SourceBGM.DoVolume(0, BAStoryPlayerController.Instance.Setting.Time_Bgm_Fade * fadeScale).OnCompleted = () =>
                     {
                         SourceBGM.Stop();
                         SourceBGM.clip = audioClip;
@@ -139,7 +139,7 @@ namespace BAStoryPlayer
 
             if (fade)
             {
-                SourceBGM.DoVolume(0, BAStoryPlayerController.Instance.Setting.Time_Bgm_Fade * fadeScale).onComplete = () =>
+                SourceBGM.DoVolume(0, BAStoryPlayerController.Instance.Setting.Time_Bgm_Fade * fadeScale).OnCompleted = () =>
                 {
                     SourceBGM.Pause();
                 };

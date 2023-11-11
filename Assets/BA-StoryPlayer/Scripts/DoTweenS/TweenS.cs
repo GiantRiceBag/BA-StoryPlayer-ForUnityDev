@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace BAStoryPlayer.DoTweenS
@@ -14,40 +15,67 @@ namespace BAStoryPlayer.DoTweenS
 
     public class TweenS
     {
+        private float _t = 0;
+
         internal int tid;
         internal float duration;
         internal Transform transform;
-        internal MonoBehaviour monoBehaviour => transform.GetComponent<MonoBehaviour>();
+        internal MonoBehaviour Mono => transform.GetComponent<MonoBehaviour>();
         internal Coroutine coroutine;
-        internal System.Func<MonoBehaviour,TweenS, System.Collections.IEnumerator> enumerator;
+        internal Func<MonoBehaviour,TweenS, System.Collections.IEnumerator> enumerator;
         internal object target;
-        internal int time;
+        internal int times;
         internal string targetName;
         internal TweenSType type = TweenSType.Position;
 
-        public System.Action onComplete;
+        internal Func<float,float> easeFunction;
 
-        public TweenS(object target,float duration,Transform transform,TweenSType type){
+        public float T
+        {
+            get
+            {
+                return easeFunction(_t);
+            }
+        }
+        public float RawT
+        {
+            set
+            {
+                _t = value;
+            }
+            get
+            {
+                return _t;
+            }
+        }
+
+        public Action OnCompleted;
+
+
+        public TweenS(object target,float duration,Transform transform,TweenSType type)
+        {
             tid = DoTweenS.UsableTid;
             this.target = target;
             this.duration = duration;
             this.transform = transform;
             this.type = type;
 
+            easeFunction = EaseFunction.Linear;
+
             DoTweenS.Add(this);
         }
         public TweenS(object target, float duration, int times,Transform transform,TweenSType type) :this(target,duration,transform,type)
         {
-            this.time = System.Math.Clamp(times, 1, int.MaxValue);
+            this.times = Mathf.Clamp(times, 1, int.MaxValue);
         }
         public TweenS(string targetName,object target, float duration,Transform transform, TweenSType type) : this(target, duration, transform, type)
         {
             this.targetName = targetName;
         }
 
-        public TweenS OnComplete(System.Action action)
+        public TweenS OnComplete(Action action)
         {
-            onComplete = action;
+            OnCompleted = action;
             return this;
         }
         public void Kill()
@@ -62,19 +90,28 @@ namespace BAStoryPlayer.DoTweenS
         }
         public TweenS Resume()
         {
-            coroutine = monoBehaviour.StartCoroutine(enumerator(monoBehaviour, this));
+            coroutine = Mono.StartCoroutine(enumerator(Mono, this));
             return this;
         }
-        public void StartCoroutine(System.Func<MonoBehaviour, TweenS, System.Collections.IEnumerator> enumerator)
+
+        public TweenS SetEase(Ease type)
         {
-            coroutine = monoBehaviour.StartCoroutine(enumerator(monoBehaviour, this));
+            easeFunction = EaseFunction.Get(type);
+            return this;
+        }
+
+        public void StartCoroutine(Func<MonoBehaviour, TweenS, System.Collections.IEnumerator> enumerator)
+        {
+            coroutine = Mono.StartCoroutine(enumerator(Mono, this));
             this.enumerator = enumerator;
         }
         public void RunOnComplete()
         {
-            onComplete?.Invoke();
+            OnCompleted?.Invoke();
             Kill();
         }
+
+
     }
 
 }

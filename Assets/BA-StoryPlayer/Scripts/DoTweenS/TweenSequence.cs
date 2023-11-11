@@ -92,7 +92,7 @@ namespace BAStoryPlayer.DoTweenS
                     }
                 case TweenUnitType.Tween:
                     {
-                        tweenQueue.Dequeue().Tween.Resume().onComplete += () =>
+                        tweenQueue.Dequeue().Tween.Resume().OnCompleted += () =>
                         {
                             Next();
                         };

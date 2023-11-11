@@ -20,6 +20,4 @@ namespace BAStoryPlayer.Event
     public struct OnPrintingLine : IEvent { }
     public struct OnPrintedLine : IEvent { }
     #endregion
-
-    static class EventCollection { }
 }

@@ -4,19 +4,19 @@ namespace BAStoryPlayer.DoTweenS
 {
     public class DoTweenS
     {
-        private static DoTweenS instance;
-        private static int usableTid = 0;
-        private static List<TweenS> tweenList = new List<TweenS>();
+        private static DoTweenS s_instance;
+        private static int s_usableTid = 0;
+        private static List<TweenS> s_tweenList = new List<TweenS>();
 
-        public static int UsableTid { get { return usableTid++; } }
+        public static int UsableTid { get { return s_usableTid++; } }
         public static DoTweenS Instance
         {
             get
             {
-                if (instance == null)
-                    instance = new DoTweenS();
+                if (s_instance == null)
+                    s_instance = new DoTweenS();
 
-                return instance;
+                return s_instance;
             }
         }
 
@@ -24,30 +24,32 @@ namespace BAStoryPlayer.DoTweenS
         public static void Add(TweenS tween,bool checkUniqueness = true)
         {
             CheckIfUnique(tween, checkUniqueness);
-            tweenList.Add(tween);
+            s_tweenList.Add(tween);
         }
         public static void Remove(TweenS tween)
         {
-            if(tweenList.Contains(tween))
-                tweenList.Remove(tween);
+            if (s_tweenList.Contains(tween))
+            {
+                s_tweenList.Remove(tween);
+            }
         }
         public static void KillAll()
         {
-            if (tweenList.Count == 0) return;
-            for (int i = tweenList.Count - 1; i >= 0; i--)
-                tweenList[i].Kill();
+            if (s_tweenList.Count == 0) return;
+            for (int i = s_tweenList.Count - 1; i >= 0; i--)
+                s_tweenList[i].Kill();
         }
         public static void Stop(int index)
         {
-            tweenList[index].Stop();
+            s_tweenList[index].Stop();
         }
         public static void Kill(int index)
         {
-            tweenList[index].Kill();
+            s_tweenList[index].Kill();
         }
         public static void StopAll()
         {
-            foreach (var i in tweenList)
+            foreach (var i in s_tweenList)
                 i.Stop();
         }
 
@@ -59,10 +61,10 @@ namespace BAStoryPlayer.DoTweenS
         /// <param name="transform">目标对象</param>
         /// <param name="kill">冲突时是否删除</param>
         /// <returns></returns>
-        static bool CheckIfUnique(TweenS tween,bool kill = false)
+        private static bool CheckIfUnique(TweenS tween,bool kill = false)
         {
             int index = 0;
-            foreach(var i in tweenList)
+            foreach(var i in s_tweenList)
             {
                 if (i.transform == tween.transform && i.type == tween.type)
                 {

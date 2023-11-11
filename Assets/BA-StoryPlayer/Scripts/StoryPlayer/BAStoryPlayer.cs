@@ -208,7 +208,7 @@ namespace BAStoryPlayer
                         _imgBackground.enabled = false;
                         break;
                     case BackgroundTransistionType.Smooth:
-                        _imgBackground.DoColor(Color.black, BAStoryPlayerController.Instance.Setting.Time_SwitchBackground).onComplete = () =>
+                        _imgBackground.DoColor(Color.black, BAStoryPlayerController.Instance.Setting.Time_SwitchBackground).OnCompleted = () =>
                          {
                              _imgBackground.sprite = null;
                              _imgBackground.enabled = false;
@@ -249,7 +249,7 @@ namespace BAStoryPlayer
                         }
                     case BackgroundTransistionType.Smooth:
                         {
-                            _imgBackground.DoColor(Color.black, BAStoryPlayerController.Instance.Setting.Time_SwitchBackground / 2).onComplete = () =>
+                            _imgBackground.DoColor(Color.black, BAStoryPlayerController.Instance.Setting.Time_SwitchBackground / 2).OnCompleted = () =>
                             {
                                 _imgBackground.sprite = sprite;
                                 _imgBackground.DoColor(Color.white, BAStoryPlayerController.Instance.Setting.Time_SwitchBackground / 2);
@@ -453,25 +453,25 @@ namespace BAStoryPlayer
                 case BackdropType.In:
                     {
                         image.color = new Color(0, 0, 0, 1);
-                        image.DoAlpha(0, duration).onComplete = ()=> { feedback?.Invoke(); Destroy(backdrop); };
+                        image.DoAlpha(0, duration).OnCompleted = ()=> { feedback?.Invoke(); Destroy(backdrop); };
                         break;
                     }
                 case BackdropType.Out:
                     {
                         image.color = new Color(0, 0, 0, 0);
-                        image.DoAlpha(1, duration).onComplete = () => { feedback?.Invoke(); Destroy(backdrop); };
+                        image.DoAlpha(1, duration).OnCompleted = () => { feedback?.Invoke(); Destroy(backdrop); };
                         break;
                     }
                 case BackdropType.OutIn:
                     {
                         image.color = new Color(0, 0, 0, 0);
-                        image.DoAlpha(1, duration/2).onComplete = () => { feedback?.Invoke(); image.DoAlpha(0, duration/2).onComplete = ()=> { Destroy(backdrop); }; };
+                        image.DoAlpha(1, duration/2).OnCompleted = () => { feedback?.Invoke(); image.DoAlpha(0, duration/2).OnCompleted = ()=> { Destroy(backdrop); }; };
                         break;
                     }
                 case BackdropType.InOut:
                     {
                         image.color = new Color(0, 0, 0, 1);
-                        image.DoAlpha(0, duration/2).onComplete = () => { feedback?.Invoke(); image.DoAlpha(1, duration/2).onComplete = ()=> { Destroy(backdrop); }; };
+                        image.DoAlpha(0, duration/2).OnCompleted = () => { feedback?.Invoke(); image.DoAlpha(1, duration/2).OnCompleted = ()=> { Destroy(backdrop); }; };
                         break;
                     }
                 default:return;

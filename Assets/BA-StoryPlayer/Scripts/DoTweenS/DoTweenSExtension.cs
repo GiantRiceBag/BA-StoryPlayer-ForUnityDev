@@ -16,15 +16,15 @@ namespace BAStoryPlayer.DoTweenS
             tween.StartCoroutine(DoLocalMove);
             return tween;
         }
-        static IEnumerator DoLocalMove(this MonoBehaviour mono,TweenS tween)
+        private static IEnumerator DoLocalMove(this MonoBehaviour mono,TweenS tween)
         {
             Vector3 origin = tween.transform.localPosition, target = (Vector3)tween.target;
-            float lerp = 0, increment = 1 / tween.duration;
+            float delta = 1 / tween.duration;
 
-            while(lerp != 1)
+            while(tween.RawT != 1)
             {
-                lerp = Mathf.Clamp(lerp + increment * Time.deltaTime, 0, 1f);
-                tween.transform.localPosition = Vector3.Lerp(origin, target, lerp);
+                tween.RawT = Mathf.MoveTowards(tween.RawT, 1, delta * Time.deltaTime);
+                tween.transform.localPosition = Vector3.Lerp(origin, target, tween.T);
                 yield return null;
             }
 
@@ -43,14 +43,14 @@ namespace BAStoryPlayer.DoTweenS
         {
             RectTransform rect = tween.transform.GetComponent<RectTransform>();
 
-            float lerp = 0, increment = (1 / tween.duration);
+            float delta = (1 / tween.duration);
             Vector2 origin = rect.anchoredPosition;
             Vector2 target = (Vector2)tween.target;
 
-            while (lerp != 1)
+            while (tween.RawT != 1)
             {
-                lerp = Mathf.Clamp(lerp + increment * Time.deltaTime, 0, 1f);
-                rect.anchoredPosition = Vector2.Lerp(origin, target, lerp);
+                tween.RawT = Mathf.MoveTowards(tween.RawT, 1, delta * Time.deltaTime);
+                rect.anchoredPosition = Vector2.Lerp(origin, target, tween.T);
                 yield return null;
             }
 
@@ -74,21 +74,21 @@ namespace BAStoryPlayer.DoTweenS
             RectTransform rect = tween.transform.GetComponent<RectTransform>();
             Vector2 origin = rect.anchoredPosition;
             Vector2 target = (Vector2)tween.target;
-            float increment = 2 * tween.time * (1 / tween.duration);
-            float lerp = 0;
-            for (int i = 0; i < tween.time; i++)
+            float delta = 2 * tween.times * (1 / tween.duration);
+
+            for (int i = 0; i < tween.times; i++)
             {
-                while (lerp != 1)
+                while (tween.RawT != 1)
                 {
-                    lerp = Mathf.Clamp(lerp + increment * Time.deltaTime, 0, 1);
-                    rect.anchoredPosition = Vector2.Lerp(origin, target, lerp);
+                    tween.RawT = Mathf.MoveTowards(tween.RawT, 1, delta * Time.deltaTime);
+                    rect.anchoredPosition = Vector2.Lerp(origin, target, tween.T);
                     yield return null;
                 }
 
-                while (lerp != 0)
+                while (tween.RawT != 0)
                 {
-                    lerp = Mathf.Clamp(lerp - increment * Time.deltaTime, 0, 1);
-                    rect.anchoredPosition = Vector2.Lerp(origin, target, lerp);
+                    tween.RawT = Mathf.MoveTowards(tween.RawT, 0, delta * Time.deltaTime);
+                    rect.anchoredPosition = Vector2.Lerp(origin, target, tween.T);
                     yield return null;
                 }
 
@@ -112,12 +112,12 @@ namespace BAStoryPlayer.DoTweenS
         static IEnumerator DoLocalScale(this MonoBehaviour mono,TweenS tween)
         {
             Vector3 target = (Vector3)tween.target,origin = tween.transform.localScale;
-            float lerp = 0, increment = 1 / tween.duration;
+            float delta = 1 / tween.duration;
 
-            while(lerp != 1)
+            while(tween.RawT != 1)
             {
-                lerp = Mathf.Clamp(lerp + increment * Time.deltaTime, 0, 1);
-                tween.transform.localScale = Vector3.Lerp(origin, target, lerp);
+                tween.RawT = Mathf.MoveTowards(tween.RawT, 1, delta * Time.deltaTime);
+                tween.transform.localScale = Vector3.Lerp(origin, target, tween.T);
                 yield return null;
             }
 
@@ -136,7 +136,7 @@ namespace BAStoryPlayer.DoTweenS
         }
         static IEnumerator DoShakeX(this MonoBehaviour mono,TweenS tween)
         {
-            float destX = tween.time * 2 * Mathf.PI;
+            float destX = tween.times * 2 * Mathf.PI;
             Func<float, float> func = (x) =>
              {
                  return Mathf.Sin(x) * (-x + destX);
@@ -171,11 +171,12 @@ namespace BAStoryPlayer.DoTweenS
             Color targetCol = (Color)tween.target;
             var skeletonGraphic = tween.transform.GetComponent<SkeletonGraphic>();
             Color originCol = skeletonGraphic.color;
-            float lerp = 0, increment = 1 / tween.duration;
-            while(lerp != 1)
+
+            float delta = 1 / tween.duration;
+            while(tween.RawT != 1)
             {
-                lerp = Mathf.Clamp(lerp + increment * Time.deltaTime, 0, 1);
-                skeletonGraphic.color = Color.Lerp(originCol, targetCol, lerp);
+                tween.RawT = Mathf.MoveTowards(tween.RawT, 1, delta * Time.deltaTime);
+                skeletonGraphic.color = Color.Lerp(originCol, targetCol, tween.T);
                 yield return null;
             }
 
@@ -195,13 +196,14 @@ namespace BAStoryPlayer.DoTweenS
         {
             float target = (float)tween.target;
             var image = tween.transform.GetComponent<Image>();
-            float lerp = 0, increment = 1 / tween.duration;
+            float delta = 1 / tween.duration;
             float origin = image.color.a;
-            while (lerp != 1)
+
+            while (tween.RawT != 1)
             {
                 Color col = image.color;
-                lerp = Mathf.Clamp(lerp + increment * Time.deltaTime, 0, 1);
-                col.a = Mathf.Lerp(origin, target, lerp);
+                tween.RawT = Mathf.MoveTowards(tween.RawT, 1, delta * Time.deltaTime);
+                col.a = Mathf.Lerp(origin, target, tween.T);
                 image.color = col;
                 yield return null;
             }
@@ -220,14 +222,17 @@ namespace BAStoryPlayer.DoTweenS
         {
             Color target = (Color)tween.target;
             var image = tween.transform.GetComponent<Image>();
-            float lerp = 0, increment = 1 / tween.duration;
+            float delta = 1 / tween.duration;
             Color origin = image.color;
-            while (lerp != 1)
+
+            while (tween.RawT != 1)
             {
                 Color col = image.color;
-                col = Color.Lerp(origin, target, lerp);
+
+                tween.RawT = Mathf.MoveTowards(tween.RawT, 1, delta * Time.deltaTime);
+                col = Color.Lerp(origin, target, tween.T);
                 image.color = col;
-                lerp = Mathf.Clamp(lerp + increment * Time.deltaTime, 0, 1);
+                
                 yield return null;
             }
 
@@ -251,11 +256,12 @@ namespace BAStoryPlayer.DoTweenS
             image.material = mat;
             float target = (float)tween.target;
             float origin = mat.GetFloat(tween.targetName);
-            float lerp = 0, increment = 1 / tween.duration;
-            while(lerp!=1)
+            float delta = 1 / tween.duration;
+
+            while(tween.RawT != 1)
             {
-                lerp = Math.Clamp(lerp + increment * Time.deltaTime, 0, 1);
-                mat.SetFloat(tween.targetName, Mathf.Lerp(origin, target, lerp));
+                tween.RawT = Mathf.MoveTowards(tween.RawT,1,delta * Time.deltaTime);
+                mat.SetFloat(tween.targetName, Mathf.Lerp(origin, target, tween.T));
                 yield return null;
             }
 
@@ -277,11 +283,12 @@ namespace BAStoryPlayer.DoTweenS
             AudioSource audio = tween.transform.GetComponent<AudioSource>();
             float target = (float)tween.target;
             float origin = audio.volume;
-            float lerp = 0, increment = 1 / tween.duration;
-            while (lerp != 1)
+            float delta = 1 / tween.duration;
+
+            while (tween.RawT != 1)
             {
-                lerp = Math.Clamp(lerp + increment * Time.deltaTime, 0, 1);
-                audio.volume = Mathf.Lerp(origin, target, lerp);
+                tween.RawT = Mathf.MoveTowards(tween.RawT, 1, delta * Time.deltaTime);
+                audio.volume = Mathf.Lerp(origin, target, tween.T);
                 yield return null;
             }
 
@@ -302,19 +309,17 @@ namespace BAStoryPlayer.DoTweenS
         {
             Quaternion origin = tween.transform.rotation;
             Quaternion target = Quaternion.Euler((Vector3)tween.target);
-            float lerp = 0, increment = 1 / tween.duration;
+            float delta = 1 / tween.duration;
 
-            while(lerp != 1)
+            while(tween.RawT != 1)
             {
-                lerp = Mathf.Clamp(lerp + increment * Time.deltaTime, 0, 1);
-                tween.transform.rotation = Quaternion.Lerp(origin,target,lerp);
+                tween.RawT = Mathf.MoveTowards(tween.RawT, 1, delta * Time.deltaTime);
+                tween.transform.rotation = Quaternion.Lerp(origin,target,tween.T);
                 yield return null;
             }
 
             tween.RunOnComplete();
         }
-
         #endregion
     }
-
 }

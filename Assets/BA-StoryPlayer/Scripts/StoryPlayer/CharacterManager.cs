@@ -26,6 +26,7 @@ namespace BAStoryPlayer
         Stiff,
         Jump,
         falldownR,
+        falldownL,
         Hide,
         Close,
         Back
@@ -324,7 +325,7 @@ namespace BAStoryPlayer
                     break;
                 case CharacterAction.Disapper: // 渐变至黑色剪影同时离场
                     skelGraphic.color = Color.white;
-                    skelGraphic.DoColor(Color.black, BAStoryPlayerController.Instance.Setting.Time_Character_Fade).onComplete = ()=> { SetAction(obj, CharacterAction.Hide); };
+                    skelGraphic.DoColor(Color.black, BAStoryPlayerController.Instance.Setting.Time_Character_Fade).OnCompleted = ()=> { SetAction(obj, CharacterAction.Hide); };
                     EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Fade });
                     break;
                 case CharacterAction.Disapper2Left:
@@ -372,19 +373,39 @@ namespace BAStoryPlayer
                     EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Jump });
                     break;
                 case CharacterAction.falldownR:
-                    TweenSequence sequence_Rotation = new TweenSequence();
-                    sequence_Rotation.Append(obj.transform.DoEuler(new Vector3(0, 0, -10), 0.3f));
-                    sequence_Rotation.Append(obj.transform.DoEuler(new Vector3(0, 0, 5), 0.5f));
-                    sequence_Rotation.Wait(0.3f);
-                    sequence_Rotation.Append(obj.transform.DoLocalMove(obj.transform.localPosition - new Vector3(0, 1500, 0), 0.3f));
-                    sequence_Rotation.Append(() => { DestroyCharacter(obj); });
+                    {
+                        TweenSequence sequence_Rotation = new TweenSequence();
+                        sequence_Rotation.Append(obj.transform.DoEuler(new Vector3(0, 0, -10), 0.3f).SetEase(Ease.OutCubic));
+                        sequence_Rotation.Wait(0.1f);
+                        sequence_Rotation.Append(obj.transform.DoEuler(new Vector3(0, 0, 5), 0.5f).SetEase(Ease.OutCubic));
+                        sequence_Rotation.Wait(0.3f);
+                        sequence_Rotation.Append(obj.transform.DoLocalMove(obj.transform.localPosition - new Vector3(0, 1500, 0), 0.3f).SetEase(Ease.InCirc));
 
-                    TweenSequence sequence_Position = new TweenSequence();
-                    sequence_Position.Append(obj.transform.DoLocalMove(obj.transform.localPosition + new Vector3(15, 0, 0), 0.3f));
-                    sequence_Position.Append(obj.transform.DoLocalMove(obj.transform.localPosition - new Vector3(30, 0, 0), 0.5f));
+                        TweenSequence sequence_Position = new TweenSequence();
+                        sequence_Position.Append(obj.transform.DoLocalMove(obj.transform.localPosition + new Vector3(30, 0, 0), 0.3f).SetEase(Ease.OutCubic));
+                        sequence_Position.Wait(0.1f);
+                        sequence_Position.Append(obj.transform.DoLocalMove(obj.transform.localPosition - new Vector3(60, 0, 0), 0.5f).SetEase(Ease.OutCubic));
 
-                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = 1.4f});
-                    break;
+                        EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = 1.6f });
+                        break;
+                    }
+                case CharacterAction.falldownL:
+                    {
+                        TweenSequence sequence_Rotation = new TweenSequence();
+                        sequence_Rotation.Append(obj.transform.DoEuler(new Vector3(0, 0, 5), 0.3f).SetEase(Ease.OutCubic));
+                        sequence_Rotation.Wait(0.1f);
+                        sequence_Rotation.Append(obj.transform.DoEuler(new Vector3(0, 0, -10), 0.5f).SetEase(Ease.OutCubic));
+                        sequence_Rotation.Wait(0.3f);
+                        sequence_Rotation.Append(obj.transform.DoLocalMove(obj.transform.localPosition - new Vector3(0, 1500, 0), 0.3f).SetEase(Ease.InCirc));
+
+                        TweenSequence sequence_Position = new TweenSequence();
+                        sequence_Position.Append(obj.transform.DoLocalMove(obj.transform.localPosition + new Vector3(30, 0, 0), 0.3f).SetEase(Ease.OutCubic));
+                        sequence_Position.Wait(0.1f);
+                        sequence_Position.Append(obj.transform.DoLocalMove(obj.transform.localPosition - new Vector3(60, 0, 0), 0.5f).SetEase(Ease.OutCubic));
+
+                        EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = 1.6f });
+                        break;
+                    }
                 case CharacterAction.Hide: // 立即让角色离场
                     DestroyCharacter(obj);
                     break;

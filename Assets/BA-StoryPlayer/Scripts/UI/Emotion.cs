@@ -27,7 +27,7 @@ namespace BAStoryPlayer.UI
             for(int i = 0; i < images.Length; i++)
             {
                 if (i == images.Length - 1)
-                    images[i].DoAlpha(0, TIME_FADEOUT).onComplete = () => { Destroy(gameObject); };
+                    images[i].DoAlpha(0, TIME_FADEOUT).OnCompleted = () => { Destroy(gameObject); };
                 else 
                     images[i].DoAlpha(0, TIME_FADEOUT);
             }

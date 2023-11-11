@@ -60,7 +60,7 @@ namespace BAStoryPlayer.UI
                 Color tempCol = image_Subpanel.color;
                 tempCol.a = 0;
                 image_Subpanel.color = tempCol;
-                image_Subpanel.DoAlpha(1, 0.1f).onComplete = () =>
+                image_Subpanel.DoAlpha(1, 0.1f).OnCompleted = () =>
                 {
                     foreach (var i in image_SubButton)
                     {
@@ -90,7 +90,7 @@ namespace BAStoryPlayer.UI
                 }
                 else
                 {
-                    image_Subpanel.DoAlpha(0, 0.2f).onComplete = () => { subpanel.SetActive(false); };
+                    image_Subpanel.DoAlpha(0, 0.2f).OnCompleted = () => { subpanel.SetActive(false); };
                 }
 
                 foreach (var i in image_SubButton)

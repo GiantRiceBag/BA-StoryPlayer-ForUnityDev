@@ -32,7 +32,7 @@ namespace BAStoryPlayer.UI
                );
 
             transform.localScale = new Vector2(0.95f, 0.95f);
-            transform.DoLocalScale(Vector2.one, 0.1f).onComplete = ()=> {
+            transform.DoLocalScale(Vector2.one, 0.1f).OnCompleted = ()=> {
                 animator.enabled = true;
             };
 
