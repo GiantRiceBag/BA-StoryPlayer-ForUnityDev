@@ -7,23 +7,23 @@ namespace BAStoryPlayer.UI
     public class Title : MonoBehaviour
     {
         [Header("References")]
-        [SerializeField] Image image_Bannerline;
-        [SerializeField] Image image_Baner;
-        [SerializeField] TextMeshProUGUI text_Title;
-        [SerializeField] TextMeshProUGUI text_Subtitle;
+        [SerializeField] private Image _imgBannerline;
+        [SerializeField] private Image _imgBaner;
+        [SerializeField] private TextMeshProUGUI _txtTitle;
+        [SerializeField] private TextMeshProUGUI _txtSubtitle;
 
         private void Start()
         {
             BAStoryPlayerController.Instance.StoryPlayer.UIModule.SetBlurBackground(true,BackgroundTransistionType.Instant);
 
-            if (image_Bannerline == null)
-                image_Bannerline = transform.Find("BannerLine").GetComponent<Image>();
-            if (image_Baner == null)
-                image_Baner = transform.Find("TitleBanner").GetComponent<Image>();
-            if (text_Title == null)
-                text_Title = transform.Find("Text_Title").GetComponent<TextMeshProUGUI>();
-            if (text_Subtitle == null)
-                text_Subtitle = transform.Find("Text_Subtitle").GetComponent<TextMeshProUGUI>();
+            if (_imgBannerline == null)
+                _imgBannerline = transform.Find("BannerLine").GetComponent<Image>();
+            if (_imgBaner == null)
+                _imgBaner = transform.Find("TitleBanner").GetComponent<Image>();
+            if (_txtTitle == null)
+                _txtTitle = transform.Find("Text_Title").GetComponent<TextMeshProUGUI>();
+            if (_txtSubtitle == null)
+                _txtSubtitle = transform.Find("Text_Subtitle").GetComponent<TextMeshProUGUI>();
 
             var rect = transform.GetComponent<RectTransform>();
             rect.anchorMin = Vector2.zero;
@@ -36,16 +36,13 @@ namespace BAStoryPlayer.UI
 
         public void Initialize(string title ,string subtitle = "")
         {
-            text_Title.text = title;
-            text_Subtitle.text = subtitle;
+            _txtTitle.text = title;
+            _txtSubtitle.text = subtitle;
 
             if (subtitle == "")
             {
-                text_Subtitle.gameObject.SetActive(false);
-                text_Title.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-                var mat = new Material(text_Title.fontSharedMaterial);
-                mat.SetColor("_FaceColor", new Color(.1f, .1f, .1f));
-                text_Title.fontSharedMaterial = mat;
+                _txtSubtitle.gameObject.SetActive(false);
+                _txtTitle.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
             }
 
         }

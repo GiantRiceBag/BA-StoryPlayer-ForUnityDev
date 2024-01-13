@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 818927088371723409}
   - component: {fileID: 818927088371723408}
   m_Layer: 5
-  m_Name: BannerLine
+  m_Name: Image_BannerLine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -88,7 +88,7 @@ GameObject:
   - component: {fileID: 818927088789685295}
   - component: {fileID: 818927088789685294}
   m_Layer: 5
-  m_Name: TitleBanner
+  m_Name: Image_TitleBanner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -361,10 +361,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bada98a6d2f4a042a179a510e3da893, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  image_Bannerline: {fileID: 818927088371723408}
-  image_Baner: {fileID: 818927088789685294}
-  text_Title: {fileID: 818927088991763033}
-  text_Subtitle: {fileID: 818927089604252995}
+  _imgBannerline: {fileID: 818927088371723408}
+  _imgBaner: {fileID: 818927088789685294}
+  _txtTitle: {fileID: 818927088991763033}
+  _txtSubtitle: {fileID: 818927089604252995}
 --- !u!1 &818927089604253005
 GameObject:
   m_ObjectHideFlags: 0

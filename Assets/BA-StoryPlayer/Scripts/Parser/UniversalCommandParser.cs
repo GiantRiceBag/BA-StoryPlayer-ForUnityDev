@@ -299,8 +299,18 @@ namespace BAStoryPlayer.Parser.UniversaScriptParser
             StoryUnit storyUnit = new StoryUnit();
             storyUnit.UpdateType(UnitType.Title);
 
-            StoryPlayer.UIModule.SetTitle(rawStoryUnit.text);
-            storyUnit.action += () => StoryPlayer.UIModule.ShowTitle("", rawStoryUnit.text);
+            string[] titles = rawStoryUnit.text.Split(';');
+
+            if (titles.Length == 2)
+            {
+                StoryPlayer.UIModule.SetTitle(titles[1]);
+                storyUnit.action += () => StoryPlayer.UIModule.ShowTitle(titles[0], titles[1]);
+            }
+            else
+            {
+                StoryPlayer.UIModule.SetTitle(rawStoryUnit.text);
+                storyUnit.action += () => StoryPlayer.UIModule.ShowTitle("", rawStoryUnit.text);
+            }
 
             return storyUnit;
         }
