@@ -1,9 +1,14 @@
+using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using BAStoryPlayer.UI;
 using UnityEngine;
 
-namespace BAStoryPlayer.NexonScriptParser
+/// <summary>
+/// This parser is marked as obsolete and should not be used.
+/// </summary>
+
+namespace BAStoryPlayer.Parser.NexonScriptParser
 {
     public enum ScriptTag
     {
@@ -29,6 +34,7 @@ namespace BAStoryPlayer.NexonScriptParser
         Option
     }
 
+    [Obsolete]
     public class NexonCommandParser : ICommandParser
     {
         private const string REG_TITLE = @"#title;([^;\n]+);?([^;\n]+)?;?";
@@ -144,6 +150,7 @@ namespace BAStoryPlayer.NexonScriptParser
     }
 
     #region SubParser
+    [Obsolete]
     public class BNexonSubParser
     {
         protected int weight = 0; // 解析权重
@@ -156,6 +163,7 @@ namespace BAStoryPlayer.NexonScriptParser
      * 处理角色操作以及文本对话部分
      * 脚本:character,na,hide
      */
+[Obsolete]
     public class NexonSubParser_CharacterLayer : BNexonSubParser
     {
         public NexonSubParser_CharacterLayer(int weight) { this.weight = weight; }
@@ -378,7 +386,7 @@ namespace BAStoryPlayer.NexonScriptParser
      * 处理背景音乐,音效等
      * 脚本处理:Video
      */
-
+    [Obsolete]
     public class NexonSubParser_MultimediaLayer : BNexonSubParser
     {
         public NexonSubParser_MultimediaLayer(int weight)
@@ -423,6 +431,7 @@ namespace BAStoryPlayer.NexonScriptParser
     /*
      * 处理选项
      */
+    [Obsolete]
     public class NexonSubParser_OptionLayer : BNexonSubParser
     {
         /*
@@ -472,6 +481,7 @@ namespace BAStoryPlayer.NexonScriptParser
     /*
      * 处理等待部分
      */
+    [Obsolete]
     public class NexonSubParser_SystemLayer : BNexonSubParser
     {
         public NexonSubParser_SystemLayer(int weight) { this.weight = weight; }
@@ -504,6 +514,7 @@ namespace BAStoryPlayer.NexonScriptParser
      * 处理背景变换以及UI部分
      * 脚本处理 : Title,Place,NextEpisode,Continued,Show/HideMenu,BgShake,ClearSt
      */
+    [Obsolete]
     public class NexonSubParser_UILayer : BNexonSubParser
     {
         public NexonSubParser_UILayer(int weight)

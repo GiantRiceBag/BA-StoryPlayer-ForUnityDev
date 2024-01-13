@@ -4,6 +4,7 @@ using System.Linq;
 using System.Collections;
 using Spine.Unity;
 using Spine;
+using System;
 
 namespace BAStoryPlayer
 {
@@ -17,34 +18,24 @@ namespace BAStoryPlayer
     public class CharacterDataUnit
     {
         [Tooltip("建议以角色罗马音作为主要索引名")] public string indexName;
-        [HideInInspector] public string familyName;
-        public string name;
-        [HideInInspector] public string collage;
-        public string affiliation;
+        [HideInInspector, Obsolete] public string familyName;
+        [HideInInspector, Obsolete] public string firstName;
+        [HideInInspector, Obsolete] public string collage;
+        [HideInInspector, Obsolete] public string affiliation;
         [Space]
         public LoadType loadType = LoadType.SkeletonData;
         public string skelUrl;
         [HideInInspector] public string portraitUrl;
         [Space]
         [Tooltip("仅在载入类型为 'SkeletonData' 时有效")] public Vector2 facePosition;
-            
-        public override string ToString()
-        {
-            System.Text.StringBuilder result = new System.Text.StringBuilder();
-            result.Append($"索引名 {indexName}\n");
-            result.Append($"姓名 {familyName}{name}\n");
-            result.Append($"学院 {collage}\n");
-            result.Append($"所属社团 {affiliation}");
-            return result.ToString() ;
-        }
     }
 
     [CreateAssetMenu(menuName = "BAStoryPlayer/角色信息表",fileName = "CharacterDataTable")]
     [SerializeField]
     public class CharacterData : ScriptableObject
     {
-        [SerializeField] private System.Collections.Generic.List<CharacterDataUnit> rawData = new System.Collections.Generic.List<CharacterDataUnit>();
-        private IReadOnlyDictionary<int, CharacterDataUnit> hashTable = new Dictionary<int, CharacterDataUnit>();
+        [SerializeField] private List<CharacterDataUnit> _rawData = new List<CharacterDataUnit>();
+        private IReadOnlyDictionary<int, CharacterDataUnit> _hashTable = new Dictionary<int, CharacterDataUnit>();
 
         public CharacterDataUnit this[string indexName]
         {
@@ -52,7 +43,7 @@ namespace BAStoryPlayer
             {
                 try
                 {
-                    return hashTable[indexName.GetHashCode()];
+                    return _hashTable[indexName.GetHashCode()];
                 }
                 catch
                 {
@@ -64,7 +55,7 @@ namespace BAStoryPlayer
         
         public void Print()
         {
-            foreach(var i in rawData)
+            foreach(var i in _rawData)
             {
                 Debug.Log(i.ToString());
             }
@@ -74,7 +65,7 @@ namespace BAStoryPlayer
         {
             Dictionary<int, CharacterDataUnit> dict = new Dictionary<int, CharacterDataUnit>();
 
-            foreach (var chrData in rawData)
+            foreach (var chrData in _rawData)
             {
                 int hash = chrData.indexName.GetHashCode();
                 dict.Add(hash, chrData);
@@ -84,7 +75,7 @@ namespace BAStoryPlayer
                 if (FindObjectOfType<BAStoryPlayerController>() == null)
                     continue;
 
-                SkeletonDataAsset skelDataAsset = Resources.Load<SkeletonDataAsset>(BAStoryPlayerController.Instance.Setting.Path_Prefab
+                SkeletonDataAsset skelDataAsset = Resources.Load<SkeletonDataAsset>(BAStoryPlayerController.Instance.Setting.PathPrefab
                     + chrData.skelUrl);
 
                 if (skelDataAsset == null) return;
@@ -142,7 +133,7 @@ namespace BAStoryPlayer
                 chrData.facePosition = sum / count;
             }
 
-            hashTable = dict;
+            _hashTable = dict;
         }
     }
 }

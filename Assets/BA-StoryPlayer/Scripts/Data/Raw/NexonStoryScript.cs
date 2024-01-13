@@ -1,8 +1,11 @@
-using BAStoryPlayer.NexonScriptParser;
+using System;
 using System.Collections.Generic;
+
+using BAStoryPlayer.Parser.NexonScriptParser;
 
 namespace BAStoryPlayer
 {
+    [Obsolete]
     public class NexonScriptData
     {
         public string script;
@@ -15,7 +18,7 @@ namespace BAStoryPlayer
         }
     }
 
-    [System.Serializable]
+    [Serializable,Obsolete]
     public class NexonStoryScript
     {
         public int groupID;
@@ -42,7 +45,7 @@ namespace BAStoryPlayer
 #endif
     }
 
-    [System.Serializable]
+    [Serializable,Obsolete]
     public class RawNexonStoryUnit
     {
         public string scripts;

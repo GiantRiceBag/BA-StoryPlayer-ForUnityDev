@@ -1,86 +1,121 @@
 {
-    "groupID": 1,
-    "content": [
+  "serial": "MS_001",
+  "uuid": "ddc0f9f3-0e66-42df-9706-ecaa14ad4ac7",
+  "description": "这是一段剧情描述。剧情有三种类型：主线剧情、支线剧情、好感剧情。主线剧情以 MS（Main Story）开头，支线剧情以 SS （Side Story）开头，好感剧情以 FS （Favor Story）开头。",
+  "content": [
+    {
+      "id": 1699114089646,
+      "type": "title",
+      "backgroundImage": "BG5",
+      "bgmId": 0,
+      "speaker": "",
+      "affiliation": "",
+      "text": "Part I;他和她的恋爱",
+      "characters": []
+    },
+    {
+      "id": 1699114089647,
+      "type": "bgm",
+      "backgroundImage": "",
+      "bgmId": "Theme_04",
+      "speaker": "",
+      "affiliation": "",
+      "text": "",
+      "characters": []
+    },
+    {
+      "id": 1699114497507,
+      "type": "text",
+      "backgroundImage": "BG2",
+      "bgmId": 0,
+      "speaker": "桃井",
+      "affiliation": "游戏开发部",
+      "text": "123456789\n123456789",
+      "characters": [
         {
-            "scripts": "#title;我是小标题;我是大标题",
-            "selectionGroup": 0,
-            "bgmURL": "Theme_01",
-            "soundURL": "",
-            "backgroundURL": "BG2",
-            "popupFileURL": ""
+          "uuid": "6c3ec0db-ed9e-415f-b695-f3de62eca4cb",
+          "name": "shiroko",
+          "position": 1,
+          "face": "00",
+          "emotion": "respond",
+          "action": "move",
+          "actionArgs": 4
         },
         {
-            "scripts": "3;shiroko;01;今天也要一起去抢银行吗?\n#place;银行劫案:行动准备\n#3;em;h\n#3;a",
-            "selectionGroup": 0,
-            "bgmURL": "",
-            "soundURL": "",
-            "backgroundURL": "",
-            "popupFileURL": ""
+          "uuid": "f4c2b56d-eed8-4e53-b5bb-e16ca0fd38ee",
+          "name": "hihumi",
+          "position": 2,
+          "face": "00",
+          "emotion": "",
+          "action": "appear",
+          "actionArgs": 1
         },
         {
-            "scripts": "[s1]今天要抢哪一个银行?\n[s2]对不起,我拒绝",
-            "selectionGroup": 0,
-            "bgmURL": "",
-            "soundURL": "",
-            "backgroundURL": "",
-            "popupFileURL": ""
+          "uuid": "bf99bffc-2d8b-40ba-bef4-2f2bd4d4cc0c",
+          "name": "hoshino",
+          "position": 3,
+          "face": "00",
+          "emotion": "",
+          "action": "",
+          "actionArgs": 2
         },
         {
-            "scripts": "3;shiroko;01;什么银行随你挑\n#3;em;c\n#3;greeting",
-            "selectionGroup": 1,
-            "bgmURL": "",
-            "soundURL": "",
-            "backgroundURL": "",
-            "popupFileURL": ""
+          "uuid": "680966d4-45c4-44c4-bd39-85ef2c10c59c",
+          "name": "nonomi",
+          "position": 4,
+          "face": "00",
+          "emotion": "",
+          "action": "hide"
         },
         {
-            "scripts": "#na;那就世界第一银行吧",
-            "selectionGroup": 1,
-            "bgmURL": "",
-            "soundURL": "",
-            "backgroundURL": "",
-            "popupFileURL": ""
-        },
-        {
-            "scripts": "3;shiroko;05;!?\n#3;stiff\n#3;em;surprise",
-            "selectionGroup": 2,
-            "bgmURL": "",
-            "soundURL": "",
-            "backgroundURL": "",
-            "popupFileURL": ""
-        },
-        {
-            "scripts": "3;shiroko;06;你没有选择的权利\n#3;em;a",
-            "selectionGroup": 2,
-            "bgmURL": "",
-            "soundURL": "",
-            "backgroundURL": "",
-            "popupFileURL": ""
-        },
-        {
-            "scripts": "1;hoshino;01;是抢银行吗？我也来我也来我也来！\n#1;em;h\n#1;ar",
-            "selectionGroup": 0,
-            "bgmURL": "",
-            "soundURL": "",
-            "backgroundURL": "",
-            "popupFileURL": ""
-        },
-        {
-            "scripts": "5;aru;06;你们认真的吗？\n#5;a\n#5;stiff\n#5;em;surprise",
-            "selectionGroup": 0,
-            "bgmURL": "",
-            "soundURL": "",
-            "backgroundURL": "",
-            "popupFileURL": ""
-        },
-        {
-            "scripts": "3;shiroko;01;走吧\n#3;jump\n#3;em;m",
-            "selectionGroup": 0,
-            "bgmURL": "",
-            "soundURL": "",
-            "backgroundURL": "",
-            "popupFileURL": ""
+          "uuid": "79a5bbcb-d334-4b80-9c3b-5bf51e756b65",
+          "name": "serika",
+          "position": 5,
+          "face": "00",
+          "emotion": "",
+          "action": ""
         }
-        
-    ]
+      ]
+    },
+    {
+      "id": 1699114580314,
+      "type": "select",
+      "backgroundImage": "",
+      "bgmId": 0,
+      "speaker": "",
+      "affiliation": "",
+      "text": "",
+      "characters": []
+    },
+    {
+      "id": 1699114581979,
+      "type": "st",
+      "backgroundImage": "",
+      "bgmId": 0,
+      "speaker": "",
+      "affiliation": "",
+      "text": "",
+      "characters": []
+    },
+    {
+      "id": 1699114582693,
+      "type": "effectOnly",
+      "backgroundImage": "",
+      "bgmId": 0,
+      "speaker": "",
+      "affiliation": "",
+      "text": "",
+      "characters": []
+    },
+    {
+      "id": 1699114583741,
+      "type": "continue",
+      "backgroundImage": "",
+      "bgmId": 0,
+      "speaker": "",
+      "affiliation": "",
+      "text": "",
+      "characters": []
+    }
+  ]
 }

@@ -1,9 +1,14 @@
+using System;
 using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
 using Spine.Unity;
+
+using Random = UnityEngine.Random;
+
 using BAStoryPlayer.DoTweenS;
 using BAStoryPlayer.Event;
+
 namespace BAStoryPlayer
 {
     public enum BackgroundTransistionType
@@ -93,6 +98,7 @@ namespace BAStoryPlayer
             SetAnimation(index, animationID);
             Highlight(index);
         }
+        [Obsolete]
         public void ActivateCharacter(int index, string indexName, string animationID, string lines)
         {
             ActivateCharacter(index, indexName, animationID);
@@ -102,7 +108,9 @@ namespace BAStoryPlayer
         public void ActivateCharacter(string indexName)
         {
             if (!CheckIfCharacterInPool(indexName))
+            {
                 CreateCharacterObj(indexName);
+            }
             _characterPool[indexName].SetActive(true);
         }
 
@@ -213,11 +221,11 @@ namespace BAStoryPlayer
                 yield break;
             }
 
-            yield return new WaitForSeconds(Random.Range(BAStoryPlayerController.Instance.Setting.Time_Character_Wink.x, BAStoryPlayerController.Instance.Setting.Time_Character_Wink.y));
+            yield return new WaitForSeconds(Random.Range(BAStoryPlayerController.Instance.Setting.TimeRangeCharacterWink.x, BAStoryPlayerController.Instance.Setting.TimeRangeCharacterWink.y));
             while (true)
             {
                 skel.AnimationState.SetAnimation(0, ani_EyeClose_Name, false);
-                yield return new WaitForSeconds(Random.Range(BAStoryPlayerController.Instance.Setting.Time_Character_Wink.x, BAStoryPlayerController.Instance.Setting.Time_Character_Wink.y));
+                yield return new WaitForSeconds(Random.Range(BAStoryPlayerController.Instance.Setting.TimeRangeCharacterWink.x, BAStoryPlayerController.Instance.Setting.TimeRangeCharacterWink.y));
             }
         }
 
@@ -268,7 +276,7 @@ namespace BAStoryPlayer
                     }
                 case BackgroundTransistionType.Smooth:
                     {
-                        obj.transform.DoMove_Anchored(new Vector2((targetIndex + 1) * SlotInterval, rect.anchoredPosition.y), BAStoryPlayerController.Instance.Setting.Time_Character_Move);
+                        obj.transform.DoMove_Anchored(new Vector2((targetIndex + 1) * SlotInterval, rect.anchoredPosition.y), BAStoryPlayerController.Instance.Setting.TimeCharacterMove);
                         break;
                     }
                 default: break;
@@ -285,8 +293,8 @@ namespace BAStoryPlayer
                     }
                 case BackgroundTransistionType.Smooth:
                     {
-                        obj.transform.DoMove_Anchored(pos, BAStoryPlayerController.Instance.Setting.Time_Character_Move);
-                        EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Move });
+                        obj.transform.DoMove_Anchored(pos, BAStoryPlayerController.Instance.Setting.TimeCharacterMove);
+                        EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.TimeCharacterMove });
                         break;
                     }
                 default: break;
@@ -320,57 +328,57 @@ namespace BAStoryPlayer
             {
                 case CharacterAction.Appear: //黑色剪影渐变进场
                     skelGraphic.color = Color.black;
-                    skelGraphic.DoColor(Color.white, BAStoryPlayerController.Instance.Setting.Time_Character_Fade);
-                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Fade });
+                    skelGraphic.DoColor(Color.white, BAStoryPlayerController.Instance.Setting.TimeCharacterFade);
+                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.TimeCharacterFade });
                     break;
                 case CharacterAction.Disapper: // 渐变至黑色剪影同时离场
                     skelGraphic.color = Color.white;
-                    skelGraphic.DoColor(Color.black, BAStoryPlayerController.Instance.Setting.Time_Character_Fade).OnCompleted = ()=> { SetAction(obj, CharacterAction.Hide); };
-                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Fade });
+                    skelGraphic.DoColor(Color.black, BAStoryPlayerController.Instance.Setting.TimeCharacterFade).OnCompleted = ()=> { SetAction(obj, CharacterAction.Hide); };
+                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.TimeCharacterFade });
                     break;
                 case CharacterAction.Disapper2Left:
                     MoveCharacterTo(obj, new Vector2(-500, 0), BackgroundTransistionType.Smooth);
-                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Move });
+                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.TimeCharacterMove });
                     break;
                 case CharacterAction.Disapper2Right:
                     MoveCharacterTo(obj, new Vector2(2420, 0), BackgroundTransistionType.Smooth);
-                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Move });
+                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.TimeCharacterMove });
                     break;
                 case CharacterAction.AppearL2R:
                     skelGraphic.color = Color.white;
                     MoveCharacterTo(obj, new Vector2(-500, 0));
                     MoveCharacterTo(obj, arg, BackgroundTransistionType.Smooth);
-                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Move });
+                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.TimeCharacterMove });
                     break;
                 case CharacterAction.AppearR2L:
                     skelGraphic.color = Color.white;
                     MoveCharacterTo(obj, new Vector2(2420, 0));
                     MoveCharacterTo(obj, arg, BackgroundTransistionType.Smooth);
-                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Move });
+                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.TimeCharacterMove });
                     break;
                 case CharacterAction.Hophop:
-                    obj.transform.DoBound_Anchored_Relative(new Vector2(0, 50), BAStoryPlayerController.Instance.Setting.Time_Character_Hophop, 2);
-                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Hophop });
+                    obj.transform.DoBound_Anchored_Relative(new Vector2(0, 50), BAStoryPlayerController.Instance.Setting.TimeCharacterHophop, 2);
+                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.TimeCharacterHophop });
                     break;
                 case CharacterAction.Greeting:
-                    obj.transform.DoBound_Anchored_Relative(new Vector2(0, -70), BAStoryPlayerController.Instance.Setting.Time_Character_Greeting);
-                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Greeting });
+                    obj.transform.DoBound_Anchored_Relative(new Vector2(0, -70), BAStoryPlayerController.Instance.Setting.TimeCharacterGreeting);
+                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.TimeCharacterGreeting });
                     break;
                 case CharacterAction.Shake:
-                    obj.transform.DoShakeX(40, BAStoryPlayerController.Instance.Setting.Time_Character_Shake, 2);
-                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Shake });
+                    obj.transform.DoShakeX(40, BAStoryPlayerController.Instance.Setting.TimeCharacterShake, 2);
+                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.TimeCharacterShake });
                     break;
                 case CharacterAction.Move:
                     MoveCharacterTo(obj, arg, BackgroundTransistionType.Smooth);
-                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Move });
+                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.TimeCharacterMove });
                     break;
                 case CharacterAction.Stiff:
-                    obj.transform.DoShakeX(10, BAStoryPlayerController.Instance.Setting.Time_Character_Stiff, 4);
-                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Stiff });
+                    obj.transform.DoShakeX(10, BAStoryPlayerController.Instance.Setting.TimeCharacterStiff, 4);
+                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.TimeCharacterStiff });
                     break;
                 case CharacterAction.Jump:
-                    obj.transform.DoBound_Anchored_Relative(new Vector2(0, 70), BAStoryPlayerController.Instance.Setting.Time_Character_Jump);
-                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.Time_Character_Jump });
+                    obj.transform.DoBound_Anchored_Relative(new Vector2(0, 70), BAStoryPlayerController.Instance.Setting.TimeCharacterJump);
+                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.TimeCharacterJump });
                     break;
                 case CharacterAction.falldownR:
                     {
@@ -498,7 +506,7 @@ namespace BAStoryPlayer
                         }
                     case BackgroundTransistionType.Smooth:
                         {
-                            skg.DoColor(ColorUnhighlight, BAStoryPlayerController.Instance.Setting.Time_Character_Highlight);
+                            skg.DoColor(ColorUnhighlight, BAStoryPlayerController.Instance.Setting.TimeCharacterHighlight);
                             break;
                         }
                     default: return;
@@ -528,7 +536,7 @@ namespace BAStoryPlayer
                         }
                     case BackgroundTransistionType.Smooth:
                         {
-                            skelGraphic.DoColor(ColorUnhighlight, BAStoryPlayerController.Instance.Setting.Time_Character_Highlight);
+                            skelGraphic.DoColor(ColorUnhighlight, BAStoryPlayerController.Instance.Setting.TimeCharacterHighlight);
                             break;
                         }
                     default: return;
@@ -584,13 +592,13 @@ namespace BAStoryPlayer
                 {
                     case LoadType.Prefab:
                         {
-                            prefab = Instantiate(Resources.Load(controller.Setting.Path_Prefab + controller.CharacterDataTable[indexName].skelUrl) as GameObject);
+                            prefab = Instantiate(Resources.Load(controller.Setting.PathPrefab + controller.CharacterDataTable[indexName].skelUrl) as GameObject);
                             break;
                         }
                     case LoadType.SkeletonData:
                         {
                             SkeletonDataAsset skelData = 
-                                Resources.Load<SkeletonDataAsset>(controller.Setting.Path_Prefab
+                                Resources.Load<SkeletonDataAsset>(controller.Setting.PathPrefab
                                     + controller.CharacterDataTable[indexName].skelUrl);
 
                             Material mat = new Material(Shader.Find("Spine/SkeletonGraphic"));

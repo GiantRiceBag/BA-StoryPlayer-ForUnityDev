@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace BAStoryPlayer.UniversaScriptParser
+namespace BAStoryPlayer.Parser.UniversaScriptParser
 {
     public class UniversalCommandParser : ICommandParser
     {
@@ -10,7 +10,6 @@ namespace BAStoryPlayer.UniversaScriptParser
         public List<StoryUnit> Parse(TextAsset rawStoryScript)
         {
             List<StoryUnit> storyUnits = new List<StoryUnit>();
-
             UniversalStoryScript storyScript = JsonUtility.FromJson<UniversalStoryScript>(rawStoryScript.text);
 
             StoryPlayer.UIModule.SetTitle();
@@ -53,8 +52,8 @@ namespace BAStoryPlayer.UniversaScriptParser
                         break;
                 }
 
-                HandleUnitCommand(rawStoryUnit, ref storyUnit);
-                HandleCommonSetting(rawStoryUnit, ref storyUnit);
+                HandleUnitCommand(rawStoryUnit, storyUnit);
+                HandleCommonSetting(rawStoryUnit, storyUnit);
 
                 if(storyUnit != null)
                 {
@@ -65,7 +64,7 @@ namespace BAStoryPlayer.UniversaScriptParser
         }
 
         #region Common Unit Handler
-        private void HandleCharacterUnit(RawUniversalStoryUnit rawStoryUnit, ref StoryUnit storyUnit)
+        private void HandleCharacterUnit(RawUniversalStoryUnit rawStoryUnit, StoryUnit storyUnit)
         {
             foreach (var characterUnit in rawStoryUnit.characters)
             {
@@ -224,12 +223,15 @@ namespace BAStoryPlayer.UniversaScriptParser
             }
         }
 
-        private void HandleUnitCommand(RawUniversalStoryUnit rawStoryUnit,ref StoryUnit storyUnit)
+        private void HandleUnitCommand(RawUniversalStoryUnit rawStoryUnit, StoryUnit storyUnit)
         {
             List<int> args = new List<int>();
             foreach(var rawArg in rawStoryUnit.commandArgs)
             {
-                args.Add(int.Parse(rawArg));
+                if(int.TryParse(rawArg,out int res))
+                {
+                    args.Add(res);
+                }
             }
 
             switch (rawStoryUnit.command)
@@ -282,7 +284,7 @@ namespace BAStoryPlayer.UniversaScriptParser
         }
 
         // 处理一些脚本单元公共配置
-        private void HandleCommonSetting(RawUniversalStoryUnit rawStoryUnit, ref StoryUnit storyUnit)
+        private void HandleCommonSetting(RawUniversalStoryUnit rawStoryUnit, StoryUnit storyUnit)
         {
             if(rawStoryUnit.backgroundImage != string.Empty)
             {
@@ -331,7 +333,7 @@ namespace BAStoryPlayer.UniversaScriptParser
 
             if(rawStoryUnit.characters.Count > 0)
             {
-                HandleCharacterUnit(rawStoryUnit, ref storyUnit);
+                HandleCharacterUnit(rawStoryUnit, storyUnit);
             }
 
             return storyUnit;

@@ -114,9 +114,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26eb253631c459f458258115d6a086d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterDataTable: {fileID: 11400000, guid: af30cd5ea32da4748b8fe42105d0d088, type: 2}
-  playerSetting: {fileID: 11400000, guid: e2901c0259c51d2498b10b87c84c071b, type: 2}
-  storyPlayer: {fileID: 2203900013526818509}
+  _characterDataTable: {fileID: 11400000, guid: af30cd5ea32da4748b8fe42105d0d088, type: 2}
+  _playerSetting: {fileID: 11400000, guid: e2901c0259c51d2498b10b87c84c071b, type: 2}
+  _storyPlayer: {fileID: 0}
 --- !u!1 &901295477
 GameObject:
   m_ObjectHideFlags: 0
@@ -377,17 +377,6 @@ PrefabInstance:
     - {fileID: 5703000469619538185, guid: 7bf58a48315d37d4393e19a3e660ec5a, type: 3}
     - {fileID: 5703000469619538190, guid: 7bf58a48315d37d4393e19a3e660ec5a, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 7bf58a48315d37d4393e19a3e660ec5a, type: 3}
---- !u!114 &2203900013526818509 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7609363249095605644, guid: 7bf58a48315d37d4393e19a3e660ec5a, type: 3}
-  m_PrefabInstance: {fileID: 8578285187517899585}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 08587367e001a4741ae9082b0d6c7646, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &2203900013526818510 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7609363249095605647, guid: 7bf58a48315d37d4393e19a3e660ec5a, type: 3}

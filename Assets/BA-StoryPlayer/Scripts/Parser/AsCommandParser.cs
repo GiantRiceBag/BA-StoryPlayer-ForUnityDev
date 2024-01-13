@@ -5,13 +5,16 @@ using System.Linq;
 using System;
 using System.Text.RegularExpressions;
 using System.IO;
+
 using BAStoryPlayer.UI;
 
-/*
- * source : https://github.com/Tualin14/ArisStudio
- */
+/// <summary>
+/// This parser is marked as obsolete and should not be used.
+/// </summary>
 
-namespace BAStoryPlayer.AsScriptParser
+/// source : https://github.com/Tualin14/ArisStudio
+
+namespace BAStoryPlayer.Parser.AsScriptParser
 {
     public struct AsCommandContainer
     {
@@ -19,6 +22,7 @@ namespace BAStoryPlayer.AsScriptParser
         public string value;
     }
 
+    [Obsolete]
     public class AsCommandParser : ICommandParser
     {
         readonly Dictionary<string, AsCommandContainer> nameIdList = new Dictionary<string, AsCommandContainer>();

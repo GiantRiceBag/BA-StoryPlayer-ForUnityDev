@@ -1,86 +1,78 @@
 using UnityEngine;
-using BAStoryPlayer.NexonScriptParser;
-using BAStoryPlayer.UniversaScriptParser;
-using BAStoryPlayer.AsScriptParser;
+
 using BAStoryPlayer.Event;
+using BAStoryPlayer.Parser.UniversaScriptParser;
 
 namespace BAStoryPlayer
 {
-    public enum StoryScriptType
-    {
-        Universal,
-        Nexon,
-        As
-    }
-
     public class BAStoryPlayerController : BSingleton<BAStoryPlayerController>
     {
-        private const string Path_Setting = "Setting/";
-        private const string Path_StoryPlayer = "StoryPlayer";
+        private const string SettingPath = "Setting/";
+        private const string StoryPlayerPath = "StoryPlayer";
 
        [Header("References")]
-       [SerializeField] private CharacterData characterDataTable;
-       [SerializeField] private PlayerSetting playerSetting;
-       [SerializeField] private BAStoryPlayer storyPlayer;
+       [SerializeField] private CharacterData _characterDataTable;
+       [SerializeField] private PlayerSetting _playerSetting;
+       [SerializeField] private BAStoryPlayer _storyPlayer;
 
-        private bool isPlaying = false;
+        private bool _isPlaying = false;
 
-        public bool IsPlaying => isPlaying;
+        public bool IsPlaying => _isPlaying;
 
         public BAStoryPlayer StoryPlayer
         {
             get
             {
-                if (storyPlayer == null)
+                if (_storyPlayer == null)
                 {
-                    storyPlayer = FindObjectOfType<BAStoryPlayer>();
+                    _storyPlayer = FindObjectOfType<BAStoryPlayer>();
 
-                    if (storyPlayer == null)
+                    if (_storyPlayer == null)
                     {
-                        storyPlayer = Instantiate(Resources.Load(Path_StoryPlayer) as GameObject).GetComponent<BAStoryPlayer>();
-                        storyPlayer.transform.SetParent(transform);
-                        storyPlayer.name = "StoryPlayer";
-                        storyPlayer.transform.localPosition = Vector3.zero;
-                        storyPlayer.transform.localScale = Vector3.one;
+                        _storyPlayer = Instantiate(Resources.Load(StoryPlayerPath) as GameObject).GetComponent<BAStoryPlayer>();
+                        _storyPlayer.transform.SetParent(transform);
+                        _storyPlayer.name = "StoryPlayer";
+                        _storyPlayer.transform.localPosition = Vector3.zero;
+                        _storyPlayer.transform.localScale = Vector3.one;
                     }
                 }
 
-                return storyPlayer;
+                return _storyPlayer;
             }
         }
         public CharacterData CharacterDataTable
         {
             get
             {
-                if (characterDataTable == null)
+                if (_characterDataTable == null)
                 {
                     // TODO 日后引入较为全面的学生数据表 --> 算了 引入的P 就那么点人 手输得了
-                    characterDataTable = Resources.Load<CharacterData>(Path_Setting + "CharacterDataTable");
+                    _characterDataTable = Resources.Load<CharacterData>(SettingPath + "CharacterDataTable");
                     Debug.LogWarning($"未配置角色信息表!");
                 }
 
-                return characterDataTable;
+                return _characterDataTable;
             }
         }
         public PlayerSetting Setting
         {
             get
             {
-                if (playerSetting == null)
+                if (_playerSetting == null)
                 {
                     if (Application.isEditor)
                         return ScriptableObject.CreateInstance<PlayerSetting>();
                     Debug.LogWarning($"未引用播放器设定表 已使用默认表");
-                    playerSetting = ScriptableObject.CreateInstance<PlayerSetting>();
+                    _playerSetting = ScriptableObject.CreateInstance<PlayerSetting>();
                 }
 
-                return playerSetting;
+                return _playerSetting;
             }
         }
 
-        public BAStoryPlayer LoadStory(string url,StoryScriptType type = StoryScriptType.Universal)
+        public BAStoryPlayer LoadStory(string url)
         {
-            if (isPlaying)
+            if (_isPlaying)
             {
                 Debug.Log("剧情播放中");
                 return null;
@@ -90,32 +82,20 @@ namespace BAStoryPlayer
             StoryPlayer.gameObject.SetActive(true);
 
             
-            var textAsset = Resources.Load<TextAsset>(Setting.Path_StoryScript + url);
+            var textAsset = Resources.Load<TextAsset>(Setting.PathStoryScript + url);
             if(textAsset == null)
             {
-                Debug.LogError($"未能在 {Setting.Path_StoryScript + url } 找到剧情脚本");
+                Debug.LogError($"未能在 {Setting.PathStoryScript + url } 找到剧情脚本");
                 return null;
             }
 
-            ICommandParser parser = null;
-            switch (type)
-            {
-                case StoryScriptType.Universal:
-                    parser = new UniversalCommandParser();
-                    break;
-                case StoryScriptType.Nexon:
-                    parser = new NexonCommandParser();
-                    break;
-                case StoryScriptType.As:
-                    parser = new AsCommandParser();
-                    break;
-            }
+            ICommandParser parser = new UniversalCommandParser();
 
             StoryPlayer.LoadUnits(0, parser.Parse(textAsset));
             StoryPlayer.ReadyToNext();
             StoryPlayer.Next();
 
-            isPlaying = true;
+            _isPlaying = true;
             StoryPlayer.gameObject.SetActive(true);
 
             EventBus<OnClosedStoryPlayer>.ClearCallback();
@@ -123,7 +103,7 @@ namespace BAStoryPlayer
             // 订阅播放结束事件
             EventBus<OnClosedStoryPlayer>.AddCallback(() =>
             {
-                isPlaying = false;
+                _isPlaying = false;
             });
 
             return StoryPlayer;

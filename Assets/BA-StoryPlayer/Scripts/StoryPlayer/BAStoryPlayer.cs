@@ -164,7 +164,7 @@ namespace BAStoryPlayer
             // 动作以及表情事件订阅 锁定一定时间的操作
             EventBus<OnAnimatedCharacter>.Binding.Add((data) =>
             {
-                Lock(data.time, BAStoryPlayerController.Instance.Setting.Time_Lock_AfterAction);
+                Lock(data.time, BAStoryPlayerController.Instance.Setting.TimeLockAfterAction);
             });
             // 选项事件订阅
             EventBus<OnPlayerSelectedBranch>.Binding.Add((data) =>
@@ -188,7 +188,7 @@ namespace BAStoryPlayer
             // 文本输出结束时间订阅 锁定操作一段时间
             EventBus<OnPrintedLine>.Binding.Add(() =>
             {
-                Lock(BAStoryPlayerController.Instance.Setting.Time_Lock_AfterPrinting);
+                Lock(BAStoryPlayerController.Instance.Setting.TimeLockAfterPrinting);
             });
         }
 
@@ -208,7 +208,7 @@ namespace BAStoryPlayer
                         _imgBackground.enabled = false;
                         break;
                     case BackgroundTransistionType.Smooth:
-                        _imgBackground.DoColor(Color.black, BAStoryPlayerController.Instance.Setting.Time_SwitchBackground).OnCompleted = () =>
+                        _imgBackground.DoColor(Color.black, BAStoryPlayerController.Instance.Setting.TimeSwitchBackground).OnCompleted = () =>
                          {
                              _imgBackground.sprite = null;
                              _imgBackground.enabled = false;
@@ -218,11 +218,11 @@ namespace BAStoryPlayer
                 return;
             }
 
-            Sprite sprite = Resources.Load<Sprite>(BAStoryPlayerController.Instance.Setting.Path_Background + url);
+            Sprite sprite = Resources.Load<Sprite>(BAStoryPlayerController.Instance.Setting.PathBackground + url);
 
             if (sprite == null)
             {
-                Debug.LogError($"Can't find background [{url}] at {BAStoryPlayerController.Instance.Setting.Path_Background + url}");
+                Debug.LogError($"没能在路径 {BAStoryPlayerController.Instance.Setting.PathBackground + url}  找到背景 [{url}]  ");
                 return;
             }
 
@@ -249,10 +249,10 @@ namespace BAStoryPlayer
                         }
                     case BackgroundTransistionType.Smooth:
                         {
-                            _imgBackground.DoColor(Color.black, BAStoryPlayerController.Instance.Setting.Time_SwitchBackground / 2).OnCompleted = () =>
+                            _imgBackground.DoColor(Color.black, BAStoryPlayerController.Instance.Setting.TimeSwitchBackground / 2).OnCompleted = () =>
                             {
                                 _imgBackground.sprite = sprite;
-                                _imgBackground.DoColor(Color.white, BAStoryPlayerController.Instance.Setting.Time_SwitchBackground / 2);
+                                _imgBackground.DoColor(Color.white, BAStoryPlayerController.Instance.Setting.TimeSwitchBackground / 2);
                             };
                             break;
                         }

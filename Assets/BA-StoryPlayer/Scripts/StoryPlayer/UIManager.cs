@@ -86,6 +86,7 @@ namespace BAStoryPlayer
         /// 更新说话者信息
         /// </summary>
         /// <param name="indexName">说话者索引名/若为空则不显示说话者信息</param>
+        [System.Obsolete]
         public void SetSpeaker(string indexName = null)
         {
             if (_currentSpeaker == indexName && indexName != null)
@@ -95,7 +96,7 @@ namespace BAStoryPlayer
             if(indexName != null)
             {
                 var data = BAStoryPlayerController.Instance.CharacterDataTable[indexName];
-                SetSpeaker(data.name, data.affiliation);
+                SetSpeaker(data.firstName, data.affiliation);
             }
             // 旁白
             else
@@ -134,7 +135,7 @@ namespace BAStoryPlayer
             for(int i = 0; i < _mainTextBuffer.Length; i++)
             {
                 _txtMain.text += _mainTextBuffer[i];
-                yield return new WaitForSeconds(BAStoryPlayerController.Instance.Setting.Interval_Print);
+                yield return new WaitForSeconds(BAStoryPlayerController.Instance.Setting.IntervalPrint);
             }
             _crtPrint = null;
             _isPrinting = false;
@@ -189,7 +190,7 @@ namespace BAStoryPlayer
         public void SetBlurBackground(bool enable,BackgroundTransistionType transition = BackgroundTransistionType.Smooth)
         {
             if(transition == BackgroundTransistionType.Smooth)
-                _imgBackground.DoFloat("_Weight", enable ? 1 : 0, BAStoryPlayerController.Instance.Setting.Time_BlurBackground);
+                _imgBackground.DoFloat("_Weight", enable ? 1 : 0, BAStoryPlayerController.Instance.Setting.TimeBlurBackground);
             else if(transition == BackgroundTransistionType.Instant)
             {
                 Material mat = new Material(_imgBackground.material);
