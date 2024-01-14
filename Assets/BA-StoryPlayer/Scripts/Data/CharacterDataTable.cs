@@ -6,12 +6,16 @@ using Spine.Unity;
 using Spine;
 using System;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 namespace BAStoryPlayer
 {
     public enum LoadType
     {
-        Prefab = 0, // Legacy
-        SkeletonData
+        SkeletonData,
+        Prefab
     }
 
     [System.Serializable]
@@ -23,16 +27,16 @@ namespace BAStoryPlayer
         [HideInInspector, Obsolete] public string collage;
         [HideInInspector, Obsolete] public string affiliation;
         [Space]
-        public LoadType loadType = LoadType.SkeletonData;
+        public LoadType loadType;
         public string skelUrl;
-        [HideInInspector] public string portraitUrl;
+        [HideInInspector, Obsolete] public string portraitUrl;
         [Space]
         [Tooltip("仅在载入类型为 'SkeletonData' 时有效")] public Vector2 facePosition;
     }
 
     [CreateAssetMenu(menuName = "BAStoryPlayer/角色信息表",fileName = "CharacterDataTable")]
     [SerializeField]
-    public class CharacterData : ScriptableObject
+    public class CharacterDataTable : ScriptableObject
     {
         [SerializeField] private List<CharacterDataUnit> _rawData = new List<CharacterDataUnit>();
         private IReadOnlyDictionary<int, CharacterDataUnit> _hashTable = new Dictionary<int, CharacterDataUnit>();
@@ -60,7 +64,7 @@ namespace BAStoryPlayer
                 Debug.Log(i.ToString());
             }
         }
-
+        
         private void OnValidate()
         {
             Dictionary<int, CharacterDataUnit> dict = new Dictionary<int, CharacterDataUnit>();
@@ -71,18 +75,28 @@ namespace BAStoryPlayer
                 dict.Add(hash, chrData);
 
                 if (chrData.loadType == LoadType.Prefab)
+                {
                     continue;
-                if (FindObjectOfType<BAStoryPlayerController>() == null)
+                }
+
+                SkeletonDataAsset skelDataAsset = null;
+
+                string[] guids = AssetDatabase.FindAssets(chrData.skelUrl.Split('/').Last());
+                if(guids.Length > 0)
+                {
+                    skelDataAsset = AssetDatabase.LoadAssetAtPath<SkeletonDataAsset>(AssetDatabase.GUIDToAssetPath(guids[0]));
+                }
+
+                if (skelDataAsset == null) 
+                {
                     continue;
+                }
 
-                SkeletonDataAsset skelDataAsset = Resources.Load<SkeletonDataAsset>(BAStoryPlayerController.Instance.Setting.PathPrefab
-                    + chrData.skelUrl);
-
-                if (skelDataAsset == null) return;
                 SkeletonData skelData = skelDataAsset.GetSkeletonData(false);
-
-                if (skelDataAsset == null || skelData == null)
+                if (skelData == null)
+                {
                     continue;
+                }
 
                 Skeleton skel = new Skeleton(skelData);
 

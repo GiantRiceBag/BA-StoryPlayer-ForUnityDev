@@ -35,7 +35,7 @@ namespace BAStoryPlayer.Parser.NexonScriptParser
     }
 
     [Obsolete]
-    public class NexonCommandParser : ICommandParser
+    public class NexonCommandParser : CommandParser
     {
         private const string REG_TITLE = @"#title;([^;\n]+);?([^;\n]+)?;?";
         private const string REG_PLACE = @"#place;([^;\n]+);?";
@@ -57,15 +57,15 @@ namespace BAStoryPlayer.Parser.NexonScriptParser
         private const string REG_CHARACTEREFFECT = @"#([1-5]);(((em|fx);([^;\n]+))|\w+);?";
         private const string REG_OPTION = @"\[n?s(\d{0,2})?]([^;\n]+)";
 
-        private BNexonSubParser nextParser;
+        private NexonSubParser nextParser;
 
-        public NexonCommandParser()
+        public NexonCommandParser(BAStoryPlayer storyPlayer) : base(storyPlayer)
         {
-            BNexonSubParser multimediaLayer = new NexonSubParser_MultimediaLayer(0);
-            BNexonSubParser uiLayer = new NexonSubParser_UILayer(4);
-            BNexonSubParser characterLayer = new NexonSubParser_CharacterLayer(2);
-            BNexonSubParser optionLayer = new NexonSubParser_OptionLayer(3);
-            BNexonSubParser systemLayer = new NexonSubParser_SystemLayer(0);
+            NexonSubParser multimediaLayer = new NexonSubParserMultimediaLayer(storyPlayer,0);
+            NexonSubParser uiLayer = new NexonSubParserUILayer(storyPlayer,4);
+            NexonSubParser characterLayer = new NexonSubParserCharacterLayer(storyPlayer, 2);
+            NexonSubParser optionLayer = new NexonSubParserOptionLayer(storyPlayer, 3);
+            NexonSubParser systemLayer = new NexonSubParserSystemLayer(storyPlayer, 0);
 
             nextParser = multimediaLayer;
             multimediaLayer.nextParser = uiLayer;
@@ -74,7 +74,7 @@ namespace BAStoryPlayer.Parser.NexonScriptParser
             characterLayer.nextParser = systemLayer;
         }
 
-        public List<StoryUnit> Parse(TextAsset rawStoryScript)
+        public override List<StoryUnit> Parse(TextAsset rawStoryScript)
         {
             Regex.CacheSize = 20;
 
@@ -151,22 +151,32 @@ namespace BAStoryPlayer.Parser.NexonScriptParser
 
     #region SubParser
     [Obsolete]
-    public class BNexonSubParser
+    public abstract class NexonSubParser
     {
+        protected BAStoryPlayer storyPlayer;
         protected int weight = 0; // 解析权重
-        public BNexonSubParser nextParser;
+
+        public NexonSubParser nextParser;
+        public BAStoryPlayer StoryPlayer => storyPlayer;
+
+        public NexonSubParser(BAStoryPlayer storyPlayer,int weight)
+        {
+            this.storyPlayer = storyPlayer;
+            this.weight = weight;
+        }
+
         public virtual StoryUnit Parse(RawNexonStoryUnit rawStoryUnit, StoryUnit storyUnit = null) { return null; }
-        public void SetNextParser(BNexonSubParser next) { nextParser = next; }
+        public void SetNextParser(NexonSubParser next) { nextParser = next; }
     }
 
     /*
      * 处理角色操作以及文本对话部分
      * 脚本:character,na,hide
      */
-[Obsolete]
-    public class NexonSubParser_CharacterLayer : BNexonSubParser
+    [Obsolete]
+    public class NexonSubParserCharacterLayer : NexonSubParser
     {
-        public NexonSubParser_CharacterLayer(int weight) { this.weight = weight; }
+        public NexonSubParserCharacterLayer(BAStoryPlayer storyPlayer, int weight) : base(storyPlayer, weight) { }
 
         public override StoryUnit Parse(RawNexonStoryUnit rawStoryUnit, StoryUnit storyUnit = null)
         {
@@ -186,14 +196,14 @@ namespace BAStoryPlayer.Parser.NexonScriptParser
                         // 注意下标减1
                         if (args.Length == 3) // 无台词
                             storyUnit.action += () => {
-                                BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.ActivateCharacter(int.Parse(args[0]) - 1, args[1], args[2]);
+                                StoryPlayer.CharacterModule.ActivateCharacter(int.Parse(args[0]) - 1, args[1], args[2]);
                             };
                         else if (args.Length == 4) // 有台词
                         {
                             if (isOccupied) continue;
                             storyUnit.UpdateType(UnitType.Text);
                             storyUnit.action += () => {
-                                BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.ActivateCharacter(int.Parse(args[0]) - 1, args[1], args[2], args[3]);
+                                StoryPlayer.CharacterModule.ActivateCharacter(int.Parse(args[0]) - 1, args[1], args[2], args[3]);
                             };
                             isOccupied = true;
                         }
@@ -215,8 +225,8 @@ namespace BAStoryPlayer.Parser.NexonScriptParser
                     case ScriptTag.Na:
                         if (isOccupied) continue;
                         storyUnit.action += () => {
-                            BAStoryPlayerController.Instance.StoryPlayer.UIModule.SetSpeaker();
-                            BAStoryPlayerController.Instance.StoryPlayer.UIModule.PrintMainText(args[1]);
+                            StoryPlayer.UIModule.SetSpeaker();
+                            StoryPlayer.UIModule.PrintMainText(args[1]);
                         };
                         isOccupied = true;
                         storyUnit.UpdateType(UnitType.Text);
@@ -225,7 +235,7 @@ namespace BAStoryPlayer.Parser.NexonScriptParser
                         switch (args[1])
                         {
                             case "hide":
-                                storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.HideAll(); };
+                                storyUnit.action += () => { StoryPlayer.CharacterModule.HideAll(); };
                                 break;
                             default: break;
                         }
@@ -244,82 +254,82 @@ namespace BAStoryPlayer.Parser.NexonScriptParser
             {
                 case "h":
                 case "heart":
-                    storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Heart); };
+                    storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Heart); };
                     break;
                 case "respond":
-                    storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Respond); };
+                    storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Respond); };
                     break;
                 case "m":
                 case "music":
-                    storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Music); };
+                    storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Music); };
                     break;
                 case "k":
                 case "twinkle":
-                    storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Twinkle); };
+                    storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Twinkle); };
                     break;
                 case "u":
                 case "upset":
-                    storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Upset); };
+                    storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Upset); };
                     break;
                 case "w":
                 case "sweat":
-                    storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Sweat); };
+                    storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Sweat); };
                     break;
                 case "[...]":
                 case "...":
                 case "dot":
-                    storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Dot); };
+                    storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Dot); };
                     break;
                 case "c":
                 case "chat":
-                    storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Chat); };
+                    storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Chat); };
                     break;
                 case "[!]":
                 case "!":
                 case "exclaim":
-                    storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Exclaim); };
+                    storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Exclaim); };
                     break;
                 case "[?!]":
                 case "?!":
                 case "[!?]":
                 case "!?":
                 case "surprise":
-                    storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Surprise); };
+                    storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Surprise); };
                     break;
                 case "[?]":
                 case "?":
                 case "question":
-                    storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Question); };
+                    storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Question); };
                     break;
                 case "[///]":
                 case "///":
                 case "shy":
-                    storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Shy); };
+                    storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Shy); };
                     break;
                 case "a":
                 case "angry":
-                    storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Angry); };
+                    storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Angry); };
                     break;
                 case "steam":
-                    storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Steam); };
+                    storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Steam); };
                     break;
                 case "sigh":
-                    storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Sigh); };
+                    storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Sigh); };
                     break;
                 case "sad":
-                    storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Sad); };
+                    storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Sad); };
                     break;
                 case "bulb":
-                    storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Bulb); };
+                    storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Bulb); };
                     break;
                 case "zzz":
-                    storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Zzz); };
+                    storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Zzz); };
                     break;
                 case "tear":
-                    storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Tear); };
+                    storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Tear); };
                     break;
                 case "think":
-                    storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Think); };
+                    storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Think); };
                     break;
                 default: return;
             }
@@ -329,53 +339,53 @@ namespace BAStoryPlayer.Parser.NexonScriptParser
             switch (actionName)
             {
                 case "a":
-                    storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Appear); };
+                    storyUnit.action += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Appear); };
                     break;
                 case "d":
-                    storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Disapper); };
+                    storyUnit.action += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Disapper); };
                     break;
                 case "dl":
-                    storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Disapper2Left); };
+                    storyUnit.action += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Disapper2Left); };
                     break;
                 case "dr":
-                    storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Disapper2Right); };
+                    storyUnit.action += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Disapper2Right); };
                     break;
                 case "ar":// 注意实际-1
-                    storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.AppearL2R, characterIndex); };
+                    storyUnit.action += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.AppearL2R, characterIndex); };
                     break;
                 case "al":// 注意实际-1
-                    storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.AppearR2L, characterIndex); };
+                    storyUnit.action += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.AppearR2L, characterIndex); };
                     break;
                 case "hophop":
-                    storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Hophop); };
+                    storyUnit.action += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Hophop); };
                     break;
                 case "greeting":
-                    storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Greeting); };
+                    storyUnit.action += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Greeting); };
                     break;
                 case "shake":
-                    storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Shake); };
+                    storyUnit.action += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Shake); };
                     break;
                 case "m1": // 注意实际-1
                 case "m2":
                 case "m3":
                 case "m4":
                 case "m5":
-                    storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Move, int.Parse(actionName[1].ToString()) - 1); };
+                    storyUnit.action += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Move, int.Parse(actionName[1].ToString()) - 1); };
                     break;
                 case "stiff":
-                    storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Stiff); };
+                    storyUnit.action += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Stiff); };
                     break;
                 case "closeup":
-                    storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Close); };
+                    storyUnit.action += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Close); };
                     break;
                 case "jump":
-                    storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Jump); };
+                    storyUnit.action += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Jump); };
                     break;
                 case "falldownR":
-                    storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.falldownR); };
+                    storyUnit.action += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.falldownR); };
                     break;
                 case "hide":
-                    storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Hide); };
+                    storyUnit.action += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Hide); };
                     break;
                 default: return;
             }
@@ -387,12 +397,9 @@ namespace BAStoryPlayer.Parser.NexonScriptParser
      * 脚本处理:Video
      */
     [Obsolete]
-    public class NexonSubParser_MultimediaLayer : BNexonSubParser
+    public class NexonSubParserMultimediaLayer : NexonSubParser
     {
-        public NexonSubParser_MultimediaLayer(int weight)
-        {
-            this.weight = weight;
-        }
+        public NexonSubParserMultimediaLayer(BAStoryPlayer storyPlayer, int weight) : base(storyPlayer, weight) { }
 
         public override StoryUnit Parse(RawNexonStoryUnit rawStoryUnit, StoryUnit storyUnit = null)
         {
@@ -402,12 +409,12 @@ namespace BAStoryPlayer.Parser.NexonScriptParser
             // 背景音乐及音效
             if (rawStoryUnit.bgmURL != string.Empty)
             {
-                storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.AudioModule.PlayBGM(rawStoryUnit.bgmURL); };
+                storyUnit.action += () => { StoryPlayer.AudioModule.PlayBGM(rawStoryUnit.bgmURL); };
             }
 
             if (rawStoryUnit.soundURL != string.Empty)
             {
-                storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.AudioModule.Play(rawStoryUnit.soundURL); };
+                storyUnit.action += () => { StoryPlayer.AudioModule.Play(rawStoryUnit.soundURL); };
             }
 
             for (int i = 0; i < rawStoryUnit.scriptList.Count; i++)
@@ -432,12 +439,11 @@ namespace BAStoryPlayer.Parser.NexonScriptParser
      * 处理选项
      */
     [Obsolete]
-    public class NexonSubParser_OptionLayer : BNexonSubParser
+    public class NexonSubParserOptionLayer : NexonSubParser
     {
-        /*
-         处理选项部分
-         */
-        public NexonSubParser_OptionLayer(int weight) { this.weight = weight; }
+        public NexonSubParserOptionLayer(BAStoryPlayer storyPlayer, int weight) : base(storyPlayer, weight)
+        {
+        }
 
         public override StoryUnit Parse(RawNexonStoryUnit rawStoryUnit, StoryUnit storyUnit = null)
         {
@@ -471,7 +477,7 @@ namespace BAStoryPlayer.Parser.NexonScriptParser
             if (datas.Count != 0)
             {
                 storyUnit.UpdateType(UnitType.Option);
-                storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.UIModule.ShowOption(datas); };
+                storyUnit.action += () => { StoryPlayer.UIModule.ShowOption(datas); };
             }
 
             return nextParser == null ? storyUnit : nextParser.Parse(rawStoryUnit, storyUnit);
@@ -482,9 +488,11 @@ namespace BAStoryPlayer.Parser.NexonScriptParser
      * 处理等待部分
      */
     [Obsolete]
-    public class NexonSubParser_SystemLayer : BNexonSubParser
+    public class NexonSubParserSystemLayer : NexonSubParser
     {
-        public NexonSubParser_SystemLayer(int weight) { this.weight = weight; }
+        public NexonSubParserSystemLayer(BAStoryPlayer storyPlayer, int weight) : base(storyPlayer, weight)
+        {
+        }
 
         public override StoryUnit Parse(RawNexonStoryUnit rawStoryUnit, StoryUnit storyUnit = null)
         {
@@ -515,11 +523,10 @@ namespace BAStoryPlayer.Parser.NexonScriptParser
      * 脚本处理 : Title,Place,NextEpisode,Continued,Show/HideMenu,BgShake,ClearSt
      */
     [Obsolete]
-    public class NexonSubParser_UILayer : BNexonSubParser
+    public class NexonSubParserUILayer : NexonSubParser
     {
-        public NexonSubParser_UILayer(int weight)
+        public NexonSubParserUILayer(BAStoryPlayer storyPlayer, int weight) : base(storyPlayer, weight)
         {
-            this.weight = weight;
         }
 
         public override StoryUnit Parse(RawNexonStoryUnit rawStoryUnit, StoryUnit storyUnit = null)
@@ -529,7 +536,7 @@ namespace BAStoryPlayer.Parser.NexonScriptParser
 
             if (rawStoryUnit.backgroundURL != string.Empty)
             {
-                storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.SetBackground(rawStoryUnit.backgroundURL, BackgroundTransistionType.Smooth); };
+                storyUnit.action += () => { StoryPlayer.SetBackground(rawStoryUnit.backgroundURL, BackgroundTransistionType.Smooth); };
             }
 
             for (int i = 0; i < rawStoryUnit.scriptList.Count; i++)
@@ -541,15 +548,15 @@ namespace BAStoryPlayer.Parser.NexonScriptParser
                     case ScriptTag.Title:
                         {
                             if (args.Length == 3)
-                                storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.UIModule.ShowTitle(args[1], args[2]); };
+                                storyUnit.action += () => { StoryPlayer.UIModule.ShowTitle(args[1], args[2]); };
                             else
-                                storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.UIModule.ShowTitle("", args[1]); };
+                                storyUnit.action += () => { StoryPlayer.UIModule.ShowTitle("", args[1]); };
                             storyUnit.UpdateType(UnitType.Title);
                             break;
                         }
                     case ScriptTag.Place:
                         {
-                            storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.UIModule.ShowVenue(args[1]); };
+                            storyUnit.action += () => { StoryPlayer.UIModule.ShowVenue(args[1]); };
                             break;
                         }
                     case ScriptTag.NextEpisode:
@@ -566,12 +573,12 @@ namespace BAStoryPlayer.Parser.NexonScriptParser
                         }
                     case ScriptTag.ShowMenu:
                         {
-                            storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.UIModule.SetActiveButton(true); };
+                            storyUnit.action += () => { StoryPlayer.UIModule.SetActiveButton(true); };
                             break;
                         }
                     case ScriptTag.HideMenu:
                         {
-                            storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.UIModule.SetActiveButton(false); };
+                            storyUnit.action += () => { StoryPlayer.UIModule.SetActiveButton(false); };
                             break;
                         }
                     case ScriptTag.BgShake:
@@ -583,7 +590,7 @@ namespace BAStoryPlayer.Parser.NexonScriptParser
                     case ScriptTag.ClearSt:
                         {
                             storyUnit.action += () => {
-                                BAStoryPlayerController.Instance.StoryPlayer.UIModule.SetActiveTextArea(false);
+                                StoryPlayer.UIModule.SetActiveTextArea(false);
                             };
                             break;
                         }

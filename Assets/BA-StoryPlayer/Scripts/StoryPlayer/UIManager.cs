@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+
 using BAStoryPlayer.DoTweenS;
 using BAStoryPlayer.UI;
-using BAStoryPlayer.Utility;
 using BAStoryPlayer.Event;
 
 namespace BAStoryPlayer
 {
-    public class UIManager : MonoBehaviour
+    public class UIManager : PlayerModule
     {
         [Header("References")]
         [SerializeField] private Image _imgBackground;
@@ -31,11 +31,9 @@ namespace BAStoryPlayer
 
         private string _currentSpeaker = null;
         private string _mainTextBuffer = null;
-        private bool _isPrinting = false;
+        private bool _isPrintingText = false;
 
-        private BAStoryPlayer StoryPlayer { get { return BAStoryPlayerController.Instance.StoryPlayer; } }
-
-        public bool IsPrinting => _isPrinting;
+        public bool IsPrintingText => _isPrintingText;
 
         private void Start()
         {
@@ -65,9 +63,13 @@ namespace BAStoryPlayer
 
                     // 若Auto则延缓两秒后继续
                     if (StoryPlayer.IsAuto)
-                        _crtNext = Timer.Delay(transform, () => { StoryPlayer.ReadyToNext();}, 2);
+                    {
+                        _crtNext = this.Delay(() => { StoryPlayer.ReadyToNext(); }, 2);
+                    }
                     else
+                    {
                         StoryPlayer.ReadyToNext();
+                    }
                 });
 
             // 若取消Auto 则删除当前执行的协程
@@ -95,7 +97,7 @@ namespace BAStoryPlayer
             // 角色说话
             if(indexName != null)
             {
-                var data = BAStoryPlayerController.Instance.CharacterDataTable[indexName];
+                var data = StoryPlayer.CharacterDataTable[indexName];
                 SetSpeaker(data.firstName, data.affiliation);
             }
             // 旁白
@@ -124,7 +126,7 @@ namespace BAStoryPlayer
             SetActiveTextArea();
             SetActiveButton();
 
-            _isPrinting = true;
+            _isPrintingText = true;
             _mainTextBuffer = text;
             if (_crtPrint != null)
                 StopCoroutine(_crtPrint);
@@ -135,10 +137,10 @@ namespace BAStoryPlayer
             for(int i = 0; i < _mainTextBuffer.Length; i++)
             {
                 _txtMain.text += _mainTextBuffer[i];
-                yield return new WaitForSeconds(BAStoryPlayerController.Instance.Setting.IntervalPrint);
+                yield return new WaitForSeconds(StoryPlayer.Setting.IntervalPrint);
             }
             _crtPrint = null;
-            _isPrinting = false;
+            _isPrintingText = false;
             _mainTextBuffer = null;
 
             EventBus<OnPrintedLine>.Raise();
@@ -149,13 +151,13 @@ namespace BAStoryPlayer
         /// </summary>
         public void Skip()
         {
-            if (!_isPrinting)
+            if (!_isPrintingText)
                 return;
 
             StopCoroutine(_crtPrint);
             _txtMain.text = _mainTextBuffer;
             _mainTextBuffer = null;
-            _isPrinting = false;
+            _isPrintingText = false;
 
             EventBus<OnPrintedLine>.Raise();
         }
@@ -190,7 +192,7 @@ namespace BAStoryPlayer
         public void SetBlurBackground(bool enable,BackgroundTransistionType transition = BackgroundTransistionType.Smooth)
         {
             if(transition == BackgroundTransistionType.Smooth)
-                _imgBackground.DoFloat("_Weight", enable ? 1 : 0, BAStoryPlayerController.Instance.Setting.TimeBlurBackground);
+                _imgBackground.DoFloat("_Weight", enable ? 1 : 0, StoryPlayer.Setting.TimeBlurBackground);
             else if(transition == BackgroundTransistionType.Instant)
             {
                 Material mat = new Material(_imgBackground.material);
@@ -207,7 +209,7 @@ namespace BAStoryPlayer
         {
             GameObject obj = Instantiate(Resources.Load("UI/Title") as GameObject);
             obj.transform.SetParent(transform);
-            obj.GetComponent<Title>().Initialize(title, subtitle);
+            obj.GetComponent<Title>().Initialize(StoryPlayer,title, subtitle);
 
             HideAllUI();
         }
@@ -215,7 +217,7 @@ namespace BAStoryPlayer
         {
             GameObject obj = Instantiate(Resources.Load("UI/OptionManager") as GameObject);
             obj.transform.SetParent(StoryPlayer.transform);
-            obj.GetComponent<OptionManager>().AddOptions(dates);
+            obj.GetComponent<OptionManager>().AddOptions(dates,StoryPlayer);
         }
         public void ShowVenue(string venue)
         {

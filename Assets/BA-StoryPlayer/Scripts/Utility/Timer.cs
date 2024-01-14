@@ -1,34 +1,37 @@
+using System;
 using UnityEngine;
+
 namespace BAStoryPlayer.Utility
 {
-    public class Timer : BSingleton<Timer>
+    [Obsolete]
+    public class Timer
     {
-        protected override void Awake()
+        public MonoBehaviour MonoBehaviour { private set; get; }
+
+        public Timer(MonoBehaviour monoBehaviour)
         {
-            base.Awake();
-            gameObject.hideFlags = HideFlags.HideInHierarchy;
+            MonoBehaviour = monoBehaviour;
         }
 
-        public static Coroutine Delay(System.Action action,float time)
+        public Coroutine Delay(System.Action action,float time)
         {
-           return Instance.StartCoroutine(CDelay(action, time));
+           return MonoBehaviour.StartCoroutine(CrtDelay(action, time));
         }
 
-        public static Coroutine Delay(Transform holder,System.Action action, float time)
+        public Coroutine Delay(Transform holder,System.Action action, float time)
         {
             return Delay(holder.GetComponent<MonoBehaviour>(), action, time);
         }
 
-        public static Coroutine Delay(MonoBehaviour holder, System.Action action, float time)
+        public Coroutine Delay(MonoBehaviour holder, System.Action action, float time)
         {
-            return holder.StartCoroutine(CDelay(action, time));
+            return holder.StartCoroutine(CrtDelay(action, time));
         }
 
-        static System.Collections.IEnumerator CDelay(System.Action action,float time)
+        private System.Collections.IEnumerator CrtDelay(System.Action action,float time)
         {
             yield return new WaitForSeconds(time);
             action?.Invoke();
         }
     }
-
 }

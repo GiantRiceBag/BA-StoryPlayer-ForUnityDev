@@ -1,10 +1,13 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace BAStoryPlayer.DoTweenS
 {
     public class DoTweenS
     {
         private static DoTweenS s_instance;
+        private static GameObject s_gameObject;
+        private static MonoBehaviour s_mono;
         private static int s_usableTid = 0;
         private static List<TweenS> s_tweenList = new List<TweenS>();
 
@@ -14,9 +17,29 @@ namespace BAStoryPlayer.DoTweenS
             get
             {
                 if (s_instance == null)
+                {
                     s_instance = new DoTweenS();
+                }
 
                 return s_instance;
+            }
+        }
+        public static MonoBehaviour MonoInstance
+        {
+            get
+            {
+                if(s_gameObject == null || s_mono == null)
+                {
+                    GameObject obj = new GameObject();
+                    obj.name = "[DoTweenS]";
+                    obj.hideFlags = HideFlags.HideInHierarchy;
+
+                    s_gameObject = GameObject.Instantiate(obj);
+                    s_mono = s_gameObject.GetComponent<MonoBehaviour>();
+                    Object.DontDestroyOnLoad(s_gameObject);
+                }
+
+                return s_mono;
             }
         }
 

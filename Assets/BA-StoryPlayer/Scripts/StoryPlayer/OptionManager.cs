@@ -29,6 +29,8 @@ namespace BAStoryPlayer.UI
             }
         }
 
+        public BAStoryPlayer StoryPlayer { get;private set; }
+
         private void Start()
         {
             var rect = GetComponent<RectTransform>();
@@ -44,13 +46,16 @@ namespace BAStoryPlayer.UI
             GameObject obj = Instantiate(BtnPrefab);
             obj.transform.SetParent(transform);
 
-            var option = obj.GetComponent<Button_Option>();
-            option.Initialize(data.optionID, $"\"{ data.text}\"");
+            var option = obj.GetComponent<ButtonOption>();
+            option.Initialize(this,data.optionID, $"\"{ data.text}\"");
         }
-        public void AddOptions(System.Collections.Generic.List<OptionData> datas)
+        public void AddOptions(System.Collections.Generic.List<OptionData> datas,BAStoryPlayer storyPlayer)
         {
+            StoryPlayer = storyPlayer;
             foreach (var i in datas)
+            {
                 AddOption(i);
+            }
         }
 
         public void RevokeInteractablilty(Transform exception = null)
@@ -80,10 +85,12 @@ namespace BAStoryPlayer.UI
         public void FinishSelecting()
         {
             if (_block != null)
+            {
                 Destroy(_block);
+            }
 
             // 一般来说选完后自动执行下一个单元
-            BAStoryPlayerController.Instance.StoryPlayer.ReadyToNext(true);
+            StoryPlayer.ReadyToNext(true);
             Destroy(gameObject);
         }
     }

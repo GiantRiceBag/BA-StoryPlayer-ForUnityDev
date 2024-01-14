@@ -17,6 +17,7 @@ using System.Reflection;
 [ExecuteAlways]
 public class Test : MonoBehaviour
 {
+    public BAStoryPlayer.BAStoryPlayer storyPlayer;
     public string storyScriptName = "TestScript";
     Action test;
     public SkeletonGraphic skelg;
@@ -32,7 +33,7 @@ public class Test : MonoBehaviour
         {
             if (Application.isPlaying)
             {
-                BAStoryPlayerController.Instance.LoadStory(storyScriptName);
+                storyPlayer.LoadStory(storyScriptName);
             }
         }
         GUILayout.Label("！！！！！！！！！！！！！！！！");

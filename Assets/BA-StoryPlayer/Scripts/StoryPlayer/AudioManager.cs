@@ -6,7 +6,7 @@ using BAStoryPlayer.DoTweenS;
 
 namespace BAStoryPlayer
 {
-    public class AudioManager : MonoBehaviour
+    public class AudioManager : PlayerModule
     {
         private int _playerID = 0;
 
@@ -97,9 +97,9 @@ namespace BAStoryPlayer
 
         public void PlayBGM(string audioURL, bool fade = true, float fadeScale = 2)
         {
-            AudioClip clip = Resources.Load<AudioClip>(BAStoryPlayerController.Instance.Setting.PathMusic + audioURL);
+            AudioClip clip = Resources.Load<AudioClip>(StoryPlayer.Setting.PathMusic + audioURL);
             if (clip == null)
-                Debug.LogError($"未能在路径 [{BAStoryPlayerController.Instance.Setting.PathMusic + audioURL}] 找到AudioClip");
+                Debug.LogError($"未能在路径 [{StoryPlayer.Setting.PathMusic + audioURL}] 找到AudioClip");
             PlayBGM(clip, fade, fadeScale);
         }
         public void PlayBGM(AudioClip audioClip, bool fade = true, float fadeScale = 2)
@@ -112,16 +112,16 @@ namespace BAStoryPlayer
                     SourceBGM.volume = 0;
                     SourceBGM.clip = audioClip;
                     SourceBGM.Play();
-                    SourceBGM.DoVolume(VolumeMusic, BAStoryPlayerController.Instance.Setting.TimeBgmFade * fadeScale);
+                    SourceBGM.DoVolume(VolumeMusic, StoryPlayer.Setting.TimeBgmFade * fadeScale);
                 }
                 else
                 {
-                    SourceBGM.DoVolume(0, BAStoryPlayerController.Instance.Setting.TimeBgmFade * fadeScale).OnCompleted = () =>
+                    SourceBGM.DoVolume(0, StoryPlayer.Setting.TimeBgmFade * fadeScale).OnCompleted = () =>
                     {
                         SourceBGM.Stop();
                         SourceBGM.clip = audioClip;
                         SourceBGM.Play();
-                        SourceBGM.DoVolume(VolumeMusic, BAStoryPlayerController.Instance.Setting.TimeBgmFade * fadeScale);
+                        SourceBGM.DoVolume(VolumeMusic, StoryPlayer.Setting.TimeBgmFade * fadeScale);
                     };
                 }
             }
@@ -139,7 +139,7 @@ namespace BAStoryPlayer
 
             if (fade)
             {
-                SourceBGM.DoVolume(0, BAStoryPlayerController.Instance.Setting.TimeBgmFade * fadeScale).OnCompleted = () =>
+                SourceBGM.DoVolume(0, StoryPlayer.Setting.TimeBgmFade * fadeScale).OnCompleted = () =>
                 {
                     SourceBGM.Pause();
                 };
@@ -152,9 +152,9 @@ namespace BAStoryPlayer
 
         public int Play(string audioURL, bool isOneShot = true, float scale = 1)
         {
-            AudioClip clip = Resources.Load<AudioClip>(BAStoryPlayerController.Instance.Setting.PathSound + audioURL);
+            AudioClip clip = Resources.Load<AudioClip>(StoryPlayer.Setting.PathSound + audioURL);
             if (clip == null)
-                Debug.LogError($"未能在路径 [{BAStoryPlayerController.Instance.Setting.PathSound + audioURL}] 找到AudioClip");
+                Debug.LogError($"未能在路径 [{StoryPlayer.Setting.PathSound + audioURL}] 找到AudioClip");
             return Play(clip, isOneShot, scale);
         }
         public int Play(AudioClip audioClip, bool isOneShot = true, float scale = 1)
@@ -192,7 +192,7 @@ namespace BAStoryPlayer
         }
         private void ReleaseSource(AudioSource source)
         {
-            if (_sourcePool.Count >= BAStoryPlayerController.Instance.Setting.NumMaxAudioSource)
+            if (_sourcePool.Count >= StoryPlayer.Setting.NumMaxAudioSource)
             {
                 Destroy(source.gameObject);
             }

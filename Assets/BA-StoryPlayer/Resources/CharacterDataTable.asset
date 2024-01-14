@@ -18,7 +18,7 @@ MonoBehaviour:
     firstName: 
     collage: 
     affiliation: 
-    loadType: 1
+    loadType: 0
     skelUrl: shiroko
     portraitUrl: 
     facePosition: {x: 22.379984, y: 1032.0273}
@@ -27,7 +27,7 @@ MonoBehaviour:
     firstName: 
     collage: 
     affiliation: 
-    loadType: 1
+    loadType: 0
     skelUrl: hihumi
     portraitUrl: 
     facePosition: {x: -14.901485, y: 1027.6925}
@@ -36,7 +36,7 @@ MonoBehaviour:
     firstName: 
     collage: 
     affiliation: 
-    loadType: 1
+    loadType: 0
     skelUrl: nonomi
     portraitUrl: 
     facePosition: {x: 10.051084, y: 1060.1202}
@@ -45,7 +45,7 @@ MonoBehaviour:
     firstName: 
     collage: 
     affiliation: 
-    loadType: 1
+    loadType: 0
     skelUrl: serika
     portraitUrl: 
     facePosition: {x: 16.000526, y: 1046.3771}
@@ -54,7 +54,7 @@ MonoBehaviour:
     firstName: 
     collage: 
     affiliation: 
-    loadType: 1
+    loadType: 0
     skelUrl: hoshino
     portraitUrl: 
     facePosition: {x: 17.975986, y: 924.4399}

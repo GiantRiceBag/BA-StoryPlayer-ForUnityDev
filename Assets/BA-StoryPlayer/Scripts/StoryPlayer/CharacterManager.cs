@@ -8,6 +8,7 @@ using Random = UnityEngine.Random;
 
 using BAStoryPlayer.DoTweenS;
 using BAStoryPlayer.Event;
+using System.Collections.ObjectModel;
 
 namespace BAStoryPlayer
 {
@@ -37,7 +38,7 @@ namespace BAStoryPlayer
         Back
     }
 
-    public class CharacterManager : MonoBehaviour
+    public class CharacterManager : PlayerModule
     {
         private const int CharacterSlotCount = 5;
         private const float CharacterScale = 0.7f;
@@ -47,12 +48,23 @@ namespace BAStoryPlayer
         private Color ColorUnhighlight { get { return new Color(0.6f, 0.6f, 0.6f);  } }
 
         [SerializeField] private SkeletonGraphic[] _character = new SkeletonGraphic[CharacterSlotCount];
-        private Dictionary<string, GameObject> _characterPool = new Dictionary<string, GameObject>();
-        private Dictionary<string, Coroutine> _winkAction = new Dictionary<string, Coroutine>();
-        private BAStoryPlayer StoryPlayer => BAStoryPlayerController.Instance.StoryPlayer;
+        private readonly Dictionary<string, GameObject> _characterPool = new Dictionary<string, GameObject>();
+        private readonly Dictionary<string, Coroutine> _winkAction = new Dictionary<string, Coroutine>();
+        private EmotionFactory _emotionFactory;
 
         public SkeletonGraphic[] Character => _character;
         public Dictionary<string, GameObject> CharacterPool => _characterPool;
+        public EmotionFactory EmotionFactory
+        {
+            get
+            {
+                if(_emotionFactory == null)
+                {
+                    _emotionFactory = new(StoryPlayer);
+                }
+                return _emotionFactory;
+            }
+        }
 
         /// <summary>
         /// 激活角色 仅Nexon格式用 (若有动作,一定要先于动作前调用)
@@ -114,8 +126,8 @@ namespace BAStoryPlayer
             _characterPool[indexName].SetActive(true);
         }
 
-        bool CheckIfCharacterInPool(string indexName) => _characterPool.ContainsKey(indexName) ? _characterPool[indexName] != null : false;
-        int CheckIfCharacterOnSlot(string indexName)
+        private bool CheckIfCharacterInPool(string indexName) => _characterPool.ContainsKey(indexName) ? _characterPool[indexName] != null : false;
+        private int CheckIfCharacterOnSlot(string indexName)
         {
             for(int i = 0; i < CharacterSlotCount; i++)
             {
@@ -127,15 +139,15 @@ namespace BAStoryPlayer
 
             return -1;
         }
-        bool CheckIfSlotEmpty(int index) => CheckIfIndexValid(index) ? Character[index] == null : false;
-        bool CheckIfIndexValid(int index) => (index >= 0 && index < CharacterSlotCount);
+        private bool CheckIfSlotEmpty(int index) => CheckIfIndexValid(index) ? Character[index] == null : false;
+        private bool CheckIfIndexValid(int index) => (index >= 0 && index < CharacterSlotCount);
 
         /// <summary>
         /// 尝试删除在场上的角色(不删除对象仅取消编号)
         /// </summary>
         /// <param name="index">下标</param>
         /// <param name="destroyObject">完全删除角色</param>
-        void DestroyCharacter(int index,bool destroyObject = false)
+        private void DestroyCharacter(int index,bool destroyObject = false)
         {
             if (CheckIfSlotEmpty(index))
                 return;
@@ -221,11 +233,11 @@ namespace BAStoryPlayer
                 yield break;
             }
 
-            yield return new WaitForSeconds(Random.Range(BAStoryPlayerController.Instance.Setting.TimeRangeCharacterWink.x, BAStoryPlayerController.Instance.Setting.TimeRangeCharacterWink.y));
+            yield return new WaitForSeconds(Random.Range(base.StoryPlayer.Setting.TimeRangeCharacterWink.x, base.StoryPlayer.Setting.TimeRangeCharacterWink.y));
             while (true)
             {
                 skel.AnimationState.SetAnimation(0, ani_EyeClose_Name, false);
-                yield return new WaitForSeconds(Random.Range(BAStoryPlayerController.Instance.Setting.TimeRangeCharacterWink.x, BAStoryPlayerController.Instance.Setting.TimeRangeCharacterWink.y));
+                yield return new WaitForSeconds(Random.Range(base.StoryPlayer.Setting.TimeRangeCharacterWink.x, base.StoryPlayer.Setting.TimeRangeCharacterWink.y));
             }
         }
 
@@ -276,7 +288,7 @@ namespace BAStoryPlayer
                     }
                 case BackgroundTransistionType.Smooth:
                     {
-                        obj.transform.DoMove_Anchored(new Vector2((targetIndex + 1) * SlotInterval, rect.anchoredPosition.y), BAStoryPlayerController.Instance.Setting.TimeCharacterMove);
+                        obj.transform.DoMove_Anchored(new Vector2((targetIndex + 1) * SlotInterval, rect.anchoredPosition.y), base.StoryPlayer.Setting.TimeCharacterMove);
                         break;
                     }
                 default: break;
@@ -293,8 +305,8 @@ namespace BAStoryPlayer
                     }
                 case BackgroundTransistionType.Smooth:
                     {
-                        obj.transform.DoMove_Anchored(pos, BAStoryPlayerController.Instance.Setting.TimeCharacterMove);
-                        EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.TimeCharacterMove });
+                        obj.transform.DoMove_Anchored(pos, base.StoryPlayer.Setting.TimeCharacterMove);
+                        EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = base.StoryPlayer.Setting.TimeCharacterMove });
                         break;
                     }
                 default: break;
@@ -316,7 +328,10 @@ namespace BAStoryPlayer
         public void SetAction(string indexName,CharacterAction action,int arg = -1)
         {
             if (!CheckIfCharacterInPool(indexName))
+            {
                 CreateCharacterObj(indexName);
+            }
+
             _characterPool[indexName].SetActive(true);
             SetAction(_characterPool[indexName], action,arg);
         }
@@ -328,57 +343,57 @@ namespace BAStoryPlayer
             {
                 case CharacterAction.Appear: //黑色剪影渐变进场
                     skelGraphic.color = Color.black;
-                    skelGraphic.DoColor(Color.white, BAStoryPlayerController.Instance.Setting.TimeCharacterFade);
-                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.TimeCharacterFade });
+                    skelGraphic.DoColor(Color.white, base.StoryPlayer.Setting.TimeCharacterFade);
+                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = base.StoryPlayer.Setting.TimeCharacterFade });
                     break;
                 case CharacterAction.Disapper: // 渐变至黑色剪影同时离场
                     skelGraphic.color = Color.white;
-                    skelGraphic.DoColor(Color.black, BAStoryPlayerController.Instance.Setting.TimeCharacterFade).OnCompleted = ()=> { SetAction(obj, CharacterAction.Hide); };
-                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.TimeCharacterFade });
+                    skelGraphic.DoColor(Color.black, base.StoryPlayer.Setting.TimeCharacterFade).OnCompleted = ()=> { SetAction(obj, CharacterAction.Hide); };
+                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = base.StoryPlayer.Setting.TimeCharacterFade });
                     break;
                 case CharacterAction.Disapper2Left:
                     MoveCharacterTo(obj, new Vector2(-500, 0), BackgroundTransistionType.Smooth);
-                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.TimeCharacterMove });
+                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = base.StoryPlayer.Setting.TimeCharacterMove });
                     break;
                 case CharacterAction.Disapper2Right:
                     MoveCharacterTo(obj, new Vector2(2420, 0), BackgroundTransistionType.Smooth);
-                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.TimeCharacterMove });
+                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = base.StoryPlayer.Setting.TimeCharacterMove });
                     break;
                 case CharacterAction.AppearL2R:
                     skelGraphic.color = Color.white;
                     MoveCharacterTo(obj, new Vector2(-500, 0));
                     MoveCharacterTo(obj, arg, BackgroundTransistionType.Smooth);
-                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.TimeCharacterMove });
+                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = base.StoryPlayer.Setting.TimeCharacterMove });
                     break;
                 case CharacterAction.AppearR2L:
                     skelGraphic.color = Color.white;
                     MoveCharacterTo(obj, new Vector2(2420, 0));
                     MoveCharacterTo(obj, arg, BackgroundTransistionType.Smooth);
-                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.TimeCharacterMove });
+                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = base.StoryPlayer.Setting.TimeCharacterMove });
                     break;
                 case CharacterAction.Hophop:
-                    obj.transform.DoBound_Anchored_Relative(new Vector2(0, 50), BAStoryPlayerController.Instance.Setting.TimeCharacterHophop, 2);
-                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.TimeCharacterHophop });
+                    obj.transform.DoBound_Anchored_Relative(new Vector2(0, 50), base.StoryPlayer.Setting.TimeCharacterHophop, 2);
+                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = base.StoryPlayer.Setting.TimeCharacterHophop });
                     break;
                 case CharacterAction.Greeting:
-                    obj.transform.DoBound_Anchored_Relative(new Vector2(0, -70), BAStoryPlayerController.Instance.Setting.TimeCharacterGreeting);
-                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.TimeCharacterGreeting });
+                    obj.transform.DoBound_Anchored_Relative(new Vector2(0, -70), base.StoryPlayer.Setting.TimeCharacterGreeting);
+                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = base.StoryPlayer.Setting.TimeCharacterGreeting });
                     break;
                 case CharacterAction.Shake:
-                    obj.transform.DoShakeX(40, BAStoryPlayerController.Instance.Setting.TimeCharacterShake, 2);
-                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.TimeCharacterShake });
+                    obj.transform.DoShakeX(40, base.StoryPlayer.Setting.TimeCharacterShake, 2);
+                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = base.StoryPlayer.Setting.TimeCharacterShake });
                     break;
                 case CharacterAction.Move:
                     MoveCharacterTo(obj, arg, BackgroundTransistionType.Smooth);
-                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.TimeCharacterMove });
+                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = base.StoryPlayer.Setting.TimeCharacterMove });
                     break;
                 case CharacterAction.Stiff:
-                    obj.transform.DoShakeX(10, BAStoryPlayerController.Instance.Setting.TimeCharacterStiff, 4);
-                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.TimeCharacterStiff });
+                    obj.transform.DoShakeX(10, base.StoryPlayer.Setting.TimeCharacterStiff, 4);
+                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = base.StoryPlayer.Setting.TimeCharacterStiff });
                     break;
                 case CharacterAction.Jump:
-                    obj.transform.DoBound_Anchored_Relative(new Vector2(0, 70), BAStoryPlayerController.Instance.Setting.TimeCharacterJump);
-                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = BAStoryPlayerController.Instance.Setting.TimeCharacterJump });
+                    obj.transform.DoBound_Anchored_Relative(new Vector2(0, 70), base.StoryPlayer.Setting.TimeCharacterJump);
+                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = base.StoryPlayer.Setting.TimeCharacterJump });
                     break;
                 case CharacterAction.falldownR:
                     {
@@ -462,7 +477,7 @@ namespace BAStoryPlayer
         public void SetEmotion(GameObject obj,CharacterEmotion emotion)
         {
             float time = 1;
-            EmotionFactory.SetEmotion(obj.transform, emotion, ref time);
+            EmotionFactory.SetEmotion(obj.transform, emotion, base.StoryPlayer.CharacterDataTable[obj.name], time);
             EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = time });
         }
 
@@ -506,7 +521,7 @@ namespace BAStoryPlayer
                         }
                     case BackgroundTransistionType.Smooth:
                         {
-                            skg.DoColor(ColorUnhighlight, BAStoryPlayerController.Instance.Setting.TimeCharacterHighlight);
+                            skg.DoColor(ColorUnhighlight, base.StoryPlayer.Setting.TimeCharacterHighlight);
                             break;
                         }
                     default: return;
@@ -536,7 +551,7 @@ namespace BAStoryPlayer
                         }
                     case BackgroundTransistionType.Smooth:
                         {
-                            skelGraphic.DoColor(ColorUnhighlight, BAStoryPlayerController.Instance.Setting.TimeCharacterHighlight);
+                            skelGraphic.DoColor(ColorUnhighlight, base.StoryPlayer.Setting.TimeCharacterHighlight);
                             break;
                         }
                     default: return;
@@ -586,20 +601,18 @@ namespace BAStoryPlayer
 
             try
             {
-                var controller = BAStoryPlayerController.Instance;
-
-                switch (controller.CharacterDataTable[indexName].loadType)
+                switch (base.StoryPlayer.CharacterDataTable[indexName].loadType)
                 {
                     case LoadType.Prefab:
                         {
-                            prefab = Instantiate(Resources.Load(controller.Setting.PathPrefab + controller.CharacterDataTable[indexName].skelUrl) as GameObject);
+                            prefab = Instantiate(Resources.Load(base.StoryPlayer.Setting.PathPrefab + base.StoryPlayer.CharacterDataTable[indexName].skelUrl) as GameObject);
                             break;
                         }
                     case LoadType.SkeletonData:
                         {
-                            SkeletonDataAsset skelData = 
-                                Resources.Load<SkeletonDataAsset>(controller.Setting.PathPrefab
-                                    + controller.CharacterDataTable[indexName].skelUrl);
+                            SkeletonDataAsset skelData =
+                                Resources.Load<SkeletonDataAsset>(base.StoryPlayer.Setting.PathPrefab
+                                    + base.StoryPlayer.CharacterDataTable[indexName].skelUrl);
 
                             Material mat = new Material(Shader.Find("Spine/SkeletonGraphic"));
                             UnityEngine.Rendering.LocalKeyword keyword = new UnityEngine.Rendering.LocalKeyword(mat.shader, "_STRAIGHT_ALPHA_INPUT");

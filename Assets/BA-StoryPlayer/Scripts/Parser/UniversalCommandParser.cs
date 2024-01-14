@@ -3,11 +3,11 @@ using UnityEngine;
 
 namespace BAStoryPlayer.Parser.UniversaScriptParser
 {
-    public class UniversalCommandParser : ICommandParser
+    public class UniversalCommandParser : CommandParser
     {
-        private BAStoryPlayer StoryPlayer => BAStoryPlayerController.Instance.StoryPlayer;
+        public UniversalCommandParser(BAStoryPlayer storyPlayer) : base(storyPlayer) { }
 
-        public List<StoryUnit> Parse(TextAsset rawStoryScript)
+        public override List<StoryUnit> Parse(TextAsset rawStoryScript)
         {
             List<StoryUnit> storyUnits = new List<StoryUnit>();
             UniversalStoryScript storyScript = JsonUtility.FromJson<UniversalStoryScript>(rawStoryScript.text);

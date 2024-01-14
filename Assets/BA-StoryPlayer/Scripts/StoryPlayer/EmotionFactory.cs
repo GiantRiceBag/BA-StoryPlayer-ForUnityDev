@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using BAStoryPlayer.UI;
 
@@ -27,7 +28,7 @@ namespace BAStoryPlayer
         Think
     }
 
-    public static class EmotionFactory
+    public class EmotionFactory
     {
         /*
         // 白子各表情坐标 定位器下
@@ -51,11 +52,18 @@ namespace BAStoryPlayer
         Zzz -296 208
         Tear -202 -36
         */
-        private static  Vector3 FacePositionOffset =>new Vector3(0,-35f,0);
-        private static System.Collections.Generic.Dictionary<CharacterEmotion, GameObject> emotionCache= new System.Collections.Generic.Dictionary<CharacterEmotion, GameObject>();
+        
+        public BAStoryPlayer StoryPlayer { get; private set; }
+
+        public EmotionFactory(BAStoryPlayer storyPlayer)
+        { 
+            StoryPlayer = storyPlayer;
+        }
+        private Vector3 FacePositionOffset => new Vector3(0,-35f,0);
+        private Dictionary<CharacterEmotion, GameObject> emotionCache = new();
         
         // TODO 表情全做完后可以删掉Case了
-        public static void SetEmotion(Transform target,CharacterEmotion emotion,ref float time)
+        public void SetEmotion(Transform target,CharacterEmotion emotion,CharacterDataUnit chrData,float time)
         {
             switch (emotion)
             {
@@ -81,18 +89,25 @@ namespace BAStoryPlayer
                     {
                         Transform HeadLocator = target.Find("HeadLocator");
                         if (HeadLocator == null)
-                            HeadLocator = GenerateHeadLocator(target).transform;
-                        if (HeadLocator == null) throw new System.NullReferenceException($"Can't locate face position of character[{target.name}]");
+                        {
+                            HeadLocator = GenerateHeadLocator(target,chrData).transform;
+                        }
+                        if (HeadLocator == null)
+                        {
+                            throw new System.NullReferenceException($"Can't locate face position of character[{target.name}]");
+                        }
 
                         try
                         {
                             if (!emotionCache.ContainsKey(emotion))
+                            {
                                 emotionCache.Add(emotion, Resources.Load<GameObject>($"Emotions/Emotion_{emotion.ToString()}"));
+                            }
 
                             var emo = GameObject.Instantiate(emotionCache[emotion]).GetComponent<Emotion>();
                             emo.Initlaize(HeadLocator, GetPos(emotion));
                             time = emo.GetClipLength();
-                            BAStoryPlayerController.Instance.StoryPlayer.AudioModule.Play($"Emotion/Emotion_{emotion.ToString()}");
+                            StoryPlayer.AudioModule.Play($"Emotion/Emotion_{emotion.ToString()}");
                         }
                         catch
                         {
@@ -114,7 +129,7 @@ namespace BAStoryPlayer
         /// </summary>
         /// <param name="emotion"></param>
         /// <returns></returns>
-        private static Vector2 GetPos(CharacterEmotion emotion)
+        private Vector2 GetPos(CharacterEmotion emotion)
         {
             switch (emotion)
             {
@@ -159,18 +174,15 @@ namespace BAStoryPlayer
                 case CharacterEmotion.Think:
                 default:
                     {
-                        Debug.Log($"情绪{emotion} 没做");
+                        Debug.Log($"表亲 {emotion} 没做");
                         return Vector2.zero;
                     }
             }
         }
 
-        private static GameObject GenerateHeadLocator(Transform target)
+        private GameObject GenerateHeadLocator(Transform target, CharacterDataUnit chrData)
         {
             string indexName = target.name;
-            CharacterDataUnit chrData = BAStoryPlayerController.Instance.CharacterDataTable[indexName];
-            if (chrData.loadType == LoadType.Prefab)
-                return null;
 
             GameObject obj = new GameObject("HeadLocator",typeof(RectTransform));
             RectTransform rectOfParent = target.GetComponent<RectTransform>();
@@ -183,7 +195,7 @@ namespace BAStoryPlayer
             return obj;
         }
 
-        public static void ClearCache()
+        public void ClearCache()
         {
             emotionCache.Clear();
         }

@@ -36,20 +36,21 @@ namespace BAStoryPlayer.DoTweenS
 
     public class TweenSequence
     {
-        System.Collections.Generic.Queue<TweenUnit> tweenQueue = new System.Collections.Generic.Queue<TweenUnit>();
-        bool isPlaying = false;
+        private System.Collections.Generic.Queue<TweenUnit> _tweenQueue = new System.Collections.Generic.Queue<TweenUnit>();
+        private bool _isPlaying = false;
+
         public void Append(TweenS tween)
         {
             TweenUnit tUnit = new TweenUnit(tween);
-            tweenQueue.Enqueue(tUnit);
+            _tweenQueue.Enqueue(tUnit);
 
             // 从tween列表中移除 防止重复被删
             DoTweenS.Remove(tween);
             tween.Stop();
 
-            if (!isPlaying)
+            if (!_isPlaying)
             {
-                isPlaying = true;
+                _isPlaying = true;
                 Next();
             }
         }
@@ -57,11 +58,11 @@ namespace BAStoryPlayer.DoTweenS
         public void Append(System.Action action)
         {
             TweenUnit tUnit = new TweenUnit(action);
-            tweenQueue.Enqueue(tUnit);
+            _tweenQueue.Enqueue(tUnit);
 
-            if (!isPlaying)
+            if (!_isPlaying)
             {
-                isPlaying = true;
+                _isPlaying = true;
                 Next();
             }
         }
@@ -69,30 +70,30 @@ namespace BAStoryPlayer.DoTweenS
         public void Wait(float time)
         {
             TweenUnit tUnit = new TweenUnit(time);
-            tweenQueue.Enqueue(tUnit);
+            _tweenQueue.Enqueue(tUnit);
 
-            if (!isPlaying)
+            if (!_isPlaying)
             {
-                isPlaying = true;
+                _isPlaying = true;
                 Next();
             }
         }
 
         void Next()
         {
-            if (tweenQueue.Count.Equals(0))
+            if (_tweenQueue.Count.Equals(0))
                 return;
 
-            switch (tweenQueue.Peek().UnitType)
+            switch (_tweenQueue.Peek().UnitType)
             {
                 case TweenUnitType.Cmd:
                     {
-                        Timer.Delay(Next, tweenQueue.Dequeue().Wait);
+                        DoTweenS.MonoInstance.Delay(Next, _tweenQueue.Dequeue().Wait);
                         break;
                     }
                 case TweenUnitType.Tween:
                     {
-                        tweenQueue.Dequeue().Tween.Resume().OnCompleted += () =>
+                        _tweenQueue.Dequeue().Tween.Resume().OnCompleted += () =>
                         {
                             Next();
                         };
@@ -100,7 +101,7 @@ namespace BAStoryPlayer.DoTweenS
                     }
                 case TweenUnitType.Event:
                     {
-                        tweenQueue.Dequeue().Action?.Invoke();
+                        _tweenQueue.Dequeue().Action?.Invoke();
                         Next();
                         break;
                     }

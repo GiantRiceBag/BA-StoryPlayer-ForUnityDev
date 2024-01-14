@@ -23,13 +23,12 @@ namespace BAStoryPlayer.Parser.AsScriptParser
     }
 
     [Obsolete]
-    public class AsCommandParser : ICommandParser
+    public class AsCommandParser : CommandParser
     {
         readonly Dictionary<string, AsCommandContainer> nameIdList = new Dictionary<string, AsCommandContainer>();
 
-        public AsCommandParser() { }
-
-        public List<StoryUnit> Parse(TextAsset storyScript)
+        public AsCommandParser(BAStoryPlayer storyPlayer) : base(storyPlayer) { }
+        public override List<StoryUnit> Parse(TextAsset storyScript)
         {
             List<StoryUnit> storyUnits = new List<StoryUnit>();
             List<string> asCommandList = new List<string>(storyScript.ToString().Split('\n'));
@@ -99,29 +98,29 @@ namespace BAStoryPlayer.Parser.AsScriptParser
                     case "mtc":
                     case "btc":
                         storyUnit.UpdateType(UnitType.Text);
-                        storyUnit.action += () => BAStoryPlayerController.Instance.StoryPlayer.UIModule.SetSpeaker(command[1]);
-                        storyUnit.action += () => BAStoryPlayerController.Instance.StoryPlayer.UIModule.PrintMainText(command[3]);
+                        storyUnit.action += () => StoryPlayer.UIModule.SetSpeaker(command[1]);
+                        storyUnit.action += () => StoryPlayer.UIModule.PrintMainText(command[3]);
                         break;
 
                     case "th":
                     case "thc":
                         storyUnit.UpdateType(UnitType.Text);
-                        storyUnit.action += () => BAStoryPlayerController.Instance.StoryPlayer.UIModule.SetSpeaker(command[1]);
-                        storyUnit.action += () => BAStoryPlayerController.Instance.StoryPlayer.UIModule.PrintMainText(command[3]);
-                        storyUnit.action += () => BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.Highlight(command[1]);
+                        storyUnit.action += () => StoryPlayer.UIModule.SetSpeaker(command[1]);
+                        storyUnit.action += () => StoryPlayer.UIModule.PrintMainText(command[3]);
+                        storyUnit.action += () => StoryPlayer.CharacterModule.Highlight(command[1]);
                         break;
 
                     // components commands
                     case "label":
-                        storyUnit.action += () => BAStoryPlayerController.Instance.StoryPlayer.UIModule.ShowVenue(command[1]);
+                        storyUnit.action += () => StoryPlayer.UIModule.ShowVenue(command[1]);
                         break;
 
                     case "banner":
                         storyUnit.UpdateType(UnitType.Title);
                         if (command.Length == 2)
-                            storyUnit.action += () => BAStoryPlayerController.Instance.StoryPlayer.UIModule.ShowTitle("", command[1]);
+                            storyUnit.action += () => StoryPlayer.UIModule.ShowTitle("", command[1]);
                         else if (command.Length == 3)
-                            storyUnit.action += () => BAStoryPlayerController.Instance.StoryPlayer.UIModule.ShowTitle(command[1], command[2]);
+                            storyUnit.action += () => StoryPlayer.UIModule.ShowTitle(command[1], command[2]);
                         break;
 
                     // scene commands
@@ -226,23 +225,23 @@ namespace BAStoryPlayer.Parser.AsScriptParser
             {
                 // Character state
                 case "show":
-                    storyUnit.action += ()=> BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetAction(indexName, CharacterAction.Appear);
+                    storyUnit.action += ()=> StoryPlayer.CharacterModule.SetAction(indexName, CharacterAction.Appear);
                     break;
                 case "hide":
-                    storyUnit.action += () => BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetAction(indexName, CharacterAction.Disapper);
+                    storyUnit.action += () => StoryPlayer.CharacterModule.SetAction(indexName, CharacterAction.Disapper);
                     break;
                 case "showD": // legacy
                 case "appear":
-                    storyUnit.action += () => BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.ActivateCharacter(indexName);
+                    storyUnit.action += () => StoryPlayer.CharacterModule.ActivateCharacter(indexName);
                     break;
                 case "hideD": // legacy
                 case "disappear":
-                    storyUnit.action += () => BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetAction(indexName, CharacterAction.Hide);
+                    storyUnit.action += () => StoryPlayer.CharacterModule.SetAction(indexName, CharacterAction.Hide);
                     break;
 
                 case "hl":
                 case "highlight":
-                    storyUnit.action += () => BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.Highlight(indexName);
+                    storyUnit.action += () => StoryPlayer.CharacterModule.Highlight(indexName);
                     break;
 
                 case "fade":
@@ -250,7 +249,7 @@ namespace BAStoryPlayer.Parser.AsScriptParser
                     break;
 
                 case "state":
-                    storyUnit.action += () => BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetAnimation(indexName, command[3]);
+                    storyUnit.action += () => StoryPlayer.CharacterModule.SetAnimation(indexName, command[3]);
                     break;
                 case "skin":
                     break;
@@ -266,7 +265,7 @@ namespace BAStoryPlayer.Parser.AsScriptParser
                 // Character Movement
                 // 目前只接受 -10 -5 0 5 10这5个参数 对应原槽位 0-4 的位置
                 case "x":
-                    storyUnit.action += () => BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.MoveCharacterTo(indexName, (int.Parse(command[3]) + 10) / 5);
+                    storyUnit.action += () => StoryPlayer.CharacterModule.MoveCharacterTo(indexName, (int.Parse(command[3]) + 10) / 5);
                     break;
                 case "y":
                     break;
@@ -281,7 +280,7 @@ namespace BAStoryPlayer.Parser.AsScriptParser
                 case "xm":
                 case "move":
                 case "move_x":
-                    storyUnit.action += () => BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetAction(indexName,CharacterAction.Move, (int.Parse(command[3]) + 10) / 5);
+                    storyUnit.action += () => StoryPlayer.CharacterModule.SetAction(indexName,CharacterAction.Move, (int.Parse(command[3]) + 10) / 5);
                     break;
                 case "moveY": // legacy
                 case "ym":
@@ -307,11 +306,11 @@ namespace BAStoryPlayer.Parser.AsScriptParser
                     break;
 
                 case "close":
-                    storyUnit.action += () => BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetAction(indexName, CharacterAction.Close);
+                    storyUnit.action += () => StoryPlayer.CharacterModule.SetAction(indexName, CharacterAction.Close);
                     break;
 
                 case "back":
-                    storyUnit.action += () => BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetAction(indexName, CharacterAction.Back);
+                    storyUnit.action += () => StoryPlayer.CharacterModule.SetAction(indexName, CharacterAction.Back);
                     break;
             }
         }
@@ -323,18 +322,18 @@ namespace BAStoryPlayer.Parser.AsScriptParser
             {
                 // Image State
                 case "show":
-                    storyUnit.action += () => BAStoryPlayerController.Instance.StoryPlayer.SetBackground(imgUrl,BackgroundTransistionType.Smooth);
+                    storyUnit.action += () => StoryPlayer.SetBackground(imgUrl,BackgroundTransistionType.Smooth);
                     break;
                 case "hide":
-                    storyUnit.action += () => BAStoryPlayerController.Instance.StoryPlayer.SetBackground(null, BackgroundTransistionType.Smooth);
+                    storyUnit.action += () => StoryPlayer.SetBackground(null, BackgroundTransistionType.Smooth);
                     break;
                 case "showD": // Legacy
                 case "appear":
-                    storyUnit.action += () => BAStoryPlayerController.Instance.StoryPlayer.SetBackground(imgUrl, BackgroundTransistionType.Instant);
+                    storyUnit.action += () => StoryPlayer.SetBackground(imgUrl, BackgroundTransistionType.Instant);
                     break;
                 case "hideD": // Legacy
                 case "disappear":
-                    storyUnit.action += () => BAStoryPlayerController.Instance.StoryPlayer.SetBackground(null, BackgroundTransistionType.Instant);
+                    storyUnit.action += () => StoryPlayer.SetBackground(null, BackgroundTransistionType.Instant);
                     break;
                 case "hl":
                 case "highlight":
@@ -376,10 +375,10 @@ namespace BAStoryPlayer.Parser.AsScriptParser
                 switch (command[2])
                 {
                     case "play":
-                        storyUnit.action += ()=> BAStoryPlayerController.Instance.StoryPlayer.AudioModule.PlayBGM(url);
+                        storyUnit.action += ()=> StoryPlayer.AudioModule.PlayBGM(url);
                         break;
                     case "pause":
-                        storyUnit.action += () => BAStoryPlayerController.Instance.StoryPlayer.AudioModule.PauseBGM();
+                        storyUnit.action += () => StoryPlayer.AudioModule.PauseBGM();
                         break;
                     case "stop":
                         break;
@@ -400,7 +399,7 @@ namespace BAStoryPlayer.Parser.AsScriptParser
                 switch (command[2])
                 {
                     case "play":
-                        storyUnit.action += () => BAStoryPlayerController.Instance.StoryPlayer.AudioModule.Play(url);
+                        storyUnit.action += () => StoryPlayer.AudioModule.Play(url);
                         break;
                     case "pause":
                         break;
@@ -435,7 +434,7 @@ namespace BAStoryPlayer.Parser.AsScriptParser
             if (datas.Count != 0)
             {
                 storyUnit.UpdateType(UnitType.Option);
-                storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.UIModule.ShowOption(datas); };
+                storyUnit.action += () => { StoryPlayer.UIModule.ShowOption(datas); };
             }
         }
 
@@ -444,64 +443,64 @@ namespace BAStoryPlayer.Parser.AsScriptParser
             switch (emotionName)
             {
                 case "Heart":
-                        storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(indexName, CharacterEmotion.Heart); };
+                        storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(indexName, CharacterEmotion.Heart); };
                         break;
                 case "Respond":
-                        storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(indexName, CharacterEmotion.Respond); };
+                        storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(indexName, CharacterEmotion.Respond); };
                         break;
                 case "Note":
-                        storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(indexName, CharacterEmotion.Music); };
+                        storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(indexName, CharacterEmotion.Music); };
                         break;
                 case "Twinkle":
-                        storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(indexName, CharacterEmotion.Twinkle); };
+                        storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(indexName, CharacterEmotion.Twinkle); };
                         break;
                 case "Anxiety ":
-                        storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(indexName, CharacterEmotion.Upset); };
+                        storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(indexName, CharacterEmotion.Upset); };
                         break;
                 case "Sweat":
-                        storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(indexName, CharacterEmotion.Sweat); };
+                        storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(indexName, CharacterEmotion.Sweat); };
                         break;
                 case "Idea":
-                        storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(indexName, CharacterEmotion.Dot); };
+                        storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(indexName, CharacterEmotion.Dot); };
                         break;
                 case "Chat":
-                        storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(indexName, CharacterEmotion.Chat); };
+                        storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(indexName, CharacterEmotion.Chat); };
                         break;
                 case "E":
-                        storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(indexName, CharacterEmotion.Exclaim); };
+                        storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(indexName, CharacterEmotion.Exclaim); };
                         break;
                 case "EQ":
-                        storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(indexName, CharacterEmotion.Surprise); };
+                        storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(indexName, CharacterEmotion.Surprise); };
                         break;
                 case "Q":
-                        storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(indexName, CharacterEmotion.Question); };
+                        storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(indexName, CharacterEmotion.Question); };
                         break;
                 case "Shy":
-                        storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(indexName, CharacterEmotion.Shy); };
+                        storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(indexName, CharacterEmotion.Shy); };
                         break;
                 case "Aggro":
-                        storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(indexName, CharacterEmotion.Angry); };
+                        storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(indexName, CharacterEmotion.Angry); };
                         break;
                 case "Steam":
-                        storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(indexName, CharacterEmotion.Steam); };
+                        storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(indexName, CharacterEmotion.Steam); };
                         break;
                 case "Sigh":
-                        storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(indexName, CharacterEmotion.Sigh); };
+                        storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(indexName, CharacterEmotion.Sigh); };
                         break;
                 case "Sad":
-                        storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(indexName, CharacterEmotion.Sad); };
+                        storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(indexName, CharacterEmotion.Sad); };
                         break;
                 case "Bulb":
-                        storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(indexName, CharacterEmotion.Bulb); };
+                        storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(indexName, CharacterEmotion.Bulb); };
                         break;
                 case "Zzz":
-                        storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(indexName, CharacterEmotion.Zzz); };
+                        storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(indexName, CharacterEmotion.Zzz); };
                         break;
                 case "Tear":
-                        storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(indexName, CharacterEmotion.Tear); };
+                        storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(indexName, CharacterEmotion.Tear); };
                         break;
                 case "Think":
-                        storyUnit.action += () => { BAStoryPlayerController.Instance.StoryPlayer.CharacterModule.SetEmotion(indexName, CharacterEmotion.Think); };
+                        storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(indexName, CharacterEmotion.Think); };
                         break;
                 default: return;
             }
