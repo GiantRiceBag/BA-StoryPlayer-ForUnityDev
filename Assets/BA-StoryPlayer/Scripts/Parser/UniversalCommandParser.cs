@@ -1,5 +1,9 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+
+using BAStoryPlayer.UI;
+using BAStoryPlayer.Utility;
 
 namespace BAStoryPlayer.Parser.UniversaScriptParser
 {
@@ -17,43 +21,7 @@ namespace BAStoryPlayer.Parser.UniversaScriptParser
 
             foreach(var rawStoryUnit in storyScript.content)
             {
-                StoryUnit storyUnit = null;
-                switch(rawStoryUnit.type)
-                {
-                    case "title":
-                        storyUnit = HandleTitleUnit(rawStoryUnit);
-                        break;
-                    case "place":
-                        storyUnit = HandlePlaceUnit(rawStoryUnit);
-                        break;
-                    case "bgm":
-                        storyUnit = HandleBgmUnit(rawStoryUnit);
-                        break;
-                    case "text":
-                        storyUnit = HandleTextUnit(rawStoryUnit);
-                        break;
-                    case "select":
-                        storyUnit = HandleSelectUnit(rawStoryUnit);
-                        break;
-                    case "option":
-                        storyUnit = HandleOptionUnit(rawStoryUnit);
-                        break;
-                    case "st":
-                        storyUnit = HandleStUnit(rawStoryUnit);
-                        break;
-                    case "effectOnly":
-                        storyUnit = HandleEffectOnlyUnit(rawStoryUnit);
-                        break;
-                    case "continue":
-                        storyUnit = HandleContinueUnit(rawStoryUnit);
-                        break;
-                    default:
-                        storyUnit = new StoryUnit();
-                        break;
-                }
-
-                HandleUnitCommand(rawStoryUnit, storyUnit);
-                HandleCommonSetting(rawStoryUnit, storyUnit);
+                StoryUnit storyUnit = ProcessRawStoryUnit(rawStoryUnit);
 
                 if(storyUnit != null)
                 {
@@ -62,9 +30,52 @@ namespace BAStoryPlayer.Parser.UniversaScriptParser
             }
             return storyUnits;
         }
+        private StoryUnit ProcessRawStoryUnit(RawStoryUnit rawStoryUnit)
+        {
+            StoryUnit storyUnit = null;
+
+            switch (rawStoryUnit.type)
+            {
+                case "title":
+                    storyUnit = HandleTitleUnit(rawStoryUnit);
+                    break;
+                case "place":
+                    storyUnit = HandlePlaceUnit(rawStoryUnit);
+                    break;
+                case "text":
+                    storyUnit = HandleTextUnit(rawStoryUnit);
+                    break;
+                case "select":
+                    storyUnit = HandleSelectUnit(rawStoryUnit);
+                    break;
+                case "st":
+                    storyUnit = HandleStUnit(rawStoryUnit);
+                    break;
+                case "effectOnly":
+                    storyUnit = HandleEffectOnlyUnit(rawStoryUnit);
+                    break;
+                case "continue":
+                    storyUnit = HandleContinueUnit(rawStoryUnit);
+                    break;
+                default:
+                    storyUnit = new StoryUnit();
+                    break;
+            }
+
+            storyUnit.scripts = rawStoryUnit.script;
+
+            HandleUnitCommand(rawStoryUnit, storyUnit);
+            HandleCommonSetting(rawStoryUnit, storyUnit);
+
+            return storyUnit;
+        }
+        private StoryUnit ProcessRawStoryUnit(RawStoryUnitBase rawStoryUnitBase)
+        {
+            return ProcessRawStoryUnit(rawStoryUnitBase.AsRawStoryUnit());
+        }
 
         #region Common Unit Handler
-        private void HandleCharacterUnit(RawUniversalStoryUnit rawStoryUnit, StoryUnit storyUnit)
+        private void HandleCharacterUnit(RawStoryUnit rawStoryUnit, StoryUnit storyUnit)
         {
             foreach (var characterUnit in rawStoryUnit.characters)
             {
@@ -204,7 +215,9 @@ namespace BAStoryPlayer.Parser.UniversaScriptParser
                         case "jump":
                             storyUnit.action += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Jump); };
                             break;
-                        case "falldownL": // TODO 后面动作补齐
+                        case "falldownL":
+                            storyUnit.action += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.falldownL); };
+                            break;
                         case "falldownR":
                             storyUnit.action += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.falldownR); };
                             break;
@@ -222,26 +235,36 @@ namespace BAStoryPlayer.Parser.UniversaScriptParser
                 }
             }
         }
-
-        private void HandleUnitCommand(RawUniversalStoryUnit rawStoryUnit, StoryUnit storyUnit)
+        private void HandleUnitCommand(RawStoryUnit rawStoryUnit, StoryUnit storyUnit)
         {
-            List<int> args = new List<int>();
-            foreach(var rawArg in rawStoryUnit.commandArgs)
-            {
-                if(int.TryParse(rawArg,out int res))
-                {
-                    args.Add(res);
-                }
-            }
-
             switch (rawStoryUnit.command)
             {
                 case "wait":
-                    storyUnit.wait = args[0];
-                    break;
+                    {
+                        if(ArgsParser.TryParse(rawStoryUnit.commandArgs,out int waitTime))
+                        {
+                            storyUnit.wait = waitTime;
+                        }
+                        break;
+                    }
                 case "setFlag":
-                    // TODO
-                    break;
+                    {
+                        if(ArgsParser.TryParse(rawStoryUnit.commandArgs, out string flagName,out FlagOperator flagOperator,out int value))
+                        {
+                            if (FlagOperation.Handle(StoryPlayer.FlagTable, flagName, flagOperator, value))
+                            {
+                                if (!StoryPlayer.ModifiedFlagTable.ContainsKey(flagName))
+                                {
+                                    StoryPlayer.ModifiedFlagTable.Add(flagName, value);
+                                }
+                                else
+                                {
+                                    StoryPlayer.ModifiedFlagTable[flagName] = value;
+                                }
+                            }
+                        }
+                        break;
+                    }
                 case "manipulateFlag":
                     break;
                 case "clearST":
@@ -282,19 +305,22 @@ namespace BAStoryPlayer.Parser.UniversaScriptParser
                     break;
             }
         }
-
-        // 处理一些脚本单元公共配置
-        private void HandleCommonSetting(RawUniversalStoryUnit rawStoryUnit, StoryUnit storyUnit)
+        //  处理一些脚本单元公共配置 音频及背景等
+        private void HandleCommonSetting(RawStoryUnit rawStoryUnit, StoryUnit storyUnit)
         {
             if(rawStoryUnit.backgroundImage != string.Empty)
             {
-                storyUnit.action += () => StoryPlayer.SetBackground(rawStoryUnit.backgroundImage,BackgroundTransistionType.Smooth);
+                storyUnit.action += () => StoryPlayer.BackgroundModule.SetBackground(rawStoryUnit.backgroundImage,BackgroundTransistionType.Smooth);
+            }
+            if(rawStoryUnit.bgm != string.Empty) 
+            {
+                storyUnit.action += () => StoryPlayer.AudioModule.PlayBGM(rawStoryUnit.bgm);
             }
         }
         #endregion
 
         #region Unit Handler
-        private StoryUnit HandleTitleUnit(RawUniversalStoryUnit rawStoryUnit)
+        private StoryUnit HandleTitleUnit(RawStoryUnit rawStoryUnit)
         {
             StoryUnit storyUnit = new StoryUnit();
             storyUnit.UpdateType(UnitType.Title);
@@ -314,8 +340,7 @@ namespace BAStoryPlayer.Parser.UniversaScriptParser
 
             return storyUnit;
         }
-
-        private StoryUnit HandlePlaceUnit(RawUniversalStoryUnit rawStoryUnit)
+        private StoryUnit HandlePlaceUnit(RawStoryUnit rawStoryUnit)
         {
             StoryUnit storyUnit = new StoryUnit();
 
@@ -323,17 +348,7 @@ namespace BAStoryPlayer.Parser.UniversaScriptParser
 
             return storyUnit;
         }
-
-        private StoryUnit HandleBgmUnit(RawUniversalStoryUnit rawStoryUnit)
-        {
-            StoryUnit storyUnit = new StoryUnit();
-
-            storyUnit.action += () => StoryPlayer.AudioModule.PlayBGM(rawStoryUnit.bgmId);
-
-            return storyUnit;
-        }
-
-        private StoryUnit HandleTextUnit(RawUniversalStoryUnit rawStoryUnit)
+        private StoryUnit HandleTextUnit(RawStoryUnit rawStoryUnit)
         {
             StoryUnit storyUnit = new StoryUnit();
             storyUnit.UpdateType(UnitType.Text);
@@ -348,8 +363,50 @@ namespace BAStoryPlayer.Parser.UniversaScriptParser
 
             return storyUnit;
         }
+        private StoryUnit HandleSelectUnit(RawStoryUnit rawStoryUnit)
+        {
+            StoryUnit storyUnit = new StoryUnit();
+            storyUnit.UpdateType(UnitType.Option);
 
-        private StoryUnit HandleSelectUnit(RawUniversalStoryUnit rawStoryUnit)
+            List<OptionData> options = new();
+
+            foreach (RawSelectionGroup selection in rawStoryUnit.selectionGroups)
+            {
+                List<StoryUnit> optionStoryUnits = new();
+                List<Condition> optionConditions = new();
+
+                foreach(RawStoryUnitBase selectionStoryUnit in selection.content)
+                {
+                    optionStoryUnits.Add(ProcessRawStoryUnit(selectionStoryUnit));
+                }
+                foreach(RawCondition optionCondition in selection.conditions)
+                {
+                    if (Enum.TryParse(typeof(RelationalOperators), optionCondition.operation,out var operRes))
+                    {
+                        optionConditions.Add(
+                            new Condition(
+                                optionCondition.flag, 
+                                (RelationalOperators)operRes,
+                                optionCondition.value)
+                            );
+                    }
+                }
+
+                options.Add(new OptionData(selection.text,selection.script, optionStoryUnits,optionConditions));
+            }
+
+            if(options.Count > 0)
+            {
+                storyUnit.action += () =>
+                {
+                    StoryPlayer.UIModule.ShowOptions(options);
+                };
+            }
+
+            return storyUnit;
+        }
+
+        private StoryUnit HandleStUnit(RawStoryUnit rawStoryUnit)
         {
             StoryUnit storyUnit = new StoryUnit();
 
@@ -358,7 +415,7 @@ namespace BAStoryPlayer.Parser.UniversaScriptParser
             return storyUnit;
         }
 
-        private StoryUnit HandleOptionUnit(RawUniversalStoryUnit rawStoryUnit)
+        private StoryUnit HandleEffectOnlyUnit(RawStoryUnit rawStoryUnit)
         {
             StoryUnit storyUnit = new StoryUnit();
 
@@ -367,25 +424,7 @@ namespace BAStoryPlayer.Parser.UniversaScriptParser
             return storyUnit;
         }
 
-        private StoryUnit HandleStUnit(RawUniversalStoryUnit rawStoryUnit)
-        {
-            StoryUnit storyUnit = new StoryUnit();
-
-            // TODO
-
-            return storyUnit;
-        }
-
-        private StoryUnit HandleEffectOnlyUnit(RawUniversalStoryUnit rawStoryUnit)
-        {
-            StoryUnit storyUnit = new StoryUnit();
-
-            // TODO
-
-            return storyUnit;
-        }
-
-        private StoryUnit HandleContinueUnit(RawUniversalStoryUnit rawStoryUnit)
+        private StoryUnit HandleContinueUnit(RawStoryUnit rawStoryUnit)
         {
             StoryUnit storyUnit = new StoryUnit();
 

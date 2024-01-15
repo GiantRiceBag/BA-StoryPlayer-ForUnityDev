@@ -3,10 +3,10 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 using System.Collections.Generic;
 using System;
+
 using BAStoryPlayer.DoTweenS;
 using BAStoryPlayer.UI;
 using BAStoryPlayer.Event;
-using Timer = BAStoryPlayer.Utility.Timer;
 using BAStoryPlayer.Parser.UniversaScriptParser;
 
 namespace BAStoryPlayer
@@ -18,8 +18,7 @@ namespace BAStoryPlayer
         private int _groupID = -1;
 
         [Header("References")]
-        [SerializeField] private Image _imgBackground;
-        [Space]
+        [SerializeField] private BackgroundManager _backgroundModule;
         [SerializeField] private CharacterManager _characterModule;
         [SerializeField] private UIManager _uiModule;
         [SerializeField] private AudioManager _audioModule;
@@ -27,10 +26,12 @@ namespace BAStoryPlayer
         [SerializeField] private CharacterDataTable _characterDataTable;
         [SerializeField] private PlayerSetting _playerSetting;
 
-        private List<StoryUnit> _storyUnit;
+        private List<StoryUnit> _storyUnits;
+        private StoryUnit _currentStoryUnit;
+
         [Header("Real-Time Data")]
-        [SerializeField] private int _currentUnitIndex = 0;
-        private Queue<int> _priorUnitIndexes = new Queue<int>(); // 优先下标队列 
+        private int _currentUnitIndex = 0;
+        private Queue<StoryUnit> _priorStoryUnits = new(); // 优先单元
         [SerializeField] private float _lockTime = 0;
 
         [SerializeField] private bool _isPlaying = false;
@@ -57,7 +58,7 @@ namespace BAStoryPlayer
                 if (_isAuto && _isPlaying && IsExecutable) // 文本输出完毕后的状态
                 {
                     if (!IsLocking)
-                        Next();
+                        ExecuteCurrentUnit();
                     else
                         EventBus<OnUnlockedPlayerInput>.AddCallback(() =>
                         {
@@ -93,6 +94,17 @@ namespace BAStoryPlayer
             private set => _isExecutable = value;
         }
 
+        public BackgroundManager BackgroundModule
+        {
+            get
+            {
+                if (_backgroundModule == null)
+                {
+                    _backgroundModule = transform.GetComponentInChildren<BackgroundManager>();
+                }
+                return _backgroundModule;
+            }
+        }
         public CharacterManager CharacterModule
         {
             get
@@ -216,12 +228,17 @@ namespace BAStoryPlayer
             }
         }
 
+        public Dictionary<string, int> FlagTable { get; set; }
+        public Dictionary<string, int> ModifiedFlagTable { get; set; }
+        public List<string> ScriptsToExecute { get; set; }
+
+        public event Action<List<string>, Dictionary<string, int>> OnStoryPlayerClosed;
+
         private void Start()
         {
-            if (_imgBackground == null)
-            {
-                _imgBackground = transform.Find("Background").GetComponent<Image>();
-            }
+            FlagTable = new();
+            ModifiedFlagTable = new();
+            ScriptsToExecute = new();
 
             // 动作以及表情事件订阅 锁定一定时间的操作
             EventBus<OnAnimatedCharacter>.Binding.Add((data) =>
@@ -229,23 +246,21 @@ namespace BAStoryPlayer
                 Lock(data.time, Setting.TimeLockAfterAction);
             });
             // 选项事件订阅
-            EventBus<OnPlayerSelectedBranch>.Binding.Add((data) =>
+            EventBus<OnPlayerSelected>.Binding.Add((data) =>
             {
-                // 坐标前移寻找最近的选项下标 并放入优先下标队列 遇到0则停止
-                for (int i = _currentUnitIndex; i < _storyUnit.Count; i++)
+                if(data.storyUnits != null && data.storyUnits.Count > 0)
                 {
-                    if (_storyUnit[i].selectionGroup == data.selectionGroup)
+                    foreach (StoryUnit priorUnit in data.storyUnits)
                     {
-                        _priorUnitIndexes.Enqueue(i);
-                    }
-                    else if (_storyUnit[i].selectionGroup == 0) // 注意添加最后一个无选项组的单元
-                    {
-                        _priorUnitIndexes.Enqueue(i);
-                        break;
+                        _priorStoryUnits.Enqueue(priorUnit);
                     }
                 }
-                // 注意先切换下标
-                NextIndex();
+                if(data.script != null && data.script != string.Empty)
+                {
+                    ScriptsToExecute.Add(data.script);
+                }
+
+                ToNextStoryUnit();
             });
             // 文本输出结束时间订阅 锁定操作一段时间
             EventBus<OnPrintedLine>.Binding.Add(() =>
@@ -254,76 +269,7 @@ namespace BAStoryPlayer
             });
         }
 
-        /// <summary>
-        /// 设置背景 并优先适应宽度
-        /// </summary>
-        /// <param name="url">相对URL</param>
-        /// <param name="type">背景切换方式 首次无效</param>
-        public void SetBackground(string url = null, BackgroundTransistionType transition = BackgroundTransistionType.Instant)
-        {
-            if (url == null)
-            {
-                switch (transition)
-                {
-                    case BackgroundTransistionType.Instant:
-                        _imgBackground.sprite = null;
-                        _imgBackground.enabled = false;
-                        break;
-                    case BackgroundTransistionType.Smooth:
-                        _imgBackground.DoColor(Color.black, Setting.TimeSwitchBackground).OnCompleted = () =>
-                         {
-                             _imgBackground.sprite = null;
-                             _imgBackground.enabled = false;
-                         };
-                        break;
-                }
-                return;
-            }
-
-            Sprite sprite = Resources.Load<Sprite>(Setting.PathBackground + url);
-
-            if (sprite == null)
-            {
-                Debug.LogError($"没能在路径 {Setting.PathBackground + url}  找到背景 [{url}]  ");
-                return;
-            }
-
-            Vector2 size = sprite.rect.size;
-            float ratio = size.y / size.x;
-            size.x = CanvasRect.rect.width;
-            size.y = size.x * ratio;
-
-            _imgBackground.GetComponent<RectTransform>().sizeDelta = size;
-            if (!_imgBackground.enabled)
-            {
-                _imgBackground.enabled = true;
-                _imgBackground.sprite = sprite;
-                _imgBackground.color = Color.white;
-            }
-            else
-            {
-                switch (transition)
-                {
-                    case BackgroundTransistionType.Instant:
-                        {
-                            _imgBackground.sprite = sprite;
-                            break;
-                        }
-                    case BackgroundTransistionType.Smooth:
-                        {
-                            _imgBackground.DoColor(Color.black, Setting.TimeSwitchBackground / 2).OnCompleted = () =>
-                            {
-                                _imgBackground.sprite = sprite;
-                                _imgBackground.DoColor(Color.white, Setting.TimeSwitchBackground / 2);
-                            };
-                            break;
-                        }
-                    default: return;
-                }
-            }
-        }
-
-        public bool LoadStory(string url)
+        public bool LoadStory(string url,Dictionary<string,int> flagTable = null)
         {
             if (IsPlaying)
             {
@@ -338,22 +284,25 @@ namespace BAStoryPlayer
                 return false;
             }
 
-            CommandParser parser = new UniversalCommandParser(this);
-
-           LoadUnits(0, parser.Parse(textAsset));
-            ReadyToNext();
-            Next();
+            FlagTable = flagTable;
+            ModifiedFlagTable.Clear();
+            ScriptsToExecute.Clear();
 
             IsPlaying = true;
             gameObject.SetActive(true);
 
-            EventBus<OnClosedStoryPlayer>.ClearCallback();
+            CommandParser parser = new UniversalCommandParser(this);
 
-            // 订阅播放结束事件
+            LoadUnits(0, parser.Parse(textAsset));
+            ReadyToNext();
+            ExecuteCurrentUnit();
+
+            EventBus<OnClosedStoryPlayer>.ClearCallback();
             EventBus<OnClosedStoryPlayer>.AddCallback(() =>
             {
                 _isPlaying = false;
             });
+            EventBus<OnStartPlayingStory>.Raise();
 
             return true;
         }
@@ -362,37 +311,38 @@ namespace BAStoryPlayer
         /// </summary>
         private void LoadUnits(int groupID, List<StoryUnit> units)
         {
-            _priorUnitIndexes.Clear();
+            _priorStoryUnits.Clear();
             _groupID = groupID;
-            _storyUnit = units;
+            _storyUnits = units;
             _currentUnitIndex = 0;
+            _currentStoryUnit = units[_currentUnitIndex];
             IsLocking = false;
             IsPlaying = true;
             IsExecutable = true;
         }
 
-        /// <summary>
-        /// 执行下一单元
-        /// </summary>
-        private void Next(bool breakLock = false)
+        public void ExecuteCurrentUnit(bool breakLock = false)
         {
             // 文本跳过
             if (_isPlaying && UIModule.IsPrintingText && !IsExecutable)
             {
                 UIModule.Skip();
                 if (IsAuto)
+                {
                     IsAuto = false;
+                }
                 return;
             }
-
             // 操作锁 针对非Auto模式
             if (IsLocking && !IsAuto && !breakLock)
+            {
                 return;
-
+            }
             if (!IsExecutable || !_isPlaying)
+            {
                 return;
-
-            if (_currentUnitIndex == _storyUnit.Count)
+            }
+            if (_currentStoryUnit == null)
             {
                 CloseStoryPlayer();
                 return;
@@ -401,56 +351,77 @@ namespace BAStoryPlayer
             // 每一个单元刷新一次锁定时间
             ReflashLockTime();
 
-            switch (_storyUnit[_currentUnitIndex].type)
+            if (_currentStoryUnit.scripts != null && _currentStoryUnit.scripts != string.Empty)
+            {
+                ScriptsToExecute.Add(_currentStoryUnit.scripts);
+            }
+
+            switch (_currentStoryUnit.type)
             {
                 case UnitType.Text:
                 case UnitType.Title:
+                    {
+                        _currentStoryUnit.Execute();
+                        ToNextStoryUnit();
+                        IsExecutable = false;
+                        break;
+                    }
                 case UnitType.Option:
                     {
-                        _storyUnit[_currentUnitIndex].Execute();
-                        NextIndex();
+                        _currentStoryUnit.Execute();
                         IsExecutable = false;
                         break;
                     }
                 case UnitType.Command:
                     {
-                        if (_storyUnit[_currentUnitIndex].wait != 0)
+                        if (_currentStoryUnit.wait != 0)
                         {
                             // 根据单元等待时间执行等待完毕后自动执行下一单元
-                            _storyUnit[_currentUnitIndex].Execute();
+                            _currentStoryUnit.Execute();
                             IsExecutable = false;
                             this.Delay(() =>
                            {
                                IsExecutable = true;
-                               NextIndex();
-                               Next(true);
-                           }, _storyUnit[_currentUnitIndex].wait / 1000f);
+                               ToNextStoryUnit();
+                               ExecuteCurrentUnit(true);
+                           }, _currentStoryUnit.wait / 1000f);
                             break;
                         }
                         else
                         {
-                            _storyUnit[_currentUnitIndex].Execute();
-                            NextIndex();
-                            Next(true);
+                            _currentStoryUnit.Execute();
+                            ToNextStoryUnit();
+                            ExecuteCurrentUnit(true);
                             break;
                         }
 
                     }
-                default: return;
+                default:
+                    break;
             }
         }
 
         /// <summary>
         /// 加载下一个下标
         /// </summary>
-        private void NextIndex()
+        public void ToNextStoryUnit()
         {
-            if (_priorUnitIndexes.Count != 0)
+            if(_priorStoryUnits.Count > 0)
             {
-                _currentUnitIndex = _priorUnitIndexes.Dequeue();
+                _currentStoryUnit = _priorStoryUnits.Dequeue();
             }
             else
+            {
                 _currentUnitIndex++;
+                if (_currentUnitIndex >= _storyUnits.Count)
+                {
+                    _currentStoryUnit = null;
+                }
+                else
+                {
+                    _currentStoryUnit = _storyUnits[_currentUnitIndex];
+                }
+            }
         }
 
         /// <summary>
@@ -462,7 +433,9 @@ namespace BAStoryPlayer
             IsExecutable = true;
             // 若Auto则直接执行
             if (next || IsAuto)
-                Next();
+            {
+                ExecuteCurrentUnit();
+            }
         }
 
         /// <summary>
@@ -482,11 +455,13 @@ namespace BAStoryPlayer
                    RequireBackdrop(BackdropType.Out, 1, () =>
                    {
                        EventBus<OnClosedStoryPlayer>.Raise();
+                       OnStoryPlayerClosed?.Invoke(ScriptsToExecute, ModifiedFlagTable);
+                       OnStoryPlayerClosed = null;
                        CharacterModule.EmotionFactory.ClearCache();
                        if (!destoryObject)
                        {
                            gameObject.SetActive(false);
-                           SetBackground();
+                           BackgroundModule.SetBackground();
                            UIModule.HideAllUI();
                            CharacterModule.ClearAllObject();
                            DoTweenS.DoTweenS.KillAll();
@@ -501,11 +476,13 @@ namespace BAStoryPlayer
                else
                {
                    EventBus<OnClosedStoryPlayer>.Raise();
+                   OnStoryPlayerClosed?.Invoke(ScriptsToExecute,ModifiedFlagTable);
+                   OnStoryPlayerClosed = null;
                    CharacterModule.EmotionFactory.ClearCache();
                    if (!destoryObject)
                    {
                        gameObject.SetActive(false);
-                       SetBackground();
+                       BackgroundModule.SetBackground();
                        UIModule.HideAllUI();
                        CharacterModule.ClearAllObject();
                        DoTweenS.DoTweenS.KillAll();
@@ -620,11 +597,6 @@ namespace BAStoryPlayer
             {
                 return ScriptableObject.Instantiate(setting);
             }
-        }
-
-        private void OnValidate()
-        {
-            
         }
     }
 }

@@ -12,49 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9059376da301de345a9a085a547c8315, type: 3}
   m_Name: CharacterDataTable
   m_EditorClassIdentifier: 
-  _rawData:
-  - indexName: shiroko
-    familyName: 
-    firstName: 
-    collage: 
-    affiliation: 
-    loadType: 0
-    skelUrl: shiroko
-    portraitUrl: 
-    facePosition: {x: 22.379984, y: 1032.0273}
-  - indexName: hihumi
-    familyName: 
-    firstName: 
-    collage: 
-    affiliation: 
-    loadType: 0
-    skelUrl: hihumi
-    portraitUrl: 
-    facePosition: {x: -14.901485, y: 1027.6925}
-  - indexName: nonomi
-    familyName: 
-    firstName: 
-    collage: 
-    affiliation: 
-    loadType: 0
-    skelUrl: nonomi
-    portraitUrl: 
-    facePosition: {x: 10.051084, y: 1060.1202}
-  - indexName: serika
-    familyName: 
-    firstName: 
-    collage: 
-    affiliation: 
-    loadType: 0
-    skelUrl: serika
-    portraitUrl: 
-    facePosition: {x: 16.000526, y: 1046.3771}
+  _list:
   - indexName: hoshino
     familyName: 
     firstName: 
     collage: 
     affiliation: 
     loadType: 0
-    skelUrl: hoshino
+    skeletonDataUrl: hoshino
     portraitUrl: 
     facePosition: {x: 17.975986, y: 924.4399}

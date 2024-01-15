@@ -28,7 +28,7 @@ namespace BAStoryPlayer
         [HideInInspector, Obsolete] public string affiliation;
         [Space]
         public LoadType loadType;
-        public string skelUrl;
+        public string skeletonDataUrl;
         [HideInInspector, Obsolete] public string portraitUrl;
         [Space]
         [Tooltip("仅在载入类型为 'SkeletonData' 时有效")] public Vector2 facePosition;
@@ -36,18 +36,29 @@ namespace BAStoryPlayer
 
     [CreateAssetMenu(menuName = "BAStoryPlayer/角色信息表",fileName = "CharacterDataTable")]
     [SerializeField]
-    public class CharacterDataTable : ScriptableObject
+    public class CharacterDataTable : ScriptableObject,IEnumerable<CharacterDataUnit>
     {
-        [SerializeField] private List<CharacterDataUnit> _rawData = new List<CharacterDataUnit>();
-        private IReadOnlyDictionary<int, CharacterDataUnit> _hashTable = new Dictionary<int, CharacterDataUnit>();
+        [SerializeField] private List<CharacterDataUnit> _list = new List<CharacterDataUnit>();
+        private Dictionary<string, CharacterDataUnit> _dictionary = new();
 
+        public IReadOnlyList<CharacterDataUnit> List => _list;
+        public IReadOnlyDictionary<string, CharacterDataUnit> Dictionary => _dictionary;
+
+        public CharacterDataUnit this[int index]
+        {
+            get => List[index];
+        }
         public CharacterDataUnit this[string indexName]
         {
             get
             {
+                if (!Dictionary.ContainsKey(indexName))
+                {
+                    TryReloadDictionary();
+                }
                 try
                 {
-                    return _hashTable[indexName.GetHashCode()];
+                    return Dictionary[indexName];
                 }
                 catch
                 {
@@ -56,32 +67,49 @@ namespace BAStoryPlayer
                 }
             }
         }
-        
-        public void Print()
+
+        public IEnumerator<CharacterDataUnit> GetEnumerator()
         {
-            foreach(var i in _rawData)
+            return _list.GetEnumerator();
+        }
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        private void OnEnable()
+        {
+#if !UNITY_EDITOR
+            TryReloadDictionary();
+#endif
+        }
+
+        private void TryReloadDictionary()
+        {
+            _dictionary.Clear();
+            foreach (var chrData in List)
             {
-                Debug.Log(i.ToString());
+                _dictionary.Add(chrData.indexName, chrData);
             }
         }
-        
+
+#if UNITY_EDITOR
         private void OnValidate()
         {
-            Dictionary<int, CharacterDataUnit> dict = new Dictionary<int, CharacterDataUnit>();
+            _dictionary.Clear();
 
-            foreach (var chrData in _rawData)
+            foreach (var chrData in _list)
             {
-                int hash = chrData.indexName.GetHashCode();
-                dict.Add(hash, chrData);
+                _dictionary.Add(chrData.indexName, chrData);
 
-                if (chrData.loadType == LoadType.Prefab)
+                if (chrData.loadType == LoadType.Prefab || chrData.skeletonDataUrl == string.Empty)
                 {
                     continue;
                 }
 
                 SkeletonDataAsset skelDataAsset = null;
 
-                string[] guids = AssetDatabase.FindAssets(chrData.skelUrl.Split('/').Last());
+                string[] guids = AssetDatabase.FindAssets(chrData.skeletonDataUrl.Split('/').Last());
                 if(guids.Length > 0)
                 {
                     skelDataAsset = AssetDatabase.LoadAssetAtPath<SkeletonDataAsset>(AssetDatabase.GUIDToAssetPath(guids[0]));
@@ -146,9 +174,9 @@ namespace BAStoryPlayer
 
                 chrData.facePosition = sum / count;
             }
-
-            _hashTable = dict;
         }
+
+#endif
     }
 }
 

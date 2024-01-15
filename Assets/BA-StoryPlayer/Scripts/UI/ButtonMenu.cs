@@ -2,13 +2,15 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using BAStoryPlayer.DoTweenS;
+using Unity.VisualScripting;
+using BAStoryPlayer.Event;
 
 namespace BAStoryPlayer.UI
 {
     public class ButtonMenu : UILayerComponent
     {
         [SerializeField] private Color _colorSelectedBackground = new Color(0.2f,0.2f,0.2f,1);
-        [SerializeField] private Color _colorSelectedText;
+        [SerializeField] private Color _colorSelectedText = Color.white;
         private Color _colorUnselectedText;
         [SerializeField] private TextMeshProUGUI _tmp;
         [SerializeField] private GameObject _subpanel;
@@ -17,6 +19,12 @@ namespace BAStoryPlayer.UI
         [SerializeField] private AudioClip _soundClick;
 
         private Coroutine _crtDisableObject;
+
+        public bool IsSelected
+        {
+            private set => _isSelected = value;
+            get => _isSelected;
+        }
 
         void Start()
         {
@@ -40,8 +48,14 @@ namespace BAStoryPlayer.UI
             GetComponent<Button>().onClick.AddListener(() =>
             {
                 PlaySound();
-                _isSelected = !_isSelected;
-                SwitchState(_isSelected);
+                IsSelected = !IsSelected;
+                SwitchState(IsSelected);
+            });
+
+            EventBus<OnStartPlayingStory>.Binding.Add((data) =>
+            {
+                IsSelected = false;
+                SwitchState(IsSelected,true);
             });
         }
 

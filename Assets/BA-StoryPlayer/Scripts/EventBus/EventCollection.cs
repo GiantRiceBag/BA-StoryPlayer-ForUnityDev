@@ -1,11 +1,16 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 namespace BAStoryPlayer.Event
 {
     #region Events
-    public struct OnPlayerSelectedBranch : IEvent 
+    public struct OnStartPlayingStory : IEvent { }
+    public struct OnPlayerSelected : IEvent 
     {
-        public int scriptGourpID;
-        public int selectionGroup;
+        [Obsolete] public int scriptGourpID;
+        [Obsolete] public int selectionGroup;
+        public string script;
+        public List<StoryUnit> storyUnits;
     }
     public struct OnPlayerCanceledAuto : IEvent { }
 

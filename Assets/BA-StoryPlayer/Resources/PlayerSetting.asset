@@ -12,24 +12,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ebe972e5b673cc44b104bf73c8191b2, type: 3}
   m_Name: PlayerSetting
   m_EditorClassIdentifier: 
-  num_Char_Persecond: 20
-  time_Lock_AfterPrinting: 0.2
-  time_Lock_AfterAction: 0.2
-  time_BlurBackground: 0.7
-  time_SwitchBackground: 1
-  time_Character_Fade: 0.75
-  time_Character_Highlight: 0.2
-  time_Character_Wink: {x: 4, y: 5.5}
-  time_Character_Hophop: 0.5
-  time_Character_Shake: 0.64
-  time_Character_Move: 0.45
-  time_Character_Stiff: 0.45
-  time_Character_Jump: 0.3
-  time_Character_Greeting: 0.8
-  num_Max_AudioSource: 10
-  time_Bgm_Fade: 0.5
-  path_Music: Music/
-  path_Sound: Sound/
-  path_Background: Background/
-  path_Prefab: CharacterPrefab/
-  path_StoryScript: StoryScript/
+  _numCharPerSecond: 20
+  _timeLockAfterPrinting: 0.2
+  _timeLockAfterAction: 0.2
+  _timeBlurBackground: 0.7
+  _timeSwitchBackground: 1
+  _timeCharacterFade: 0.75
+  _timeCharacterHighlight: 0.2
+  _timeRangeCharacterWink: {x: 4, y: 5.5}
+  _timeCharacterHophop: 0.5
+  _timeCharacterShake: 0.64
+  _timeCharacterMove: 0.45
+  _timeCharacterStiff: 0.45
+  _timeCharacterJump: 0.3
+  _timeCharacterGreeting: 0.8
+  _numMaxAudioSource: 10
+  _timeBgmFade: 0.5
+  _pathMusic: Music/
+  _pathSound: Sound/
+  _pathBackground: Background/
+  _pathCharacterSkeletonData: CharacterSkeletonData/
+  _pathStoryScript: StoryScript/

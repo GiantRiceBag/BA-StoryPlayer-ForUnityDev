@@ -99,7 +99,9 @@ namespace BAStoryPlayer
         {
             AudioClip clip = Resources.Load<AudioClip>(StoryPlayer.Setting.PathMusic + audioURL);
             if (clip == null)
+            {
                 Debug.LogError($"未能在路径 [{StoryPlayer.Setting.PathMusic + audioURL}] 找到AudioClip");
+            }
             PlayBGM(clip, fade, fadeScale);
         }
         public void PlayBGM(AudioClip audioClip, bool fade = true, float fadeScale = 2)

@@ -15,6 +15,7 @@ namespace BAStoryPlayer
         public int weight = int.MinValue;
         public float wait = 0;
         public int selectionGroup = 0;
+        public string scripts;
 
         public void Execute() { action?.Invoke(); }
         /// <summary>

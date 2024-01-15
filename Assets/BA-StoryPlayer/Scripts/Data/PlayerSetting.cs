@@ -52,7 +52,7 @@ namespace BAStoryPlayer
         [Tooltip("背景图片路径")]
         [SerializeField] private string _pathBackground = "Background/";
         [Tooltip("角色Skel以及Prefab路径")]
-        [SerializeField] private string _pathSkel = "CharacterSkel/";
+        [SerializeField] private string _pathCharacterSkeletonData = "CharacterSkeletonData/";
         [Tooltip("剧情脚本路径")]
         [SerializeField] private string _pathStoryScript = "StoryScript/";
 
@@ -80,7 +80,7 @@ namespace BAStoryPlayer
         public string PathMusic => _pathMusic;
         public string PathSound => _pathSound;
         public string PathBackground => _pathBackground;
-        public string PathPrefab => _pathSkel;
+        public string PathCharacterSkeletonData => _pathCharacterSkeletonData;
         public string PathStoryScript => _pathStoryScript;
     }
 }

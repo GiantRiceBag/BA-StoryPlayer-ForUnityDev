@@ -213,7 +213,7 @@ namespace BAStoryPlayer
 
             HideAllUI();
         }
-        public void ShowOption(List<OptionData> dates)
+        public void ShowOptions(List<OptionData> dates)
         {
             GameObject obj = Instantiate(Resources.Load("UI/OptionManager") as GameObject);
             obj.transform.SetParent(StoryPlayer.transform);

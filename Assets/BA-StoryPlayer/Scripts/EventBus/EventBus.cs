@@ -30,7 +30,9 @@ namespace BAStoryPlayer.Event
             PlayModeState = state;
 
             if (PlayModeState == PlayModeStateChange.EnteredEditMode)
+            {
                 ClearAllBuses();
+            }
         }
 #endif
 

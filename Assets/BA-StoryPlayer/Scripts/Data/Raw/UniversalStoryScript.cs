@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
 
 namespace BAStoryPlayer
 {
@@ -15,12 +14,12 @@ namespace BAStoryPlayer
         public string serial;
         public string uuid;
         public string description;
-        public List<RawUniversalStoryUnit> content;
+        public List<RawStoryUnit> content;
 
 #if UNITY_EDITOR
         public override string ToString() 
         { 
-            System.Text.StringBuilder stringBuilder = new System.Text.StringBuilder();
+            StringBuilder stringBuilder = new StringBuilder();
 
             stringBuilder.AppendLine($"serial [{serial}]");
             stringBuilder.AppendLine($"uuid [{uuid}]");
@@ -32,11 +31,6 @@ namespace BAStoryPlayer
             }
 
             return stringBuilder.ToString();
-        }
-
-        public void Print()
-        {
-            Debug.Log(ToString());
         }
         public void ToJsonFile(string url)
         {
@@ -52,32 +46,54 @@ namespace BAStoryPlayer
     }
 
     [Serializable]
-    public class RawUniversalStoryUnit
+    public class RawStoryUnitBase
     {
         public long id;
         public string type;
         public string backgroundImage;
-        public string bgmId;
+        public string bgm;
         public string speaker;
         public string affiliation;
         public string text;
-        public List<RawUniversalStoryCharacterUnit> characters;
+        public string script;
+
+        public List<RawStoryCharacterUnit> characters;
         public string command;
         public List<string> commandArgs;
 
-        public int selectionGroup;
-        public List<string> condition; // TODO 适配BranchTable
-        // public List<RawUniversalStoryUnit> content; // 选项组子内容 TODO 要重构
+        public RawStoryUnit AsRawStoryUnit()
+        {
+            return new RawStoryUnit()
+            {
+                id = this.id,
+                type = this.type,
+                backgroundImage = this.backgroundImage,
+                bgm = this.bgm,
+                speaker = this.speaker,
+                affiliation = this.affiliation,
+                text = this.text,
+                characters = this.characters,
+                command = this.command,
+                commandArgs = this.commandArgs,
+                script = this.script,
+            };
+        }
+    }
+
+    [Serializable]
+    public class RawStoryUnit : RawStoryUnitBase
+    {
+        public List<RawSelectionGroup> selectionGroups;
 
 #if UNITY_EDITOR
         public override string ToString()
         {
-            System.Text.StringBuilder stringBuilder = new System.Text.StringBuilder();
+            StringBuilder stringBuilder = new StringBuilder();
 
             stringBuilder.AppendLine($"id   [{id}]");
             stringBuilder.AppendLine($"type   [{type}]");
             stringBuilder.AppendLine($"backgroundIamge   [{backgroundImage}]");
-            stringBuilder.AppendLine($"bgmId   [{bgmId}]");
+            stringBuilder.AppendLine($"bgmId   [{bgm}]");
             stringBuilder.AppendLine($"speaker   [{speaker}]");
             stringBuilder.AppendLine($"affiliation   [{affiliation}]");
             stringBuilder.AppendLine($"text   [{text}]");
@@ -93,7 +109,7 @@ namespace BAStoryPlayer
     }
 
     [Serializable]
-    public class RawUniversalStoryCharacterUnit
+    public class RawStoryCharacterUnit
     {
         public string uuid;
         public string name;
@@ -122,5 +138,24 @@ namespace BAStoryPlayer
         }
 #endif
     }
-}
 
+    [Serializable]
+    public class RawSelectionGroup
+    {
+        public long id;
+        public string type;
+        public string text;
+        public bool isConditional;
+        public List<RawCondition> conditions;
+        [HideInInspector] public List<RawStoryUnitBase> content;
+        public string script;
+    }
+
+    [Serializable]
+    public class RawCondition
+    {
+        public string flag;
+        public string operation;
+        public int value;
+    }
+}

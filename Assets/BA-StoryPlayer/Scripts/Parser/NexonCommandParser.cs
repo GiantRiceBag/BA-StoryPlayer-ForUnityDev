@@ -477,7 +477,7 @@ namespace BAStoryPlayer.Parser.NexonScriptParser
             if (datas.Count != 0)
             {
                 storyUnit.UpdateType(UnitType.Option);
-                storyUnit.action += () => { StoryPlayer.UIModule.ShowOption(datas); };
+                storyUnit.action += () => { StoryPlayer.UIModule.ShowOptions(datas); };
             }
 
             return nextParser == null ? storyUnit : nextParser.Parse(rawStoryUnit, storyUnit);
@@ -536,7 +536,7 @@ namespace BAStoryPlayer.Parser.NexonScriptParser
 
             if (rawStoryUnit.backgroundURL != string.Empty)
             {
-                storyUnit.action += () => { StoryPlayer.SetBackground(rawStoryUnit.backgroundURL, BackgroundTransistionType.Smooth); };
+                storyUnit.action += () => { StoryPlayer.BackgroundModule.SetBackground(rawStoryUnit.backgroundURL, BackgroundTransistionType.Smooth); };
             }
 
             for (int i = 0; i < rawStoryUnit.scriptList.Count; i++)

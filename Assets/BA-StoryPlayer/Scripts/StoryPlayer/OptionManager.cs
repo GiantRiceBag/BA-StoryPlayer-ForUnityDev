@@ -1,17 +1,32 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace BAStoryPlayer.UI
 {
-    public struct OptionData
+    public class OptionData
     {
-        public int optionID;
+        [Obsolete] public int optionID;
         public string text;
+        public List<Condition> conditions;
+        public List<StoryUnit> storyUnits;
+        public string script;
 
-        public OptionData(int id,string text)
+        public bool IsConditional => conditions != null && conditions.Count > 0;
+
+        [Obsolete]
+        public OptionData(int id, string text)
         {
             this.optionID = id;
             this.text = text;
+        }
+        public OptionData(string text,string script,List<StoryUnit> storyUnits = null, List<Condition> conditions = null)
+        {
+            this.text = text;
+            this.script = script;
+            this.storyUnits = storyUnits;
+            this.conditions = conditions;
         }
     }
 
@@ -24,7 +39,9 @@ namespace BAStoryPlayer.UI
             get
             {
                 if (_btnPrefab == null)
+                {
                     _btnPrefab = Resources.Load<GameObject>("UI/Option");
+                }
                 return _btnPrefab;
             }
         }
@@ -41,20 +58,39 @@ namespace BAStoryPlayer.UI
             transform.localPosition = Vector3.zero;
         }
 
-        private void AddOption(OptionData data)
+        private bool AddOption(OptionData data)
         {
+            foreach(var condition in data.conditions)
+            {
+                if (!condition.Validate(StoryPlayer.FlagTable))
+                {
+                    return false;
+                }
+            }
+
             GameObject obj = Instantiate(BtnPrefab);
             obj.transform.SetParent(transform);
 
             var option = obj.GetComponent<ButtonOption>();
-            option.Initialize(this,data.optionID, $"\"{ data.text}\"");
+            option.Initialize(this,data);
+
+            return true;
         }
-        public void AddOptions(System.Collections.Generic.List<OptionData> datas,BAStoryPlayer storyPlayer)
+        public void AddOptions(List<OptionData> datas,BAStoryPlayer storyPlayer)
         {
             StoryPlayer = storyPlayer;
+            int optionsCount = 0;
             foreach (var i in datas)
             {
-                AddOption(i);
+                if (AddOption(i))
+                {
+                    optionsCount++;
+                }
+            }
+
+            if(optionsCount == 0)
+            {
+                FinishSelecting(true);
             }
         }
 
@@ -64,8 +100,13 @@ namespace BAStoryPlayer.UI
             CreateMouseBlock();
 
             foreach (var i in GetComponentsInChildren<Button>())
-                if(i.transform != exception.transform)
+            {
+                if (i.transform != exception.transform)
+                {
                     i.interactable = false;
+                }
+
+            }
         }
 
        private void CreateMouseBlock()
@@ -82,7 +123,7 @@ namespace BAStoryPlayer.UI
             _block = Instantiate(obj);
         }
 
-        public void FinishSelecting()
+        public void FinishSelecting(bool nextUnit = false)
         {
             if (_block != null)
             {
@@ -90,6 +131,10 @@ namespace BAStoryPlayer.UI
             }
 
             // 一般来说选完后自动执行下一个单元
+            if(nextUnit)
+            {
+                StoryPlayer.ToNextStoryUnit();
+            }
             StoryPlayer.ReadyToNext(true);
             Destroy(gameObject);
         }

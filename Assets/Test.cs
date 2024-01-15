@@ -13,12 +13,15 @@ using System.Linq;
 using System.IO;
 using BAStoryPlayer.Event;
 using System.Reflection;
+using BAStoryPlayer.Utility;
+using Unity.Burst.Intrinsics;
+using static UnityEngine.Video.VideoPlayer;
 
 [ExecuteAlways]
 public class Test : MonoBehaviour
 {
     public BAStoryPlayer.BAStoryPlayer storyPlayer;
-    public string storyScriptName = "TestScript";
+    public string storyScriptName = "MS_Test";
     Action test;
     public SkeletonGraphic skelg;
     List<GameObject> ps = new List<GameObject>();
@@ -31,11 +34,28 @@ public class Test : MonoBehaviour
         GUILayout.FlexibleSpace();
         if (GUILayout.Button("Play"))
         {
+            Dictionary<string, int> flags = new();
+            flags.Add("TestFlag1", 2);
             if (Application.isPlaying)
             {
-                storyPlayer.LoadStory(storyScriptName);
+                storyPlayer.LoadStory(storyScriptName, flags);
+                storyPlayer.OnStoryPlayerClosed += (scripts, flags) =>
+                {
+                    foreach(var i in scripts)
+                    {
+                        Debug.Log($"script:{i}");
+                    }
+                    foreach (var i in flags)
+                    {
+                        Debug.Log($"flag:{i}");
+                    }
+                };
             }
         }
         GUILayout.Label("！！！！！！！！！！！！！！！！");
+        if (GUILayout.Button("Test Something"))
+        {
+
+        }
     }
 }

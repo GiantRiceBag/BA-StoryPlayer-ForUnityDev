@@ -322,18 +322,18 @@ namespace BAStoryPlayer.Parser.AsScriptParser
             {
                 // Image State
                 case "show":
-                    storyUnit.action += () => StoryPlayer.SetBackground(imgUrl,BackgroundTransistionType.Smooth);
+                    storyUnit.action += () => StoryPlayer.BackgroundModule.SetBackground(imgUrl,BackgroundTransistionType.Smooth);
                     break;
                 case "hide":
-                    storyUnit.action += () => StoryPlayer.SetBackground(null, BackgroundTransistionType.Smooth);
+                    storyUnit.action += () => StoryPlayer.BackgroundModule.SetBackground(null, BackgroundTransistionType.Smooth);
                     break;
                 case "showD": // Legacy
                 case "appear":
-                    storyUnit.action += () => StoryPlayer.SetBackground(imgUrl, BackgroundTransistionType.Instant);
+                    storyUnit.action += () => StoryPlayer.BackgroundModule.SetBackground(imgUrl, BackgroundTransistionType.Instant);
                     break;
                 case "hideD": // Legacy
                 case "disappear":
-                    storyUnit.action += () => StoryPlayer.SetBackground(null, BackgroundTransistionType.Instant);
+                    storyUnit.action += () => StoryPlayer.BackgroundModule.SetBackground(null, BackgroundTransistionType.Instant);
                     break;
                 case "hl":
                 case "highlight":
@@ -421,20 +421,20 @@ namespace BAStoryPlayer.Parser.AsScriptParser
         }
         void HandleSelectionCommand(string[] command,StoryUnit storyUnit)
         {
-            List<OptionData> datas = new System.Collections.Generic.List<OptionData>();
+            List<OptionData> datas = new List<OptionData>();
 
             for(int i = 1; i + 1 < command.Length; i+=2)
             {
-                OptionData data = new OptionData();
-                data.text = command[i];
-                data.optionID = int.Parse(Regex.Replace(command[i + 1], "[^0-9]", ""));
+                string text = command[i];
+                int optionID = int.Parse(Regex.Replace(command[i + 1], "[^0-9]", ""));
+                OptionData data = new OptionData(optionID,text);
                 datas.Add(data);
             }
 
             if (datas.Count != 0)
             {
                 storyUnit.UpdateType(UnitType.Option);
-                storyUnit.action += () => { StoryPlayer.UIModule.ShowOption(datas); };
+                storyUnit.action += () => { StoryPlayer.UIModule.ShowOptions(datas); };
             }
         }
 

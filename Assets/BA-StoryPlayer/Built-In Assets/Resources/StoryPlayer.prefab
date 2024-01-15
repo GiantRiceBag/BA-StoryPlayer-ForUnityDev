@@ -1997,6 +1997,7 @@ GameObject:
   - component: {fileID: 5703000470661201345}
   - component: {fileID: 5703000470661201344}
   - component: {fileID: 7609363249095605655}
+  - component: {fileID: 141289091}
   m_Layer: 5
   m_Name: Background
   m_TagString: Untagged
@@ -2062,6 +2063,20 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &141289091
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5703000469989028972}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a8eef499483b3745b9a57b4ff72757c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  storyPlayer: {fileID: 7609363249095605644}
+  _imgBackground: {fileID: 7609363249095605655}
 --- !u!1 &5703000470023379116
 GameObject:
   m_ObjectHideFlags: 0
@@ -2075,7 +2090,7 @@ GameObject:
   - component: {fileID: 5703000470023379107}
   - component: {fileID: 5703000470023379106}
   m_Layer: 5
-  m_Name: Button_Next
+  m_Name: Button_Execute
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2185,7 +2200,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 7609363249095605644}
         m_TargetAssemblyTypeName: BAStoryPlayer.BAStoryPlayer, Assembly-CSharp
-        m_MethodName: Next
+        m_MethodName: ExecuteCurrentUnit
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2947,9 +2962,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   storyPlayer: {fileID: 7609363249095605644}
   _colorSelectedBackground: {r: 0.2, g: 0.2, b: 0.2, a: 1}
-  _colorSelectedText: {r: 0, g: 0, b: 0, a: 0}
-  _tmp: {fileID: 0}
-  _subpanel: {fileID: 0}
+  _colorSelectedText: {r: 1, g: 1, b: 1, a: 1}
+  _tmp: {fileID: 5703000470235610524}
+  _subpanel: {fileID: 5703000471001061370}
   _isSelected: 0
   _soundClick: {fileID: 0}
 --- !u!1 &5703000470486286572
@@ -3540,13 +3555,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08587367e001a4741ae9082b0d6c7646, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _imgBackground: {fileID: 7609363249095605655}
+  _backgroundModule: {fileID: 141289091}
   _characterModule: {fileID: 7609363249095605652}
   _uiModule: {fileID: 7609363249095605653}
   _audioModule: {fileID: 7609363249095605642}
   _characterDataTable: {fileID: 11400000, guid: af30cd5ea32da4748b8fe42105d0d088, type: 2}
   _playerSetting: {fileID: 11400000, guid: e2901c0259c51d2498b10b87c84c071b, type: 2}
-  _currentUnitIndex: 0
   _lockTime: 0
   _isPlaying: 0
   _isExecutable: 1
@@ -3708,7 +3722,7 @@ MonoBehaviour:
   _colorSelected: {r: 1, g: 0.8784314, b: 0.4235294, a: 1}
   _isSelected: 0
   _sound_Click: {fileID: 0}
-  _objFlowLight: {fileID: 0}
+  _objFlowLight: {fileID: 970468940}
 --- !u!1 &5703000471333672098
 GameObject:
   m_ObjectHideFlags: 0

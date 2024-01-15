@@ -605,14 +605,14 @@ namespace BAStoryPlayer
                 {
                     case LoadType.Prefab:
                         {
-                            prefab = Instantiate(Resources.Load(base.StoryPlayer.Setting.PathPrefab + base.StoryPlayer.CharacterDataTable[indexName].skelUrl) as GameObject);
+                            prefab = Instantiate(Resources.Load(base.StoryPlayer.Setting.PathCharacterSkeletonData + base.StoryPlayer.CharacterDataTable[indexName].skeletonDataUrl) as GameObject);
                             break;
                         }
                     case LoadType.SkeletonData:
                         {
                             SkeletonDataAsset skelData =
-                                Resources.Load<SkeletonDataAsset>(base.StoryPlayer.Setting.PathPrefab
-                                    + base.StoryPlayer.CharacterDataTable[indexName].skelUrl);
+                                Resources.Load<SkeletonDataAsset>(base.StoryPlayer.Setting.PathCharacterSkeletonData
+                                    + base.StoryPlayer.CharacterDataTable[indexName].skeletonDataUrl);
 
                             Material mat = new Material(Shader.Find("Spine/SkeletonGraphic"));
                             UnityEngine.Rendering.LocalKeyword keyword = new UnityEngine.Rendering.LocalKeyword(mat.shader, "_STRAIGHT_ALPHA_INPUT");
