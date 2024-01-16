@@ -118,7 +118,6 @@ namespace BAStoryPlayer.UI
             _animator.SetBool("Selected", false);
             _animator.SetBool("Highlighted", false);
         }
-
         public void OnPointerEnter(PointerEventData eventData)
         {
             IsPointerOnButton = true;
@@ -128,7 +127,6 @@ namespace BAStoryPlayer.UI
             _animator.SetBool("Selected", false);
             _animator.SetBool("Highlighted", true);
         }
-
         public void OnPointerDown(PointerEventData eventData)
         {   
             if(IsPointerOnButton == true)
@@ -139,7 +137,6 @@ namespace BAStoryPlayer.UI
                 _animator.SetBool("Highlighted", false);
             }
         }
-
         public void OnPointerUp(PointerEventData eventData)
         {
             if (IsPointerOnButton == true)

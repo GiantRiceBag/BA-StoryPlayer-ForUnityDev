@@ -333,7 +333,7 @@ namespace BAStoryPlayer
             // 每一个单元刷新一次锁定时间
             ReflashLockTime();
 
-            if (_currentStoryUnit.scripts != null && _currentStoryUnit.scripts != string.Empty)
+            if (!string.IsNullOrEmpty(_currentStoryUnit.scripts))
             {
                 ScriptsToExecute.Add(_currentStoryUnit.scripts);
             }
@@ -577,7 +577,7 @@ namespace BAStoryPlayer
                     _priorStoryUnits.Enqueue(priorUnit);
                 }
             }
-            if (data.script != null && data.script != string.Empty)
+            if (!string.IsNullOrEmpty(data.script))
             {
                 ScriptsToExecute.Add(data.script);
             }

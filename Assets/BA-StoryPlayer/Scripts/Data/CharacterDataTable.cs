@@ -18,7 +18,17 @@ namespace BAStoryPlayer
         Prefab
     }
 
-    [System.Serializable]
+    public interface ICharacterDataTableInternal
+    {
+        public List<CharacterDataUnit> List {  get; }
+        public Dictionary<string,CharacterDataUnit> Dictionary {  get; }
+
+        public void Add(CharacterDataUnit data);
+        public void Clear();
+        public void Reflash();
+    }
+
+    [Serializable]
     public class CharacterDataUnit
     {
         [Tooltip("建议以角色罗马音作为主要索引名")] public string indexName;
@@ -35,14 +45,17 @@ namespace BAStoryPlayer
     }
 
     [CreateAssetMenu(menuName = "BAStoryPlayer/角色信息表",fileName = "CharacterDataTable")]
-    [SerializeField]
-    public class CharacterDataTable : ScriptableObject,IEnumerable<CharacterDataUnit>
+    [Serializable]
+    public class CharacterDataTable : ScriptableObject,IEnumerable<CharacterDataUnit>, ICharacterDataTableInternal
     {
         [SerializeField] private List<CharacterDataUnit> _list = new List<CharacterDataUnit>();
         private Dictionary<string, CharacterDataUnit> _dictionary = new();
 
         public IReadOnlyList<CharacterDataUnit> List => _list;
         public IReadOnlyDictionary<string, CharacterDataUnit> Dictionary => _dictionary;
+
+        List<CharacterDataUnit> ICharacterDataTableInternal.List => _list;
+        Dictionary<string, CharacterDataUnit> ICharacterDataTableInternal.Dictionary => _dictionary;
 
         public CharacterDataUnit this[int index]
         {
@@ -70,7 +83,7 @@ namespace BAStoryPlayer
 
         public IEnumerator<CharacterDataUnit> GetEnumerator()
         {
-            return _list.GetEnumerator();
+            return List.GetEnumerator();
         }
         IEnumerator IEnumerable.GetEnumerator()
         {
@@ -176,6 +189,23 @@ namespace BAStoryPlayer
             }
         }
 
+        public void Clear()
+        {
+            _list.Clear();
+            _dictionary.Clear();
+        }
+        public void Add(CharacterDataUnit data)
+        {
+            if (!_dictionary.ContainsKey(data.indexName))
+            {
+                _list.Add(data);
+                _dictionary.Add(data.indexName, data);
+            }
+        }
+        public void Reflash()
+        {
+            OnValidate();
+        }
 #endif
     }
 }
