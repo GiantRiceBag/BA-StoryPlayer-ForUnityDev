@@ -105,7 +105,6 @@ namespace BAStoryPlayer.UI
                 {
                     i.interactable = false;
                 }
-
             }
         }
 
@@ -133,9 +132,9 @@ namespace BAStoryPlayer.UI
             // 一般来说选完后自动执行下一个单元
             if(nextUnit)
             {
-                StoryPlayer.ToNextStoryUnit();
+                StoryPlayer.PrepareNextStoryUnit();
             }
-            StoryPlayer.ReadyToNext(true);
+            StoryPlayer.ReadyToExecute(true);
             Destroy(gameObject);
         }
     }

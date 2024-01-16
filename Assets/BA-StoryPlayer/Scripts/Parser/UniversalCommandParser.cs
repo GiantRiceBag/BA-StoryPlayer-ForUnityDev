@@ -82,7 +82,7 @@ namespace BAStoryPlayer.Parser.UniversaScriptParser
                 string indexName = characterUnit.name;
                 int characterIndex = characterUnit.position - 1;
 
-                storyUnit.action += () => StoryPlayer.CharacterModule.ActivateCharacter(characterIndex, indexName, characterUnit.face);
+                storyUnit.actions += () => StoryPlayer.CharacterModule.ActivateCharacter(characterIndex, indexName, characterUnit.face);
 
                 if (characterUnit.emotion != null)
                 {
@@ -90,82 +90,82 @@ namespace BAStoryPlayer.Parser.UniversaScriptParser
                     {
                         case "h":
                         case "heart":
-                            storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Heart); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Heart); };
                             break;
                         case "respond":
-                            storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Respond); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Respond); };
                             break;
                         case "m":
                         case "music":
-                            storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Music); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Music); };
                             break;
                         case "k":
                         case "twinkle":
-                            storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Twinkle); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Twinkle); };
                             break;
                         case "u":
                         case "upset":
-                            storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Upset); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Upset); };
                             break;
                         case "w":
                         case "sweat":
-                            storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Sweat); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Sweat); };
                             break;
                         case "[...]":
                         case "...":
                         case "dot":
-                            storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Dot); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Dot); };
                             break;
                         case "c":
                         case "chat":
-                            storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Chat); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Chat); };
                             break;
                         case "[!]":
                         case "!":
                         case "exclaim":
-                            storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Exclaim); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Exclaim); };
                             break;
                         case "[?!]":
                         case "?!":
                         case "[!?]":
                         case "!?":
                         case "surprise":
-                            storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Surprise); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Surprise); };
                             break;
                         case "[?]":
                         case "?":
                         case "question":
-                            storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Question); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Question); };
                             break;
                         case "[///]":
                         case "///":
                         case "shy":
-                            storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Shy); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Shy); };
                             break;
                         case "a":
                         case "angry":
-                            storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Angry); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Angry); };
                             break;
                         case "steam":
-                            storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Steam); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Steam); };
                             break;
                         case "sigh":
-                            storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Sigh); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Sigh); };
                             break;
                         case "sad":
-                            storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Sad); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Sad); };
                             break;
                         case "bulb":
-                            storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Bulb); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Bulb); };
                             break;
                         case "zzz":
-                            storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Zzz); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Zzz); };
                             break;
                         case "tear":
-                            storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Tear); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Tear); };
                             break;
                         case "think":
-                            storyUnit.action += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Think); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetEmotion(characterIndex, CharacterEmotion.Think); };
                             break;
                         default:
                             break;
@@ -177,52 +177,52 @@ namespace BAStoryPlayer.Parser.UniversaScriptParser
                     switch (characterUnit.action)
                     {
                         case "a":
-                            storyUnit.action += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Appear); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Appear); };
                             break;
                         case "d":
-                            storyUnit.action += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Disapper); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Disapper); };
                             break;
                         case "dl":
-                            storyUnit.action += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Disapper2Left); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Disapper2Left); };
                             break;
                         case "dr":
-                            storyUnit.action += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Disapper2Right); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Disapper2Right); };
                             break;
                         case "ar":
-                            storyUnit.action += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.AppearL2R, characterUnit.actionArgs - 1); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.AppearL2R, characterUnit.actionArgs - 1); };
                             break;
                         case "al":
-                            storyUnit.action += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.AppearR2L, characterUnit.actionArgs - 1); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.AppearR2L, characterUnit.actionArgs - 1); };
                             break;
                         case "hophop":
-                            storyUnit.action += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Hophop); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Hophop); };
                             break;
                         case "greeting":
-                            storyUnit.action += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Greeting); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Greeting); };
                             break;
                         case "shake":
-                            storyUnit.action += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Shake); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Shake); };
                             break;
                         case "move":
-                            storyUnit.action += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Move, characterUnit.actionArgs - 1); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Move, characterUnit.actionArgs - 1); };
                             break;
                         case "stiff":
-                            storyUnit.action += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Stiff); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Stiff); };
                             break;
                         case "closeup":
-                            storyUnit.action += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Close); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Close); };
                             break;
                         case "jump":
-                            storyUnit.action += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Jump); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Jump); };
                             break;
                         case "falldownL":
-                            storyUnit.action += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.falldownL); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.falldownL); };
                             break;
                         case "falldownR":
-                            storyUnit.action += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.falldownR); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.falldownR); };
                             break;
                         case "hide":
-                            storyUnit.action += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Hide); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Hide); };
                             break;
                         default: 
                             break;
@@ -310,11 +310,11 @@ namespace BAStoryPlayer.Parser.UniversaScriptParser
         {
             if(rawStoryUnit.backgroundImage != string.Empty)
             {
-                storyUnit.action += () => StoryPlayer.BackgroundModule.SetBackground(rawStoryUnit.backgroundImage,BackgroundTransistionType.Smooth);
+                storyUnit.actions += () => StoryPlayer.BackgroundModule.SetBackground(rawStoryUnit.backgroundImage,BackgroundTransistionType.Smooth);
             }
             if(rawStoryUnit.bgm != string.Empty) 
             {
-                storyUnit.action += () => StoryPlayer.AudioModule.PlayBGM(rawStoryUnit.bgm);
+                storyUnit.actions += () => StoryPlayer.AudioModule.PlayBGM(rawStoryUnit.bgm);
             }
         }
         #endregion
@@ -330,12 +330,12 @@ namespace BAStoryPlayer.Parser.UniversaScriptParser
             if (titles.Length == 2)
             {
                 StoryPlayer.UIModule.SetTitle(titles[1]);
-                storyUnit.action += () => StoryPlayer.UIModule.ShowTitle(titles[0], titles[1]);
+                storyUnit.actions += () => StoryPlayer.UIModule.ShowTitle(titles[0], titles[1]);
             }
             else
             {
                 StoryPlayer.UIModule.SetTitle(rawStoryUnit.text);
-                storyUnit.action += () => StoryPlayer.UIModule.ShowTitle("", rawStoryUnit.text);
+                storyUnit.actions += () => StoryPlayer.UIModule.ShowTitle("", rawStoryUnit.text);
             }
 
             return storyUnit;
@@ -344,7 +344,7 @@ namespace BAStoryPlayer.Parser.UniversaScriptParser
         {
             StoryUnit storyUnit = new StoryUnit();
 
-            storyUnit.action += () => StoryPlayer.UIModule.ShowVenue(rawStoryUnit.text);
+            storyUnit.actions += () => StoryPlayer.UIModule.ShowVenue(rawStoryUnit.text);
 
             return storyUnit;
         }
@@ -353,8 +353,8 @@ namespace BAStoryPlayer.Parser.UniversaScriptParser
             StoryUnit storyUnit = new StoryUnit();
             storyUnit.UpdateType(UnitType.Text);
 
-            storyUnit.action += () => StoryPlayer.UIModule.SetSpeaker(rawStoryUnit.speaker, rawStoryUnit.affiliation);
-            storyUnit.action += () => StoryPlayer.UIModule.PrintMainText(rawStoryUnit.text);
+            storyUnit.actions += () => StoryPlayer.UIModule.SetSpeaker(rawStoryUnit.speaker, rawStoryUnit.affiliation);
+            storyUnit.actions += () => StoryPlayer.UIModule.PrintMainText(rawStoryUnit.text);
 
             if(rawStoryUnit.characters.Count > 0)
             {
@@ -397,7 +397,7 @@ namespace BAStoryPlayer.Parser.UniversaScriptParser
 
             if(options.Count > 0)
             {
-                storyUnit.action += () =>
+                storyUnit.actions += () =>
                 {
                     StoryPlayer.UIModule.ShowOptions(options);
                 };
@@ -414,7 +414,6 @@ namespace BAStoryPlayer.Parser.UniversaScriptParser
 
             return storyUnit;
         }
-
         private StoryUnit HandleEffectOnlyUnit(RawStoryUnit rawStoryUnit)
         {
             StoryUnit storyUnit = new StoryUnit();
@@ -423,7 +422,6 @@ namespace BAStoryPlayer.Parser.UniversaScriptParser
 
             return storyUnit;
         }
-
         private StoryUnit HandleContinueUnit(RawStoryUnit rawStoryUnit)
         {
             StoryUnit storyUnit = new StoryUnit();

@@ -26,7 +26,7 @@ namespace BAStoryPlayer.UI
                 _txtTitle.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
             }
 
-            StoryPlayer.UIModule.SetBlurBackground(true, BackgroundTransistionType.Instant);
+            StoryPlayer.BackgroundModule.SetBlurBackground(true, BackgroundTransistionType.Instant);
 
             if (_imgBannerline == null)
             {
@@ -59,13 +59,13 @@ namespace BAStoryPlayer.UI
 
         public void RemoveBlurEffect()
         {
-            StoryPlayer.UIModule.SetBlurBackground(false);
+            StoryPlayer.BackgroundModule.SetBlurBackground(false);
         }
 
         public void RunOnComplete()
         {
             //  一般播放完标题就开始执行下一个单元
-            StoryPlayer.ReadyToNext(true);
+            StoryPlayer.ReadyToExecute(true);
             Destroy(gameObject);
         }
     }

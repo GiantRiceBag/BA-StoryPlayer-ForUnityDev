@@ -21,10 +21,10 @@ namespace BAStoryPlayer.UI
         public void SetText(string text)
         {
             this.textmesh.text = $"<color=#767C88><size=40><b>   | </b></size></color>{text}";
-            StartCoroutine(Delay());
+            StartCoroutine(CrtDelay());
         }
 
-       IEnumerator Delay()
+       IEnumerator CrtDelay()
         {
             yield return null;
             banner.sizeDelta  = new Vector2(textmesh.GetComponent<RectTransform>().sizeDelta.x + 30,banner.sizeDelta.y);

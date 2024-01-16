@@ -12,11 +12,6 @@ using System.Collections.ObjectModel;
 
 namespace BAStoryPlayer
 {
-    public enum BackgroundTransistionType
-    {
-        Instant = 0,
-        Smooth
-    }
     public enum CharacterAction
     {
         Appear = 0,
@@ -306,7 +301,7 @@ namespace BAStoryPlayer
                 case BackgroundTransistionType.Smooth:
                     {
                         obj.transform.DoMove_Anchored(pos, base.StoryPlayer.Setting.TimeCharacterMove);
-                        EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = base.StoryPlayer.Setting.TimeCharacterMove });
+                        EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = base.StoryPlayer.Setting.TimeCharacterMove });
                         break;
                     }
                 default: break;
@@ -344,56 +339,56 @@ namespace BAStoryPlayer
                 case CharacterAction.Appear: //黑色剪影渐变进场
                     skelGraphic.color = Color.black;
                     skelGraphic.DoColor(Color.white, base.StoryPlayer.Setting.TimeCharacterFade);
-                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = base.StoryPlayer.Setting.TimeCharacterFade });
+                    EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = base.StoryPlayer.Setting.TimeCharacterFade });
                     break;
                 case CharacterAction.Disapper: // 渐变至黑色剪影同时离场
                     skelGraphic.color = Color.white;
                     skelGraphic.DoColor(Color.black, base.StoryPlayer.Setting.TimeCharacterFade).OnCompleted = ()=> { SetAction(obj, CharacterAction.Hide); };
-                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = base.StoryPlayer.Setting.TimeCharacterFade });
+                    EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = base.StoryPlayer.Setting.TimeCharacterFade });
                     break;
                 case CharacterAction.Disapper2Left:
                     MoveCharacterTo(obj, new Vector2(-500, 0), BackgroundTransistionType.Smooth);
-                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = base.StoryPlayer.Setting.TimeCharacterMove });
+                    EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = base.StoryPlayer.Setting.TimeCharacterMove });
                     break;
                 case CharacterAction.Disapper2Right:
                     MoveCharacterTo(obj, new Vector2(2420, 0), BackgroundTransistionType.Smooth);
-                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = base.StoryPlayer.Setting.TimeCharacterMove });
+                    EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = base.StoryPlayer.Setting.TimeCharacterMove });
                     break;
                 case CharacterAction.AppearL2R:
                     skelGraphic.color = Color.white;
                     MoveCharacterTo(obj, new Vector2(-500, 0));
                     MoveCharacterTo(obj, arg, BackgroundTransistionType.Smooth);
-                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = base.StoryPlayer.Setting.TimeCharacterMove });
+                    EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = base.StoryPlayer.Setting.TimeCharacterMove });
                     break;
                 case CharacterAction.AppearR2L:
                     skelGraphic.color = Color.white;
                     MoveCharacterTo(obj, new Vector2(2420, 0));
                     MoveCharacterTo(obj, arg, BackgroundTransistionType.Smooth);
-                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = base.StoryPlayer.Setting.TimeCharacterMove });
+                    EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = base.StoryPlayer.Setting.TimeCharacterMove });
                     break;
                 case CharacterAction.Hophop:
                     obj.transform.DoBound_Anchored_Relative(new Vector2(0, 50), base.StoryPlayer.Setting.TimeCharacterHophop, 2);
-                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = base.StoryPlayer.Setting.TimeCharacterHophop });
+                    EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = base.StoryPlayer.Setting.TimeCharacterHophop });
                     break;
                 case CharacterAction.Greeting:
                     obj.transform.DoBound_Anchored_Relative(new Vector2(0, -70), base.StoryPlayer.Setting.TimeCharacterGreeting);
-                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = base.StoryPlayer.Setting.TimeCharacterGreeting });
+                    EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = base.StoryPlayer.Setting.TimeCharacterGreeting });
                     break;
                 case CharacterAction.Shake:
                     obj.transform.DoShakeX(40, base.StoryPlayer.Setting.TimeCharacterShake, 2);
-                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = base.StoryPlayer.Setting.TimeCharacterShake });
+                    EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = base.StoryPlayer.Setting.TimeCharacterShake });
                     break;
                 case CharacterAction.Move:
                     MoveCharacterTo(obj, arg, BackgroundTransistionType.Smooth);
-                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = base.StoryPlayer.Setting.TimeCharacterMove });
+                    EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = base.StoryPlayer.Setting.TimeCharacterMove });
                     break;
                 case CharacterAction.Stiff:
                     obj.transform.DoShakeX(10, base.StoryPlayer.Setting.TimeCharacterStiff, 4);
-                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = base.StoryPlayer.Setting.TimeCharacterStiff });
+                    EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = base.StoryPlayer.Setting.TimeCharacterStiff });
                     break;
                 case CharacterAction.Jump:
                     obj.transform.DoBound_Anchored_Relative(new Vector2(0, 70), base.StoryPlayer.Setting.TimeCharacterJump);
-                    EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = base.StoryPlayer.Setting.TimeCharacterJump });
+                    EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = base.StoryPlayer.Setting.TimeCharacterJump });
                     break;
                 case CharacterAction.falldownR:
                     {
@@ -409,7 +404,7 @@ namespace BAStoryPlayer
                         sequence_Position.Wait(0.1f);
                         sequence_Position.Append(obj.transform.DoLocalMove(obj.transform.localPosition - new Vector3(60, 0, 0), 0.5f).SetEase(Ease.OutCubic));
 
-                        EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = 1.6f });
+                        EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = 1.6f });
                         break;
                     }
                 case CharacterAction.falldownL:
@@ -426,7 +421,7 @@ namespace BAStoryPlayer
                         sequence_Position.Wait(0.1f);
                         sequence_Position.Append(obj.transform.DoLocalMove(obj.transform.localPosition - new Vector3(60, 0, 0), 0.5f).SetEase(Ease.OutCubic));
 
-                        EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = 1.6f });
+                        EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = 1.6f });
                         break;
                     }
                 case CharacterAction.Hide: // 立即让角色离场
@@ -478,7 +473,7 @@ namespace BAStoryPlayer
         {
             float time = 1;
             EmotionFactory.SetEmotion(obj.transform, emotion, base.StoryPlayer.CharacterDataTable[obj.name], time);
-            EventBus<OnAnimatedCharacter>.Raise(new OnAnimatedCharacter() { time = time });
+            EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = time });
         }
 
         /// <summary>

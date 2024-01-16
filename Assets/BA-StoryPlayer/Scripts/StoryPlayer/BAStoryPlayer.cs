@@ -52,7 +52,7 @@ namespace BAStoryPlayer
                 _isAuto = value;
                 if (!_isAuto)
                 {
-                    EventBus<OnPlayerCanceledAuto>.Raise();
+                    EventBus<OnCanceledAuto>.Raise();
                     EventBus<OnUnlockedPlayerInput>.ClearCallback();
                 }
                 if (_isAuto && _isPlaying && IsExecutable) // 文本输出完毕后的状态
@@ -64,7 +64,7 @@ namespace BAStoryPlayer
                         {
                             this.Delay(() =>
                             {
-                                ReadyToNext();
+                                ReadyToExecute();
                                 EventBus<OnUnlockedPlayerInput>.ClearCallback();
                             }, 1);
                         });
@@ -239,34 +239,19 @@ namespace BAStoryPlayer
             FlagTable = new();
             ModifiedFlagTable = new();
             ScriptsToExecute = new();
+        }
 
-            // 动作以及表情事件订阅 锁定一定时间的操作
-            EventBus<OnAnimatedCharacter>.Binding.Add((data) =>
-            {
-                Lock(data.time, Setting.TimeLockAfterAction);
-            });
-            // 选项事件订阅
-            EventBus<OnPlayerSelected>.Binding.Add((data) =>
-            {
-                if(data.storyUnits != null && data.storyUnits.Count > 0)
-                {
-                    foreach (StoryUnit priorUnit in data.storyUnits)
-                    {
-                        _priorStoryUnits.Enqueue(priorUnit);
-                    }
-                }
-                if(data.script != null && data.script != string.Empty)
-                {
-                    ScriptsToExecute.Add(data.script);
-                }
-
-                ToNextStoryUnit();
-            });
-            // 文本输出结束时间订阅 锁定操作一段时间
-            EventBus<OnPrintedLine>.Binding.Add(() =>
-            {
-                Lock(Setting.TimeLockAfterPrinting);
-            });
+        private void OnEnable()
+        {
+            EventBus<OnSetCharacterAction>.Binding.Add(OnSetCharacterActionEventHandler);
+            EventBus<OnPlayerSelected>.Binding.Add(OnPlayerSelectedEventHandler);
+            EventBus<OnFinishedPrintingMainText>.Binding.Add(OnFinishedPrintingMainTextEventHandler);
+        }
+        private void OnDisable()
+        {
+            EventBus<OnSetCharacterAction>.Binding.Remove(OnSetCharacterActionEventHandler);
+            EventBus<OnPlayerSelected>.Binding.Remove(OnPlayerSelectedEventHandler);
+            EventBus<OnFinishedPrintingMainText>.Binding.Remove(OnFinishedPrintingMainTextEventHandler);
         }
 
         public bool LoadStory(string url,Dictionary<string,int> flagTable = null)
@@ -294,7 +279,7 @@ namespace BAStoryPlayer
             CommandParser parser = new UniversalCommandParser(this);
 
             LoadUnits(0, parser.Parse(textAsset));
-            ReadyToNext();
+            ReadyToExecute();
             ExecuteCurrentUnit();
 
             EventBus<OnClosedStoryPlayer>.ClearCallback();
@@ -306,9 +291,7 @@ namespace BAStoryPlayer
 
             return true;
         }
-        /// <summary>
-        /// 载入执行单元 数据初始化
-        /// </summary>
+
         private void LoadUnits(int groupID, List<StoryUnit> units)
         {
             _priorStoryUnits.Clear();
@@ -320,7 +303,6 @@ namespace BAStoryPlayer
             IsPlaying = true;
             IsExecutable = true;
         }
-
         public void ExecuteCurrentUnit(bool breakLock = false)
         {
             // 文本跳过
@@ -362,7 +344,7 @@ namespace BAStoryPlayer
                 case UnitType.Title:
                     {
                         _currentStoryUnit.Execute();
-                        ToNextStoryUnit();
+                        PrepareNextStoryUnit();
                         IsExecutable = false;
                         break;
                     }
@@ -382,7 +364,7 @@ namespace BAStoryPlayer
                             this.Delay(() =>
                            {
                                IsExecutable = true;
-                               ToNextStoryUnit();
+                               PrepareNextStoryUnit();
                                ExecuteCurrentUnit(true);
                            }, _currentStoryUnit.wait / 1000f);
                             break;
@@ -390,7 +372,7 @@ namespace BAStoryPlayer
                         else
                         {
                             _currentStoryUnit.Execute();
-                            ToNextStoryUnit();
+                            PrepareNextStoryUnit();
                             ExecuteCurrentUnit(true);
                             break;
                         }
@@ -400,11 +382,7 @@ namespace BAStoryPlayer
                     break;
             }
         }
-
-        /// <summary>
-        /// 加载下一个下标
-        /// </summary>
-        public void ToNextStoryUnit()
+        public void PrepareNextStoryUnit()
         {
             if(_priorStoryUnits.Count > 0)
             {
@@ -423,26 +401,16 @@ namespace BAStoryPlayer
                 }
             }
         }
-
-        /// <summary>
-        /// 准备执行下一单元
-        /// </summary>
-        /// <param name="next">是否直接执行下一单元</param>
-        public void ReadyToNext(bool next = false)
+        public void ReadyToExecute(bool canExecute = false)
         {
             IsExecutable = true;
             // 若Auto则直接执行
-            if (next || IsAuto)
+            if (canExecute || IsAuto)
             {
                 ExecuteCurrentUnit();
             }
         }
 
-        /// <summary>
-        /// 关闭播放器
-        /// </summary>
-        /// <param name="fadeOut">是否启用幕布渐出</param>
-        /// <param name="destoryObject">是否删除播放器Object</param>
         public void CloseStoryPlayer(bool fadeOut = true, bool destoryObject = false)
         {
             _isPlaying = false;
@@ -504,12 +472,6 @@ namespace BAStoryPlayer
             OutIn,
             InOut
         }
-        /// <summary>
-        /// 创建幕布
-        /// </summary>
-        /// <param name="type">幕布类型</param>
-        /// <param name="duration">持续时间</param>
-        /// <param name="feedback">回调函数</param>
         private void RequireBackdrop(BackdropType type,float duration,Action feedback = null)
         {
             GameObject backdrop = new GameObject("Backdrop");
@@ -558,9 +520,13 @@ namespace BAStoryPlayer
         private void Lock(float duration,float extra = 0.2f)
         {
             if (duration + extra > _lockTime)
+            {
                 ReflashLockTime(duration + extra);
+            }
             else
+            {
                 return;
+            }
 
             if (IsLocking)
                 StopCoroutine(_crtLock);
@@ -571,7 +537,6 @@ namespace BAStoryPlayer
                 IsLocking = false;
             }, duration + extra);
         }
-
         /// <summary>
         /// 刷新当前单元锁定时间
         /// </summary>
@@ -597,6 +562,31 @@ namespace BAStoryPlayer
             {
                 return ScriptableObject.Instantiate(setting);
             }
+        }
+
+        private void OnSetCharacterActionEventHandler(OnSetCharacterAction data)
+        {
+            Lock(data.time, Setting.TimeLockAfterAction);
+        }
+        private void OnPlayerSelectedEventHandler(OnPlayerSelected data)
+        {
+            if (data.storyUnits != null && data.storyUnits.Count > 0)
+            {
+                foreach (StoryUnit priorUnit in data.storyUnits)
+                {
+                    _priorStoryUnits.Enqueue(priorUnit);
+                }
+            }
+            if (data.script != null && data.script != string.Empty)
+            {
+                ScriptsToExecute.Add(data.script);
+            }
+
+            PrepareNextStoryUnit();
+        }
+        private void OnFinishedPrintingMainTextEventHandler(OnFinishedPrintingMainText data)
+        {
+            Lock(Setting.TimeLockAfterPrinting);
         }
     }
 }

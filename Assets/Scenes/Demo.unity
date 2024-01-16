@@ -447,10 +447,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3511405651180319170}
     m_Modifications:
-    - target: {fileID: 5703000470023379116, guid: 7bf58a48315d37d4393e19a3e660ec5a, type: 3}
-      propertyPath: m_Name
-      value: Button_Execute
-      objectReference: {fileID: 0}
     - target: {fileID: 5703000471106460066, guid: 7bf58a48315d37d4393e19a3e660ec5a, type: 3}
       propertyPath: m_Name
       value: StoryPlayer

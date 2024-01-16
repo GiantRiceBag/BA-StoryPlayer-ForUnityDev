@@ -44,19 +44,6 @@ namespace BAStoryPlayer.UI
 
             _subpanel.SetActive(false);
             _colorUnselectedText = _tmp.color;
-
-            GetComponent<Button>().onClick.AddListener(() =>
-            {
-                PlaySound();
-                IsSelected = !IsSelected;
-                SwitchState(IsSelected);
-            });
-
-            EventBus<OnStartPlayingStory>.Binding.Add((data) =>
-            {
-                IsSelected = false;
-                SwitchState(IsSelected,true);
-            });
         }
 
         private void SwitchState(bool selected,bool instant = false)
@@ -71,7 +58,11 @@ namespace BAStoryPlayer.UI
                     StopCoroutine(_crtDisableObject);
                     _crtDisableObject = null;
                 }
-                _crtDisableObject = StartCoroutine(CrtDisableObject(5));
+                _crtDisableObject = this.Delay(() =>
+                {
+                    _isSelected = false;
+                    SwitchState(_isSelected);
+                },5);
 
                 _subpanel.SetActive(true);
                 Image image_Subpanel = _subpanel.GetComponent<Image>();
@@ -123,6 +114,11 @@ namespace BAStoryPlayer.UI
             }
         }
 
+        private void OnEnable()
+        {
+            GetComponent<Button>().onClick.AddListener(OnClickEventHandler);
+            EventBus<OnStartPlayingStory>.Binding.Add(OnStartPlayingStoryEventHandler);
+        }
         private void OnDisable()
         {
             if (Application.isEditor)
@@ -131,6 +127,8 @@ namespace BAStoryPlayer.UI
             }
             _isSelected = false;
             SwitchState(_isSelected,true);
+            EventBus<OnStartPlayingStory>.Binding.Remove(OnStartPlayingStoryEventHandler);
+            GetComponent<Button>().onClick.RemoveListener(OnClickEventHandler);
         }
 
         public void PlaySound() 
@@ -138,11 +136,16 @@ namespace BAStoryPlayer.UI
             StoryPlayer.AudioModule.Play(_soundClick);
         }
 
-        private System.Collections.IEnumerator CrtDisableObject(float time)
+        private void OnStartPlayingStoryEventHandler(OnStartPlayingStory data)
         {
-            yield return new WaitForSeconds(time);
-            _isSelected = false;
-            SwitchState(_isSelected);
+            IsSelected = false;
+            SwitchState(IsSelected, true);
+        }
+        private void OnClickEventHandler()
+        {
+            PlaySound();
+            IsSelected = !IsSelected;
+            SwitchState(IsSelected);
         }
     }
 }

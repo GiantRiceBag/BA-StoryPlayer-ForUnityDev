@@ -12,17 +12,17 @@ namespace BAStoryPlayer.Event
         public string script;
         public List<StoryUnit> storyUnits;
     }
-    public struct OnPlayerCanceledAuto : IEvent { }
+    public struct OnCanceledAuto : IEvent { }
 
     public struct OnClosedStoryPlayer : IEvent { }
     public struct OnUnlockedPlayerInput : IEvent { }
 
-    public struct OnAnimatedCharacter : IEvent
+    public struct OnSetCharacterAction : IEvent
     {
         public float time;
     }
 
-    public struct OnPrintingLine : IEvent { }
-    public struct OnPrintedLine : IEvent { }
+    public struct OnStartPrintingMainText : IEvent { }
+    public struct OnFinishedPrintingMainText : IEvent { }
     #endregion
 }

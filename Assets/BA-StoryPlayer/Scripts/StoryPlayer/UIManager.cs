@@ -13,8 +13,6 @@ namespace BAStoryPlayer
     public class UIManager : PlayerModule
     {
         [Header("References")]
-        [SerializeField] private Image _imgBackground;
-        [Space]
         [SerializeField] private TextMeshProUGUI _txtSpeaker;
         [SerializeField] private TextMeshProUGUI _txtMain;
         [SerializeField] private TextMeshProUGUI _txtTitle;
@@ -37,9 +35,6 @@ namespace BAStoryPlayer
 
         private void Start()
         {
-            if (_imgBackground == null)
-                _imgBackground = transform.parent.Find("Background").GetComponent<Image>();
-
             if (_txtSpeaker == null)
                 _txtSpeaker = transform.Find("TextArea").Find("Text_Speaker").GetComponent<TextMeshProUGUI>();
             if (_txtMain == null)
@@ -55,39 +50,19 @@ namespace BAStoryPlayer
                 _btnAuto = transform.Find("Button_Auto").GetComponent<Button>();
             if (_btnMenu == null)
                 _btnMenu = transform.Find("Button_Menu").GetComponent<Button>();
-
-            // 事件绑定
-            EventBus<OnPrintedLine>.Binding.Add(() =>
-                {
-                    _objContinued.SetActive(true);
-
-                    // 若Auto则延缓两秒后继续
-                    if (StoryPlayer.IsAuto)
-                    {
-                        _crtNext = this.Delay(() => { StoryPlayer.ReadyToNext(); }, 2);
-                    }
-                    else
-                    {
-                        StoryPlayer.ReadyToNext();
-                    }
-                });
-
-            // 若取消Auto 则删除当前执行的协程
-            EventBus<OnPlayerCanceledAuto>.Binding.Add(() =>
-            {
-                if (_crtNext != null)
-                {
-                    StopCoroutine(_crtNext);
-                    _crtNext = null;
-                    StoryPlayer.ReadyToNext();
-                }
-            });
         }
 
-        /// <summary>
-        /// 更新说话者信息
-        /// </summary>
-        /// <param name="indexName">说话者索引名/若为空则不显示说话者信息</param>
+        private void OnEnable()
+        {
+            EventBus<OnFinishedPrintingMainText>.Binding.Add(OnFinishedPringtingMainTextEventHandler);
+            EventBus<OnCanceledAuto>.Binding.Add(OnCanceldAutoEventHandler);
+        }
+        private void OnDisable()
+        {
+            EventBus<OnFinishedPrintingMainText>.Binding.Remove(OnFinishedPringtingMainTextEventHandler);
+            EventBus<OnCanceledAuto>.Binding.Remove(OnCanceldAutoEventHandler);
+        }
+
         [System.Obsolete]
         public void SetSpeaker(string indexName = null)
         {
@@ -108,18 +83,14 @@ namespace BAStoryPlayer
 
             _currentSpeaker = indexName;
         }
-        public void SetSpeaker(string speakerName,string affiliation)
+        public void SetSpeaker(string speakerName = null,string affiliation = null)
         {
             _txtSpeaker.text = $"{speakerName} <color=#9CD7EF><size=39>{affiliation}</size></color>";
         }
 
-        /// <summary>
-        /// 输出主文本
-        /// </summary>
-        /// <param name="text"></param>
         public void PrintMainText(string text)
         {
-            EventBus<OnPrintingLine>.Raise();
+            EventBus<OnStartPrintingMainText>.Raise();
 
             _txtMain.text = null;
             _objContinued.SetActive(false);
@@ -130,9 +101,9 @@ namespace BAStoryPlayer
             _mainTextBuffer = text;
             if (_crtPrint != null)
                 StopCoroutine(_crtPrint);
-            _crtPrint = StartCoroutine(CPrint());
+            _crtPrint = StartCoroutine(CrtPrint());
         }
-        IEnumerator CPrint()
+        IEnumerator CrtPrint()
         {
             for(int i = 0; i < _mainTextBuffer.Length; i++)
             {
@@ -143,23 +114,22 @@ namespace BAStoryPlayer
             _isPrintingText = false;
             _mainTextBuffer = null;
 
-            EventBus<OnPrintedLine>.Raise();
+            EventBus<OnFinishedPrintingMainText>.Raise();
         }
 
-        /// <summary>
-        /// 跳过文本
-        /// </summary>
         public void Skip()
         {
             if (!_isPrintingText)
+            {
                 return;
+            }
 
             StopCoroutine(_crtPrint);
             _txtMain.text = _mainTextBuffer;
             _mainTextBuffer = null;
             _isPrintingText = false;
 
-            EventBus<OnPrintedLine>.Raise();
+            EventBus<OnFinishedPrintingMainText>.Raise();
         }
 
         public void ClearText()
@@ -187,19 +157,6 @@ namespace BAStoryPlayer
             SetActiveButton(false);
             SetActiveTextArea(false);
             _objSubPanelSynopsis.SetActive(false);
-        }
-
-        public void SetBlurBackground(bool enable,BackgroundTransistionType transition = BackgroundTransistionType.Smooth)
-        {
-            if(transition == BackgroundTransistionType.Smooth)
-                _imgBackground.DoFloat("_Weight", enable ? 1 : 0, StoryPlayer.Setting.TimeBlurBackground);
-            else if(transition == BackgroundTransistionType.Instant)
-            {
-                Material mat = new Material(_imgBackground.material);
-                _imgBackground.material = mat;
-                mat.SetFloat("_Weight", enable ? 1 : 0);
-            }
-                
         }
 
         /// <summary>
@@ -233,6 +190,30 @@ namespace BAStoryPlayer
         public void SetTitle(string title = "") 
         {
             _txtTitle.text = title;
+        }
+
+        private void OnFinishedPringtingMainTextEventHandler(OnFinishedPrintingMainText data)
+        {
+            _objContinued.SetActive(true);
+
+            // 若Auto则延缓两秒后继续
+            if (StoryPlayer.IsAuto)
+            {
+                _crtNext = this.Delay(() => { StoryPlayer.ReadyToExecute(); }, 2);
+            }
+            else
+            {
+                StoryPlayer.ReadyToExecute();
+            }
+        }
+        private void OnCanceldAutoEventHandler(OnCanceledAuto data)
+        {
+            if (_crtNext != null)
+            {
+                StopCoroutine(_crtNext);
+                _crtNext = null;
+                StoryPlayer.ReadyToExecute();
+            }
         }
     }
 }

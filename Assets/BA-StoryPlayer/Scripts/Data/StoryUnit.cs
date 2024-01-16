@@ -11,13 +11,13 @@ namespace BAStoryPlayer
     public class StoryUnit
     {
         public UnitType type = UnitType.Command;
-        public System.Action action;
+        public System.Action actions;
         public int weight = int.MinValue;
         public float wait = 0;
         public int selectionGroup = 0;
         public string scripts;
 
-        public void Execute() { action?.Invoke(); }
+        public void Execute() { actions?.Invoke(); }
         /// <summary>
         /// 根据新权重值更新单元标签
         /// </summary>
@@ -35,7 +35,7 @@ namespace BAStoryPlayer
             System.Text.StringBuilder text = new System.Text.StringBuilder();
             text.Append($"type : {type}\n");
             text.Append($"weight : {weight}\n");
-            text.Append($"action : { action == null }\n");
+            text.Append($"action : { actions == null }\n");
             text.Append($"wait : {wait}\n");
             text.Append($"selectionGroup : {selectionGroup}");
             return text.ToString();

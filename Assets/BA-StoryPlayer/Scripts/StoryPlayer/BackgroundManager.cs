@@ -6,6 +6,12 @@ using UnityEngine.UI;
 
 namespace BAStoryPlayer
 {
+    public enum BackgroundTransistionType
+    {
+        Instant = 0,
+        Smooth
+    }
+
     public class BackgroundManager : PlayerModule
     {
         [Header("References")]
@@ -86,6 +92,19 @@ namespace BAStoryPlayer
                         }
                     default: return;
                 }
+            }
+        }
+
+
+        public void SetBlurBackground(bool enable, BackgroundTransistionType transition = BackgroundTransistionType.Smooth)
+        {
+            if (transition == BackgroundTransistionType.Smooth)
+                _imgBackground.DoFloat("_Weight", enable ? 1 : 0, StoryPlayer.Setting.TimeBlurBackground);
+            else if (transition == BackgroundTransistionType.Instant)
+            {
+                Material mat = new Material(_imgBackground.material);
+                _imgBackground.material = mat;
+                mat.SetFloat("_Weight", enable ? 1 : 0);
             }
         }
     }

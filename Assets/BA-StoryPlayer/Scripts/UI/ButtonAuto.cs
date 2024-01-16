@@ -30,40 +30,42 @@ namespace BAStoryPlayer.UI
             }
          }
 
-        void Start()
-        {
-            // TODO 临时使用 后期在优化弄的好看点
-            GetComponent<Button>().onClick.AddListener(() =>
-            {
-                _isSelected = !_isSelected;
-                StoryPlayer.IsAuto = _isSelected;
-                StoryPlayer.AudioModule.Play(Sound_Click);
-
-                if (_isSelected)
-                {
-                    GetComponent<Image>().color = _colorSelected;
-                    FlowLight.SetActive(true);
-                }
-                else
-                {
-                    GetComponent<Image>().color = Color.white;
-                    FlowLight.SetActive(false);
-                }
-            });
-
-            EventBus<OnPlayerCanceledAuto>.Binding.Add(() =>
-            {
-                _isSelected = false;
-                GetComponent<Image>().color = Color.white;
-                FlowLight.SetActive(false);
-            });
-        }
-
         private void OnEnable()
         {
+            GetComponent<Button>().onClick.AddListener(OnClickEventHandler);
+            EventBus<OnCanceledAuto>.Binding.Add(OnCancelAutoEventHandler);
             _isSelected = StoryPlayer.IsAuto = false;
             FlowLight.SetActive(false);
             GetComponent<Image>().color = Color.white;
+        }
+        private void OnDisable()
+        {
+            GetComponent<Button>().onClick.RemoveListener(OnClickEventHandler);
+            EventBus<OnCanceledAuto>.Binding.Remove(OnCancelAutoEventHandler);
+        }
+
+        private void OnCancelAutoEventHandler(OnCanceledAuto data)
+        {
+            _isSelected = false;
+            GetComponent<Image>().color = Color.white;
+            FlowLight.SetActive(false);
+        }
+        private void OnClickEventHandler()
+        {
+            _isSelected = !_isSelected;
+            StoryPlayer.IsAuto = _isSelected;
+            StoryPlayer.AudioModule.Play(Sound_Click);
+
+            if (_isSelected)
+            {
+                GetComponent<Image>().color = _colorSelected;
+                FlowLight.SetActive(true);
+            }
+            else
+            {
+                GetComponent<Image>().color = Color.white;
+                FlowLight.SetActive(false);
+            }
         }
     }
 }
