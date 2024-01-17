@@ -106,6 +106,11 @@ namespace BAStoryPlayer
         }
         public void PlayBGM(AudioClip audioClip, bool fade = true, float fadeScale = 2)
         {
+            if(SourceBGM.isPlaying && audioClip == SourceBGM.clip)
+            {
+                return;
+            }
+
             if (fade)
             {
                 if (SourceBGM.clip == null)

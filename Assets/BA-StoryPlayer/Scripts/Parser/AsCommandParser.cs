@@ -322,18 +322,18 @@ namespace BAStoryPlayer.Parser.AsScriptParser
             {
                 // Image State
                 case "show":
-                    storyUnit.actions += () => StoryPlayer.BackgroundModule.SetBackground(imgUrl,BackgroundTransistionType.Smooth);
+                    storyUnit.actions += () => StoryPlayer.BackgroundModule.SetBackground(imgUrl,TransistionType.Fade);
                     break;
                 case "hide":
-                    storyUnit.actions += () => StoryPlayer.BackgroundModule.SetBackground(null, BackgroundTransistionType.Smooth);
+                    storyUnit.actions += () => StoryPlayer.BackgroundModule.SetBackground(null, TransistionType.Fade);
                     break;
                 case "showD": // Legacy
                 case "appear":
-                    storyUnit.actions += () => StoryPlayer.BackgroundModule.SetBackground(imgUrl, BackgroundTransistionType.Instant);
+                    storyUnit.actions += () => StoryPlayer.BackgroundModule.SetBackground(imgUrl, TransistionType.Immediate);
                     break;
                 case "hideD": // Legacy
                 case "disappear":
-                    storyUnit.actions += () => StoryPlayer.BackgroundModule.SetBackground(null, BackgroundTransistionType.Instant);
+                    storyUnit.actions += () => StoryPlayer.BackgroundModule.SetBackground(null, TransistionType.Immediate);
                     break;
                 case "hl":
                 case "highlight":

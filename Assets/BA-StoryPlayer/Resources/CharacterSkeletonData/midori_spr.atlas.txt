@@ -1,0 +1,104 @@
+
+midori_spr.png
+size: 2048,2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+00_eyeclose_00
+  rotate: false
+  xy: 568, 1518
+  size: 198, 148
+  orig: 198, 148
+  offset: 0, 0
+  index: -1
+02_respond
+  rotate: false
+  xy: 504, 1826
+  size: 198, 152
+  orig: 198, 152
+  offset: 0, 0
+  index: -1
+03_smile
+  rotate: false
+  xy: 1156, 1014
+  size: 194, 142
+  orig: 194, 142
+  offset: 0, 0
+  index: -1
+04_embarrass
+  rotate: false
+  xy: 1176, 1546
+  size: 160, 144
+  orig: 160, 144
+  offset: 0, 0
+  index: -1
+05_serious
+  rotate: false
+  xy: 1254, 314
+  size: 194, 128
+  orig: 194, 128
+  offset: 0, 0
+  index: -1
+06_depressed
+  rotate: false
+  xy: 1172, 1692
+  size: 194, 132
+  orig: 194, 132
+  offset: 0, 0
+  index: -1
+07
+  rotate: false
+  xy: 1174, 1160
+  size: 196, 132
+  orig: 196, 132
+  offset: 0, 0
+  index: -1
+08
+  rotate: false
+  xy: 1180, 1422
+  size: 184, 122
+  orig: 184, 122
+  offset: 0, 0
+  index: -1
+09
+  rotate: false
+  xy: 1138, 858
+  size: 182, 154
+  orig: 182, 154
+  offset: 0, 0
+  index: -1
+10
+  rotate: false
+  xy: 536, 1670
+  size: 196, 152
+  orig: 196, 152
+  offset: 0, 0
+  index: -1
+Hair_Cover_01
+  rotate: false
+  xy: 4, 1918
+  size: 162, 58
+  orig: 166, 62
+  offset: 2, 2
+  index: -1
+Halo
+  rotate: false
+  xy: 816, 48
+  size: 436, 418
+  orig: 436, 418
+  offset: 0, 0
+  index: -1
+default
+  rotate: false
+  xy: 1130, 1828
+  size: 198, 148
+  orig: 198, 148
+  offset: 0, 0
+  index: -1
+midori
+  rotate: false
+  xy: 4, 4
+  size: 1584, 1972
+  orig: 1584, 1972
+  offset: 0, 0
+  index: -1

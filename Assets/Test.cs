@@ -7,7 +7,6 @@ using BAStoryPlayer;
 using Spine.Unity.AttachmentTools;
 using Spine;
 using BAStoryPlayer.DoTweenS;
-using UnityEditor;
 using System;
 using System.Linq;
 using System.IO;
@@ -17,6 +16,7 @@ using BAStoryPlayer.Utility;
 using Unity.Burst.Intrinsics;
 using static UnityEngine.Video.VideoPlayer;
 using Unity.VisualScripting;
+using Unity.Mathematics;
 
 [ExecuteAlways]
 public class Test : MonoBehaviour
@@ -28,7 +28,7 @@ public class Test : MonoBehaviour
     List<GameObject> ps = new List<GameObject>();
 
     public GameObject obj;
-
+    public string msg = string.Empty;
     private void OnGUI()
     {
         storyScriptName = GUILayout.TextField(storyScriptName,15);
@@ -56,7 +56,7 @@ public class Test : MonoBehaviour
         GUILayout.Label("！！！！！！！！！！！！！！！！");
         if (GUILayout.Button("Test Something"))
         {
-            
+
         }
     }
 }

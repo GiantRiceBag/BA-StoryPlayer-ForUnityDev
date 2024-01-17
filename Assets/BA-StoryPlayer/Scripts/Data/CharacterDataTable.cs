@@ -23,9 +23,12 @@ namespace BAStoryPlayer
         public List<CharacterDataUnit> List {  get; }
         public Dictionary<string,CharacterDataUnit> Dictionary {  get; }
 
+
+#if UNITY_EDITOR
         public void Add(CharacterDataUnit data);
         public void Clear();
         public void Reflash();
+#endif
     }
 
     [Serializable]

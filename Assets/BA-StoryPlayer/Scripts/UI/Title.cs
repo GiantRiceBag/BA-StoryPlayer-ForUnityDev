@@ -26,7 +26,7 @@ namespace BAStoryPlayer.UI
                 _txtTitle.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
             }
 
-            StoryPlayer.BackgroundModule.SetBlurBackground(true, BackgroundTransistionType.Instant);
+            StoryPlayer.BackgroundModule.SetBlurBackground(true, TransistionType.Immediate);
 
             if (_imgBannerline == null)
             {

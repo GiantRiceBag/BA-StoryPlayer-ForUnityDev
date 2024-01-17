@@ -536,7 +536,7 @@ namespace BAStoryPlayer.Parser.NexonScriptParser
 
             if (rawStoryUnit.backgroundURL != string.Empty)
             {
-                storyUnit.actions += () => { StoryPlayer.BackgroundModule.SetBackground(rawStoryUnit.backgroundURL, BackgroundTransistionType.Smooth); };
+                storyUnit.actions += () => { StoryPlayer.BackgroundModule.SetBackground(rawStoryUnit.backgroundURL, TransistionType.Fade); };
             }
 
             for (int i = 0; i < rawStoryUnit.scriptList.Count; i++)

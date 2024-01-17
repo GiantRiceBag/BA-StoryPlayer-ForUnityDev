@@ -1,0 +1,97 @@
+
+momoi_spr.png
+size: 2048,2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+01_normal
+  rotate: false
+  xy: 930, 1642
+  size: 238, 146
+  orig: 238, 146
+  offset: 0, 0
+  index: -1
+02_respond
+  rotate: false
+  xy: 4, 936
+  size: 238, 156
+  orig: 238, 156
+  offset: 0, 0
+  index: -1
+03_smile
+  rotate: false
+  xy: 4, 1266
+  size: 236, 170
+  orig: 236, 170
+  offset: 0, 0
+  index: -1
+04_embarrass
+  rotate: false
+  xy: 244, 928
+  size: 174, 162
+  orig: 174, 162
+  offset: 0, 0
+  index: -1
+05_serious
+  rotate: false
+  xy: 832, 1790
+  size: 238, 166
+  orig: 238, 166
+  offset: 0, 0
+  index: -1
+06_depressed
+  rotate: false
+  xy: 4, 382
+  size: 212, 152
+  orig: 212, 152
+  offset: 0, 0
+  index: -1
+07
+  rotate: false
+  xy: 4, 96
+  size: 192, 132
+  orig: 192, 132
+  offset: 0, 0
+  index: -1
+08
+  rotate: false
+  xy: 4, 1438
+  size: 240, 172
+  orig: 240, 172
+  offset: 0, 0
+  index: -1
+Hair_Cover_01
+  rotate: false
+  xy: 414, 1904
+  size: 170, 50
+  orig: 174, 54
+  offset: 2, 2
+  index: -1
+Halo
+  rotate: false
+  xy: 4, 1612
+  size: 406, 342
+  orig: 418, 354
+  offset: 6, 6
+  index: -1
+default
+  rotate: false
+  xy: 4, 1094
+  size: 238, 166
+  orig: 238, 166
+  offset: 0, 0
+  index: -1
+eyeclose
+  rotate: false
+  xy: 4, 232
+  size: 188, 146
+  orig: 188, 146
+  offset: 0, 0
+  index: -1
+momoi
+  rotate: false
+  xy: 4, 6
+  size: 1770, 1950
+  orig: 1770, 1950
+  offset: 0, 0
+  index: -1

@@ -43,7 +43,7 @@ namespace BAStoryPlayer.Editor
                             {
                                 tableInternal.Add(new CharacterDataUnit()
                                 {
-                                    indexName = obj.name,
+                                    indexName = obj.name.Replace("_spr_SkeletonData", ""),
                                     skeletonDataUrl = obj.name
                                 });
                             }
@@ -56,7 +56,7 @@ namespace BAStoryPlayer.Editor
                             {
                                 tableInternal.Add(new CharacterDataUnit()
                                 {
-                                    indexName = obj.name,
+                                    indexName = obj.name.Replace("_spr_SkeletonData", ""),
                                     skeletonDataUrl = obj.name,
                                     loadType = LoadType.Prefab
                                 });
@@ -76,7 +76,5 @@ namespace BAStoryPlayer.Editor
 
             serializedObject.ApplyModifiedProperties();
         }
-
-
     }
 }

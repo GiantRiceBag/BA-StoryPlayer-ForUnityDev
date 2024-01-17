@@ -1,0 +1,83 @@
+
+yuuka_spr.png
+size: 2048,2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+01_normal
+  rotate: false
+  xy: 832, 1900
+  size: 156, 136
+  orig: 156, 136
+  offset: 0, 0
+  index: -1
+00_default
+  rotate: false
+  xy: 832, 1900
+  size: 156, 136
+  orig: 156, 136
+  offset: 0, 0
+  index: -1
+02_respond
+  rotate: false
+  xy: 1302, 1898
+  size: 158, 138
+  orig: 158, 138
+  offset: 0, 0
+  index: -1
+03_smile
+  rotate: false
+  xy: 508, 1906
+  size: 156, 130
+  orig: 156, 130
+  offset: 0, 0
+  index: -1
+04_embarrassed
+  rotate: false
+  xy: 1464, 1894
+  size: 162, 142
+  orig: 162, 142
+  offset: 0, 0
+  index: -1
+05_serious
+  rotate: false
+  xy: 668, 1902
+  size: 160, 134
+  orig: 160, 134
+  offset: 0, 0
+  index: -1
+06_depressed
+  rotate: false
+  xy: 992, 1900
+  size: 156, 136
+  orig: 156, 136
+  offset: 0, 0
+  index: -1
+07
+  rotate: false
+  xy: 348, 1910
+  size: 156, 126
+  orig: 156, 126
+  offset: 0, 0
+  index: -1
+eyeclose
+  rotate: false
+  xy: 1152, 1900
+  size: 146, 136
+  orig: 146, 136
+  offset: 0, 0
+  index: -1
+halo
+  rotate: false
+  xy: 4, 1946
+  size: 340, 90
+  orig: 340, 90
+  offset: 0, 0
+  index: -1
+yuuka
+  rotate: true
+  xy: 4, 1008
+  size: 882, 2032
+  orig: 882, 2032
+  offset: 0, 0
+  index: -1

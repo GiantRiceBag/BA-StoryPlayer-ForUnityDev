@@ -1,0 +1,1416 @@
+{
+  "serial": "MS_000",
+  "uuid": "ddc0f9f3-0e66-42df-9706-ecaa14ad4ac7",
+  "lastUpdated": 1705242440776,
+  "status": 0,
+  "description": "面临废部危机的游戏开发部和老师一同商量应对危机的方法。 ",
+  "content": [
+    {
+      "id": 1699283057901,
+      "type": "title",
+      "backgroundImage": "BG_GameDevRoom",
+      "bgm": "",
+      "speaker": "",
+      "affiliation": "",
+      "text": "序章;废部危机",
+      "characters": []
+    },
+    {
+      "id": 1701769850710,
+      "type": "text",
+      "backgroundImage": "BG_GameDevRoom",
+      "bgm": "Theme_64",
+      "speaker": "桃井",
+      "affiliation": "游戏开发部",
+      "text": "之前，我们的游戏部因为缺少成员差一点就要被那个“冷酷算数妖怪”废部了！",
+      "characters": [
+        {
+          "uuid": "0cfe7dc4-42e5-470f-81c7-e90e0e0d65d1",
+          "name": "momoi",
+          "position": 3,
+          "face": "03",
+          "emotion": "steam",
+          "action": "hophop"
+        }
+      ]
+    },
+    {
+      "id": 1701769226127,
+      "type": "text",
+      "backgroundImage": "BG_GameDevRoom",
+      "bgm": "Theme_64",
+      "speaker": "桃井",
+      "affiliation": "游戏开发部",
+      "text": "总之，在经历了各种各样艰苦的磨难、绝望的考验之后，我们终于迎来了关乎游戏部存亡的重要时刻！  ",
+      "characters": [
+        {
+          "uuid": "0cfe7dc4-42e5-470f-81c7-e90e0e0d65d1",
+          "name": "momoi",
+          "position": 3,
+          "face": "03",
+          "emotion": "",
+          "action": ""
+        }
+      ]
+    },
+    {
+      "id": 1701770207538,
+      "type": "text",
+      "backgroundImage": "BG_GameDevRoom",
+      "bgm": "Theme_64",
+      "speaker": "桃井",
+      "affiliation": "游戏开发部",
+      "text": "还好，老天爷都看不下去了，我们成功在废墟里找到了一位同伴！",
+      "characters": [
+        {
+          "uuid": "0cfe7dc4-42e5-470f-81c7-e90e0e0d65d1",
+          "name": "momoi",
+          "position": 3,
+          "face": "03",
+          "emotion": "",
+          "action": "move",
+          "actionArgs": 4
+        },
+        {
+          "uuid": "54814b30-3e86-4d21-b91b-c4a99469a405",
+          "name": "aris",
+          "position": 1,
+          "face": "07",
+          "emotion": "",
+          "action": "appearToRight"
+        }
+      ]
+    },
+    {
+      "id": 1701770392356,
+      "type": "text",
+      "backgroundImage": "BG_GameDevRoom",
+      "bgm": "Theme_64",
+      "speaker": "爱丽丝",
+      "affiliation": "游戏开发部",
+      "text": "邦邦卡邦！",
+      "characters": [
+        {
+          "uuid": "0cfe7dc4-42e5-470f-81c7-e90e0e0d65d1",
+          "name": "momoi",
+          "position": 4,
+          "face": "03",
+          "emotion": "",
+          "action": "",
+          "actionArgs": 5
+        },
+        {
+          "uuid": "54814b30-3e86-4d21-b91b-c4a99469a405",
+          "name": "aris",
+          "position": 1,
+          "face": "07",
+          "emotion": "",
+          "action": "appearToRight"
+        }
+      ]
+    },
+    {
+      "id": 1701771322422,
+      "type": "text",
+      "backgroundImage": "BG_GameDevRoom",
+      "bgm": "Theme_64",
+      "speaker": "桃",
+      "affiliation": "游戏开发部",
+      "text": "我们成功突破了不公正的封锁，给爱丽丝同学上了学籍信息，又准备好了枪，只要能通过今天「算数冷酷妖怪」的审查……",
+      "characters": [
+        {
+          "uuid": "0cfe7dc4-42e5-470f-81c7-e90e0e0d65d1",
+          "name": "momoi",
+          "position": 4,
+          "face": "03",
+          "emotion": "",
+          "action": "",
+          "actionArgs": 5
+        },
+        {
+          "uuid": "54814b30-3e86-4d21-b91b-c4a99469a405",
+          "name": "aris",
+          "position": 1,
+          "face": "07",
+          "emotion": "",
+          "action": "appearToRight"
+        }
+      ]
+    },
+    {
+      "id": 1701771429235,
+      "type": "text",
+      "backgroundImage": "BG_GameDevRoom",
+      "bgm": "Theme_64",
+      "speaker": "绿",
+      "affiliation": "游戏开发部",
+      "text": "都这个时候了，姐姐你就别在那做前情提要了。找到爱丽丝的时候老师不是一直都在吗！",
+      "characters": [
+        {
+          "uuid": "0cfe7dc4-42e5-470f-81c7-e90e0e0d65d1",
+          "name": "momoi",
+          "position": 4,
+          "face": "03",
+          "emotion": "",
+          "action": "",
+          "actionArgs": 5
+        },
+        {
+          "uuid": "54814b30-3e86-4d21-b91b-c4a99469a405",
+          "name": "midori",
+          "position": 2,
+          "face": "05",
+          "emotion": "",
+          "action": ""
+        }
+      ]
+    },
+    {
+      "id": 1701771837470,
+      "type": "text",
+      "backgroundImage": "BG_GameDevRoom",
+      "bgm": "Theme_64",
+      "speaker": "柚子",
+      "affiliation": "游戏开发部",
+      "text": "……审查，能通过吗……",
+      "characters": [
+        {
+          "uuid": "0cfe7dc4-42e5-470f-81c7-e90e0e0d65d1",
+          "name": "momoi",
+          "position": 4,
+          "face": "03",
+          "emotion": "",
+          "action": "",
+          "actionArgs": 5
+        },
+        {
+          "uuid": "54814b30-3e86-4d21-b91b-c4a99469a405",
+          "name": "midori",
+          "position": 2,
+          "face": "05",
+          "emotion": "",
+          "action": ""
+        },
+        {
+          "uuid": "228f7fa9-1df9-41d6-80fd-4992e2d54c3c",
+          "name": "yuzu",
+          "position": 3,
+          "face": "04",
+          "emotion": "",
+          "action": ""
+        }
+      ],
+      "script": ""
+    },
+    {
+      "id": 1701771893754,
+      "type": "text",
+      "backgroundImage": "BG_GameDevRoom",
+      "bgm": "Theme_64",
+      "speaker": "爱丽丝",
+      "affiliation": "游戏开发部",
+      "text": "一定没问题的！因为爱丽丝是大家的伙伴!",
+      "characters": [
+        {
+          "uuid": "0cfe7dc4-42e5-470f-81c7-e90e0e0d65d1",
+          "name": "momoi",
+          "position": 4,
+          "face": "03",
+          "emotion": "",
+          "action": "",
+          "actionArgs": 5
+        },
+        {
+          "uuid": "54814b30-3e86-4d21-b91b-c4a99469a405",
+          "name": "midori",
+          "position": 2,
+          "face": "05",
+          "emotion": "",
+          "action": ""
+        },
+        {
+          "uuid": "228f7fa9-1df9-41d6-80fd-4992e2d54c3c",
+          "name": "yuzu",
+          "position": 3,
+          "face": "04",
+          "emotion": "",
+          "action": ""
+        }
+      ],
+      "script": ""
+    },
+    {
+      "id": 1705135239144,
+      "type": "text",
+      "backgroundImage": "BG_GameDevRoom",
+      "bgm": "Theme_64",
+      "speaker": "桃井",
+      "affiliation": "游戏开发部",
+      "text": "很好，就是要有这种自信！爱丽丝，再复习一下，你在我们游戏开发部的职位是什么？",
+      "script": "",
+      "characters": [
+        {
+          "uuid": "0cfe7dc4-42e5-470f-81c7-e90e0e0d65d1",
+          "name": "momoi",
+          "position": 4,
+          "face": "03",
+          "emotion": "",
+          "action": "",
+          "actionArgs": 5
+        },
+        {
+          "uuid": "54814b30-3e86-4d21-b91b-c4a99469a405",
+          "name": "midori",
+          "position": 2,
+          "face": "05",
+          "emotion": "",
+          "action": ""
+        },
+        {
+          "uuid": "228f7fa9-1df9-41d6-80fd-4992e2d54c3c",
+          "name": "yuzu",
+          "position": 3,
+          "face": "04",
+          "emotion": "",
+          "action": ""
+        }
+      ]
+    },
+    {
+      "id": 1705135272297,
+      "type": "text",
+      "backgroundImage": "BG_GameDevRoom",
+      "bgm": "Theme_64",
+      "speaker": "爱丽丝",
+      "affiliation": "游戏开发部",
+      "text": "是的！爱丽丝是坦克和光属性adc！",
+      "script": "",
+      "characters": [
+        {
+          "uuid": "0cfe7dc4-42e5-470f-81c7-e90e0e0d65d1",
+          "name": "momoi",
+          "position": 4,
+          "face": "03",
+          "emotion": "",
+          "action": "",
+          "actionArgs": 5
+        },
+        {
+          "uuid": "54814b30-3e86-4d21-b91b-c4a99469a405",
+          "name": "midori",
+          "position": 2,
+          "face": "05",
+          "emotion": "",
+          "action": ""
+        },
+        {
+          "uuid": "228f7fa9-1df9-41d6-80fd-4992e2d54c3c",
+          "name": "yuzu",
+          "position": 3,
+          "face": "04",
+          "emotion": "",
+          "action": ""
+        }
+      ]
+    },
+    {
+      "id": 1705135300010,
+      "type": "text",
+      "backgroundImage": "BG_GameDevRoom",
+      "bgm": "Theme_64",
+      "speaker": "桃井",
+      "affiliation": "游戏开发部",
+      "text": "完全不对啊！再和你……",
+      "script": "",
+      "characters": [
+        {
+          "uuid": "0cfe7dc4-42e5-470f-81c7-e90e0e0d65d1",
+          "name": "momoi",
+          "position": 4,
+          "face": "03",
+          "emotion": "",
+          "action": "",
+          "actionArgs": 5
+        },
+        {
+          "uuid": "54814b30-3e86-4d21-b91b-c4a99469a405",
+          "name": "midori",
+          "position": 2,
+          "face": "05",
+          "emotion": "",
+          "action": ""
+        },
+        {
+          "uuid": "228f7fa9-1df9-41d6-80fd-4992e2d54c3c",
+          "name": "yuzu",
+          "position": 3,
+          "face": "04",
+          "emotion": "",
+          "action": ""
+        }
+      ]
+    },
+    {
+      "id": 1705135356342,
+      "type": "text",
+      "backgroundImage": "BG_GameDevRoom",
+      "bgm": "",
+      "speaker": "",
+      "affiliation": "",
+      "text": "（开门声）",
+      "script": "",
+      "characters": [
+        {
+          "uuid": "0cfe7dc4-42e5-470f-81c7-e90e0e0d65d1",
+          "name": "momoi",
+          "position": 4,
+          "face": "03",
+          "emotion": "",
+          "action": "",
+          "actionArgs": 5
+        },
+        {
+          "uuid": "54814b30-3e86-4d21-b91b-c4a99469a405",
+          "name": "midori",
+          "position": 2,
+          "face": "05",
+          "emotion": "",
+          "action": ""
+        },
+        {
+          "uuid": "228f7fa9-1df9-41d6-80fd-4992e2d54c3c",
+          "name": "yuzu",
+          "position": 3,
+          "face": "04",
+          "emotion": "",
+          "action": ""
+        }
+      ]
+    },
+    {
+      "id": 1705135390246,
+      "type": "text",
+      "backgroundImage": "BG_GameDevRoom",
+      "bgm": "Theme_64",
+      "speaker": "桃井",
+      "affiliation": "游戏开发部",
+      "text": "坏了！优香已经到了！",
+      "script": "",
+      "characters": [
+        {
+          "uuid": "0cfe7dc4-42e5-470f-81c7-e90e0e0d65d1",
+          "name": "momoi",
+          "position": 4,
+          "face": "03",
+          "emotion": "",
+          "action": "",
+          "actionArgs": 5
+        },
+        {
+          "uuid": "54814b30-3e86-4d21-b91b-c4a99469a405",
+          "name": "midori",
+          "position": 2,
+          "face": "05",
+          "emotion": "",
+          "action": ""
+        },
+        {
+          "uuid": "228f7fa9-1df9-41d6-80fd-4992e2d54c3c",
+          "name": "yuzu",
+          "position": 3,
+          "face": "04",
+          "emotion": "",
+          "action": ""
+        }
+      ]
+    },
+    {
+      "id": 1705135420860,
+      "type": "effectOnly",
+      "backgroundImage": "BG_GameDevRoom",
+      "bgm": "Theme_64",
+      "speaker": "桃井",
+      "affiliation": "游戏开发部",
+      "text": "",
+      "script": "",
+      "characters": [
+        {
+          "uuid": "0cfe7dc4-42e5-470f-81c7-e90e0e0d65d1",
+          "name": "momoi",
+          "position": 4,
+          "face": "03",
+          "emotion": "",
+          "action": "",
+          "actionArgs": 5
+        },
+        {
+          "uuid": "54814b30-3e86-4d21-b91b-c4a99469a405",
+          "name": "midori",
+          "position": 2,
+          "face": "05",
+          "emotion": "",
+          "action": ""
+        },
+        {
+          "uuid": "228f7fa9-1df9-41d6-80fd-4992e2d54c3c",
+          "name": "yuzu",
+          "position": 3,
+          "face": "04",
+          "emotion": "",
+          "action": ""
+        }
+      ],
+      "command": "clearST"
+    },
+    {
+      "id": 1705135446678,
+      "type": "effectOnly",
+      "backgroundImage": "BG_GameDevRoom",
+      "bgm": "Theme_64",
+      "speaker": "桃井",
+      "affiliation": "游戏开发部",
+      "text": "",
+      "script": "",
+      "characters": [
+        {
+          "uuid": "0cfe7dc4-42e5-470f-81c7-e90e0e0d65d1",
+          "name": "momoi",
+          "position": 4,
+          "face": "03",
+          "emotion": "",
+          "action": "",
+          "actionArgs": 5
+        },
+        {
+          "uuid": "54814b30-3e86-4d21-b91b-c4a99469a405",
+          "name": "midori",
+          "position": 2,
+          "face": "05",
+          "emotion": "",
+          "action": ""
+        },
+        {
+          "uuid": "228f7fa9-1df9-41d6-80fd-4992e2d54c3c",
+          "name": "yuzu",
+          "position": 3,
+          "face": "04",
+          "emotion": "",
+          "action": ""
+        }
+      ],
+      "command": "hideAll"
+    },
+    {
+      "id": 1705135466827,
+      "type": "effectOnly",
+      "backgroundImage": "BG_GameDevRoom",
+      "bgm": "Theme_64",
+      "speaker": "桃井",
+      "affiliation": "游戏开发部",
+      "text": "",
+      "script": "",
+      "characters": [
+        {
+          "uuid": "0cfe7dc4-42e5-470f-81c7-e90e0e0d65d1",
+          "name": "momoi",
+          "position": 4,
+          "face": "03",
+          "emotion": "",
+          "action": "",
+          "actionArgs": 5
+        },
+        {
+          "uuid": "54814b30-3e86-4d21-b91b-c4a99469a405",
+          "name": "midori",
+          "position": 2,
+          "face": "05",
+          "emotion": "",
+          "action": ""
+        },
+        {
+          "uuid": "228f7fa9-1df9-41d6-80fd-4992e2d54c3c",
+          "name": "yuzu",
+          "position": 3,
+          "face": "04",
+          "emotion": "",
+          "action": ""
+        }
+      ],
+      "command": "wait",
+      "commandArgs": [
+        1500
+      ]
+    },
+    {
+      "id": 1705135511260,
+      "type": "text",
+      "backgroundImage": "BG_GameDevRoom",
+      "bgm": "Theme_64",
+      "speaker": "优香",
+      "affiliation": "研讨会",
+      "text": "……我认可了。",
+      "script": "",
+      "characters": [
+        {
+          "uuid": "0cfe7dc4-42e5-470f-81c7-e90e0e0d65d1",
+          "name": "momoi",
+          "position": 4,
+          "face": "03",
+          "emotion": "",
+          "action": "",
+          "actionArgs": 5
+        },
+        {
+          "uuid": "54814b30-3e86-4d21-b91b-c4a99469a405",
+          "name": "midori",
+          "position": 2,
+          "face": "05",
+          "emotion": "",
+          "action": ""
+        },
+        {
+          "uuid": "228f7fa9-1df9-41d6-80fd-4992e2d54c3c",
+          "name": "yuzu",
+          "position": 3,
+          "face": "04",
+          "emotion": "",
+          "action": ""
+        }
+      ]
+    },
+    {
+      "id": 1705135549477,
+      "type": "text",
+      "backgroundImage": "BG_GameDevRoom",
+      "bgm": "Theme_64",
+      "speaker": "桃井",
+      "affiliation": "游戏开发部",
+      "text": "诶？！明明爱丽丝回答得一塌糊涂……",
+      "script": "",
+      "characters": [
+        {
+          "uuid": "0cfe7dc4-42e5-470f-81c7-e90e0e0d65d1",
+          "name": "momoi",
+          "position": 4,
+          "face": "03",
+          "emotion": "",
+          "action": "",
+          "actionArgs": 5
+        },
+        {
+          "uuid": "54814b30-3e86-4d21-b91b-c4a99469a405",
+          "name": "midori",
+          "position": 2,
+          "face": "05",
+          "emotion": "",
+          "action": ""
+        },
+        {
+          "uuid": "228f7fa9-1df9-41d6-80fd-4992e2d54c3c",
+          "name": "yuzu",
+          "position": 3,
+          "face": "04",
+          "emotion": "",
+          "action": ""
+        }
+      ]
+    },
+    {
+      "id": 1705135586760,
+      "type": "text",
+      "backgroundImage": "BG_GameDevRoom",
+      "bgm": "Theme_64",
+      "speaker": "优香",
+      "affiliation": "研讨会",
+      "text": "我已经大概明白了，爱丽丝同学比任何人都更喜欢游戏的心情。",
+      "script": "",
+      "characters": [
+        {
+          "uuid": "0cfe7dc4-42e5-470f-81c7-e90e0e0d65d1",
+          "name": "momoi",
+          "position": 4,
+          "face": "03",
+          "emotion": "",
+          "action": "",
+          "actionArgs": 5
+        },
+        {
+          "uuid": "54814b30-3e86-4d21-b91b-c4a99469a405",
+          "name": "midori",
+          "position": 2,
+          "face": "05",
+          "emotion": "",
+          "action": ""
+        },
+        {
+          "uuid": "228f7fa9-1df9-41d6-80fd-4992e2d54c3c",
+          "name": "yuzu",
+          "position": 3,
+          "face": "04",
+          "emotion": "",
+          "action": ""
+        }
+      ]
+    },
+    {
+      "id": 1705135648983,
+      "type": "text",
+      "backgroundImage": "BG_GameDevRoom",
+      "bgm": "Theme_64",
+      "speaker": "优香",
+      "affiliation": "研讨会",
+      "text": "这样的你，会成为游戏部的新部员也没有什么奇怪的。",
+      "script": "",
+      "characters": [
+        {
+          "uuid": "0cfe7dc4-42e5-470f-81c7-e90e0e0d65d1",
+          "name": "momoi",
+          "position": 4,
+          "face": "03",
+          "emotion": "",
+          "action": "",
+          "actionArgs": 5
+        },
+        {
+          "uuid": "54814b30-3e86-4d21-b91b-c4a99469a405",
+          "name": "midori",
+          "position": 2,
+          "face": "05",
+          "emotion": "",
+          "action": ""
+        },
+        {
+          "uuid": "228f7fa9-1df9-41d6-80fd-4992e2d54c3c",
+          "name": "yuzu",
+          "position": 3,
+          "face": "04",
+          "emotion": "",
+          "action": ""
+        }
+      ]
+    },
+    {
+      "id": 1705135660412,
+      "type": "text",
+      "backgroundImage": "BG_GameDevRoom",
+      "bgm": "Theme_64",
+      "speaker": "绿",
+      "affiliation": "游戏开发部",
+      "text": "也就是说……",
+      "script": "",
+      "characters": [
+        {
+          "uuid": "0cfe7dc4-42e5-470f-81c7-e90e0e0d65d1",
+          "name": "momoi",
+          "position": 4,
+          "face": "03",
+          "emotion": "",
+          "action": "",
+          "actionArgs": 5
+        },
+        {
+          "uuid": "54814b30-3e86-4d21-b91b-c4a99469a405",
+          "name": "midori",
+          "position": 2,
+          "face": "05",
+          "emotion": "",
+          "action": ""
+        },
+        {
+          "uuid": "228f7fa9-1df9-41d6-80fd-4992e2d54c3c",
+          "name": "yuzu",
+          "position": 3,
+          "face": "04",
+          "emotion": "",
+          "action": ""
+        }
+      ]
+    },
+    {
+      "id": 1705135681476,
+      "type": "text",
+      "backgroundImage": "BG_GameDevRoom",
+      "bgm": "Theme_64",
+      "speaker": "优香",
+      "affiliation": "研讨会",
+      "text": "没错，游戏部不用废部了——暂时。",
+      "script": "",
+      "characters": [
+        {
+          "uuid": "0cfe7dc4-42e5-470f-81c7-e90e0e0d65d1",
+          "name": "momoi",
+          "position": 4,
+          "face": "03",
+          "emotion": "",
+          "action": "",
+          "actionArgs": 5
+        },
+        {
+          "uuid": "54814b30-3e86-4d21-b91b-c4a99469a405",
+          "name": "midori",
+          "position": 2,
+          "face": "05",
+          "emotion": "",
+          "action": ""
+        },
+        {
+          "uuid": "228f7fa9-1df9-41d6-80fd-4992e2d54c3c",
+          "name": "yuzu",
+          "position": 3,
+          "face": "04",
+          "emotion": "",
+          "action": ""
+        }
+      ]
+    },
+    {
+      "id": 1705135699544,
+      "type": "text",
+      "backgroundImage": "BG_GameDevRoom",
+      "bgm": "Theme_64",
+      "speaker": "爱丽丝",
+      "affiliation": "游戏开发部",
+      "text": "暂时？",
+      "script": "",
+      "characters": [
+        {
+          "uuid": "0cfe7dc4-42e5-470f-81c7-e90e0e0d65d1",
+          "name": "momoi",
+          "position": 4,
+          "face": "03",
+          "emotion": "",
+          "action": "",
+          "actionArgs": 5
+        },
+        {
+          "uuid": "54814b30-3e86-4d21-b91b-c4a99469a405",
+          "name": "midori",
+          "position": 2,
+          "face": "05",
+          "emotion": "",
+          "action": ""
+        },
+        {
+          "uuid": "228f7fa9-1df9-41d6-80fd-4992e2d54c3c",
+          "name": "yuzu",
+          "position": 3,
+          "face": "04",
+          "emotion": "",
+          "action": ""
+        }
+      ]
+    },
+    {
+      "id": 1705135742227,
+      "type": "text",
+      "backgroundImage": "BG_GameDevRoom",
+      "bgm": "Theme_64",
+      "speaker": "优香",
+      "affiliation": "研讨会",
+      "text": "没错——到这个季度为止。",
+      "script": "",
+      "characters": [
+        {
+          "uuid": "0cfe7dc4-42e5-470f-81c7-e90e0e0d65d1",
+          "name": "momoi",
+          "position": 4,
+          "face": "03",
+          "emotion": "",
+          "action": "",
+          "actionArgs": 5
+        },
+        {
+          "uuid": "54814b30-3e86-4d21-b91b-c4a99469a405",
+          "name": "midori",
+          "position": 2,
+          "face": "05",
+          "emotion": "",
+          "action": ""
+        },
+        {
+          "uuid": "228f7fa9-1df9-41d6-80fd-4992e2d54c3c",
+          "name": "yuzu",
+          "position": 3,
+          "face": "04",
+          "emotion": "",
+          "action": ""
+        }
+      ]
+    },
+    {
+      "id": 1705135771894,
+      "type": "text",
+      "backgroundImage": "BG_GameDevRoom",
+      "bgm": "Theme_64",
+      "speaker": "桃井",
+      "affiliation": "游戏开发部",
+      "text": "那不是只剩两个月了吗！而且明明我们成员数量已经够了……",
+      "script": "",
+      "characters": [
+        {
+          "uuid": "0cfe7dc4-42e5-470f-81c7-e90e0e0d65d1",
+          "name": "momoi",
+          "position": 4,
+          "face": "03",
+          "emotion": "",
+          "action": "",
+          "actionArgs": 5
+        },
+        {
+          "uuid": "54814b30-3e86-4d21-b91b-c4a99469a405",
+          "name": "midori",
+          "position": 2,
+          "face": "05",
+          "emotion": "",
+          "action": ""
+        },
+        {
+          "uuid": "228f7fa9-1df9-41d6-80fd-4992e2d54c3c",
+          "name": "yuzu",
+          "position": 3,
+          "face": "04",
+          "emotion": "",
+          "action": ""
+        }
+      ]
+    },
+    {
+      "id": 1705135805194,
+      "type": "text",
+      "backgroundImage": "BG_GameDevRoom",
+      "bgm": "Theme_64",
+      "speaker": "优香",
+      "affiliation": "研讨会",
+      "text": "上次开社团大会的时候就说过了吧，出于预算的考虑，所有社团必须拿出活动成果，才能被承认。",
+      "script": "",
+      "characters": [
+        {
+          "uuid": "0cfe7dc4-42e5-470f-81c7-e90e0e0d65d1",
+          "name": "momoi",
+          "position": 4,
+          "face": "03",
+          "emotion": "",
+          "action": "",
+          "actionArgs": 5
+        },
+        {
+          "uuid": "54814b30-3e86-4d21-b91b-c4a99469a405",
+          "name": "midori",
+          "position": 2,
+          "face": "05",
+          "emotion": "",
+          "action": ""
+        },
+        {
+          "uuid": "228f7fa9-1df9-41d6-80fd-4992e2d54c3c",
+          "name": "yuzu",
+          "position": 3,
+          "face": "04",
+          "emotion": "",
+          "action": ""
+        }
+      ]
+    },
+    {
+      "id": 1705135828562,
+      "type": "text",
+      "backgroundImage": "BG_GameDevRoom",
+      "bgm": "Theme_64",
+      "speaker": "绿",
+      "affiliation": "游戏开发部",
+      "text": "社团大会，我记得一般应该是让姐姐去的……",
+      "script": "",
+      "characters": [
+        {
+          "uuid": "0cfe7dc4-42e5-470f-81c7-e90e0e0d65d1",
+          "name": "momoi",
+          "position": 4,
+          "face": "03",
+          "emotion": "",
+          "action": "",
+          "actionArgs": 5
+        },
+        {
+          "uuid": "54814b30-3e86-4d21-b91b-c4a99469a405",
+          "name": "midori",
+          "position": 2,
+          "face": "05",
+          "emotion": "",
+          "action": ""
+        },
+        {
+          "uuid": "228f7fa9-1df9-41d6-80fd-4992e2d54c3c",
+          "name": "yuzu",
+          "position": 3,
+          "face": "04",
+          "emotion": "",
+          "action": ""
+        }
+      ]
+    },
+    {
+      "id": 1705135842080,
+      "type": "text",
+      "backgroundImage": "BG_GameDevRoom",
+      "bgm": "Theme_64",
+      "speaker": "桃井",
+      "affiliation": "游戏开发部",
+      "text": "……呃，上次……啥时候来着？",
+      "script": "",
+      "characters": [
+        {
+          "uuid": "0cfe7dc4-42e5-470f-81c7-e90e0e0d65d1",
+          "name": "momoi",
+          "position": 4,
+          "face": "03",
+          "emotion": "",
+          "action": "",
+          "actionArgs": 5
+        },
+        {
+          "uuid": "54814b30-3e86-4d21-b91b-c4a99469a405",
+          "name": "midori",
+          "position": 2,
+          "face": "05",
+          "emotion": "",
+          "action": ""
+        },
+        {
+          "uuid": "228f7fa9-1df9-41d6-80fd-4992e2d54c3c",
+          "name": "yuzu",
+          "position": 3,
+          "face": "04",
+          "emotion": "",
+          "action": ""
+        }
+      ]
+    },
+    {
+      "id": 1705135881930,
+      "type": "text",
+      "backgroundImage": "BG_GameDevRoom",
+      "bgm": "Theme_64",
+      "speaker": "优香",
+      "affiliation": "研讨会",
+      "text": "正好两个月后是千禧社团大赛的日子，如果你们真的想要保住自己的社团，不如在这段时间里好好努力！",
+      "script": "",
+      "characters": [
+        {
+          "uuid": "0cfe7dc4-42e5-470f-81c7-e90e0e0d65d1",
+          "name": "momoi",
+          "position": 4,
+          "face": "03",
+          "emotion": "",
+          "action": "",
+          "actionArgs": 5
+        },
+        {
+          "uuid": "54814b30-3e86-4d21-b91b-c4a99469a405",
+          "name": "midori",
+          "position": 2,
+          "face": "05",
+          "emotion": "",
+          "action": ""
+        },
+        {
+          "uuid": "228f7fa9-1df9-41d6-80fd-4992e2d54c3c",
+          "name": "yuzu",
+          "position": 3,
+          "face": "04",
+          "emotion": "",
+          "action": ""
+        }
+      ]
+    },
+    {
+      "id": 1705135885096,
+      "type": "text",
+      "backgroundImage": "BG_GameDevRoom",
+      "bgm": "Theme_64",
+      "speaker": "桃井",
+      "affiliation": "游戏开发部",
+      "text": "抗议！暴政！独裁！只有两个月的时间能做什么！这根本就是要逼我们废部吧！",
+      "script": "",
+      "characters": [
+        {
+          "uuid": "0cfe7dc4-42e5-470f-81c7-e90e0e0d65d1",
+          "name": "momoi",
+          "position": 4,
+          "face": "03",
+          "emotion": "",
+          "action": "",
+          "actionArgs": 5
+        },
+        {
+          "uuid": "54814b30-3e86-4d21-b91b-c4a99469a405",
+          "name": "midori",
+          "position": 2,
+          "face": "05",
+          "emotion": "",
+          "action": ""
+        },
+        {
+          "uuid": "228f7fa9-1df9-41d6-80fd-4992e2d54c3c",
+          "name": "yuzu",
+          "position": 3,
+          "face": "04",
+          "emotion": "",
+          "action": ""
+        }
+      ]
+    },
+    {
+      "id": 1705135906911,
+      "type": "text",
+      "backgroundImage": "BG_GameDevRoom",
+      "bgm": "Theme_64",
+      "speaker": "优香",
+      "affiliation": "研讨会",
+      "text": "这可是规定，而且有60天的时间总能做点什么的吧？",
+      "script": "",
+      "characters": [
+        {
+          "uuid": "0cfe7dc4-42e5-470f-81c7-e90e0e0d65d1",
+          "name": "momoi",
+          "position": 4,
+          "face": "03",
+          "emotion": "",
+          "action": "",
+          "actionArgs": 5
+        },
+        {
+          "uuid": "54814b30-3e86-4d21-b91b-c4a99469a405",
+          "name": "midori",
+          "position": 2,
+          "face": "05",
+          "emotion": "",
+          "action": ""
+        },
+        {
+          "uuid": "228f7fa9-1df9-41d6-80fd-4992e2d54c3c",
+          "name": "yuzu",
+          "position": 3,
+          "face": "04",
+          "emotion": "",
+          "action": ""
+        }
+      ]
+    },
+    {
+      "id": 1705135924611,
+      "type": "text",
+      "backgroundImage": "BG_GameDevRoom",
+      "bgm": "Theme_64",
+      "speaker": "爱丽丝",
+      "affiliation": "游戏开发部",
+      "text": "60天的话，已经足够勇者打倒魔王了！",
+      "script": "",
+      "characters": [
+        {
+          "uuid": "0cfe7dc4-42e5-470f-81c7-e90e0e0d65d1",
+          "name": "momoi",
+          "position": 4,
+          "face": "03",
+          "emotion": "",
+          "action": "",
+          "actionArgs": 5
+        },
+        {
+          "uuid": "54814b30-3e86-4d21-b91b-c4a99469a405",
+          "name": "midori",
+          "position": 2,
+          "face": "05",
+          "emotion": "",
+          "action": ""
+        },
+        {
+          "uuid": "228f7fa9-1df9-41d6-80fd-4992e2d54c3c",
+          "name": "yuzu",
+          "position": 3,
+          "face": "04",
+          "emotion": "",
+          "action": ""
+        }
+      ]
+    },
+    {
+      "id": 1705135942915,
+      "type": "text",
+      "backgroundImage": "BG_GameDevRoom",
+      "bgm": "Theme_64",
+      "speaker": "优香",
+      "affiliation": "研讨会",
+      "text": "这是把我当做魔王的意思吗？",
+      "script": "",
+      "characters": [
+        {
+          "uuid": "0cfe7dc4-42e5-470f-81c7-e90e0e0d65d1",
+          "name": "momoi",
+          "position": 4,
+          "face": "03",
+          "emotion": "",
+          "action": "",
+          "actionArgs": 5
+        },
+        {
+          "uuid": "54814b30-3e86-4d21-b91b-c4a99469a405",
+          "name": "midori",
+          "position": 2,
+          "face": "05",
+          "emotion": "",
+          "action": ""
+        },
+        {
+          "uuid": "228f7fa9-1df9-41d6-80fd-4992e2d54c3c",
+          "name": "yuzu",
+          "position": 3,
+          "face": "04",
+          "emotion": "",
+          "action": ""
+        }
+      ]
+    },
+    {
+      "id": 1705135975213,
+      "type": "text",
+      "backgroundImage": "BG_GameDevRoom",
+      "bgm": "Theme_64",
+      "speaker": "绿",
+      "affiliation": "游戏开发部",
+      "text": "仔细想想，确实时间还勉强够用。",
+      "script": "",
+      "characters": [
+        {
+          "uuid": "0cfe7dc4-42e5-470f-81c7-e90e0e0d65d1",
+          "name": "momoi",
+          "position": 4,
+          "face": "03",
+          "emotion": "",
+          "action": "",
+          "actionArgs": 5
+        },
+        {
+          "uuid": "54814b30-3e86-4d21-b91b-c4a99469a405",
+          "name": "midori",
+          "position": 2,
+          "face": "05",
+          "emotion": "",
+          "action": ""
+        },
+        {
+          "uuid": "228f7fa9-1df9-41d6-80fd-4992e2d54c3c",
+          "name": "yuzu",
+          "position": 3,
+          "face": "04",
+          "emotion": "",
+          "action": ""
+        }
+      ]
+    },
+    {
+      "id": 1705135995379,
+      "type": "text",
+      "backgroundImage": "BG_GameDevRoom",
+      "bgm": "Theme_64",
+      "speaker": "柚子",
+      "affiliation": "游戏开发部",
+      "text": "我……我也会努力的……",
+      "script": "",
+      "characters": [
+        {
+          "uuid": "0cfe7dc4-42e5-470f-81c7-e90e0e0d65d1",
+          "name": "momoi",
+          "position": 4,
+          "face": "03",
+          "emotion": "",
+          "action": "",
+          "actionArgs": 5
+        },
+        {
+          "uuid": "54814b30-3e86-4d21-b91b-c4a99469a405",
+          "name": "midori",
+          "position": 2,
+          "face": "05",
+          "emotion": "",
+          "action": ""
+        },
+        {
+          "uuid": "228f7fa9-1df9-41d6-80fd-4992e2d54c3c",
+          "name": "yuzu",
+          "position": 3,
+          "face": "04",
+          "emotion": "",
+          "action": ""
+        }
+      ]
+    },
+    {
+      "id": 1705136006744,
+      "type": "text",
+      "backgroundImage": "BG_GameDevRoom",
+      "bgm": "Theme_64",
+      "speaker": "桃井",
+      "affiliation": "游戏开发部",
+      "text": "诶？！这种时候不好好谈条件的话……",
+      "script": "",
+      "characters": [
+        {
+          "uuid": "0cfe7dc4-42e5-470f-81c7-e90e0e0d65d1",
+          "name": "momoi",
+          "position": 4,
+          "face": "03",
+          "emotion": "",
+          "action": "",
+          "actionArgs": 5
+        },
+        {
+          "uuid": "54814b30-3e86-4d21-b91b-c4a99469a405",
+          "name": "midori",
+          "position": 2,
+          "face": "05",
+          "emotion": "",
+          "action": ""
+        },
+        {
+          "uuid": "228f7fa9-1df9-41d6-80fd-4992e2d54c3c",
+          "name": "yuzu",
+          "position": 3,
+          "face": "04",
+          "emotion": "",
+          "action": ""
+        }
+      ]
+    },
+    {
+      "id": 1705136026512,
+      "type": "text",
+      "backgroundImage": "BG_GameDevRoom",
+      "bgm": "Theme_64",
+      "speaker": "优香",
+      "affiliation": "研讨会",
+      "text": "我想我对你们游戏开发部已经足够宽容了——别以为你们可以安安心心的玩游戏直到60天后，每过十天我都会来检查你们的工作进度的！",
+      "script": "",
+      "characters": [
+        {
+          "uuid": "0cfe7dc4-42e5-470f-81c7-e90e0e0d65d1",
+          "name": "momoi",
+          "position": 4,
+          "face": "03",
+          "emotion": "",
+          "action": "",
+          "actionArgs": 5
+        },
+        {
+          "uuid": "54814b30-3e86-4d21-b91b-c4a99469a405",
+          "name": "midori",
+          "position": 2,
+          "face": "05",
+          "emotion": "",
+          "action": ""
+        },
+        {
+          "uuid": "228f7fa9-1df9-41d6-80fd-4992e2d54c3c",
+          "name": "yuzu",
+          "position": 3,
+          "face": "04",
+          "emotion": "",
+          "action": ""
+        }
+      ]
+    },
+    {
+      "id": 1705136045496,
+      "type": "text",
+      "backgroundImage": "BG_GameDevRoom",
+      "bgm": "Theme_64",
+      "speaker": "桃井",
+      "affiliation": "游戏开发部",
+      "text": "恶鬼啊！我老师都没检查过我作业！",
+      "script": "",
+      "characters": [
+        {
+          "uuid": "0cfe7dc4-42e5-470f-81c7-e90e0e0d65d1",
+          "name": "momoi",
+          "position": 4,
+          "face": "03",
+          "emotion": "",
+          "action": "",
+          "actionArgs": 5
+        },
+        {
+          "uuid": "54814b30-3e86-4d21-b91b-c4a99469a405",
+          "name": "midori",
+          "position": 2,
+          "face": "05",
+          "emotion": "",
+          "action": ""
+        },
+        {
+          "uuid": "228f7fa9-1df9-41d6-80fd-4992e2d54c3c",
+          "name": "yuzu",
+          "position": 3,
+          "face": "04",
+          "emotion": "",
+          "action": ""
+        }
+      ]
+    },
+    {
+      "id": 1705136072677,
+      "type": "select",
+      "backgroundImage": "",
+      "selectionGroups": [
+        {
+          "id": 1705136072680,
+          "type": "option",
+          "text": "……",
+          "isConditional": false,
+          "condition": [],
+          "content": [],
+          "script": ""
+        },
+        {
+          "id": 1705136081779,
+          "type": "option",
+          "text": "小桃，大家一起加油吧",
+          "isConditional": false,
+          "condition": [],
+          "content": [],
+          "script": ""
+        }
+      ],
+      "bgm": "",
+      "speaker": "",
+      "affiliation": "",
+      "text": "",
+      "characters": [],
+      "script": ""
+    },
+    {
+      "id": 1705171086954,
+      "type": "continue",
+      "backgroundImage": "",
+      "selectionGroups": [
+        {
+          "id": 1705171086955,
+          "type": "option",
+          "text": "",
+          "isConditional": false,
+          "condition": [],
+          "content": [],
+          "script": ""
+        }
+      ],
+      "bgm": "",
+      "speaker": "",
+      "affiliation": "",
+      "text": "",
+      "characters": [],
+      "script": ""
+    }
+  ],
+  "tags": [
+    "主线",
+    "导入"
+  ]
+}

@@ -177,22 +177,28 @@ namespace BAStoryPlayer.Parser.UniversaScriptParser
                     switch (characterUnit.action)
                     {
                         case "a":
+                        case "appear":
                             storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Appear); };
                             break;
                         case "d":
+                        case "disappear":
                             storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Disapper); };
                             break;
                         case "dl":
+                        case "disappearLeft":
                             storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Disapper2Left); };
                             break;
                         case "dr":
+                        case "disappearRight":
                             storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Disapper2Right); };
                             break;
                         case "ar":
-                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.AppearL2R, characterUnit.actionArgs - 1); };
+                        case "appearToRight":
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.AppearL2R, characterIndex); };
                             break;
                         case "al":
-                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.AppearR2L, characterUnit.actionArgs - 1); };
+                        case "appearToLeft":
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.AppearR2L, characterIndex); };
                             break;
                         case "hophop":
                             storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Hophop); };
@@ -310,11 +316,11 @@ namespace BAStoryPlayer.Parser.UniversaScriptParser
         {
             if(rawStoryUnit.backgroundImage != string.Empty)
             {
-                storyUnit.actions += () => StoryPlayer.BackgroundModule.SetBackground(rawStoryUnit.backgroundImage,BackgroundTransistionType.Smooth);
+                storyUnit.actions += () => StoryPlayer.BackgroundModule.SetBackground(rawStoryUnit.backgroundImage,TransistionType.Fade);
             }
             if(rawStoryUnit.bgm != string.Empty) 
             {
-                storyUnit.actions += () => StoryPlayer.AudioModule.PlayBGM(rawStoryUnit.bgm);
+                storyUnit.actions += () => StoryPlayer.AudioModule.PlayBGM(rawStoryUnit.bgm,false);
             }
         }
         #endregion

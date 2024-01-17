@@ -6,10 +6,10 @@ using UnityEngine.UI;
 
 namespace BAStoryPlayer
 {
-    public enum BackgroundTransistionType
+    public enum TransistionType
     {
-        Instant = 0,
-        Smooth
+        Immediate = 0,
+        Fade
     }
 
     public class BackgroundManager : PlayerModule
@@ -31,17 +31,17 @@ namespace BAStoryPlayer
         /// </summary>
         /// <param name="url">相对URL</param>
         /// <param name="type">背景切换方式 首次无效</param>
-        public void SetBackground(string url = null, BackgroundTransistionType transition = BackgroundTransistionType.Instant)
+        public void SetBackground(string url = null, TransistionType transition = TransistionType.Immediate)
         {
             if (url == null)
             {
                 switch (transition)
                 {
-                    case BackgroundTransistionType.Instant:
+                    case TransistionType.Immediate:
                         _imgBackground.sprite = null;
                         _imgBackground.enabled = false;
                         break;
-                    case BackgroundTransistionType.Smooth:
+                    case TransistionType.Fade:
                         _imgBackground.DoColor(Color.black, StoryPlayer.Setting.TimeSwitchBackground).OnCompleted = () =>
                         {
                             _imgBackground.sprite = null;
@@ -57,6 +57,10 @@ namespace BAStoryPlayer
             if (sprite == null)
             {
                 Debug.LogError($"没能在路径 {StoryPlayer.Setting.PathBackground + url}  找到背景 [{url}]  ");
+                return;
+            }
+            else if(sprite == _imgBackground.sprite)
+            {
                 return;
             }
 
@@ -76,12 +80,12 @@ namespace BAStoryPlayer
             {
                 switch (transition)
                 {
-                    case BackgroundTransistionType.Instant:
+                    case TransistionType.Immediate:
                         {
                             _imgBackground.sprite = sprite;
                             break;
                         }
-                    case BackgroundTransistionType.Smooth:
+                    case TransistionType.Fade:
                         {
                             _imgBackground.DoColor(Color.black, StoryPlayer.Setting.TimeSwitchBackground / 2).OnCompleted = () =>
                             {
@@ -96,11 +100,11 @@ namespace BAStoryPlayer
         }
 
 
-        public void SetBlurBackground(bool enable, BackgroundTransistionType transition = BackgroundTransistionType.Smooth)
+        public void SetBlurBackground(bool enable, TransistionType transition = TransistionType.Fade)
         {
-            if (transition == BackgroundTransistionType.Smooth)
+            if (transition == TransistionType.Fade)
                 _imgBackground.DoFloat("_Weight", enable ? 1 : 0, StoryPlayer.Setting.TimeBlurBackground);
-            else if (transition == BackgroundTransistionType.Instant)
+            else if (transition == TransistionType.Immediate)
             {
                 Material mat = new Material(_imgBackground.material);
                 _imgBackground.material = mat;

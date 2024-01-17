@@ -1,0 +1,97 @@
+
+yuzu_spr.png
+size: 2048,2048
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+00_default
+  rotate: false
+  xy: 998, 1376
+  size: 262, 144
+  orig: 262, 144
+  offset: 0, 0
+  index: -1
+01_normal
+  rotate: false
+  xy: 1264, 1374
+  size: 264, 146
+  orig: 264, 146
+  offset: 0, 0
+  index: -1
+02_respond
+  rotate: false
+  xy: 4, 1234
+  size: 264, 148
+  orig: 264, 148
+  offset: 0, 0
+  index: -1
+03_smile
+  rotate: false
+  xy: 272, 1234
+  size: 264, 148
+  orig: 264, 148
+  offset: 0, 0
+  index: -1
+04_embrassed
+  rotate: false
+  xy: 694, 1382
+  size: 300, 138
+  orig: 300, 138
+  offset: 0, 0
+  index: -1
+05_serious
+  rotate: false
+  xy: 166, 1386
+  size: 260, 134
+  orig: 260, 134
+  offset: 0, 0
+  index: -1
+06_depressed
+  rotate: false
+  xy: 430, 1386
+  size: 260, 134
+  orig: 260, 134
+  offset: 0, 0
+  index: -1
+07_shiawase
+  rotate: true
+  xy: 1798, 1258
+  size: 262, 148
+  orig: 262, 148
+  offset: 0, 0
+  index: -1
+08_hoee
+  rotate: false
+  xy: 540, 1230
+  size: 298, 148
+  orig: 298, 148
+  offset: 0, 0
+  index: -1
+eyeclose
+  rotate: false
+  xy: 1532, 1374
+  size: 262, 146
+  orig: 262, 146
+  offset: 0, 0
+  index: -1
+front_hair
+  rotate: true
+  xy: 4, 1416
+  size: 104, 158
+  orig: 104, 158
+  offset: 0, 0
+  index: -1
+halo
+  rotate: false
+  xy: 842, 1198
+  size: 392, 174
+  orig: 392, 174
+  offset: 0, 0
+  index: -1
+yuzu
+  rotate: true
+  xy: 4, 4
+  size: 1190, 2022
+  orig: 1190, 2022
+  offset: 0, 0
+  index: -1

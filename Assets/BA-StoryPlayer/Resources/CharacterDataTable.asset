@@ -13,51 +13,15 @@ MonoBehaviour:
   m_Name: CharacterDataTable
   m_EditorClassIdentifier: 
   _list:
-  - indexName: aru
+  - indexName: aris
     familyName: 
     firstName: 
     collage: 
     affiliation: 
     loadType: 0
-    skeletonDataUrl: aru
+    skeletonDataUrl: aris_spr_SkeletonData
     portraitUrl: 
-    facePosition: {x: 34.322628, y: 1068.5945}
-  - indexName: ayane
-    familyName: 
-    firstName: 
-    collage: 
-    affiliation: 
-    loadType: 0
-    skeletonDataUrl: ayane
-    portraitUrl: 
-    facePosition: {x: 34.06952, y: 1025.6346}
-  - indexName: azusa
-    familyName: 
-    firstName: 
-    collage: 
-    affiliation: 
-    loadType: 0
-    skeletonDataUrl: azusa
-    portraitUrl: 
-    facePosition: {x: -1.2950838, y: 926.16925}
-  - indexName: haruka
-    familyName: 
-    firstName: 
-    collage: 
-    affiliation: 
-    loadType: 0
-    skeletonDataUrl: haruka
-    portraitUrl: 
-    facePosition: {x: 48.664364, y: 980.14453}
-  - indexName: hihumi
-    familyName: 
-    firstName: 
-    collage: 
-    affiliation: 
-    loadType: 0
-    skeletonDataUrl: hihumi
-    portraitUrl: 
-    facePosition: {x: -14.901485, y: 1027.6925}
+    facePosition: {x: -8.523785, y: 990.3067}
   - indexName: hoshino
     familyName: 
     firstName: 
@@ -67,120 +31,39 @@ MonoBehaviour:
     skeletonDataUrl: hoshino
     portraitUrl: 
     facePosition: {x: 17.975986, y: 924.4399}
-  - indexName: kayoko
+  - indexName: midori
     familyName: 
     firstName: 
     collage: 
     affiliation: 
     loadType: 0
-    skeletonDataUrl: kayoko
+    skeletonDataUrl: midori_spr_SkeletonData
     portraitUrl: 
-    facePosition: {x: 49.694706, y: 1013.27515}
-  - indexName: master
+    facePosition: {x: -60.800972, y: 905.60376}
+  - indexName: momoi
     familyName: 
     firstName: 
     collage: 
     affiliation: 
     loadType: 0
-    skeletonDataUrl: master
+    skeletonDataUrl: momoi_spr_SkeletonData
     portraitUrl: 
-    facePosition: {x: 33.102554, y: 1240.4209}
-  - indexName: master_shibaseki
-    familyName: 
-    firstName: 
-    collage: 
-    affiliation: 
-    loadType: 1
-    skeletonDataUrl: master_shibaseki
-    portraitUrl: 
-    facePosition: {x: 0, y: 0}
-  - indexName: mutsuki
+    facePosition: {x: 109.00936, y: 905.38116}
+  - indexName: yuuka
     familyName: 
     firstName: 
     collage: 
     affiliation: 
     loadType: 0
-    skeletonDataUrl: mutsuki
+    skeletonDataUrl: yuuka_spr_SkeletonData
     portraitUrl: 
-    facePosition: {x: 12.385402, y: 906.2979}
-  - indexName: nonomi
+    facePosition: {x: -24.696207, y: 1044.212}
+  - indexName: yuzu
     familyName: 
     firstName: 
     collage: 
     affiliation: 
     loadType: 0
-    skeletonDataUrl: nonomi
+    skeletonDataUrl: yuzu_spr_SkeletonData
     portraitUrl: 
-    facePosition: {x: 10.051084, y: 1060.1202}
-  - indexName: passerby
-    familyName: 
-    firstName: 
-    collage: 
-    affiliation: 
-    loadType: 1
-    skeletonDataUrl: passerby
-    portraitUrl: 
-    facePosition: {x: 0, y: 0}
-  - indexName: rabu
-    familyName: 
-    firstName: 
-    collage: 
-    affiliation: 
-    loadType: 0
-    skeletonDataUrl: rabu
-    portraitUrl: 
-    facePosition: {x: 7.7139525, y: 1023.5453}
-  - indexName: serika
-    familyName: 
-    firstName: 
-    collage: 
-    affiliation: 
-    loadType: 0
-    skeletonDataUrl: serika
-    portraitUrl: 
-    facePosition: {x: 16.000526, y: 1046.3771}
-  - indexName: serika_uniform
-    familyName: 
-    firstName: 
-    collage: 
-    affiliation: 
-    loadType: 0
-    skeletonDataUrl: serika_uniform
-    portraitUrl: 
-    facePosition: {x: 10.242086, y: 1047.0461}
-  - indexName: shiroko
-    familyName: 
-    firstName: 
-    collage: 
-    affiliation: 
-    loadType: 0
-    skeletonDataUrl: shiroko
-    portraitUrl: 
-    facePosition: {x: 22.379984, y: 1032.0273}
-  - indexName: shiroko_alter
-    familyName: 
-    firstName: 
-    collage: 
-    affiliation: 
-    loadType: 0
-    skeletonDataUrl: shiroko_alter
-    portraitUrl: 
-    facePosition: {x: 48.543545, y: 1067.5419}
-  - indexName: sukeban
-    familyName: 
-    firstName: 
-    collage: 
-    affiliation: 
-    loadType: 0
-    skeletonDataUrl: sukeban
-    portraitUrl: 
-    facePosition: {x: 69.79301, y: 1148.0483}
-  - indexName: wakamo
-    familyName: 
-    firstName: 
-    collage: 
-    affiliation: 
-    loadType: 0
-    skeletonDataUrl: wakamo
-    portraitUrl: 
-    facePosition: {x: 0, y: 0}
+    facePosition: {x: -6.8188944, y: 952.62994}
