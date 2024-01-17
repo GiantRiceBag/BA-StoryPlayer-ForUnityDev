@@ -73,11 +73,11 @@ namespace BAStoryPlayer.Utility
             {
                 return false;
             }
-            if (!TryConvert(args[0], out K res2))
+            if (!TryConvert(args[1], out K res2))
             {
                 return false;
             }
-            if (!TryConvert(args[0], out U res3))
+            if (!TryConvert(args[2], out U res3))
             {
                 return false;
             }
