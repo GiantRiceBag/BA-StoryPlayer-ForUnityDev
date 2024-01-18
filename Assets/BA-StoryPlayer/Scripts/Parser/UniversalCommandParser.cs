@@ -11,25 +11,30 @@ namespace BAStoryPlayer.Parser.UniversaScriptParser
     {
         public UniversalCommandParser(BAStoryPlayer storyPlayer) : base(storyPlayer) { }
 
-        public override List<StoryUnit> Parse(TextAsset rawStoryScript)
+        public List<StoryUnit> Parse(UniversalStoryScript rawStoryScript)
         {
             List<StoryUnit> storyUnits = new List<StoryUnit>();
-            UniversalStoryScript storyScript = JsonUtility.FromJson<UniversalStoryScript>(rawStoryScript.text);
 
             StoryPlayer.UIModule.SetTitle();
-            StoryPlayer.UIModule.SetSynopsis(storyScript.description);
+            StoryPlayer.UIModule.SetSynopsis(rawStoryScript.description);
 
-            foreach(var rawStoryUnit in storyScript.content)
+            foreach (var rawStoryUnit in rawStoryScript.content)
             {
                 StoryUnit storyUnit = ProcessRawStoryUnit(rawStoryUnit);
 
-                if(storyUnit != null)
+                if (storyUnit != null)
                 {
                     storyUnits.Add(storyUnit);
                 }
             }
             return storyUnits;
         }
+        public override List<StoryUnit> Parse(string rawStoryScriptJson)
+        {
+            UniversalStoryScript rawStoryScript = JsonUtility.FromJson<UniversalStoryScript>(rawStoryScriptJson);
+            return Parse(rawStoryScript);
+        }
+
         private StoryUnit ProcessRawStoryUnit(RawStoryUnit rawStoryUnit)
         {
             StoryUnit storyUnit = null;
@@ -333,7 +338,7 @@ namespace BAStoryPlayer.Parser.UniversaScriptParser
 
             string[] titles = rawStoryUnit.text.Split(';');
 
-            if (titles.Length == 2)
+            if (titles.Length == 2 && titles[1] != string.Empty)
             {
                 StoryPlayer.UIModule.SetTitle(titles[1]);
                 storyUnit.actions += () => StoryPlayer.UIModule.ShowTitle(titles[0], titles[1]);

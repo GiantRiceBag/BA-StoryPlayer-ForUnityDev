@@ -505,6 +505,11 @@ namespace BAStoryPlayer.Parser.AsScriptParser
                 default: return;
             }
         }
+
+        public override List<StoryUnit> Parse(string rawStoryScriptJson)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public static class AsCommand

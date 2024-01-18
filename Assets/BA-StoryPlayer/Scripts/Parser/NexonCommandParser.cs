@@ -105,6 +105,11 @@ namespace BAStoryPlayer.Parser.NexonScriptParser
             return storyUnits;
         }
 
+        public override List<StoryUnit> Parse(string rawStoryScriptJson)
+        {
+            throw new NotImplementedException();
+        }
+
         ScriptTag GetScriptTag(string script)
         {
             if (Regex.IsMatch(script, REG_TITLE))

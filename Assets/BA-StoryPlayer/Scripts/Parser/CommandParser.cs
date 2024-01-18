@@ -13,6 +13,10 @@ namespace BAStoryPlayer
             this.storyPlayer = storyPlayer;
         }
 
-        public abstract List<StoryUnit> Parse(TextAsset rawStoryScript);
+        public virtual List<StoryUnit> Parse(TextAsset rawStoryScriptTextAsset)
+        {
+            return Parse(rawStoryScriptTextAsset.text);
+        }
+        public abstract List<StoryUnit> Parse(string rawStoryScriptJson);
     }
 }

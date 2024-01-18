@@ -46,7 +46,7 @@ namespace BAStoryPlayer.UI
             _colorUnselectedText = _tmp.color;
         }
 
-        private void SwitchState(bool selected,bool instant = false)
+        private void SwitchState(bool selected,bool immidiate = false)
         {
             if (selected)
             {
@@ -94,7 +94,7 @@ namespace BAStoryPlayer.UI
 
                 Image image_Subpanel = _subpanel.GetComponent<Image>();
                 Image[] image_SubButton = _subpanel.GetComponentsInChildren<Image>();
-                if (instant)
+                if (immidiate)
                 {
                     image_Subpanel.color = new Color(image_Subpanel.color.r, image_Subpanel.color.g, image_Subpanel.color.b, 0);
                     _subpanel.SetActive(false);
@@ -106,7 +106,7 @@ namespace BAStoryPlayer.UI
 
                 foreach (var i in image_SubButton)
                 {
-                    if (instant)
+                    if (immidiate)
                         i.color = new Color(i.color.r, i.color.g, i.color.b, 0);
                     else
                         i.DoAlpha(0, 0.1f);
@@ -121,12 +121,13 @@ namespace BAStoryPlayer.UI
         }
         private void OnDisable()
         {
-            if (Application.isEditor)
+            if (!Application.isPlaying)
             {
                 return;
             }
-            _isSelected = false;
-            SwitchState(_isSelected,true);
+            IsSelected = false;
+            SwitchState(IsSelected, true);
+            Debug.Log(2);
             EventBus<OnStartPlayingStory>.Binding.Remove(OnStartPlayingStoryEventHandler);
             GetComponent<Button>().onClick.RemoveListener(OnClickEventHandler);
         }
@@ -140,11 +141,13 @@ namespace BAStoryPlayer.UI
         {
             IsSelected = false;
             SwitchState(IsSelected, true);
+            Debug.Log(1);
         }
         private void OnClickEventHandler()
         {
             PlaySound();
             IsSelected = !IsSelected;
+            Debug.Log(IsSelected);
             SwitchState(IsSelected);
         }
     }

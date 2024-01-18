@@ -256,16 +256,21 @@ namespace BAStoryPlayer
 
         public bool LoadStory(string url,Dictionary<string,int> flagTable = null)
         {
-            if (IsPlaying)
-            {
-                Debug.Log("剧情播放中");
-                return false;
-            }
-
             var textAsset = Resources.Load<TextAsset>(Setting.PathStoryScript + url);
             if (textAsset == null)
             {
                 Debug.LogError($"未能在 {Setting.PathStoryScript + url} 找到剧情脚本");
+                return false;
+            }
+
+            UniversalStoryScript storyScript = JsonUtility.FromJson<UniversalStoryScript>(textAsset.text);
+            return LoadStory(storyScript,flagTable);
+        }
+        public bool LoadStory(UniversalStoryScript storyScript, Dictionary<string, int> flagTable = null)
+        {
+            if (IsPlaying)
+            {
+                Debug.Log("剧情播放中");
                 return false;
             }
 
@@ -276,9 +281,16 @@ namespace BAStoryPlayer
             IsPlaying = true;
             gameObject.SetActive(true);
 
-            CommandParser parser = new UniversalCommandParser(this);
+            UniversalCommandParser parser = new UniversalCommandParser(this);
+            List<StoryUnit> units = parser.Parse(storyScript);
 
-            LoadUnits(0, parser.Parse(textAsset));
+            if(units.Count == 0)
+            {
+                Debug.Log("无可执行单元");
+                return false;
+            }
+
+            LoadUnits(0, units);
             ReadyToExecute();
             ExecuteCurrentUnit();
 
@@ -294,6 +306,11 @@ namespace BAStoryPlayer
 
         private void LoadUnits(int groupID, List<StoryUnit> units)
         {
+            if(units.Count == 0)
+            {
+                CloseStoryPlayer();
+            }
+
             _priorStoryUnits.Clear();
             _groupID = groupID;
             _storyUnits = units;
