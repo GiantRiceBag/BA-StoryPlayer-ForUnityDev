@@ -19,6 +19,7 @@ using Unity.VisualScripting;
 using Unity.Mathematics;
 using UnityEngine.Networking;
 using static UnityEngine.UI.CanvasScaler;
+using UnityEditor;
 
 [ExecuteAlways]
 public class Test : MonoBehaviour
@@ -33,9 +34,13 @@ public class Test : MonoBehaviour
     public string msg = string.Empty;
     public GUISkin guiSkin;
     private bool isDrawingRemoteScript;
+
     private void Start()
     {
-        storyPlayer.gameObject.SetActive(false);
+        if (Application.isPlaying)
+        {
+            storyPlayer.gameObject.SetActive(false);
+        }
     }
 
     private void OnGUI()
@@ -82,7 +87,9 @@ public class Test : MonoBehaviour
                 storyScripts.Clear();
                 StartCoroutine(CrtReflashScripts());
             }
-            GUILayout.Label("————————————————");
+
+            DrawCuttingLine();
+
             if (GUILayout.Button("Test"))
             {
 
@@ -93,9 +100,16 @@ public class Test : MonoBehaviour
     private List<string> scriptsUID = new();
     private List<UniversalStoryScript> storyScripts = new();
     private bool isReflashing = false;
-    private Vector2 scrollPos = new Vector2(10, 30);
+    private Vector2 scriptsScrollPos = new Vector2(10, 30);
+    private Vector2 msgScrollPos = new Vector2(10, 30);
     private bool isPreloadingAsset;
-    private string preloadingMsg = string.Empty;
+    private List<Msg> preloadingMsg = new();
+
+    struct Msg
+    {
+        public string text;
+        public Color color;
+    }
 
     private void DrawRemoteScript()
     {
@@ -126,51 +140,111 @@ public class Test : MonoBehaviour
                 StartCoroutine(CrtReflashScripts());
             }
         }
-        GUILayout.Label("————————————————");
+
         if (storyPlayer.IsPlaying)
         {
-            GUILayout.Label("*剧情播放中*");
+            GUILayout.BeginVertical(guiSkin.box);
+            GUILayout.Label("*剧情播放中*",new GUIStyle()
+            {
+                alignment = TextAnchor.MiddleCenter,
+                normal = new GUIStyleState()
+                {
+                    textColor = Color.white,
+                    background = guiSkin.box.normal.background
+                }
+            });
+            GUILayout.EndVertical();
             return;
         }
-
         GUILayout.FlexibleSpace();
-        if(isReflashing )
+        if( isReflashing )
         {
-            GUILayout.Label("加载编辑器剧本中...");
+            GUILayout.BeginVertical(guiSkin.box);
+            GUILayout.Label("加载编辑器剧本中...", new GUIStyle()
+            {
+                alignment = TextAnchor.MiddleCenter,
+                normal = new GUIStyleState()
+                {
+                    textColor = Color.white,
+                    background = guiSkin.box.normal.background
+                }
+            });
+            GUILayout.EndVertical();
         }
 
         if (!isPreloadingAsset)
         {
             if (scriptsUID.Count > 0)
             {
-                scrollPos = GUILayout.BeginScrollView(scrollPos);
+                
+                scriptsScrollPos = GUILayout.BeginScrollView(scriptsScrollPos);
                 DrawScriptButton();
                 GUILayout.EndScrollView();
+                
             }
         }
         else
         {
-            GUILayout.Label(preloadingMsg);
+            if(preloadingMsg.Count> 0)
+            {
+                GUILayout.BeginVertical(guiSkin.box);
+                msgScrollPos = GUILayout.BeginScrollView(msgScrollPos);
+                foreach(var msg in preloadingMsg.Reverse<Msg>())
+                {
+                    GUILayout.Label(new GUIContent()
+                    {
+                        text = msg.text
+                    }, new GUIStyle()
+                    {
+                        normal = new GUIStyleState()
+                        {
+                            textColor = msg.color
+                        }
+                    });
+                }
+                GUILayout.EndScrollView();
+                GUILayout.EndVertical();
+            }
         }
-
     }
     private void DrawScriptButton()
     {
         foreach(var script in storyScripts)
         {
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("刷新"))
+            {
+                isReflashing = true;
+                int index = storyScripts.IndexOf(script);
+                StartCoroutine(CrtGetScript(script.uuid, data =>
+                {
+                    storyScripts[index] = data;
+                    isReflashing = false;
+                }));
+            }
             if (GUILayout.Button(script.serial))
             {
                 if (Application.isPlaying)
                 {
+                    if (isReflashing)
+                    {
+                        isReflashing = false;
+                        StopAllCoroutines();
+                    }
+
                     StartCoroutine(CrtPreloadAssetAndPlayStory(script));
                 }
                 else
                 {
                     Debug.Log(JsonUtility.ToJson(script,true));
                 }
-                
             }
+            GUILayout.EndHorizontal();
         }
+    }
+    private void DrawCuttingLine()
+    {
+        GUILayout.Label("————————————");
     }
 
     private IEnumerator CrtReflashScripts()
@@ -188,7 +262,10 @@ public class Test : MonoBehaviour
 
                 foreach(var i in scriptsUID)
                 {
-                    yield return StartCoroutine(CrtGetScript(i));
+                    yield return StartCoroutine(CrtGetScript(i, data =>
+                    {
+                        storyScripts.Add(data);
+                    }));
                 }
             }
             else
@@ -198,7 +275,7 @@ public class Test : MonoBehaviour
         }
         isReflashing = false;
     }
-    private IEnumerator CrtGetScript(string uid)
+    private IEnumerator CrtGetScript(string uid,Action<UniversalStoryScript> action = null)
     {
         string url = $"https://api.blue-archive.io/story/{uid}?t={GetTimestamp()}";
 
@@ -209,7 +286,7 @@ public class Test : MonoBehaviour
             if (request.result == UnityWebRequest.Result.Success)
             {
                 ResponseScriptData data = JsonUtility.FromJson<ResponseScriptData>(request.downloadHandler.text);
-                storyScripts.Add(data.data);
+                action?.Invoke(data.data);
             }
             else
             {
@@ -246,7 +323,11 @@ public class Test : MonoBehaviour
 
                     using (UnityWebRequest request = UnityWebRequestTexture.GetTexture(url))
                     {
-                        preloadingMsg = $"正在载入背景 {rawStoryUnit.backgroundImage}.jpg";
+                        preloadingMsg.Add(new Msg()
+                        {
+                            text = $"正在载入背景 {rawStoryUnit.backgroundImage}.jpg",
+                            color = Color.white
+                        });
                         yield return request.SendWebRequest();
 
                         if (request.result == UnityWebRequest.Result.Success)
@@ -256,12 +337,20 @@ public class Test : MonoBehaviour
                                     rawStoryUnit.backgroundImage,
                                     Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero)
                                 );
-                            preloadingMsg = $"载入背景 {rawStoryUnit.backgroundImage}.jpg 成功";
+
+                            preloadingMsg.Add(new Msg()
+                            {
+                                text = $"载入背景 {rawStoryUnit.backgroundImage}.jpg 成功",
+                                color = Color.green
+                            });
                         }
                         else
                         {
-                            Debug.LogError("Request failed: " + request.error);
-                            preloadingMsg = $"载入背景 {rawStoryUnit.backgroundImage}.jpg 失败";
+                            preloadingMsg.Add(new Msg()
+                            {
+                                text = $"载入背景 {rawStoryUnit.backgroundImage}.jpg 失败",
+                                color = Color.red
+                            });
                         }
                     }
                 }
@@ -284,7 +373,11 @@ public class Test : MonoBehaviour
 
                     using (UnityWebRequest request = UnityWebRequestMultimedia.GetAudioClip(url, AudioType.MPEG))
                     {
-                        preloadingMsg = $"正在载入音乐 {rawStoryUnit.bgm}.mp3";
+                        preloadingMsg.Add(new Msg()
+                        {
+                            text = $"正在载入音乐 {rawStoryUnit.bgm}.mp3",
+                            color = Color.white
+                        });
                         yield return request.SendWebRequest();
 
                         if (request.result == UnityWebRequest.Result.Success)
@@ -294,12 +387,19 @@ public class Test : MonoBehaviour
                                     rawStoryUnit.bgm,
                                     clip
                                 );
-                            preloadingMsg = $"载入音乐 {rawStoryUnit.bgm}.jpg 成功";
+                            preloadingMsg.Add(new Msg()
+                            {
+                                text = $"载入音乐 {rawStoryUnit.bgm}.mp3 成功",
+                                color = Color.green
+                            });
                         }
                         else
                         {
-                            Debug.LogError("Request failed: " + request.error);
-                            preloadingMsg = $"载入音乐 {rawStoryUnit.bgm}.jpg 失败";
+                            preloadingMsg.Add(new Msg()
+                            {
+                                text = $"载入音乐 {rawStoryUnit.bgm}.mp3 失败",
+                                color = Color.red
+                            });
                         }
                     }     
                 }
@@ -329,7 +429,11 @@ public class Test : MonoBehaviour
 
                                 using (UnityWebRequest request = UnityWebRequestTexture.GetTexture(url))
                                 {
-                                    preloadingMsg = $"正在载入背景 {unit.backgroundImage}.jpg";
+                                    preloadingMsg.Add(new Msg()
+                                    {
+                                        text = $"正在载入背景 {unit.backgroundImage}.jpg",
+                                        color = Color.white
+                                    });
                                     yield return request.SendWebRequest();
 
                                     if (request.result == UnityWebRequest.Result.Success)
@@ -339,12 +443,19 @@ public class Test : MonoBehaviour
                                                 unit.backgroundImage,
                                                 Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero)
                                             );
-                                        preloadingMsg = $"载入背景 {unit.backgroundImage}.jpg 成功";
+                                        preloadingMsg.Add(new Msg()
+                                        {
+                                            text = $"载入背景 {unit.backgroundImage}.jpg 成功",
+                                            color = Color.green
+                                        });
                                     }
                                     else
                                     {
-                                        Debug.LogError("Request failed: " + request.error);
-                                        preloadingMsg = $"载入背景 {unit.backgroundImage}.jpg 失败";
+                                        preloadingMsg.Add(new Msg()
+                                        {
+                                            text = $"载入背景 {unit.backgroundImage}.jpg 失败",
+                                            color = Color.red
+                                        });
                                     }
                                 }
                             }
@@ -367,7 +478,11 @@ public class Test : MonoBehaviour
 
                                 using (UnityWebRequest request = UnityWebRequestMultimedia.GetAudioClip(url, AudioType.MPEG))
                                 {
-                                    preloadingMsg = $"正在载入音乐 {unit.bgm}.mp3";
+                                    preloadingMsg.Add(new Msg()
+                                    {
+                                        text = $"正在载入音乐 {unit.bgm}.mp3",
+                                        color = Color.white
+                                    });
                                     yield return request.SendWebRequest();
 
                                     if (request.result == UnityWebRequest.Result.Success)
@@ -377,12 +492,19 @@ public class Test : MonoBehaviour
                                                 unit.bgm,
                                                 aclip
                                             );
-                                        preloadingMsg = $"载入音乐 {unit.bgm}.jpg 成功";
+                                        preloadingMsg.Add(new Msg()
+                                        {
+                                            text = $"载入音乐 {unit.bgm}.mp3 成功",
+                                            color = Color.green
+                                        });
                                     }
                                     else
                                     {
-                                        Debug.LogError("Request failed: " + request.error);
-                                        preloadingMsg = $"载入音乐 {unit.bgm}.jpg 失败";
+                                        preloadingMsg.Add(new Msg()
+                                        {
+                                            text = $"载入音乐 {unit.bgm}.mp3 失败",
+                                            color = Color.red
+                                        });
                                     }
                                 }
                             }
@@ -393,7 +515,7 @@ public class Test : MonoBehaviour
         }
 
         isPreloadingAsset = false;
-        preloadingMsg = string.Empty ;
+        preloadingMsg.Clear() ;
 
         storyPlayer.LoadStory(storyScript);
     }

@@ -113,6 +113,7 @@ namespace BAStoryPlayer
                     Debug.LogError($"未能在路径 [{StoryPlayer.Setting.PathMusic + clipName}] 找到AudioClip");
                     return;
                 }
+                PreloadedMusicClips.Add(clipName, clip);
                 PlayBGM(clip, fade, fadeScale);
             }
         }

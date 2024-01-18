@@ -453,10 +453,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: StoryPlayer
       objectReference: {fileID: 0}
-    - target: {fileID: 5703000471106460066, guid: 7bf58a48315d37d4393e19a3e660ec5a, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7609363249095605647, guid: 7bf58a48315d37d4393e19a3e660ec5a, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

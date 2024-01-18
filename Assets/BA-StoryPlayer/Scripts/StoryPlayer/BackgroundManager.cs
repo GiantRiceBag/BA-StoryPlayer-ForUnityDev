@@ -60,6 +60,7 @@ namespace BAStoryPlayer
             else
             {
                 Sprite sprite = Resources.Load<Sprite>(StoryPlayer.Setting.PathBackground + imageName);
+                PreloadedImages.Add(imageName, sprite);
                 SetBackground(sprite, transition);
             }
         }

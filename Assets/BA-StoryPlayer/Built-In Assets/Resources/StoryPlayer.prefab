@@ -3778,7 +3778,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   storyPlayer: {fileID: 7609363249095605644}
-  _imgBackground: {fileID: 7609363249095605655}
   _txtSpeaker: {fileID: 5703000470341460545}
   _txtMain: {fileID: 5703000469878625797}
   _txtTitle: {fileID: 542640873}

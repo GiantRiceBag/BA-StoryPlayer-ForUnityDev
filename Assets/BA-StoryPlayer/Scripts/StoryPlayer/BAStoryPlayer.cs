@@ -256,12 +256,12 @@ namespace BAStoryPlayer
             EventBus<OnFinishedPrintingMainText>.Binding.Remove(OnFinishedPrintingMainTextEventHandler);
         }
 
-        public bool LoadStory(string url,Dictionary<string,int> flagTable = null)
+        public bool LoadStory(string scriptName,Dictionary<string,int> flagTable = null)
         {
-            var textAsset = Resources.Load<TextAsset>(Setting.PathStoryScript + url);
+            var textAsset = Resources.Load<TextAsset>(Setting.PathStoryScript + scriptName);
             if (textAsset == null)
             {
-                Debug.LogError($"未能在 {Setting.PathStoryScript + url} 找到剧情脚本");
+                Debug.LogError($"未能在 {Setting.PathStoryScript + scriptName} 找到剧情脚本");
                 return false;
             }
 
