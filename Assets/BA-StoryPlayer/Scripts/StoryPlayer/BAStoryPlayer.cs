@@ -1,7 +1,9 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
+using UnityEngine.Networking;
 using System.Collections.Generic;
+using System.Collections;
 using System;
 
 using BAStoryPlayer.DoTweenS;
@@ -234,7 +236,7 @@ namespace BAStoryPlayer
 
         public event Action<List<string>, Dictionary<string, int>> OnStoryPlayerClosed;
 
-        private void Start()
+        private void Awake()
         {
             FlagTable = new();
             ModifiedFlagTable = new();
@@ -275,8 +277,8 @@ namespace BAStoryPlayer
             }
 
             FlagTable = flagTable;
-            ModifiedFlagTable.Clear();
-            ScriptsToExecute.Clear();
+            ModifiedFlagTable?.Clear();
+            ScriptsToExecute?.Clear();
 
             IsPlaying = true;
             gameObject.SetActive(true);
@@ -430,8 +432,9 @@ namespace BAStoryPlayer
 
         public void CloseStoryPlayer(bool fadeOut = true, bool destoryObject = false)
         {
-            _isPlaying = false;
+            IsPlaying = false;
             AudioModule.PauseBGM();
+            ClearPreloadAsset();
 
             this.Delay(() =>
            {
@@ -579,6 +582,12 @@ namespace BAStoryPlayer
             {
                 return ScriptableObject.Instantiate(setting);
             }
+        }
+
+        public void ClearPreloadAsset()
+        {
+            BackgroundModule.ClearPreloadedImages();
+            AudioModule.ClearPreloadedMusicClips();
         }
 
         private void OnSetCharacterActionEventHandler(OnSetCharacterAction data)

@@ -127,7 +127,6 @@ namespace BAStoryPlayer.UI
             }
             IsSelected = false;
             SwitchState(IsSelected, true);
-            Debug.Log(2);
             EventBus<OnStartPlayingStory>.Binding.Remove(OnStartPlayingStoryEventHandler);
             GetComponent<Button>().onClick.RemoveListener(OnClickEventHandler);
         }
@@ -141,13 +140,11 @@ namespace BAStoryPlayer.UI
         {
             IsSelected = false;
             SwitchState(IsSelected, true);
-            Debug.Log(1);
         }
         private void OnClickEventHandler()
         {
             PlaySound();
             IsSelected = !IsSelected;
-            Debug.Log(IsSelected);
             SwitchState(IsSelected);
         }
     }

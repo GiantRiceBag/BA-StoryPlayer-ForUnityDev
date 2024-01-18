@@ -51,6 +51,8 @@ namespace BAStoryPlayer
             }
         }
 
+        private Dictionary<string, AudioClip> _preloadedMusicClips = new();
+
         public float VolumeMaster
         {
             set
@@ -95,16 +97,26 @@ namespace BAStoryPlayer
             }
         }
 
-        public void PlayBGM(string audioURL, bool fade = true, float fadeScale = 2)
+        public Dictionary<string, AudioClip> PreloadedMusicClips => _preloadedMusicClips;
+
+        public void PlayBGM(string clipName, bool fade = true, float fadeScale = 2)
         {
-            AudioClip clip = Resources.Load<AudioClip>(StoryPlayer.Setting.PathMusic + audioURL);
-            if (clip == null)
+            if (PreloadedMusicClips.ContainsKey(clipName))
             {
-                Debug.LogError($"未能在路径 [{StoryPlayer.Setting.PathMusic + audioURL}] 找到AudioClip");
+                PlayBGM(PreloadedMusicClips[clipName],fade,fadeScale);
             }
-            PlayBGM(clip, fade, fadeScale);
+            else
+            {
+                AudioClip clip = Resources.Load<AudioClip>(StoryPlayer.Setting.PathMusic + clipName);
+                if (clip == null)
+                {
+                    Debug.LogError($"未能在路径 [{StoryPlayer.Setting.PathMusic + clipName}] 找到AudioClip");
+                    return;
+                }
+                PlayBGM(clip, fade, fadeScale);
+            }
         }
-        public void PlayBGM(AudioClip audioClip, bool fade = true, float fadeScale = 2)
+        private void PlayBGM(AudioClip audioClip, bool fade, float fadeScale)
         {
             if(SourceBGM.isPlaying && audioClip == SourceBGM.clip)
             {
@@ -157,11 +169,15 @@ namespace BAStoryPlayer
             }
         }
 
-        public int Play(string audioURL, bool isOneShot = true, float scale = 1)
+        public int Play(string clipName, bool isOneShot = true, float scale = 1)
         {
-            AudioClip clip = Resources.Load<AudioClip>(StoryPlayer.Setting.PathSound + audioURL);
+            AudioClip clip = Resources.Load<AudioClip>(StoryPlayer.Setting.PathSound + clipName);
             if (clip == null)
-                Debug.LogError($"未能在路径 [{StoryPlayer.Setting.PathSound + audioURL}] 找到AudioClip");
+            {
+                Debug.LogError($"未能在路径 [{StoryPlayer.Setting.PathSound + clipName}] 找到AudioClip");
+                return -1;
+            }
+                
             return Play(clip, isOneShot, scale);
         }
         public int Play(AudioClip audioClip, bool isOneShot = true, float scale = 1)
@@ -238,6 +254,7 @@ namespace BAStoryPlayer
             return source;
         }
 
+
         public void ClearAll()
         {
             for(int i = _playingPool.Count - 1; i >= 0; i--)
@@ -245,6 +262,10 @@ namespace BAStoryPlayer
                 Destroy(_playingPool[i].gameObject);
             }
             SourceBGM.clip = null;
+        }
+        public void ClearPreloadedMusicClips()
+        {
+            PreloadedMusicClips.Clear();
         }
     }
 }

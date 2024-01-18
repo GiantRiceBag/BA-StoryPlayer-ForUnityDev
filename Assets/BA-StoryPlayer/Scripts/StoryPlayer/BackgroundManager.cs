@@ -17,6 +17,9 @@ namespace BAStoryPlayer
         [Header("References")]
         [SerializeField] private Image _imgBackground;
 
+        private Dictionary<string, Sprite> _preloadedImages = new();
+        public Dictionary<string, Sprite> PreloadedImages => _preloadedImages;
+
         private void Start()
         {
             if (_imgBackground == null)
@@ -25,15 +28,13 @@ namespace BAStoryPlayer
             }
         }
 
-
         /// <summary>
         /// 设置背景 并优先适应宽度
         /// </summary>
-        /// <param name="url">相对URL</param>
         /// <param name="type">背景切换方式 首次无效</param>
-        public void SetBackground(string url = null, TransistionType transition = TransistionType.Immediate)
+        public void SetBackground(string imageName = null, TransistionType transition = TransistionType.Immediate)
         {
-            if (url == null)
+            if (imageName == null)
             {
                 switch (transition)
                 {
@@ -52,24 +53,25 @@ namespace BAStoryPlayer
                 return;
             }
 
-            Sprite sprite = Resources.Load<Sprite>(StoryPlayer.Setting.PathBackground + url);
-
-            if (sprite == null)
+            if(PreloadedImages.ContainsKey(imageName))
             {
-                Debug.LogError($"没能在路径 {StoryPlayer.Setting.PathBackground + url}  找到背景 [{url}]  ");
+                SetBackground(PreloadedImages[imageName], transition);
+            }
+            else
+            {
+                Sprite sprite = Resources.Load<Sprite>(StoryPlayer.Setting.PathBackground + imageName);
+                SetBackground(sprite, transition);
+            }
+        }
+        private void SetBackground(Sprite sprite, TransistionType transition)
+        {
+            if (sprite == null || sprite == _imgBackground.sprite)
+            {
                 return;
             }
-            else if(sprite == _imgBackground.sprite)
-            {
-                return;
-            }
 
-            Vector2 size = sprite.rect.size;
-            float ratio = size.y / size.x;
-            size.x = StoryPlayer.CanvasRect.rect.width;
-            size.y = size.x * ratio;
+            ResizeBackgroundToFitScreenWidth(sprite);
 
-            _imgBackground.GetComponent<RectTransform>().sizeDelta = size;
             if (!_imgBackground.enabled)
             {
                 _imgBackground.enabled = true;
@@ -94,11 +96,19 @@ namespace BAStoryPlayer
                             };
                             break;
                         }
-                    default: return;
+                    default: break;
                 }
             }
         }
 
+        public void ResizeBackgroundToFitScreenWidth(Sprite sprite)
+        {
+            Vector2 size = sprite.rect.size;
+            float ratio = size.y / size.x;
+            size.x = StoryPlayer.CanvasRect.rect.width;
+            size.y = size.x * ratio;
+            _imgBackground.GetComponent<RectTransform>().sizeDelta = size;
+        }
 
         public void SetBlurBackground(bool enable, TransistionType transition = TransistionType.Fade)
         {
@@ -110,6 +120,11 @@ namespace BAStoryPlayer
                 _imgBackground.material = mat;
                 mat.SetFloat("_Weight", enable ? 1 : 0);
             }
+        }
+
+        public void ClearPreloadedImages()
+        {
+            PreloadedImages.Clear();
         }
     }
 }

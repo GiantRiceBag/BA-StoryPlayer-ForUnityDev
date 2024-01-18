@@ -345,8 +345,9 @@ namespace BAStoryPlayer.Parser.UniversaScriptParser
             }
             else
             {
-                StoryPlayer.UIModule.SetTitle(rawStoryUnit.text);
-                storyUnit.actions += () => StoryPlayer.UIModule.ShowTitle("", rawStoryUnit.text);
+                string title = rawStoryUnit.text.Replace(";", "");
+                StoryPlayer.UIModule.SetTitle(title);
+                storyUnit.actions += () => StoryPlayer.UIModule.ShowTitle("", title);
             }
 
             return storyUnit;
