@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: TextArea
-  m_Shader: {fileID: 4800000, guid: 0ee59431203ca7d4da1aad42ea865780, type: 3}
+  m_Shader: {fileID: 4800000, guid: f25600b34ef94564fbd3ff66b1f427bf, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -21,13 +21,15 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 52b5e65bfc32e0d4eaa5b261d703dcea, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _AlphaScale: 0.93
-    - _Strength: 1.85
+    - _EdgeSmoothness: 1.28
+    - _FillAmount: 1.07
+    - _MaxTransparency: 0.909
+    - _Power: 0.879
     m_Colors:
-    - _TintColor: {r: 0.067490004, g: 0.11532801, b: 0.17, a: 1}
+    - _Color: {r: 0.06662595, g: 0.11443538, b: 0.17144115, a: 1}
   m_BuildTextureStacks: []

@@ -9,7 +9,20 @@ namespace BAStoryPlayer.UI
         [SerializeField] private Color _colorSelected = new Color(1, 0.8784314f, 0.4235294f);
         [SerializeField] private bool _isSelected = false;
         [SerializeField] private AudioClip _sound_Click;
-        [SerializeField] private GameObject _objFlowLight;
+        [SerializeField] private Material _material;
+
+        public Material Material
+        {
+            get
+            {
+                if(_material == null) 
+                { 
+                    _material = new Material(GetComponent<Image>().material);
+                    GetComponent<Image>().material = _material;
+                }
+                return _material;
+            }
+        }
 
         public AudioClip Sound_Click
         {
@@ -20,22 +33,19 @@ namespace BAStoryPlayer.UI
                 return _sound_Click;
             }
         }
-        public GameObject FlowLight 
+
+        private void Start()
         {
-            get
-            {
-                if(_objFlowLight == null)
-                    _objFlowLight = transform.Find("FlowLight").gameObject;
-                return _objFlowLight;
-            }
-         }
+            _material = new Material(GetComponent<Image>().material);
+            GetComponent<Image>().material = _material;
+        }
 
         private void OnEnable()
         {
             GetComponent<Button>().onClick.AddListener(OnClickEventHandler);
             EventBus<OnCanceledAuto>.Binding.Add(OnCancelAutoEventHandler);
             _isSelected = StoryPlayer.IsAuto = false;
-            FlowLight.SetActive(false);
+            SetEnableFlowingLight(false);
             GetComponent<Image>().color = Color.white;
         }
         private void OnDisable()
@@ -48,8 +58,14 @@ namespace BAStoryPlayer.UI
         {
             _isSelected = false;
             GetComponent<Image>().color = Color.white;
-            FlowLight.SetActive(false);
+            SetEnableFlowingLight(false);
         }
+
+        public void SetEnableFlowingLight(bool enable)
+        {
+            Material.SetInt("_EnableFlowingLight", enable ? 1 : 0);
+        }
+
         private void OnClickEventHandler()
         {
             _isSelected = !_isSelected;
@@ -59,12 +75,12 @@ namespace BAStoryPlayer.UI
             if (_isSelected)
             {
                 GetComponent<Image>().color = _colorSelected;
-                FlowLight.SetActive(true);
+                SetEnableFlowingLight(true);
             }
             else
             {
                 GetComponent<Image>().color = Color.white;
-                FlowLight.SetActive(false);
+                SetEnableFlowingLight(false);
             }
         }
     }

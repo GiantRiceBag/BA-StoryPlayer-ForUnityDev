@@ -1,12 +1,11 @@
-Shader "Unlit/TextArea"
+Shader "Hidden/PatternButton"
 {
     Properties
     {
-       _Color("Color",COLOR) = (1,1,1,1)
-       _Power("Power",Range(0,1)) = 0.879
-       _FillAmount("Fill Amount",Range(0,2)) = 1.07
-       _EdgeSmoothness("Edge Smoothness",Range(0,10)) = 1.28
-       _MaxTransparency("Max Transparency",Range(0,1)) = 0.909
+        [HideInInspector]_MainTex ("Texture", 2D) = "white" {}
+        _PatternTex("Pattern Texure",2D) = "white" {}
+        _PatternAlphaReinforcement("Pattern Alpha Reinforcement",Range(0,10)) = 1
+        _PatternTint("Pattern Tint",Color) = (1,1,1,1)
     }
     SubShader
     {
@@ -16,7 +15,6 @@ Shader "Unlit/TextArea"
             "RenderType"="Transparent"
             "Queue"="Transparent"
         }
-
         Pass
         {
             CGPROGRAM
@@ -25,21 +23,17 @@ Shader "Unlit/TextArea"
 
             #include "UnityCG.cginc"
 
-            fixed4 _Color;
-            float _FillAmount;
-            float _Power;
-            float _EdgeSmoothness;
-            float _MaxTransparency;
-
             struct appdata
             {
                 float4 vertex : POSITION;
+                float4 color : COLOR;
                 float2 uv : TEXCOORD0;
             };
 
             struct v2f
             {
                 float2 uv : TEXCOORD0;
+                float4 color :TEXCOORD1;
                 float4 vertex : SV_POSITION;
             };
 
@@ -48,19 +42,26 @@ Shader "Unlit/TextArea"
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = v.uv;
+                o.color = v.color;
                 return o;
             }
 
+            sampler2D _MainTex;
+            sampler2D _PatternTex;
+            float4 _PatternTex_ST;
+
+            fixed4 _PatternTint;
+            float _PatternAlphaReinforcement;
+
             fixed4 frag (v2f i) : SV_Target
             {
-                float uv_y = 1-i.uv.y;
-                fixed4 col = fixed4(_Color.xyz,pow(uv_y,_Power));
-                col.w += smoothstep(1-_FillAmount,1-_FillAmount+_EdgeSmoothness,uv_y);
-                col.w = clamp(col.w,0,_MaxTransparency);
+                fixed4 col = tex2D(_MainTex, i.uv);
+                float2 patternUV = TRANSFORM_TEX(i.uv,_PatternTex);
+                fixed4 patternCol = tex2D(_PatternTex,patternUV);
 
-                return col;
+                fixed4 finalCol = col * i.color + col.a * patternCol.a * _PatternAlphaReinforcement * _PatternTint;
+                return finalCol;
             }
-
             ENDCG
         }
     }
