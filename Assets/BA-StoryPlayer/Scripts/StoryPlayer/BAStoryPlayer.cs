@@ -39,6 +39,7 @@ namespace BAStoryPlayer
         [SerializeField] private bool _isPlaying = false;
         [SerializeField] private bool _isExecutable = true;
         [SerializeField] private bool _isLocking = false;
+        private bool _isSkippable = true;
 
         private Coroutine _crtLock;
 
@@ -94,6 +95,23 @@ namespace BAStoryPlayer
         {
             get => _isExecutable;
             private set => _isExecutable = value;
+        }
+        public bool IsSkippable
+        {
+            set => _isSkippable = value;
+            get => _isSkippable;
+        }
+        public bool IsReadyToClosePlayer
+        {
+            get
+            {
+                if(IsPlaying && _currentUnitIndex == _storyUnits.Count)
+                {
+                    return true;
+                }
+
+                return false;
+            }
         }
 
         public BackgroundManager BackgroundModule
@@ -280,6 +298,7 @@ namespace BAStoryPlayer
             ModifiedFlagTable?.Clear();
             ScriptsToExecute?.Clear();
 
+            IsSkippable = true;
             IsPlaying = true;
             gameObject.SetActive(true);
 
@@ -432,6 +451,16 @@ namespace BAStoryPlayer
 
         public void CloseStoryPlayer(bool fadeOut = true, bool destoryObject = false)
         {
+            if(!IsReadyToClosePlayer && !IsSkippable)
+            {
+                // TODO
+                // 执行某种快进处理或者弹窗提示
+                Debug.Log("存在分支及单元脚本，无法跳过。（非编辑器）");
+#if !UNITY_EDITOR
+                return;
+#endif
+            }
+
             IsPlaying = false;
             AudioModule.PauseBGM();
             ClearPreloadAsset();

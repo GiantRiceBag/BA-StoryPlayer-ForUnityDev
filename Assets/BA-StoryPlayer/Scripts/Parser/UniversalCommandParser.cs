@@ -381,14 +381,25 @@ namespace BAStoryPlayer.Parser.UniversaScriptParser
             storyUnit.UpdateType(UnitType.Option);
 
             List<OptionData> options = new();
+            bool hasOptionScripts = false;
 
             foreach (RawSelectionGroup selection in rawStoryUnit.selectionGroups)
             {
                 List<StoryUnit> optionStoryUnits = new();
                 List<Condition> optionConditions = new();
 
+                if (!string.IsNullOrEmpty(selection.script))
+                {
+                    hasOptionScripts = true;
+                }
+
                 foreach(RawStoryUnitBase selectionStoryUnit in selection.content)
                 {
+                    if (!string.IsNullOrEmpty(selectionStoryUnit.script))
+                    {
+                        hasOptionScripts = true;
+                    }
+
                     optionStoryUnits.Add(ProcessRawStoryUnit(selectionStoryUnit));
                 }
                 foreach(RawCondition optionCondition in selection.conditions)
@@ -409,6 +420,11 @@ namespace BAStoryPlayer.Parser.UniversaScriptParser
 
             if(options.Count > 0)
             {
+                if (hasOptionScripts)
+                {
+                    StoryPlayer.IsSkippable = false;
+                }
+
                 storyUnit.actions += () =>
                 {
                     StoryPlayer.UIModule.ShowOptions(options);
