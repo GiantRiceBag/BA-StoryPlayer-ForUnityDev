@@ -51,7 +51,6 @@ namespace BAStoryPlayer.DoTweenS
 
         public Action OnCompleted;
 
-
         public TweenS(object target,float duration,Transform transform,TweenSType type)
         {
             tid = DoTweenS.UsableTid;
@@ -110,8 +109,5 @@ namespace BAStoryPlayer.DoTweenS
             OnCompleted?.Invoke();
             Kill();
         }
-
-
     }
-
 }

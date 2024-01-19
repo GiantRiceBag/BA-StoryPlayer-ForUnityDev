@@ -4,6 +4,7 @@ using TMPro;
 using BAStoryPlayer.DoTweenS;
 using Unity.VisualScripting;
 using BAStoryPlayer.Event;
+using System.Linq;
 
 namespace BAStoryPlayer.UI
 {
@@ -60,8 +61,8 @@ namespace BAStoryPlayer.UI
                 }
                 _crtDisableObject = this.Delay(() =>
                 {
-                    _isSelected = false;
-                    SwitchState(_isSelected);
+                    IsSelected = false;
+                    SwitchState(IsSelected);
                 },5);
 
                 _subpanel.SetActive(true);
@@ -93,7 +94,7 @@ namespace BAStoryPlayer.UI
                 }
 
                 Image image_Subpanel = _subpanel.GetComponent<Image>();
-                Image[] image_SubButton = _subpanel.GetComponentsInChildren<Image>();
+                Image[] image_SubButton = _subpanel.GetComponentsInChildren<Image>().Where(e=>e!=image_Subpanel).ToArray();
                 if (immidiate)
                 {
                     image_Subpanel.color = new Color(image_Subpanel.color.r, image_Subpanel.color.g, image_Subpanel.color.b, 0);
@@ -101,7 +102,10 @@ namespace BAStoryPlayer.UI
                 }
                 else
                 {
-                    image_Subpanel.DoAlpha(0, 0.2f).OnCompleted = () => { _subpanel.SetActive(false); };
+                    image_Subpanel.DoAlpha(0, 0.2f).OnComplete(() =>
+                    {
+                        _subpanel.SetActive(false); 
+                    });
                 }
 
                 foreach (var i in image_SubButton)

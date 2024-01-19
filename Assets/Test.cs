@@ -174,9 +174,14 @@ public class Test : MonoBehaviour
 
         if (!isPreloadingAsset)
         {
+            if (Application.isPlaying && storyPlayer.gameObject.activeSelf)
+            {
+                return;
+            }
+
+
             if (scriptsUID.Count > 0)
             {
-                
                 scriptsScrollPos = GUILayout.BeginScrollView(scriptsScrollPos);
                 DrawScriptButton();
                 GUILayout.EndScrollView();
@@ -209,11 +214,16 @@ public class Test : MonoBehaviour
     }
     private void DrawScriptButton()
     {
-        foreach(var script in storyScripts)
+        foreach (var script in storyScripts)
         {
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Ë¢ÐÂ"))
             {
+                if (isReflashing)
+                {
+                    return;
+                }
+
                 isReflashing = true;
                 int index = storyScripts.IndexOf(script);
                 StartCoroutine(CrtGetScript(script.uuid, data =>

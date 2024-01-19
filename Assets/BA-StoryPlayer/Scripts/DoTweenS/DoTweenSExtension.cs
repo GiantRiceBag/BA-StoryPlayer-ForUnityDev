@@ -205,6 +205,7 @@ namespace BAStoryPlayer.DoTweenS
                 tween.RawT = Mathf.MoveTowards(tween.RawT, 1, delta * Time.deltaTime);
                 col.a = Mathf.Lerp(origin, target, tween.T);
                 image.color = col;
+
                 yield return null;
             }
 

@@ -160,7 +160,7 @@ Shader "Hidden/FlowLight"
                 float cullingResult = smoothstep(0,halfLength,delta) - smoothstep(halfLength,_FlowingLightLength,delta);
                 cullingResult = lerp(smoothstep(180,halfLength+180,delta) - smoothstep(halfLength+180,_FlowingLightLength+180,delta),cullingResult,cullingResult);
 
-                return edgeCol * cullingResult;
+                return fixed4(_FlowingLightTint.xyz,cullingResult*edgeCol.a);
             }
             ENDCG
         }
