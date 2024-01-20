@@ -153,7 +153,7 @@ namespace BAStoryPlayer
             DestroyCharacter(Character[index].gameObject);
             _character[index] = null;
         }
-        void DestroyCharacter(string indexName,bool destroyObject = false)
+        private void DestroyCharacter(string indexName,bool destroyObject = false)
         {
             if (!CheckIfCharacterInPool(indexName))
                 return;
@@ -182,7 +182,7 @@ namespace BAStoryPlayer
         /// </summary>
         /// <param name="indexName">角色名</param>
         /// <param name="enable">开启眨眼</param>
-        void SetWinkAction(string indexName,bool enable)
+        private void SetWinkAction(string indexName,bool enable)
         {
             Coroutine coroutine = null;
             _winkAction.TryGetValue(indexName, out coroutine);
@@ -192,7 +192,7 @@ namespace BAStoryPlayer
                 {
                     if (coroutine == null)
                     {
-                        coroutine = StartCoroutine(CCharacterWink(indexName));
+                        coroutine = StartCoroutine(CrtCharacterWink(indexName));
                         if (coroutine != null)
                             _winkAction.Add(indexName, coroutine);
                     }
@@ -212,7 +212,7 @@ namespace BAStoryPlayer
             }
             
         }
-        IEnumerator CCharacterWink(string indexName)
+        private IEnumerator CrtCharacterWink(string indexName)
         {
             SkeletonGraphic skel = CharacterPool[indexName].GetComponent<SkeletonGraphic>();
             string ani_EyeClose_Name = "";
@@ -244,7 +244,7 @@ namespace BAStoryPlayer
         /// <param name="currentIndex">角色编号</param>
         /// <param name="targetIndex">目标位置编号</param>
         /// <param name="transition">过渡方式</param>
-        void MoveCharacterTo(int currentIndex,int targetIndex,TransistionType transition = TransistionType.Immediate)
+        private void MoveCharacterTo(int currentIndex,int targetIndex,TransistionType transition = TransistionType.Immediate)
         {
             if (!CheckIfIndexValid(currentIndex) || !CheckIfIndexValid(targetIndex))
                 return;
@@ -252,7 +252,7 @@ namespace BAStoryPlayer
                 return;
             MoveCharacterTo(Character[currentIndex].gameObject, targetIndex, transition);
         }
-        void MoveCharacterTo(int currentIndex,Vector2 pos,TransistionType transition = TransistionType.Immediate)
+        private void MoveCharacterTo(int currentIndex,Vector2 pos,TransistionType transition = TransistionType.Immediate)
         {
             if (CheckIfSlotEmpty(currentIndex))
                 return;
@@ -265,14 +265,14 @@ namespace BAStoryPlayer
             _characterPool[indexName].SetActive(true);
             MoveCharacterTo(_characterPool[indexName], targetIndex, transition);
         }
-        void MoveCharacterTo(string indexName, Vector2 pos, TransistionType transition = TransistionType.Immediate)
+        private void MoveCharacterTo(string indexName, Vector2 pos, TransistionType transition = TransistionType.Immediate)
         {
             if (!CheckIfCharacterInPool(indexName))
                 CreateCharacterObj(indexName);
             _characterPool[indexName].SetActive(true);
             MoveCharacterTo(_characterPool[indexName], pos, transition);
         }
-        void MoveCharacterTo(GameObject obj, int targetIndex, TransistionType transition = TransistionType.Immediate)
+        private void MoveCharacterTo(GameObject obj, int targetIndex, TransistionType transition = TransistionType.Immediate)
         {
             targetIndex = Mathf.Clamp(targetIndex, 0, 4);
             RectTransform rect = obj.GetComponent<RectTransform>();
@@ -291,7 +291,7 @@ namespace BAStoryPlayer
                 default: break;
             }
         }
-        void MoveCharacterTo(GameObject obj, Vector2 pos, TransistionType transition = TransistionType.Immediate)
+        private void MoveCharacterTo(GameObject obj, Vector2 pos, TransistionType transition = TransistionType.Immediate)
         {
             switch (transition)
             {
