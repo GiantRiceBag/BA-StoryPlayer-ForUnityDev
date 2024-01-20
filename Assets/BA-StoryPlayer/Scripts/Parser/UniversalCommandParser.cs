@@ -319,11 +319,11 @@ namespace BAStoryPlayer.Parser.UniversaScriptParser
         //  处理一些脚本单元公共配置 音频及背景等
         private void HandleCommonSetting(RawStoryUnit rawStoryUnit, StoryUnit storyUnit)
         {
-            if(rawStoryUnit.backgroundImage != string.Empty)
+            if(!string.IsNullOrEmpty(rawStoryUnit.backgroundImage))
             {
                 storyUnit.actions += () => StoryPlayer.BackgroundModule.SetBackground(rawStoryUnit.backgroundImage,TransistionType.Fade);
             }
-            if(rawStoryUnit.bgm != string.Empty) 
+            if(!string.IsNullOrEmpty(rawStoryUnit.bgm)) 
             {
                 storyUnit.actions += () => StoryPlayer.AudioModule.PlayBGM(rawStoryUnit.bgm,false);
             }

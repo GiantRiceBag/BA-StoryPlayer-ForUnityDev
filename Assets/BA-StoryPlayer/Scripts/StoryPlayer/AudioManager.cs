@@ -255,7 +255,6 @@ namespace BAStoryPlayer
             return source;
         }
 
-
         public void ClearAll()
         {
             for(int i = _playingPool.Count - 1; i >= 0; i--)
@@ -267,6 +266,11 @@ namespace BAStoryPlayer
         public void ClearPreloadedMusicClips()
         {
             PreloadedMusicClips.Clear();
+        }
+
+        public void PlaySoundButtonClick()
+        {
+            Play("Button_Click");
         }
     }
 }

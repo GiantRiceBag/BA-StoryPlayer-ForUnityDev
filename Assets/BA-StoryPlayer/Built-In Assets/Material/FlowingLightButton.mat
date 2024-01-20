@@ -41,7 +41,7 @@ Material:
     - _FlowingLightReinforcement: 10.7
     - _FlowingLightScale: 1
     - _FlowingLightSpeed: 0.3
-    - _PatternAlphaReinforcement: 0.5
+    - _PatternAlphaReinforcement: 0.3
     - _Speed: 0.2
     - _Threshold: 0.3
     m_Colors:

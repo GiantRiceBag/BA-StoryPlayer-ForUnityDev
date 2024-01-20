@@ -17,7 +17,6 @@ namespace BAStoryPlayer.UI
         [SerializeField] private GameObject _subpanel;
         [Space]
         [SerializeField] private bool _isSelected = false;
-        [SerializeField] private AudioClip _soundClick;
 
         private Coroutine _crtDisableObject;
 
@@ -29,11 +28,6 @@ namespace BAStoryPlayer.UI
 
         void Start()
         {
-            if (_soundClick == null)
-            {
-                _soundClick = Resources.Load("Sound/Button_Click") as AudioClip;
-            }
-
             if (_tmp == null)
             {
                 _tmp = transform.GetComponentInChildren<TextMeshProUGUI>();
@@ -137,7 +131,7 @@ namespace BAStoryPlayer.UI
 
         public void PlaySound() 
         {
-            StoryPlayer.AudioModule.Play(_soundClick);
+            StoryPlayer.AudioModule.PlaySoundButtonClick();
         }
 
         private void OnStartPlayingStoryEventHandler(OnStartPlayingStory data)

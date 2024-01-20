@@ -1,152 +1,315 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using BAStoryPlayer.DoTweenS;
-using BAStoryPlayer.Event;
 using TMPro;
-using System;
 
 namespace BAStoryPlayer.UI
 {
-    public class ButtonOption : MonoBehaviour,IPointerExitHandler,IPointerEnterHandler,IPointerDownHandler,IPointerUpHandler
-    {
-        private Animator _animator;
-        [SerializeField] AudioClip _soundClick;
+    using DoTweenS;
+    using global::BAStoryPlayer.Event;
+    using State;
+    using System;
 
+    public class ButtonOption : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler, IPointerDownHandler, IPointerUpHandler
+    {
         private const float WidthNormal = 0.701842f;
         private const float HeightNormal = 0.0924069f;
 
-        [Obsolete] public int OptionID { get; private set; }
-        public bool Clicked { get; private set; }
-        public bool IsPointerOnButton { get; private set; }
+        private OptionButtonState State { get; set; }
 
-        public OptionManager OptionManager { get; private set; }
+        private OptionButtonState _normal = new Normal();
+        private OptionButtonState _highlighted = new Highlighted();
+        private OptionButtonState _pressed = new Pressed();
+        private OptionButtonState _selected = new Selected();
+        private OptionButtonState _disabled = new Disabled();
 
-        [Obsolete]
-        public void Initialize(OptionManager optionManager,int optionID,string text)
+        private Image _image;
+        private RectTransform _rectTransform;
+        private TextMeshProUGUI _textMesh;
+
+        private bool _isDisabled;
+        private bool _isPointerHovering;
+        private bool _isPointerPressed;
+        private bool _isDesiredClicked;
+
+        public bool IsDisabled
         {
-            OptionManager = optionManager;
-            OptionID = optionID;
-            GetComponentInChildren<TextMeshProUGUI>().text = text;
-
-            if (_soundClick == null)
+            private set
             {
-                _soundClick = Resources.Load("Sound/Button_Click") as AudioClip;
+                _isDisabled = value;
+                ReflashState();
             }
-
-            _animator = GetComponent<Animator>();
-            _animator.enabled = false;
-
-            GetComponent<RectTransform>().sizeDelta = new Vector2(
-                   WidthNormal * optionManager.StoryPlayer.CanvasRect.sizeDelta.x,
-                   HeightNormal * optionManager.StoryPlayer.CanvasRect.sizeDelta.y
-               );
-
-            transform.localScale = new Vector2(0.95f, 0.95f);
-            transform.DoLocalScale(Vector2.one, 0.1f).OnCompleted = () => {
-                _animator.enabled = true;
-            };
-
-            GetComponent<Button>().onClick.AddListener(() =>
+            get
             {
-                if (Clicked)
-                {
-                    return;
-                }
-                Clicked = true;
-                optionManager.StoryPlayer.AudioModule.Play(_soundClick);
-                _animator.SetBool("Interactable", false);
-                optionManager.RevokeInteractablilty(transform);
-                EventBus<OnPlayerSelected>.Raise(new OnPlayerSelected()
-                {
-                    scriptGourpID = optionManager.StoryPlayer.GroupID,
-                    selectionGroup = OptionID
-                });
-            });
+                return _isDisabled;
+            }
         }
-        public void Initialize(OptionManager optionManager, OptionData optionData)
+        public bool IsPointerHovering
         {
-            OptionManager = optionManager;
-            GetComponentInChildren<TextMeshProUGUI>().text = optionData.text;
-
-            if (_soundClick == null)
+            private set
             {
-                _soundClick = Resources.Load("Sound/Button_Click") as AudioClip;
+                _isPointerHovering = value;
+                ReflashState();
+            }
+            get
+            {
+                return _isPointerHovering;
+            }
+        }
+        public bool IsPointerPressed
+        {
+            private set
+            {
+                _isPointerPressed = value;
+                ReflashState();
+            }
+            get
+            {
+                return _isPointerPressed;
+            }
+        }
+        public bool IsDesiredClicked
+        {
+            private set
+            {
+                _isDesiredClicked = value;
+                ReflashState();
+            }
+            get
+            {
+                return _isDesiredClicked;
+            }
+        }
+
+        public Image Image
+        {
+            get
+            {
+                if(_image == null)
+                {
+                    _image = transform.GetComponent<Image>();
+                }
+                return _image;
+            }
+        }
+        public RectTransform RectTransform
+        {
+            get
+            {
+                if(_rectTransform == null)
+                {
+                    _rectTransform = GetComponent<RectTransform>();
+                }
+                return _rectTransform;
+            }
+        }
+        public TextMeshProUGUI TextMesh
+        {
+            get
+            {
+                if(_textMesh == null)
+                {
+                    _textMesh = GetComponentInChildren<TextMeshProUGUI>();
+                }
+                return _textMesh;
+            }
+        }
+        public OptionManager OptionManager
+        { 
+            get;
+            private set;
+        }
+
+        public Action onClicked;
+
+        private void Start()
+        {
+            SwitchState(_normal);
+
+            _selected.onAnimationEnd = () =>
+            {
+                OptionManager?.FinishSelecting();
+            };
+        }
+
+        private void ReflashState()
+        {
+            if (IsDisabled)
+            {
+                return;
             }
 
-            _animator = GetComponent<Animator>();
-            _animator.enabled = false;
+            if (IsDesiredClicked)
+            {
+                IsDisabled = true;
+                SwitchState(_selected);
+                onClicked?.Invoke();
+                return;
+            }
+
+            if (IsPointerHovering)
+            {
+                if (IsPointerPressed)
+                {
+                    SwitchState(_pressed);
+                }
+                else
+                {
+                    SwitchState(_highlighted);
+                }
+            }
+            else
+            {
+                SwitchState(_normal);
+            }
+        }
+        private void SwitchState(OptionButtonState state)
+        {
+            State?.OnEnd(this);
+            State = state;
+            State?.OnStart(this);
+        }
+
+        public ButtonOption Initialize(OptionManager optionManager, OptionData optionData)
+        {
+            OptionManager = optionManager;
 
             GetComponent<RectTransform>().sizeDelta = new Vector2(
-                   WidthNormal * optionManager.StoryPlayer.CanvasRect.sizeDelta.x,
-                   HeightNormal * optionManager.StoryPlayer.CanvasRect.sizeDelta.y
-               );
-
+               WidthNormal * optionManager.StoryPlayer.CanvasRect.sizeDelta.x,
+               HeightNormal * optionManager.StoryPlayer.CanvasRect.sizeDelta.y
+           );
             transform.localScale = new Vector2(0.95f, 0.95f);
-            transform.DoLocalScale(Vector2.one, 0.1f).OnCompleted = () => {
-                _animator.enabled = true;
-            };
+            transform.DoLocalScale(Vector2.one, 0.1f);
 
-            GetComponent<Button>().onClick.AddListener(() =>
+            TextMesh.text = optionData.text;
+
+            onClicked += () =>
             {
-                if (Clicked)
-                {
-                    return;
-                }
-                Clicked = true;
-                optionManager.StoryPlayer.AudioModule.Play(_soundClick);
-                _animator.SetBool("Interactable", false);
-                optionManager.RevokeInteractablilty(transform);
                 EventBus<OnPlayerSelected>.Raise(new OnPlayerSelected()
                 {
                     storyUnits = optionData.storyUnits,
                     script = optionData.script
                 });
-            });
-        }
-        public void RunOnComplete()
-        {
-            OptionManager.FinishSelecting();
-        }
+                OptionManager?.StoryPlayer.AudioModule.PlaySoundButtonClick();
+                OptionManager?.RevokeInteractablilty(transform);
+            };
 
-        public void OnPointerExit(PointerEventData eventData)
-        {
-            IsPointerOnButton = false;
-
-            _animator.SetBool("Normal", true);
-            _animator.SetBool("Pressed", false);
-            _animator.SetBool("Selected", false);
-            _animator.SetBool("Highlighted", false);
+            return this;
         }
-        public void OnPointerEnter(PointerEventData eventData)
+        public void Disable()
         {
-            IsPointerOnButton = true;
-
-            _animator.SetBool("Normal", false);
-            _animator.SetBool("Pressed", false);
-            _animator.SetBool("Selected", false);
-            _animator.SetBool("Highlighted", true);
-        }
-        public void OnPointerDown(PointerEventData eventData)
-        {   
-            if(IsPointerOnButton == true)
+            if (IsDisabled)
             {
-                _animator.SetBool("Normal", false);
-                _animator.SetBool("Pressed", true);
-                _animator.SetBool("Selected", false);
-                _animator.SetBool("Highlighted", false);
+                return;
+            }
+
+            IsDisabled = true;
+            SwitchState(_disabled);
+        }
+
+        void IPointerEnterHandler.OnPointerEnter(PointerEventData eventData)
+        {
+            IsPointerHovering = true;
+        }
+        void IPointerExitHandler.OnPointerExit(PointerEventData eventData)
+        {
+            IsPointerHovering = false;
+
+            if (IsPointerPressed)
+            {
+                IsPointerPressed = false;
             }
         }
-        public void OnPointerUp(PointerEventData eventData)
+        void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
         {
-            if (IsPointerOnButton == true)
+            if (IsPointerHovering)
             {
-                _animator.SetBool("Normal", false);
-                _animator.SetBool("Pressed", false);
-                _animator.SetBool("Selected", true);
-                _animator.SetBool("Highlighted", false);
+                IsPointerPressed = true;
             }
         }
+        void IPointerUpHandler.OnPointerUp(PointerEventData eventData)
+        {
+            if (IsPointerHovering && IsPointerPressed)
+            {
+                IsDesiredClicked = true;
+                IsPointerPressed = false;
+            }
+        }
+
+        #region States
+        protected abstract class OptionButtonState : State<ButtonOption>
+        {
+            public Action onAnimationEnd;
+            
+            protected void RunOnAnimationEnd()
+            {
+                onAnimationEnd?.Invoke();
+            }
+        }
+
+        private class Normal : OptionButtonState
+        {
+            public override void OnStart(ButtonOption component)
+            {
+                component.RectTransform.DoScale(Vector3.one, 0.16667f).OnComplete(RunOnAnimationEnd);
+            }
+        }
+        private class Highlighted : OptionButtonState
+        {
+            private Vector3 _highlightedScale = new Vector3(1.05f, 1.05f, 1.05f);
+
+            public override void OnStart(ButtonOption component)
+            {
+                component.RectTransform.DoScale(_highlightedScale, 0.16667f).OnComplete(RunOnAnimationEnd);
+            }
+        }
+        private class Pressed : OptionButtonState
+        {
+            private Vector3 _pressedScale = new Vector3(0.95f, 0.95f, 0.95f);
+
+            public override void OnStart(ButtonOption component)
+            {
+                component.RectTransform.DoScale(_pressedScale, 0.16667f).OnComplete(RunOnAnimationEnd);
+            }
+        }
+        private class Selected : OptionButtonState
+        {
+            public override void OnStart(ButtonOption component)
+            {
+                component.RectTransform.localScale = Vector3.one * 0.95f;
+
+                component.RectTransform.DoLocalScale(Vector3.one * 1.2f, 0.833333f);
+                component.Image.DoAlpha(0, 0.833333f);
+                component.TextMesh.DoAlpha(0, 0.833333f).OnComplete(RunOnAnimationEnd);
+            }
+        }
+        private class Disabled : OptionButtonState
+        {
+            public override void OnStart(ButtonOption component)
+            {
+                component.Image.DoAlpha(0, 0.13333f);
+                component.TextMesh.DoAlpha(0, 0.13333f).OnComplete(RunOnAnimationEnd); ;
+            }
+        }
+        #endregion
+    }
+}
+
+namespace BAStoryPlayer.UI.State
+{
+    public interface IState<T>
+    {
+        public void OnStart(T component);
+        public void OnUpdate(T component);
+        public void OnEnd(T component);
     }
 
+    public class State<T> : IState<T>
+    {
+        public virtual void OnEnd(T component) { }
+        public virtual void OnStart(T component) { }
+        public virtual void OnUpdate(T component) { }
+    }
 }

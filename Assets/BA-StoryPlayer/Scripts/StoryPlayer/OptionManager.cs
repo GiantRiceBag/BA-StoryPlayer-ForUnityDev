@@ -40,7 +40,7 @@ namespace BAStoryPlayer.UI
             {
                 if (_btnPrefab == null)
                 {
-                    _btnPrefab = Resources.Load<GameObject>("UI/Option");
+                    _btnPrefab = Resources.Load<GameObject>("UI/OptionButton");
                 }
                 return _btnPrefab;
             }
@@ -93,22 +93,21 @@ namespace BAStoryPlayer.UI
                 FinishSelecting(true);
             }
         }
-
-        public void RevokeInteractablilty(Transform exception = null)
+        public void RevokeInteractablilty(Transform exception)
         {
             GetComponent<VerticalLayoutGroup>().enabled = false;
             CreateMouseBlock();
 
-            foreach (var i in GetComponentsInChildren<Button>())
+            foreach (var i in GetComponentsInChildren<ButtonOption>())
             {
                 if (i.transform != exception.transform)
                 {
-                    i.interactable = false;
+                    i.Disable();
                 }
             }
         }
 
-       private void CreateMouseBlock()
+        private void CreateMouseBlock()
         {
             GameObject obj = new GameObject();
             obj.name = "Block";

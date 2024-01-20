@@ -8,7 +8,6 @@ namespace BAStoryPlayer.UI
     {
         [SerializeField] private Color _colorSelected = new Color(1, 0.8784314f, 0.4235294f);
         [SerializeField] private bool _isSelected = false;
-        [SerializeField] private AudioClip _sound_Click;
         [SerializeField] private Material _material;
 
         public Material Material
@@ -21,16 +20,6 @@ namespace BAStoryPlayer.UI
                     GetComponent<Image>().material = _material;
                 }
                 return _material;
-            }
-        }
-
-        public AudioClip Sound_Click
-        {
-            get
-            {
-                if (_sound_Click == null)
-                    _sound_Click = Resources.Load("Sound/Button_Click") as AudioClip;
-                return _sound_Click;
             }
         }
 
@@ -70,7 +59,7 @@ namespace BAStoryPlayer.UI
         {
             _isSelected = !_isSelected;
             StoryPlayer.IsAuto = _isSelected;
-            StoryPlayer.AudioModule.Play(Sound_Click);
+            StoryPlayer.AudioModule.PlaySoundButtonClick();
 
             if (_isSelected)
             {
