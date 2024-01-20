@@ -89,7 +89,7 @@ namespace BAStoryPlayer.DoTweenS
             int index = 0;
             foreach(var i in s_tweenList)
             {
-                if (i.transform == tween.transform && i.type == tween.type)
+                if (i.mono == tween.mono && i.type == tween.type)
                 {
                     if (kill)
                     {

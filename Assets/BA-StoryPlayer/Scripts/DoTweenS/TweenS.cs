@@ -19,8 +19,7 @@ namespace BAStoryPlayer.DoTweenS
 
         internal int tid;
         internal float duration;
-        internal Transform transform;
-        internal MonoBehaviour Mono => transform.GetComponent<MonoBehaviour>();
+        internal MonoBehaviour mono;
         internal Coroutine coroutine;
         internal Func<MonoBehaviour,TweenS, System.Collections.IEnumerator> enumerator;
         internal object target;
@@ -51,23 +50,23 @@ namespace BAStoryPlayer.DoTweenS
 
         public Action OnCompleted;
 
-        public TweenS(object target,float duration,Transform transform,TweenSType type)
+        public TweenS(object target,float duration,MonoBehaviour mono,TweenSType type)
         {
             tid = DoTweenS.UsableTid;
             this.target = target;
             this.duration = duration;
-            this.transform = transform;
+            this.mono = mono;
             this.type = type;
 
             easeFunction = EaseFunction.Linear;
 
             DoTweenS.Add(this);
         }
-        public TweenS(object target, float duration, int times,Transform transform,TweenSType type) :this(target,duration,transform,type)
+        public TweenS(object target, float duration, int times, MonoBehaviour mono,TweenSType type) :this(target,duration,mono,type)
         {
             this.times = Mathf.Clamp(times, 1, int.MaxValue);
         }
-        public TweenS(string targetName,object target, float duration,Transform transform, TweenSType type) : this(target, duration, transform, type)
+        public TweenS(string targetName,object target, float duration, MonoBehaviour mono, TweenSType type) : this(target, duration, mono, type)
         {
             this.targetName = targetName;
         }
@@ -84,12 +83,12 @@ namespace BAStoryPlayer.DoTweenS
         }
         public TweenS Stop()
         {
-            transform.GetComponent<MonoBehaviour>().StopCoroutine(coroutine);
+            mono.StopCoroutine(coroutine);
             return this;
         }
         public TweenS Resume()
         {
-            coroutine = Mono.StartCoroutine(enumerator(Mono, this));
+            coroutine = mono.StartCoroutine(enumerator(mono, this));
             return this;
         }
 
@@ -101,7 +100,7 @@ namespace BAStoryPlayer.DoTweenS
 
         public void StartCoroutine(Func<MonoBehaviour, TweenS, System.Collections.IEnumerator> enumerator)
         {
-            coroutine = Mono.StartCoroutine(enumerator(Mono, this));
+            coroutine = mono.StartCoroutine(enumerator(mono, this));
             this.enumerator = enumerator;
         }
         public void RunOnComplete()
