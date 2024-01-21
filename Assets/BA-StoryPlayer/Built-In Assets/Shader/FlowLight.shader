@@ -11,10 +11,11 @@ Shader "Hidden/FlowLight"
         [Toggle]_FlowingLightOnly("Flowing Light Only",int) = 0
         _FlowingLightLength("Flowing Light Length",Range(0,360)) = 180
         _FlowingLightSpeed("Flowing Light Speed",float) = 0.3
-        _FlowingLightEdgeSize("Flowing Light Edge Size",Range(0,10)) = 3.92
+        _FlowingLightEdgeSize("Flowing Light Edge Size",Range(0,10)) = 2.42
         _FlowingLightScale("Flowing Light Scale",Range(0,10)) = 1
         [HDR]_FlowingLightTint("Flowing Light Tint",Color) = (2,1.482,0.6509)
         _FlowingLightReinforcement("Flowing Lght Reinforcement",Range(1,100)) = 10.7
+        _CullingResultPower("Culling Result Power",range(0,10)) = 1
         _EdgeSmoothness("Edge Smoothness",range(0,1)) = 0.5
         _AlphaThreshold("Alpha Threshold",Range(0,1)) = 0.02
     }
@@ -125,6 +126,8 @@ Shader "Hidden/FlowLight"
             float _EdgeSmoothness;
             fixed4 _FlowingLightTint;
 
+            float _CullingResultPower;
+
             v2f vert (appdata v)
             {
                 v2f o;
@@ -159,6 +162,7 @@ Shader "Hidden/FlowLight"
                 float halfLength = _FlowingLightLength / 2;
                 float cullingResult = smoothstep(0,halfLength,delta) - smoothstep(halfLength,_FlowingLightLength,delta);
                 cullingResult = lerp(smoothstep(180,halfLength+180,delta) - smoothstep(halfLength+180,_FlowingLightLength+180,delta),cullingResult,cullingResult);
+                cullingResult = pow(cullingResult,_CullingResultPower);
 
                 return fixed4(_FlowingLightTint.xyz,cullingResult*edgeCol.a);
             }

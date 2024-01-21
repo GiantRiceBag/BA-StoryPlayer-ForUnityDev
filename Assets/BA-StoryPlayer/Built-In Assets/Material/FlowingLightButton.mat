@@ -32,10 +32,11 @@ Material:
     m_Floats:
     - _AlphaThreshold: 0.02
     - _Angle: 180
+    - _CullingResultPower: 1
     - _EdgeSize: 3.92
     - _EdgeSmoothness: 0.5
     - _EnableFlowingLight: 0
-    - _FlowingLightEdgeSize: 3.92
+    - _FlowingLightEdgeSize: 2.42
     - _FlowingLightLength: 180
     - _FlowingLightOnly: 0
     - _FlowingLightReinforcement: 10.7
@@ -46,7 +47,7 @@ Material:
     - _Threshold: 0.3
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _FlowingLightTint: {r: 1.9999998, g: 1.4869108, b: 0.6596858, a: 1}
+    - _FlowingLightTint: {r: 2.270603, g: 1.6880922, b: 0.7489423, a: 1}
     - _PatternTint: {r: 1, g: 1, b: 1, a: 1}
     - _Tint: {r: 2, g: 1.4820586, b: 0.6509434, a: 1}
   m_BuildTextureStacks: []
