@@ -237,12 +237,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   storyPlayer: {fileID: 659295187}
-  storyScriptName: MS_Test
-  skelg: {fileID: 0}
-  obj: {fileID: 0}
-  msg: []
   guiSkin: {fileID: 11400000, guid: c9f5a97861c827f47a984637eca05867, type: 2}
-  skel: {fileID: 4900000, guid: ce0ce425a9a912f46aec7732253e28d3, type: 3}
 --- !u!4 &1270762860
 Transform:
   m_ObjectHideFlags: 0
