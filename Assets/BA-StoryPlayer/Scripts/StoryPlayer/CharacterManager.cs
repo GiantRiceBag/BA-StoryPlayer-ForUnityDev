@@ -334,7 +334,7 @@ namespace BAStoryPlayer
                     break;
                 case CharacterAction.Disapper: // 渐变至黑色剪影同时离场
                     skelGraphic.color = Color.white;
-                    skelGraphic.DoColor(Color.black, base.StoryPlayer.Setting.TimeCharacterFade).OnCompleted = ()=> { SetAction(obj, CharacterAction.Hide); };
+                    skelGraphic.DoColor(Color.black, base.StoryPlayer.Setting.TimeCharacterFade).onCompleted = ()=> { SetAction(obj, CharacterAction.Hide); };
                     EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = base.StoryPlayer.Setting.TimeCharacterFade });
                     break;
                 case CharacterAction.Disapper2Left:

@@ -136,7 +136,7 @@ namespace BAStoryPlayer
                 }
                 else
                 {
-                    SourceBGM.DoVolume(0, StoryPlayer.Setting.TimeBgmFade * fadeScale).OnCompleted = () =>
+                    SourceBGM.DoVolume(0, StoryPlayer.Setting.TimeBgmFade * fadeScale).onCompleted = () =>
                     {
                         SourceBGM.Stop();
                         SourceBGM.clip = audioClip;
@@ -159,7 +159,7 @@ namespace BAStoryPlayer
 
             if (fade)
             {
-                SourceBGM.DoVolume(0, StoryPlayer.Setting.TimeBgmFade * fadeScale).OnCompleted = () =>
+                SourceBGM.DoVolume(0, StoryPlayer.Setting.TimeBgmFade * fadeScale).onCompleted = () =>
                 {
                     SourceBGM.Pause();
                 };

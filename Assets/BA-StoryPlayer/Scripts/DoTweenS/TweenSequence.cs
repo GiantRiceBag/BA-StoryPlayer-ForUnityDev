@@ -54,7 +54,6 @@ namespace BAStoryPlayer.DoTweenS
                 Next();
             }
         }
-
         public void Append(System.Action action)
         {
             TweenUnit tUnit = new TweenUnit(action);
@@ -93,7 +92,7 @@ namespace BAStoryPlayer.DoTweenS
                     }
                 case TweenUnitType.Tween:
                     {
-                        _tweenQueue.Dequeue().Tween.Resume().OnCompleted += () =>
+                        _tweenQueue.Dequeue().Tween.Resume().onCompleted += () =>
                         {
                             Next();
                         };

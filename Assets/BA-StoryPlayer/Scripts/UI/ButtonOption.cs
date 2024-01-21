@@ -253,7 +253,7 @@ namespace BAStoryPlayer.UI
         {
             public override void OnStart(ButtonOption component)
             {
-                component.RectTransform.DoScale(Vector3.one, 0.16667f).OnComplete(RunOnAnimationEnd);
+                component.RectTransform.DoScale(Vector3.one, 0.16667f).OnCompleted(RunOnAnimationEnd);
             }
         }
         private class Highlighted : OptionButtonState
@@ -262,7 +262,7 @@ namespace BAStoryPlayer.UI
 
             public override void OnStart(ButtonOption component)
             {
-                component.RectTransform.DoScale(_highlightedScale, 0.16667f).OnComplete(RunOnAnimationEnd);
+                component.RectTransform.DoScale(_highlightedScale, 0.16667f).OnCompleted(RunOnAnimationEnd);
             }
         }
         private class Pressed : OptionButtonState
@@ -271,7 +271,7 @@ namespace BAStoryPlayer.UI
 
             public override void OnStart(ButtonOption component)
             {
-                component.RectTransform.DoScale(_pressedScale, 0.16667f).OnComplete(RunOnAnimationEnd);
+                component.RectTransform.DoScale(_pressedScale, 0.16667f).OnCompleted(RunOnAnimationEnd);
             }
         }
         private class Selected : OptionButtonState
@@ -282,7 +282,7 @@ namespace BAStoryPlayer.UI
 
                 component.RectTransform.DoLocalScale(Vector3.one * 1.2f, 0.833333f);
                 component.Image.DoAlpha(0, 0.833333f);
-                component.TextMesh.DoAlpha(0, 0.833333f).OnComplete(RunOnAnimationEnd);
+                component.TextMesh.DoAlpha(0, 0.833333f).OnCompleted(RunOnAnimationEnd);
             }
         }
         private class Disabled : OptionButtonState
@@ -290,7 +290,7 @@ namespace BAStoryPlayer.UI
             public override void OnStart(ButtonOption component)
             {
                 component.Image.DoAlpha(0, 0.13333f);
-                component.TextMesh.DoAlpha(0, 0.13333f).OnComplete(RunOnAnimationEnd); ;
+                component.TextMesh.DoAlpha(0, 0.13333f).OnCompleted(RunOnAnimationEnd); ;
             }
         }
         #endregion

@@ -30,15 +30,13 @@ namespace BAStoryPlayer.DoTweenS
             {
                 if(s_gameObject == null || s_mono == null)
                 {
-                    GameObject obj = new GameObject();
-                    obj.name = "[DoTweenS]";
+                    GameObject obj = new GameObject("[DoTweenS]",typeof(DoTweenSRuntime));
                     obj.hideFlags = HideFlags.HideInHierarchy;
 
-                    s_gameObject = GameObject.Instantiate(obj);
+                    s_gameObject = obj;
                     s_mono = s_gameObject.GetComponent<MonoBehaviour>();
                     Object.DontDestroyOnLoad(s_gameObject);
                 }
-
                 return s_mono;
             }
         }
@@ -104,4 +102,8 @@ namespace BAStoryPlayer.DoTweenS
         }
     }
 
+    public class DoTweenSRuntime : MonoBehaviour
+    {
+
+    }
 }

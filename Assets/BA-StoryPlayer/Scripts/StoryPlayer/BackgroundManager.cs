@@ -43,7 +43,7 @@ namespace BAStoryPlayer
                         _imgBackground.enabled = false;
                         break;
                     case TransistionType.Fade:
-                        _imgBackground.DoColor(Color.black, StoryPlayer.Setting.TimeSwitchBackground).OnCompleted = () =>
+                        _imgBackground.DoColor(Color.black, StoryPlayer.Setting.TimeSwitchBackground).onCompleted = () =>
                         {
                             _imgBackground.sprite = null;
                             _imgBackground.enabled = false;
@@ -90,7 +90,7 @@ namespace BAStoryPlayer
                         }
                     case TransistionType.Fade:
                         {
-                            _imgBackground.DoColor(Color.black, StoryPlayer.Setting.TimeSwitchBackground / 2).OnCompleted = () =>
+                            _imgBackground.DoColor(Color.black, StoryPlayer.Setting.TimeSwitchBackground / 2).onCompleted = () =>
                             {
                                 _imgBackground.sprite = sprite;
                                 _imgBackground.DoColor(Color.white, StoryPlayer.Setting.TimeSwitchBackground / 2);

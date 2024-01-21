@@ -166,7 +166,7 @@ namespace BAStoryPlayer
         {
             GameObject obj = Instantiate(Resources.Load("UI/Title") as GameObject);
             obj.transform.SetParent(transform);
-            obj.GetComponent<Title>().Initialize(StoryPlayer,title, subtitle);
+            obj.GetComponent<Title>().InitializeAndPlay(StoryPlayer,title, subtitle);
 
             HideAllUI();
         }

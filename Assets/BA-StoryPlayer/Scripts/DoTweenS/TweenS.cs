@@ -48,7 +48,7 @@ namespace BAStoryPlayer.DoTweenS
             }
         }
 
-        public Action OnCompleted;
+        public Action onCompleted;
 
         public TweenS(object target,float duration,MonoBehaviour mono,TweenSType type)
         {
@@ -71,9 +71,9 @@ namespace BAStoryPlayer.DoTweenS
             this.targetName = targetName;
         }
 
-        public TweenS OnComplete(Action action)
+        public TweenS OnCompleted(Action action)
         {
-            OnCompleted = action;
+            onCompleted = action;
             return this;
         }
         public void Kill()
@@ -105,7 +105,7 @@ namespace BAStoryPlayer.DoTweenS
         }
         public void RunOnComplete()
         {
-            OnCompleted?.Invoke();
+            onCompleted?.Invoke();
             Kill();
         }
     }

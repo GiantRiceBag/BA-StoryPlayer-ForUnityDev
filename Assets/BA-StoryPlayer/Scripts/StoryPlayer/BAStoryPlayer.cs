@@ -530,25 +530,25 @@ namespace BAStoryPlayer
                 case BackdropType.In:
                     {
                         image.color = new Color(0, 0, 0, 1);
-                        image.DoAlpha(0, duration).OnCompleted = ()=> { feedback?.Invoke(); Destroy(backdrop); };
+                        image.DoAlpha(0, duration).onCompleted = ()=> { feedback?.Invoke(); Destroy(backdrop); };
                         break;
                     }
                 case BackdropType.Out:
                     {
                         image.color = new Color(0, 0, 0, 0);
-                        image.DoAlpha(1, duration).OnCompleted = () => { feedback?.Invoke(); Destroy(backdrop); };
+                        image.DoAlpha(1, duration).onCompleted = () => { feedback?.Invoke(); Destroy(backdrop); };
                         break;
                     }
                 case BackdropType.OutIn:
                     {
                         image.color = new Color(0, 0, 0, 0);
-                        image.DoAlpha(1, duration/2).OnCompleted = () => { feedback?.Invoke(); image.DoAlpha(0, duration/2).OnCompleted = ()=> { Destroy(backdrop); }; };
+                        image.DoAlpha(1, duration/2).onCompleted = () => { feedback?.Invoke(); image.DoAlpha(0, duration/2).onCompleted = ()=> { Destroy(backdrop); }; };
                         break;
                     }
                 case BackdropType.InOut:
                     {
                         image.color = new Color(0, 0, 0, 1);
-                        image.DoAlpha(0, duration/2).OnCompleted = () => { feedback?.Invoke(); image.DoAlpha(1, duration/2).OnCompleted = ()=> { Destroy(backdrop); }; };
+                        image.DoAlpha(0, duration/2).onCompleted = () => { feedback?.Invoke(); image.DoAlpha(1, duration/2).onCompleted = ()=> { Destroy(backdrop); }; };
                         break;
                     }
                 default:return;
