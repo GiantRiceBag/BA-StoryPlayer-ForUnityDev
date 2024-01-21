@@ -271,27 +271,14 @@ namespace BAStoryPlayer
         {
             if (!CheckIfCharacterInPool(indexName))
                 CreateCharacterObj(indexName);
-            _characterPool[indexName].SetActive(true);
-            MoveCharacterTo(_characterPool[indexName], pos, transition);
+            CharacterPool[indexName].SetActive(true);
+            MoveCharacterTo(CharacterPool[indexName], pos, transition);
         }
         private void MoveCharacterTo(GameObject obj, int targetIndex, TransistionType transition = TransistionType.Immediate)
         {
             targetIndex = Mathf.Clamp(targetIndex, 0, 4);
             RectTransform rect = obj.GetComponent<RectTransform>();
-            switch (transition)
-            {
-                case TransistionType.Immediate:
-                    {
-                        rect.anchoredPosition = new Vector2((targetIndex + 1) * SlotInterval, rect.anchoredPosition.y);
-                        break;
-                    }
-                case TransistionType.Fade:
-                    {
-                        obj.transform.DoMove_Anchored(new Vector2((targetIndex + 1) * SlotInterval, rect.anchoredPosition.y), base.StoryPlayer.Setting.TimeCharacterMove);
-                        break;
-                    }
-                default: break;
-            }
+            MoveCharacterTo(obj, new Vector2((targetIndex + 1) * SlotInterval, rect.anchoredPosition.y), transition);
         }
         private void MoveCharacterTo(GameObject obj, Vector2 pos, TransistionType transition = TransistionType.Immediate)
         {
@@ -331,8 +318,8 @@ namespace BAStoryPlayer
                 CreateCharacterObj(indexName);
             }
 
-            _characterPool[indexName].SetActive(true);
-            SetAction(_characterPool[indexName], action,arg);
+            CharacterPool[indexName].SetActive(true);
+            SetAction(CharacterPool[indexName], action,arg);
         }
         public void SetAction(GameObject obj,CharacterAction action,int arg = -1)
         {
