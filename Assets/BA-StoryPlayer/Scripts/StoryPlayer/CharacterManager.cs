@@ -9,6 +9,7 @@ using Random = UnityEngine.Random;
 using BAStoryPlayer.DoTweenS;
 using BAStoryPlayer.Event;
 using System.Collections.ObjectModel;
+using System.Reflection;
 
 namespace BAStoryPlayer
 {
@@ -42,12 +43,12 @@ namespace BAStoryPlayer
 
         private Color ColorUnhighlight { get { return new Color(0.6f, 0.6f, 0.6f);  } }
 
-        [SerializeField] private SkeletonGraphic[] _character = new SkeletonGraphic[CharacterSlotCount];
+        [SerializeField] private SkeletonGraphic[] _characters = new SkeletonGraphic[CharacterSlotCount];
         private readonly Dictionary<string, GameObject> _characterPool = new Dictionary<string, GameObject>();
         private readonly Dictionary<string, Coroutine> _winkAction = new Dictionary<string, Coroutine>();
         private EmotionFactory _emotionFactory;
 
-        public SkeletonGraphic[] Character => _character;
+        public SkeletonGraphic[] Characters => _characters;
         public Dictionary<string, GameObject> CharacterPool => _characterPool;
         public EmotionFactory EmotionFactory
         {
@@ -71,7 +72,7 @@ namespace BAStoryPlayer
             if (currentIndex == -1)
             {
                 GameObject obj = null;
-                _characterPool.TryGetValue(indexName,out obj);
+                CharacterPool.TryGetValue(indexName,out obj);
 
                 // 对象池中不存在则载入预制体并初始化相关数据
                 if(obj == null)
@@ -87,7 +88,7 @@ namespace BAStoryPlayer
 
                 // 对应槽位有其他角色则删除
                 DestroyCharacter(index);
-                _character[index] = obj.GetComponent<SkeletonGraphic>();
+                Characters[index] = obj.GetComponent<SkeletonGraphic>();
             }
             // 角色在场上
             else
@@ -97,8 +98,8 @@ namespace BAStoryPlayer
                 {
                     DestroyCharacter(index);
                     MoveCharacterTo(currentIndex, index);
-                    _character[index] = _character[currentIndex];
-                    _character[currentIndex] = null;
+                    Characters[index] = Characters[currentIndex];
+                    Characters[currentIndex] = null;
                 }
             }
 
@@ -114,6 +115,7 @@ namespace BAStoryPlayer
             StoryPlayer.UIModule.SetSpeaker(indexName);
             StoryPlayer.UIModule.PrintMainText(lines);
         }
+        [Obsolete]
         public void ActivateCharacter(string indexName)
         {
             if (!CheckIfCharacterInPool(indexName))
@@ -128,15 +130,15 @@ namespace BAStoryPlayer
         {
             for(int i = 0; i < CharacterSlotCount; i++)
             {
-                if (Character[i] == null)
+                if (Characters[i] == null)
                     continue;
-                if (Character[i].gameObject.name == indexName)
+                if (Characters[i].gameObject.name == indexName)
                     return i;
             }
 
             return -1;
         }
-        private bool CheckIfSlotEmpty(int index) => CheckIfIndexValid(index) ? Character[index] == null : false;
+        private bool CheckIfSlotEmpty(int index) => CheckIfIndexValid(index) ? Characters[index] == null : false;
         private bool CheckIfIndexValid(int index) => (index >= 0 && index < CharacterSlotCount);
 
         /// <summary>
@@ -149,9 +151,9 @@ namespace BAStoryPlayer
             if (CheckIfSlotEmpty(index))
                 return;
             // 先停掉角色的眨眼动画在变换位置
-            SetWinkAction(Character[index].name, false);
-            DestroyCharacter(Character[index].gameObject);
-            _character[index] = null;
+            SetWinkAction(Characters[index].name, false);
+            DestroyCharacter(Characters[index].gameObject);
+            _characters[index] = null;
         }
         private void DestroyCharacter(string indexName,bool destroyObject = false)
         {
@@ -174,7 +176,7 @@ namespace BAStoryPlayer
             SetWinkAction(obj.name, false);
             int slotIndex = CheckIfCharacterOnSlot(obj.name);
             if (slotIndex != -1)
-                _character[slotIndex] = null;
+                _characters[slotIndex] = null;
         }
 
         /// <summary>
@@ -250,13 +252,13 @@ namespace BAStoryPlayer
                 return;
             if (CheckIfSlotEmpty(currentIndex))
                 return;
-            MoveCharacterTo(Character[currentIndex].gameObject, targetIndex, transition);
+            MoveCharacterTo(Characters[currentIndex].gameObject, targetIndex, transition);
         }
         private void MoveCharacterTo(int currentIndex,Vector2 pos,TransistionType transition = TransistionType.Immediate)
         {
             if (CheckIfSlotEmpty(currentIndex))
                 return;
-            MoveCharacterTo(Character[currentIndex].gameObject, pos, transition);
+            MoveCharacterTo(Characters[currentIndex].gameObject, pos, transition);
         }
         public void MoveCharacterTo(string indexName, int targetIndex, TransistionType transition = TransistionType.Immediate)
         {
@@ -320,7 +322,7 @@ namespace BAStoryPlayer
         {
             if (CheckIfSlotEmpty(index))
                 return;
-            SetAction(Character[index].gameObject, action, arg);
+            SetAction(Characters[index].gameObject, action, arg);
         }
         public void SetAction(string indexName,CharacterAction action,int arg = -1)
         {
@@ -462,7 +464,7 @@ namespace BAStoryPlayer
         {
             if (CheckIfSlotEmpty(index))
                 return;
-            SetEmotion(Character[index].gameObject,emotion);
+            SetEmotion(Characters[index].gameObject,emotion);
         }
         public void SetEmotion(string indexName, CharacterEmotion emotion)
         {
@@ -485,7 +487,7 @@ namespace BAStoryPlayer
         {
             if (CheckIfSlotEmpty(index))
                 return;
-            Highlight(Character[index].gameObject, transition);
+            Highlight(Characters[index].gameObject, transition);
         }
         public void Highlight(string indexName, TransistionType transition = TransistionType.Immediate)
         {
@@ -563,12 +565,16 @@ namespace BAStoryPlayer
         /// 创建角色并初始化
         /// </summary>
         /// <param name="indexName">索引名</param>
-        /// <param name="index">角色下标</param>
+        /// <param name="pos">角色下标</param>
         /// <returns></returns>
-        private GameObject CreateCharacterObj(string indexName,int index = 2)
+        public GameObject CreateCharacterObj(string indexName,int pos = 2)
         {
             GameObject obj;
-            obj = LoadCharacterPrefab(indexName);
+            obj = LoadCharacterFromSkeletonData(indexName);
+            if(obj == null)
+            {
+                return null;
+            }
 
             obj.transform.SetParent(transform);
             obj.name = indexName;
@@ -577,64 +583,86 @@ namespace BAStoryPlayer
             rectTransform.anchorMax = Vector2.zero;
             rectTransform.rotation = Quaternion.Euler(0, 0, 0);
             rectTransform.pivot = new Vector2(0.5f, 0);
-            rectTransform.anchoredPosition = new Vector3((index + 1) * SlotInterval, 0, 0);
+            rectTransform.anchoredPosition = new Vector3((pos + 1) * SlotInterval, 0, 0);
             rectTransform.localScale = new Vector3(CharacterScale, CharacterScale, 1);
 
             obj.GetComponent<SkeletonGraphic>().MatchRectTransformWithBounds();
 
             SetAnimation(obj.GetComponent<SkeletonGraphic>(), "Idle_01", 1, true); // 呼吸轨道
 
-            _characterPool.Remove(indexName);
-            _characterPool.Add(indexName, obj);
+            CharacterPool.Remove(indexName);
+            CharacterPool.Add(indexName, obj);
 
             return obj;
         }
-
         /// <summary>
         /// 加载角色实体
         /// </summary>
         /// <param name="indexName"></param>
         /// <returns></returns>
-        public GameObject LoadCharacterPrefab(string indexName)
+        private GameObject LoadCharacterFromSkeletonData(string indexName)
         {
+            if (!StoryPlayer.CharacterDataTable.ContainsKey(indexName))
+            {
+                return null;
+            }
+
             GameObject prefab = null;
 
-            try
+            switch (base.StoryPlayer.CharacterDataTable[indexName].loadType)
             {
-                switch (base.StoryPlayer.CharacterDataTable[indexName].loadType)
-                {
-                    case LoadType.Prefab:
-                        {
-                            prefab = Instantiate(Resources.Load(base.StoryPlayer.Setting.PathCharacterSkeletonData + base.StoryPlayer.CharacterDataTable[indexName].skeletonDataUrl) as GameObject);
-                            break;
-                        }
-                    case LoadType.SkeletonData:
-                        {
-                            SkeletonDataAsset skelData =
-                                Resources.Load<SkeletonDataAsset>(base.StoryPlayer.Setting.PathCharacterSkeletonData
-                                    + base.StoryPlayer.CharacterDataTable[indexName].skeletonDataUrl);
+                case LoadType.Prefab:
+                    {
+                        prefab = Instantiate(Resources.Load(base.StoryPlayer.Setting.PathCharacterSkeletonData + base.StoryPlayer.CharacterDataTable[indexName].skeletonDataUrl) as GameObject);
+                        break;
+                    }
+                case LoadType.SkeletonData:
+                    {
+                        SkeletonDataAsset skelData =
+                            Resources.Load<SkeletonDataAsset>(base.StoryPlayer.Setting.PathCharacterSkeletonData
+                                + base.StoryPlayer.CharacterDataTable[indexName].skeletonDataUrl);
 
-                            Shader shader = Shader.Find("Spine/SkeletonGraphic");
-                            if (shader == null)
-                            {
-                                shader = Resources.Load<Shader>("Shader/Spine-SkeletonGraphic");
-                            }
-                            Material mat = new Material(shader);
-                            UnityEngine.Rendering.LocalKeyword keyword = new UnityEngine.Rendering.LocalKeyword(mat.shader, "_STRAIGHT_ALPHA_INPUT");
-                            mat.SetKeyword(keyword, true);
-                            prefab = SkeletonGraphic.NewSkeletonGraphicGameObject(skelData, transform, mat).gameObject;
-                            break;
+                        Shader shader = Shader.Find("Spine/SkeletonGraphic");
+                        if (shader == null)
+                        {
+                            shader = Resources.Load<Shader>("Shader/Spine-SkeletonGraphic");
                         }
-                }
-            }
-            catch (System.Exception e)
-            {
-                Debug.LogError(e.Message);
-                return null;
+                        Material mat = new Material(shader);
+                        UnityEngine.Rendering.LocalKeyword keyword = new UnityEngine.Rendering.LocalKeyword(mat.shader, "_STRAIGHT_ALPHA_INPUT");
+                        mat.SetKeyword(keyword, true);
+                        prefab = SkeletonGraphic.NewSkeletonGraphicGameObject(skelData, transform, mat).gameObject;
+                        break;
+                    }
             }
 
             prefab.name = indexName;
             return prefab;
+        }
+        public void AddPreloadedCharacter(GameObject obj,string indexName)
+        {
+            StoryPlayer.CharacterDataTable.AddRuntimeUnit(
+                    indexName,
+                    obj.GetComponent<SkeletonGraphic>()
+                );
+
+            obj.SetActive(false);
+
+            obj.transform.SetParent(transform);
+            obj.name = indexName;
+            var rectTransform = obj.GetComponent<RectTransform>();
+            rectTransform.anchorMin = Vector2.zero;
+            rectTransform.anchorMax = Vector2.zero;
+            rectTransform.rotation = Quaternion.Euler(0, 0, 0);
+            rectTransform.pivot = new Vector2(0.5f, 0);
+            rectTransform.anchoredPosition = new Vector3(3 * SlotInterval, 0, 0);
+            rectTransform.localScale = new Vector3(CharacterScale, CharacterScale, 1);
+
+            obj.GetComponent<SkeletonGraphic>().MatchRectTransformWithBounds();
+
+            SetAnimation(obj.GetComponent<SkeletonGraphic>(), "Idle_01", 1, true); // 呼吸轨道
+
+            CharacterPool.Remove(indexName);
+            CharacterPool.Add(indexName, obj);
         }
 
         /// <summary>
@@ -644,8 +672,8 @@ namespace BAStoryPlayer
         {
             if (CheckIfSlotEmpty(index))
                 return;
-            SetAnimation(Character[index], animationID, track, loop);
-            SetWinkAction(Character[index].name, animationID.Contains("01") ? true : false);
+            SetAnimation(Characters[index], animationID, track, loop);
+            SetWinkAction(Characters[index].name, animationID.Contains("01") ? true : false);
         }
         public void SetAnimation(string indexName,string animationID, int track = 0, bool loop = true)
         {
@@ -672,8 +700,8 @@ namespace BAStoryPlayer
             }
             _winkAction.Clear();
 
-            _characterPool.Clear();
-            _character = new SkeletonGraphic[CharacterSlotCount];
+            CharacterPool.Clear();
+            _characters = new SkeletonGraphic[CharacterSlotCount];
             transform.ClearAllChild();
         }
     }

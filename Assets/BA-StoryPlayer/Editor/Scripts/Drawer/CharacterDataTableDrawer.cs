@@ -27,7 +27,7 @@ namespace BAStoryPlayer.Editor
 
                 if (!string.IsNullOrEmpty(selectedFolderPath))
                 {
-                    tableInternal.Clear();
+                    tableInternal.ClearEditor();
 
                     string relativePath = "Assets" + selectedFolderPath.Substring(Application.dataPath.Length);
                     string[] guids = AssetDatabase.FindAssets("",new string[] { relativePath});
@@ -41,7 +41,7 @@ namespace BAStoryPlayer.Editor
 
                             if(obj != null)
                             {
-                                tableInternal.Add(new CharacterDataUnit()
+                                tableInternal.AddEditor(new CharacterDataUnit()
                                 {
                                     indexName = obj.name.Replace("_spr_SkeletonData", ""),
                                     skeletonDataUrl = obj.name
@@ -54,7 +54,7 @@ namespace BAStoryPlayer.Editor
 
                             if (obj != null)
                             {
-                                tableInternal.Add(new CharacterDataUnit()
+                                tableInternal.AddEditor(new CharacterDataUnit()
                                 {
                                     indexName = obj.name.Replace("_spr_SkeletonData", ""),
                                     skeletonDataUrl = obj.name,

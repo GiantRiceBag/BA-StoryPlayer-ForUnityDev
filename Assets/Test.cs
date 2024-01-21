@@ -20,6 +20,7 @@ using Unity.Mathematics;
 using UnityEngine.Networking;
 using static UnityEngine.UI.CanvasScaler;
 using UnityEditor;
+using UnityEngine.UIElements;
 
 [ExecuteAlways]
 public class Test : MonoBehaviour
@@ -31,7 +32,7 @@ public class Test : MonoBehaviour
     List<GameObject> ps = new List<GameObject>();
 
     public GameObject obj;
-    public string msg = string.Empty;
+    public List<string> msg = new();
     public GUISkin guiSkin;
     private bool isDrawingRemoteScript;
 
@@ -89,10 +90,11 @@ public class Test : MonoBehaviour
             }
 
             DrawCuttingLine();
+            PrintLog();
 
             if (GUILayout.Button("Test"))
             {
-
+                StartCoroutine(CrtLoadCharacterSpine("yuzu"));
             }
         }
     }
@@ -329,40 +331,7 @@ public class Test : MonoBehaviour
                 }
                 else
                 {
-                    string url = $"https://image.blue-archive.io/01_Background/{rawStoryUnit.backgroundImage}.jpg";
-
-                    using (UnityWebRequest request = UnityWebRequestTexture.GetTexture(url))
-                    {
-                        preloadingMsg.Add(new Msg()
-                        {
-                            text = $"正在载入背景 {rawStoryUnit.backgroundImage}.jpg",
-                            color = Color.white
-                        });
-                        yield return request.SendWebRequest();
-
-                        if (request.result == UnityWebRequest.Result.Success)
-                        {
-                            Texture2D texture = DownloadHandlerTexture.GetContent(request);
-                            storyPlayer.BackgroundModule.PreloadedImages.Add(
-                                    rawStoryUnit.backgroundImage,
-                                    Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero)
-                                );
-
-                            preloadingMsg.Add(new Msg()
-                            {
-                                text = $"载入背景 {rawStoryUnit.backgroundImage}.jpg 成功",
-                                color = Color.green
-                            });
-                        }
-                        else
-                        {
-                            preloadingMsg.Add(new Msg()
-                            {
-                                text = $"载入背景 {rawStoryUnit.backgroundImage}.jpg 失败",
-                                color = Color.red
-                            });
-                        }
-                    }
+                    yield return CrtLoadBackground(rawStoryUnit.backgroundImage);
                 }
             }
             if (!string.IsNullOrEmpty(rawStoryUnit.bgm))
@@ -379,39 +348,24 @@ public class Test : MonoBehaviour
                 }
                 else
                 {
-                    string url = $"https://bgm.blue-archive.io/{rawStoryUnit.bgm}.mp3";
+                    yield return CrtLoadBGM(rawStoryUnit.bgm);
+                }
+            }
+            foreach(var characterUnit in rawStoryUnit.characters)
+            {
+                if (string.IsNullOrEmpty(characterUnit.name) || storyPlayer.CharacterModule.CharacterPool.ContainsKey(characterUnit.name))
+                {
+                    continue;
+                }
 
-                    using (UnityWebRequest request = UnityWebRequestMultimedia.GetAudioClip(url, AudioType.MPEG))
-                    {
-                        preloadingMsg.Add(new Msg()
-                        {
-                            text = $"正在载入音乐 {rawStoryUnit.bgm}.mp3",
-                            color = Color.white
-                        });
-                        yield return request.SendWebRequest();
-
-                        if (request.result == UnityWebRequest.Result.Success)
-                        {
-                            clip = DownloadHandlerAudioClip.GetContent(request);
-                            storyPlayer.AudioModule.PreloadedMusicClips.Add(
-                                    rawStoryUnit.bgm,
-                                    clip
-                                );
-                            preloadingMsg.Add(new Msg()
-                            {
-                                text = $"载入音乐 {rawStoryUnit.bgm}.mp3 成功",
-                                color = Color.green
-                            });
-                        }
-                        else
-                        {
-                            preloadingMsg.Add(new Msg()
-                            {
-                                text = $"载入音乐 {rawStoryUnit.bgm}.mp3 失败",
-                                color = Color.red
-                            });
-                        }
-                    }     
+                GameObject obj = storyPlayer.CharacterModule.CreateCharacterObj(characterUnit.name);
+                if (obj == null)
+                {
+                    yield return CrtLoadCharacterSpine(characterUnit.name);
+                }
+                else
+                {
+                    obj.SetActive(false);
                 }
             }
 
@@ -435,39 +389,7 @@ public class Test : MonoBehaviour
                             }
                             else
                             {
-                                string url = $"https://image.blue-archive.io/01_Background/{unit.backgroundImage}.jpg";
-
-                                using (UnityWebRequest request = UnityWebRequestTexture.GetTexture(url))
-                                {
-                                    preloadingMsg.Add(new Msg()
-                                    {
-                                        text = $"正在载入背景 {unit.backgroundImage}.jpg",
-                                        color = Color.white
-                                    });
-                                    yield return request.SendWebRequest();
-
-                                    if (request.result == UnityWebRequest.Result.Success)
-                                    {
-                                        Texture2D texture = DownloadHandlerTexture.GetContent(request);
-                                        storyPlayer.BackgroundModule.PreloadedImages.Add(
-                                                unit.backgroundImage,
-                                                Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero)
-                                            );
-                                        preloadingMsg.Add(new Msg()
-                                        {
-                                            text = $"载入背景 {unit.backgroundImage}.jpg 成功",
-                                            color = Color.green
-                                        });
-                                    }
-                                    else
-                                    {
-                                        preloadingMsg.Add(new Msg()
-                                        {
-                                            text = $"载入背景 {unit.backgroundImage}.jpg 失败",
-                                            color = Color.red
-                                        });
-                                    }
-                                }
+                                yield return CrtLoadBackground(unit.backgroundImage);
                             }
                         }
                         if (!string.IsNullOrEmpty(unit.bgm))
@@ -484,39 +406,25 @@ public class Test : MonoBehaviour
                             }
                             else
                             {
-                                string url = $"https://bgm.blue-archive.io/{unit.bgm}.mp3";
+                                yield return CrtLoadBGM(unit.bgm);
+                            }
+                        }
 
-                                using (UnityWebRequest request = UnityWebRequestMultimedia.GetAudioClip(url, AudioType.MPEG))
-                                {
-                                    preloadingMsg.Add(new Msg()
-                                    {
-                                        text = $"正在载入音乐 {unit.bgm}.mp3",
-                                        color = Color.white
-                                    });
-                                    yield return request.SendWebRequest();
+                        foreach(var chrUnit in unit.characters)
+                        {
+                            if (string.IsNullOrEmpty(chrUnit.name) || storyPlayer.CharacterModule.CharacterPool.ContainsKey(chrUnit.name))
+                            {
+                                continue;
+                            }
 
-                                    if (request.result == UnityWebRequest.Result.Success)
-                                    {
-                                        AudioClip aclip = DownloadHandlerAudioClip.GetContent(request);
-                                        storyPlayer.AudioModule.PreloadedMusicClips.Add(
-                                                unit.bgm,
-                                                aclip
-                                            );
-                                        preloadingMsg.Add(new Msg()
-                                        {
-                                            text = $"载入音乐 {unit.bgm}.mp3 成功",
-                                            color = Color.green
-                                        });
-                                    }
-                                    else
-                                    {
-                                        preloadingMsg.Add(new Msg()
-                                        {
-                                            text = $"载入音乐 {unit.bgm}.mp3 失败",
-                                            color = Color.red
-                                        });
-                                    }
-                                }
+                            GameObject obj = storyPlayer.CharacterModule.CreateCharacterObj(chrUnit.name);
+                            if (obj == null)
+                            {
+                                yield return CrtLoadCharacterSpine(chrUnit.name);
+                            }
+                            else
+                            {
+                                obj.SetActive(false);
                             }
                         }
                     }
@@ -529,10 +437,237 @@ public class Test : MonoBehaviour
 
         storyPlayer.LoadStory(storyScript);
     }
+    private IEnumerator CrtLoadCharacterSpine(string chrName)
+    {
+        string chrNameWithSuffix = $"{chrName}_spr";
+        string url = $"https://yuuka.cdn.diyigemt.com/image/ba-all-data/spine/{chrNameWithSuffix}/{chrNameWithSuffix}";
+
+        TextAsset atlas = null;
+        using (UnityWebRequest atlasRequest = UnityWebRequest.Get($"{url}.atlas"))
+        {
+            Log($"正在下载 {chrNameWithSuffix}.atlas", Color.white);
+            yield return atlasRequest.SendWebRequest();
+            if (atlasRequest.result != UnityWebRequest.Result.Success)
+            {
+                Log($"下载 {chrNameWithSuffix}.atlas 失败", Color.red);
+                yield break;
+            }
+            else
+            {
+                atlas = new TextAsset(atlasRequest.downloadHandler.text);
+                atlas.name = $"{chrNameWithSuffix}";
+                Log($"下载 {chrNameWithSuffix}.atlas 成功", Color.green);
+            }
+        }
+
+        Texture2D texture = new Texture2D(1, 1);
+        using (UnityWebRequest pngRequest = UnityWebRequest.Get($"{url}.png"))
+        {
+            Log($"正在下载 {chrNameWithSuffix}.png", Color.white);
+            yield return pngRequest.SendWebRequest();
+
+            if (pngRequest.result != UnityWebRequest.Result.Success)
+            {
+                Log($"下载 {chrNameWithSuffix}.png 失败", Color.red);
+                yield break;
+            }
+            else
+            {
+                Log($"下载 {chrNameWithSuffix}.png 成功", Color.green);
+                byte[] imgBytes = pngRequest.downloadHandler.data;
+                texture.LoadImage(imgBytes);
+                texture.name = $"{chrNameWithSuffix}";
+            }
+        }
+
+        SpineAtlasAsset spineAtlasAsset =
+            SpineAtlasAsset.CreateRuntimeInstance(
+                atlas,
+                new[] { texture },
+                new Material(Resources.Load<Shader>("Shader/Spine-SkeletonGraphic")),
+                true
+            );
+
+        SkeletonDataAsset runtimeSkeletonDataAsset = null;
+        using (UnityWebRequest skelRequest = UnityWebRequest.Get($"{url}.skel"))
+        {
+            Log($"正在下载 {chrNameWithSuffix}.skel", Color.white);
+            yield return skelRequest.SendWebRequest();
+
+            if (skelRequest.result != UnityWebRequest.Result.Success)
+            {
+                Log($"下载 {chrNameWithSuffix}.skel 失败", Color.red);
+                yield break;
+            }
+            else
+            {
+                Log($"下载 {chrNameWithSuffix}.skel 成功", Color.green);
+                byte[] skelBytes = skelRequest.downloadHandler.data;
+
+                AtlasAttachmentLoader attachmentLoader = new AtlasAttachmentLoader(
+                    spineAtlasAsset.GetAtlas()
+                );
+                SkeletonBinary binary = new SkeletonBinary(attachmentLoader)
+                {
+                    Scale = 0.01f
+                };
+                MemoryStream skelStream = new MemoryStream(skelBytes);
+
+                SkeletonData skeletonData = binary.ReadSkeletonData(skelStream);
+                skeletonData.Name = $"{chrName}";
+                AnimationStateData stateData = new AnimationStateData(skeletonData);
+
+                runtimeSkeletonDataAsset = ScriptableObject.CreateInstance<SkeletonDataAsset>();
+
+                Type skeletonDataAssetType = runtimeSkeletonDataAsset.GetType();
+                FieldInfo skeletonDataField = skeletonDataAssetType.GetField("skeletonData", BindingFlags.NonPublic | BindingFlags.Instance);
+                FieldInfo stateDataField = skeletonDataAssetType.GetField("stateData", BindingFlags.NonPublic | BindingFlags.Instance);
+                skeletonDataField.SetValue(runtimeSkeletonDataAsset, skeletonData);
+                stateDataField.SetValue(runtimeSkeletonDataAsset, stateData);
+
+                runtimeSkeletonDataAsset.atlasAssets = new[] { spineAtlasAsset };
+
+                runtimeSkeletonDataAsset.skeletonJSON = new TextAsset("1") { name = $"{chrName}.skel" };
+            }
+        }
+
+        SkeletonGraphic instance = SkeletonGraphic.NewSkeletonGraphicGameObject(
+            runtimeSkeletonDataAsset, storyPlayer.transform.parent, new Material(Resources.Load<Shader>("Shader/Spine-SkeletonGraphic"))
+        );
+
+        instance.Initialize(false);
+        instance.Skeleton.SetSlotsToSetupPose();
+
+        storyPlayer.CharacterModule.AddPreloadedCharacter(instance.gameObject, chrName);
+    }
+    private IEnumerator CrtLoadBackground(string backgroundName)
+    {
+
+        Sprite sprite = Resources.Load<Sprite>(storyPlayer.Setting.PathBackground + backgroundName);
+        if (sprite != null)
+        {
+            storyPlayer.BackgroundModule.PreloadedImages.Add(backgroundName, sprite);
+        }
+        else
+        {
+            string url = $"https://image.blue-archive.io/01_Background/{backgroundName}.jpg";
+
+            using (UnityWebRequest request = UnityWebRequestTexture.GetTexture(url))
+            {
+                preloadingMsg.Add(new Msg()
+                {
+                    text = $"正在载入背景 {backgroundName}.jpg",
+                    color = Color.white
+                });
+                yield return request.SendWebRequest();
+
+                if (request.result == UnityWebRequest.Result.Success)
+                {
+                    Texture2D texture = DownloadHandlerTexture.GetContent(request);
+                    storyPlayer.BackgroundModule.PreloadedImages.Add(
+                            backgroundName,
+                            Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero)
+                        );
+
+                    preloadingMsg.Add(new Msg()
+                    {
+                        text = $"载入背景 {backgroundName}.jpg 成功",
+                        color = Color.green
+                    });
+                }
+                else
+                {
+                    preloadingMsg.Add(new Msg()
+                    {
+                        text = $"载入背景 {backgroundName}.jpg 失败",
+                        color = Color.red
+                    });
+                }
+            }
+        }
+    }
+    private IEnumerator CrtLoadBGM(string bgmName)
+    {
+
+        AudioClip clip = Resources.Load<AudioClip>(storyPlayer.Setting.PathMusic + bgmName);
+        if (clip != null)
+        {
+            storyPlayer.AudioModule.PreloadedMusicClips.Add(bgmName, clip);
+        }
+        else
+        {
+            string url = $"https://bgm.blue-archive.io/{bgmName}.mp3";
+
+            using (UnityWebRequest request = UnityWebRequestMultimedia.GetAudioClip(url, AudioType.MPEG))
+            {
+                preloadingMsg.Add(new Msg()
+                {
+                    text = $"正在载入音乐 {bgmName}.mp3",
+                    color = Color.white
+                });
+                yield return request.SendWebRequest();
+
+                if (request.result == UnityWebRequest.Result.Success)
+                {
+                    clip = DownloadHandlerAudioClip.GetContent(request);
+                    storyPlayer.AudioModule.PreloadedMusicClips.Add(
+                            bgmName,
+                            clip
+                        );
+                    preloadingMsg.Add(new Msg()
+                    {
+                        text = $"载入音乐 {bgmName}.mp3 成功",
+                        color = Color.green
+                    });
+                }
+                else
+                {
+                    preloadingMsg.Add(new Msg()
+                    {
+                        text = $"载入音乐 {bgmName}.mp3 失败",
+                        color = Color.red
+                    });
+                }
+            }
+        }
+    }
 
     private string GetTimestamp()
     {
         return ((long)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds).ToString();
+    }
+    private void Log(string msg,Color color)
+    {
+        preloadingMsg.Add(new Msg()
+        {
+            text = msg,
+            color = color
+        });
+    }
+    private void PrintLog()
+    {
+        if(preloadingMsg.Count <= 0)
+        {
+            return;
+        }
+        foreach(var i in preloadingMsg.Reverse<Msg>())
+        {
+            GUILabelWithColor(i.text,i.color);
+        }
+    }
+    private void GUILabelWithColor(string msg,Color color)
+    {
+        GUILayout.Label(new GUIContent()
+        {
+            text = msg
+        }, new GUIStyle()
+        {
+            font = guiSkin.font,
+            normal = new GUIStyleState()
+            {
+                textColor = color
+            }
+        });
     }
 
     public class ResponseData

@@ -259,6 +259,15 @@ namespace BAStoryPlayer
             FlagTable = new();
             ModifiedFlagTable = new();
             ScriptsToExecute = new();
+            
+            if(_playerSetting != null)
+            {
+                _playerSetting = ScriptableObject.Instantiate(_playerSetting);
+            }
+            if(_characterDataTable != null)
+            {
+                _characterDataTable = ScriptableObject.Instantiate(_characterDataTable);
+            }
         }
 
         private void OnEnable()
@@ -457,58 +466,42 @@ namespace BAStoryPlayer
                 // 执行某种快进处理或者弹窗提示
                 Debug.Log("存在分支及单元脚本，无法跳过。（非编辑器）");
 #if !UNITY_EDITOR
-                return;
+                // return;
 #endif
             }
 
             IsPlaying = false;
             AudioModule.PauseBGM();
-            ClearPreloadAsset();
+
+            Action DoClosePlayer = () =>
+            {
+                EventBus<OnClosedStoryPlayer>.Raise();
+                OnStoryPlayerClosed?.Invoke(ScriptsToExecute, ModifiedFlagTable);
+                OnStoryPlayerClosed = null;
+                if (!destoryObject)
+                {
+                    gameObject.SetActive(false);
+                    BackgroundModule.SetBackground();
+                    UIModule.HideAllUI();
+                    ClearPreloadAsset();
+                    DoTweenS.DoTweenS.KillAll();
+                    AudioModule.ClearAll();
+                }
+                else
+                {
+                    Destroy(gameObject);
+                }
+            };
 
             this.Delay(() =>
            {
                if (fadeOut)
                {
-                   RequireBackdrop(BackdropType.Out, 1, () =>
-                   {
-                       EventBus<OnClosedStoryPlayer>.Raise();
-                       OnStoryPlayerClosed?.Invoke(ScriptsToExecute, ModifiedFlagTable);
-                       OnStoryPlayerClosed = null;
-                       CharacterModule.EmotionFactory.ClearCache();
-                       if (!destoryObject)
-                       {
-                           gameObject.SetActive(false);
-                           BackgroundModule.SetBackground();
-                           UIModule.HideAllUI();
-                           CharacterModule.ClearAllObject();
-                           DoTweenS.DoTweenS.KillAll();
-                           AudioModule.ClearAll();
-                       }
-                       else
-                       {
-                           Destroy(gameObject);
-                       }
-                   });
+                   RequireBackdrop(BackdropType.Out, 1, DoClosePlayer);
                }
                else
                {
-                   EventBus<OnClosedStoryPlayer>.Raise();
-                   OnStoryPlayerClosed?.Invoke(ScriptsToExecute,ModifiedFlagTable);
-                   OnStoryPlayerClosed = null;
-                   CharacterModule.EmotionFactory.ClearCache();
-                   if (!destoryObject)
-                   {
-                       gameObject.SetActive(false);
-                       BackgroundModule.SetBackground();
-                       UIModule.HideAllUI();
-                       CharacterModule.ClearAllObject();
-                       DoTweenS.DoTweenS.KillAll();
-                       AudioModule.ClearAll();
-                   }
-                   else
-                   {
-                       Destroy(gameObject);
-                   }
+                   DoClosePlayer();
                }
            }, 2f);
         }
@@ -597,7 +590,7 @@ namespace BAStoryPlayer
 
         private CharacterDataTable TryGetCharactetDatable()
         {
-            return Resources.Load<CharacterDataTable>("CharacterDataTable");
+            return ScriptableObject.Instantiate(Resources.Load<CharacterDataTable>("CharacterDataTable"));
         }
         private PlayerSetting TryGetPlayerSetting()
         {
@@ -617,6 +610,9 @@ namespace BAStoryPlayer
         {
             BackgroundModule.ClearPreloadedImages();
             AudioModule.ClearPreloadedMusicClips();
+            CharacterModule.ClearAllObject();
+            CharacterModule.EmotionFactory.ClearCache();
+            CharacterDataTable.ClearRuntimeUnits();
         }
 
         private void OnSetCharacterActionEventHandler(OnSetCharacterAction data)
