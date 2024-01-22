@@ -500,7 +500,7 @@ public class Test : MonoBehaviour
                         continue;
                     }
 
-                    GameObject obj = testor.storyPlayer.CharacterModule.CreateCharacterObj(characterUnit.name);
+                    GameObject obj = testor.storyPlayer.CharacterModule.CreateCharacterObj(characterUnit.name,2,false);
                     if (obj == null)
                     {
                         yield return CrtLoadCharacterSpine(characterUnit.name);

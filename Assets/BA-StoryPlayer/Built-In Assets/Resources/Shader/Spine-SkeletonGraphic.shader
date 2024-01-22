@@ -62,7 +62,7 @@ Shader "Spine/SkeletonGraphic"
 			Name "Normal"
 
 		CGPROGRAM
-			#pragma shader_feature _ _STRAIGHT_ALPHA_INPUT
+			#pragma multi_compile _ _STRAIGHT_ALPHA_INPUT
 			#pragma shader_feature _ _CANVAS_GROUP_COMPATIBLE
 			#pragma vertex vert
 			#pragma fragment frag
@@ -116,10 +116,9 @@ Shader "Spine/SkeletonGraphic"
 			{
 				half4 texColor = tex2D(_MainTex, IN.texcoord);
 
-				// Ç¿¿ª
-				// #if defined(_STRAIGHT_ALPHA_INPUT)
+				 #ifdef _STRAIGHT_ALPHA_INPUT
 				texColor.rgb *= texColor.a;
-				// #endif
+				#endif
 
 				half4 color = (texColor + _TextureSampleAdd) * IN.color;
 				#ifdef _CANVAS_GROUP_COMPATIBLE

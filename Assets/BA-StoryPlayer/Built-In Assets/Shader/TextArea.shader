@@ -2,6 +2,7 @@ Shader "Unlit/TextArea"
 {
     Properties
     {
+       [HideInInspector]_MainTex("MainTex",2D) = "white"{}
        _Color("Color",COLOR) = (1,1,1,1)
        _Power("Power",Range(0,1)) = 0.879
        _FillAmount("Fill Amount",Range(0,2)) = 1.07

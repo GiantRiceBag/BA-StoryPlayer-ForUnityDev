@@ -10,6 +10,7 @@ using BAStoryPlayer.DoTweenS;
 using BAStoryPlayer.Event;
 using System.Collections.ObjectModel;
 using System.Reflection;
+using Unity.Mathematics;
 
 namespace BAStoryPlayer
 {
@@ -78,11 +79,6 @@ namespace BAStoryPlayer
                 if(obj == null)
                 {
                     obj = CreateCharacterObj(indexName, index);
-                    if(obj == null)
-                    {
-                        // Test Only
-                        obj = CreateErrorCharacter(indexName,index);
-                    }
                 }
                 else
                 {
@@ -515,13 +511,13 @@ namespace BAStoryPlayer
             }
         }
 
-        public GameObject CreateCharacterObj(string indexName,int index = 2)
+        public GameObject CreateCharacterObj(string indexName,int initialPosIndex = 2,bool createErrorChrIfNull = true)
         {
             GameObject obj;
             obj = LoadCharacterFromSkeletonData(indexName);
             if(obj == null)
             {
-                return null;
+                return createErrorChrIfNull ? CreateErrorCharacter(indexName, initialPosIndex) : null;
             }
 
             obj.transform.SetParent(transform);
@@ -531,7 +527,7 @@ namespace BAStoryPlayer
             rectTransform.anchorMax = Vector2.zero;
             rectTransform.rotation = Quaternion.Euler(0, 0, 0);
             rectTransform.pivot = new Vector2(0.5f, 0);
-            rectTransform.anchoredPosition = new Vector3((index + 1) * SlotInterval, 0, 0);
+            rectTransform.anchoredPosition = new Vector3((initialPosIndex + 1) * SlotInterval, 0, 0);
             rectTransform.localScale = new Vector3(CharacterScale, CharacterScale, 1);
 
             obj.GetComponent<SkeletonGraphic>().MatchRectTransformWithBounds();
@@ -581,14 +577,14 @@ namespace BAStoryPlayer
             prefab.name = indexName;
             return prefab;
         }
-        private GameObject CreateErrorCharacter(string indexName,int index)
+        private GameObject CreateErrorCharacter(string indexName,int initialPosIndex)
         {
             GameObject obj = Instantiate(Resources.Load<GameObject>("ErrorCharacter/ErrorChr"));
-            AddPreloadedCharacter(obj, indexName,index);
+            AddPreloadedCharacter(obj, indexName,initialPosIndex);
             obj.SetActive(true);
             return obj;
         }
-        public void AddPreloadedCharacter(GameObject obj,string indexName,int index = 2)
+        public void AddPreloadedCharacter(GameObject obj,string indexName,int initialPosIndex = 2)
         {
             if (!StoryPlayer.CharacterDataTable.ContainsKey(indexName))
             {
@@ -607,11 +603,14 @@ namespace BAStoryPlayer
             rectTransform.anchorMax = Vector2.zero;
             rectTransform.rotation = Quaternion.Euler(0, 0, 0);
             rectTransform.pivot = new Vector2(0.5f, 0);
-            rectTransform.anchoredPosition = new Vector3((index + 1) * SlotInterval, 0, 0);
+            rectTransform.anchoredPosition = new Vector3((initialPosIndex + 1) * SlotInterval, 0, 0);
             rectTransform.localScale = new Vector3(CharacterScale, CharacterScale, 1);
-            Debug.Log(obj.GetComponent<SkeletonGraphic>()==null);
-            obj.GetComponent<SkeletonGraphic>().MatchRectTransformWithBounds();
-            
+
+            SkeletonGraphic skeletonGraphic = obj.GetComponent<SkeletonGraphic>();
+            skeletonGraphic.MatchRectTransformWithBounds();
+
+            UnityEngine.Rendering.LocalKeyword keyword = new UnityEngine.Rendering.LocalKeyword(skeletonGraphic.material.shader, "_STRAIGHT_ALPHA_INPUT");
+            skeletonGraphic.material.SetKeyword(keyword, true);
             SetAnimation(obj.GetComponent<SkeletonGraphic>(), "Idle_01", 1, true); // ºôÎü¹ìµÀ
 
             CharacterPool.Remove(indexName);

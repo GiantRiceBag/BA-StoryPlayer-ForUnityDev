@@ -81,7 +81,10 @@ namespace BAStoryPlayer.DoTweenS
         void Next()
         {
             if (_tweenQueue.Count.Equals(0))
+            {
+                _isPlaying = false;
                 return;
+            }
 
             switch (_tweenQueue.Peek().UnitType)
             {
