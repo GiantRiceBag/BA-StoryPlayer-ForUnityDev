@@ -363,6 +363,12 @@ namespace BAStoryPlayer.Parser.UniversaScriptParser
         private StoryUnit HandleTextUnit(RawStoryUnit rawStoryUnit)
         {
             StoryUnit storyUnit = new StoryUnit();
+
+            if (string.IsNullOrEmpty(rawStoryUnit.text))
+            {
+                return storyUnit;
+            }
+
             storyUnit.UpdateType(UnitType.Text);
 
             storyUnit.actions += () => StoryPlayer.UIModule.SetSpeaker(rawStoryUnit.speaker, rawStoryUnit.affiliation);

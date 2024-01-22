@@ -9,28 +9,6 @@
   ],
   "content": [
     {
-      "id": 1705242549730,
-      "type": "title",
-      "backgroundImage": "BG_CityTown",
-      "selectionGroups": [
-        {
-          "id": 1705242549730,
-          "type": "option",
-          "text": "",
-          "isConditional": false,
-          "condition": [],
-          "content": [],
-          "script": ""
-        }
-      ],
-      "bgm": "Theme_01",
-      "speaker": "",
-      "affiliation": "",
-      "text": "小标题;大标题",
-      "characters": [],
-      "script": "单元1"
-    },
-    {
       "id": 1705242632272,
       "type": "place",
       "backgroundImage": "",
@@ -74,7 +52,7 @@
       "characters": [
         {
           "uuid": "92ccc146-29aa-42bb-8138-023804860272",
-          "name": "hoshino",
+          "name": "hoshino123",
           "position": 3,
           "face": "00",
           "emotion": "",

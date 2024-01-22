@@ -78,6 +78,11 @@ namespace BAStoryPlayer
                 if(obj == null)
                 {
                     obj = CreateCharacterObj(indexName, index);
+                    if(obj == null)
+                    {
+                        // Test Only
+                        obj = CreateErrorCharacter(indexName,index);
+                    }
                 }
                 else
                 {
@@ -141,11 +146,6 @@ namespace BAStoryPlayer
         private bool CheckIfSlotEmpty(int index) => CheckIfIndexValid(index) ? Characters[index] == null : false;
         private bool CheckIfIndexValid(int index) => (index >= 0 && index < CharacterSlotCount);
 
-        /// <summary>
-        /// 尝试删除在场上的角色(不删除对象仅取消编号)
-        /// </summary>
-        /// <param name="index">下标</param>
-        /// <param name="destroyObject">完全删除角色</param>
         private void DestroyCharacter(int index,bool destroyObject = false)
         {
             if (CheckIfSlotEmpty(index))
@@ -179,11 +179,6 @@ namespace BAStoryPlayer
                 _characters[slotIndex] = null;
         }
 
-        /// <summary>
-        /// 设置开启角色眨眼动画
-        /// </summary>
-        /// <param name="indexName">角色名</param>
-        /// <param name="enable">开启眨眼</param>
         private void SetWinkAction(string indexName,bool enable)
         {
             Coroutine coroutine = null;
@@ -240,12 +235,6 @@ namespace BAStoryPlayer
             }
         }
 
-        /// <summary>
-        /// 变更角色位置但不改变其编号
-        /// </summary>
-        /// <param name="currentIndex">角色编号</param>
-        /// <param name="targetIndex">目标位置编号</param>
-        /// <param name="transition">过渡方式</param>
         private void MoveCharacterTo(int currentIndex,int targetIndex,TransistionType transition = TransistionType.Immediate)
         {
             if (!CheckIfIndexValid(currentIndex) || !CheckIfIndexValid(targetIndex))
@@ -299,12 +288,6 @@ namespace BAStoryPlayer
             }
         }
 
-        /// <summary>
-        /// 使角色执行某种动作
-        /// </summary>
-        /// <param name="index">编号</param>
-        /// <param name="action">动作</param>
-        /// <param name="arg">参数(可选)</param>
         public void SetAction(int index,CharacterAction action,int arg = -1)
         {
             if (CheckIfSlotEmpty(index))
@@ -338,11 +321,11 @@ namespace BAStoryPlayer
                     EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = base.StoryPlayer.Setting.TimeCharacterFade });
                     break;
                 case CharacterAction.Disapper2Left:
-                    MoveCharacterTo(obj, new Vector2(-500, 0), TransistionType.Fade);
+                    MoveCharacterTo(obj, new Vector2(-SlotInterval * 2, 0), TransistionType.Fade);
                     EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = base.StoryPlayer.Setting.TimeCharacterMove });
                     break;
                 case CharacterAction.Disapper2Right:
-                    MoveCharacterTo(obj, new Vector2(2420, 0), TransistionType.Fade);
+                    MoveCharacterTo(obj, new Vector2(StoryPlayer.CanvasRect.sizeDelta.x + SlotInterval * 2, 0), TransistionType.Fade);
                     EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = base.StoryPlayer.Setting.TimeCharacterMove });
                     break;
                 case CharacterAction.AppearL2R:
@@ -431,9 +414,6 @@ namespace BAStoryPlayer
             }
         }
 
-        /// <summary>
-        /// 立即隐藏场上角色
-        /// </summary>
         public void HideAll()
         {
             for(int i = 0; i < CharacterSlotCount; i++)
@@ -442,11 +422,6 @@ namespace BAStoryPlayer
             }
         }
 
-        /// <summary>
-        /// 设置角色情绪emoji
-        /// </summary>
-        /// <param name="index">下标</param>
-        /// <param name="emotion">表情</param>
         public void SetEmotion(int index,CharacterEmotion emotion)
         {
             if (CheckIfSlotEmpty(index))
@@ -467,9 +442,6 @@ namespace BAStoryPlayer
             EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = time });
         }
 
-        /// <summary>
-        /// 高亮并置顶某个角色
-        /// </summary>
         public void Highlight(int index,TransistionType transition = TransistionType.Immediate)
         {
             if (CheckIfSlotEmpty(index))
@@ -518,11 +490,6 @@ namespace BAStoryPlayer
             }
         }
 
-        /// <summary>
-        /// 高亮所有角色
-        /// </summary>
-        /// <param name="enable"></param>
-        /// <param name="transition"></param>
         public void HighlightAll(TransistionType transition = TransistionType.Immediate)
         {
             foreach (var chr in _characterPool.Values)
@@ -548,13 +515,7 @@ namespace BAStoryPlayer
             }
         }
 
-        /// <summary>
-        /// 创建角色并初始化
-        /// </summary>
-        /// <param name="indexName">索引名</param>
-        /// <param name="pos">角色下标</param>
-        /// <returns></returns>
-        public GameObject CreateCharacterObj(string indexName,int pos = 2)
+        public GameObject CreateCharacterObj(string indexName,int index = 2)
         {
             GameObject obj;
             obj = LoadCharacterFromSkeletonData(indexName);
@@ -570,7 +531,7 @@ namespace BAStoryPlayer
             rectTransform.anchorMax = Vector2.zero;
             rectTransform.rotation = Quaternion.Euler(0, 0, 0);
             rectTransform.pivot = new Vector2(0.5f, 0);
-            rectTransform.anchoredPosition = new Vector3((pos + 1) * SlotInterval, 0, 0);
+            rectTransform.anchoredPosition = new Vector3((index + 1) * SlotInterval, 0, 0);
             rectTransform.localScale = new Vector3(CharacterScale, CharacterScale, 1);
 
             obj.GetComponent<SkeletonGraphic>().MatchRectTransformWithBounds();
@@ -582,11 +543,6 @@ namespace BAStoryPlayer
 
             return obj;
         }
-        /// <summary>
-        /// 加载角色实体
-        /// </summary>
-        /// <param name="indexName"></param>
-        /// <returns></returns>
         private GameObject LoadCharacterFromSkeletonData(string indexName)
         {
             if (!StoryPlayer.CharacterDataTable.ContainsKey(indexName))
@@ -625,12 +581,22 @@ namespace BAStoryPlayer
             prefab.name = indexName;
             return prefab;
         }
-        public void AddPreloadedCharacter(GameObject obj,string indexName)
+        private GameObject CreateErrorCharacter(string indexName,int index)
         {
-            StoryPlayer.CharacterDataTable.AddRuntimeUnit(
+            GameObject obj = Instantiate(Resources.Load<GameObject>("ErrorCharacter/ErrorChr"));
+            AddPreloadedCharacter(obj, indexName,index);
+            obj.SetActive(true);
+            return obj;
+        }
+        public void AddPreloadedCharacter(GameObject obj,string indexName,int index = 2)
+        {
+            if (!StoryPlayer.CharacterDataTable.ContainsKey(indexName))
+            {
+                StoryPlayer.CharacterDataTable.AddRuntimeUnit(
                     indexName,
                     obj.GetComponent<SkeletonGraphic>()
                 );
+            }
 
             obj.SetActive(false);
 
@@ -641,20 +607,17 @@ namespace BAStoryPlayer
             rectTransform.anchorMax = Vector2.zero;
             rectTransform.rotation = Quaternion.Euler(0, 0, 0);
             rectTransform.pivot = new Vector2(0.5f, 0);
-            rectTransform.anchoredPosition = new Vector3(3 * SlotInterval, 0, 0);
+            rectTransform.anchoredPosition = new Vector3((index + 1) * SlotInterval, 0, 0);
             rectTransform.localScale = new Vector3(CharacterScale, CharacterScale, 1);
-
+            Debug.Log(obj.GetComponent<SkeletonGraphic>()==null);
             obj.GetComponent<SkeletonGraphic>().MatchRectTransformWithBounds();
-
+            
             SetAnimation(obj.GetComponent<SkeletonGraphic>(), "Idle_01", 1, true); // 呼吸轨道
 
             CharacterPool.Remove(indexName);
             CharacterPool.Add(indexName, obj);
         }
 
-        /// <summary>
-        /// 设置Spine动画
-        /// </summary>
         public void SetAnimation(int index, string animationID, int track = 0, bool loop = true)
         {
             if (CheckIfSlotEmpty(index))

@@ -159,6 +159,25 @@ public class Test : MonoBehaviour
         }
         public abstract void OnGUI();
         public virtual void OnStart() { }
+
+        protected void DrawPlayerDetailsWhilePlaying()
+        {
+            GUILayout.BeginVertical(guiSkin.box);
+            GUIStyle style = new GUIStyle()
+            {
+                alignment = TextAnchor.MiddleLeft,
+                normal = new GUIStyleState()
+                {
+                    textColor = Color.white,
+                    background = guiSkin.box.normal.background
+                }
+            };
+
+            GUILayout.Label("*剧情播放中*", style);
+            GUILayout.Label($"进度：{testor.storyPlayer.CurrentUnitIndex}/{testor.storyPlayer.UnitCount}", style);
+            GUILayout.Label($"分支单元：{testor.storyPlayer.IsBranchUnit}", style);
+            GUILayout.EndVertical();
+        }
     }
     protected class GUIHomePage : CustomGUI
     {
@@ -196,10 +215,15 @@ public class Test : MonoBehaviour
             }
 
             DrawCuttingLine();
+            if (testor.storyPlayer.IsPlaying)
+            {
+                DrawPlayerDetailsWhilePlaying();
+                return;
+            }
 
             if (GUILayout.Button("Test"))
             {
-               
+                
             }
         }
     }
@@ -210,6 +234,10 @@ public class Test : MonoBehaviour
         private bool isReflashing = false;
         private Vector2 scriptsScrollPos = new Vector2(10, 30);
         private bool isPreloadingAsset;
+
+        private Dictionary<string, Sprite> backgroundCache = new();
+        private Dictionary<string, AudioClip> bgmCache = new();
+        private Dictionary<string, SkeletonDataAsset> sprCache = new();
 
         public GUIRemoteScriptsPage(Test testor) : base(testor) { }
 
@@ -234,20 +262,36 @@ public class Test : MonoBehaviour
                 }
                 testor.StartCoroutine(CrtReflashScripts());
             }
+            GUILayout.FlexibleSpace();
+            if (GUILayout.Button("清除缓存"))
+            {
+                if(isPreloadingAsset || testor.storyPlayer.IsPlaying)
+                {
+                    return;
+                }
+
+                foreach(var texKV in backgroundCache)
+                {
+                    DestroyImmediate(texKV.Value);
+                }
+                backgroundCache.Clear();
+
+                foreach(var bgmKV in bgmCache)
+                {
+                    DestroyImmediate(bgmKV.Value);
+                }
+                bgmCache.Clear();
+
+                foreach(var sprKV in sprCache)
+                {
+                    DestroyImmediate(sprKV.Value);
+                }
+                sprCache.Clear();
+            }
 
             if (testor.storyPlayer.IsPlaying)
             {
-                GUILayout.BeginVertical(guiSkin.box);
-                GUILayout.Label("*剧情播放中*", new GUIStyle()
-                {
-                    alignment = TextAnchor.MiddleCenter,
-                    normal = new GUIStyleState()
-                    {
-                        textColor = Color.white,
-                        background = guiSkin.box.normal.background
-                    }
-                });
-                GUILayout.EndVertical();
+                DrawPlayerDetailsWhilePlaying();
                 return;
             }
             GUILayout.FlexibleSpace();
@@ -537,6 +581,21 @@ public class Test : MonoBehaviour
         }
         private IEnumerator CrtLoadCharacterSpine(string chrName)
         {
+            if(sprCache.ContainsKey(chrName))
+            {
+                SkeletonDataAsset skelAsset = sprCache[chrName];
+
+                SkeletonGraphic skelGraphic = SkeletonGraphic.NewSkeletonGraphicGameObject(
+                    skelAsset, testor.storyPlayer.transform.parent, new Material(Resources.Load<Shader>("Shader/Spine-SkeletonGraphic"))
+                );
+
+                skelGraphic.Initialize(false);
+                skelGraphic.Skeleton.SetSlotsToSetupPose();
+
+                testor.storyPlayer.CharacterModule.AddPreloadedCharacter(skelGraphic.gameObject, chrName);
+                yield break;
+            }
+
             string chrNameWithSuffix = $"{chrName}_spr";
             string url = $"https://yuuka.cdn.diyigemt.com/image/ba-all-data/spine/{chrNameWithSuffix}/{chrNameWithSuffix}";
 
@@ -632,7 +691,7 @@ public class Test : MonoBehaviour
             SkeletonGraphic instance = SkeletonGraphic.NewSkeletonGraphicGameObject(
                 runtimeSkeletonDataAsset, testor.storyPlayer.transform.parent, new Material(Resources.Load<Shader>("Shader/Spine-SkeletonGraphic"))
             );
-
+            sprCache.Add(chrName, runtimeSkeletonDataAsset);
             instance.Initialize(false);
             instance.Skeleton.SetSlotsToSetupPose();
 
@@ -640,6 +699,14 @@ public class Test : MonoBehaviour
         }
         private IEnumerator CrtLoadBackground(string backgroundName)
         {
+            if (backgroundCache.ContainsKey(backgroundName))
+            {
+                testor.storyPlayer.BackgroundModule.PreloadedImages.Add(
+                        backgroundName,
+                        backgroundCache[backgroundName]
+                    );
+                yield break;
+            }
 
             Sprite sprite = Resources.Load<Sprite>(testor.storyPlayer.Setting.PathBackground + backgroundName);
             if (sprite != null)
@@ -662,10 +729,12 @@ public class Test : MonoBehaviour
                     if (request.result == UnityWebRequest.Result.Success)
                     {
                         Texture2D texture = DownloadHandlerTexture.GetContent(request);
+                        sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
                         testor.storyPlayer.BackgroundModule.PreloadedImages.Add(
                                 backgroundName,
-                                Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero)
+                                sprite
                             );
+                        backgroundCache.Add(backgroundName, sprite);
 
                         messages.Add(new GUIMessage()
                         {
@@ -686,6 +755,11 @@ public class Test : MonoBehaviour
         }
         private IEnumerator CrtLoadBGM(string bgmName)
         {
+            if (bgmCache.ContainsKey(bgmName))
+            {
+                testor.storyPlayer.AudioModule.PreloadedMusicClips.Add(bgmName, bgmCache[bgmName]);
+                yield break;
+            }
 
             AudioClip clip = Resources.Load<AudioClip>(testor.storyPlayer.Setting.PathMusic + bgmName);
             if (clip != null)
@@ -712,6 +786,7 @@ public class Test : MonoBehaviour
                                 bgmName,
                                 clip
                             );
+                        bgmCache.Add(bgmName,clip);
                         messages.Add(new GUIMessage()
                         {
                             text = $"载入音乐 {bgmName}.mp3 成功",

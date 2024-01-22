@@ -2810,7 +2810,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 3be47ad7e8cea5a41bd600a98cf762bc, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -2887,7 +2887,7 @@ MonoBehaviour:
   storyPlayer: {fileID: 7609363249095605644}
   _colorSelectedBackground: {r: 0.2, g: 0.2, b: 0.2, a: 1}
   _colorSelectedText: {r: 1, g: 1, b: 1, a: 1}
-  _tmp: {fileID: 5703000470235610524}
+  _textMesh: {fileID: 5703000470235610524}
   _subpanel: {fileID: 5703000471001061370}
   _isSelected: 0
 --- !u!1 &5703000470486286572

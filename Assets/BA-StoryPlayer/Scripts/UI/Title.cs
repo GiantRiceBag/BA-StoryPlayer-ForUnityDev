@@ -81,8 +81,7 @@ namespace BAStoryPlayer.UI
             _txtTitle.color = new Color(_txtTitle.color.r, _txtTitle.color.g, _txtTitle.color.b, 0);
 
             sequence.Append(_imgBannerline.DoAlpha(1, 0.33333f));
-            sequence.Wait(0.3333f);
-            sequence.Append(_imgBaner.DoAlpha(1, 0.68333f));
+            sequence.Append(_imgBaner.DoAlpha(1, 0.3333f));
             sequence.Wait(0.05f);
             if (!string.IsNullOrEmpty(_txtSubtitle.text))
             {

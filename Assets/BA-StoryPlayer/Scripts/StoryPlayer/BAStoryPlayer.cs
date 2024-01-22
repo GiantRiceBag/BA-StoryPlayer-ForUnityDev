@@ -43,6 +43,11 @@ namespace BAStoryPlayer
 
         private Coroutine _crtLock;
 
+        public StoryUnit CurrentStoryUnit => _currentStoryUnit;
+        public int CurrentUnitIndex => _currentUnitIndex;
+        public int UnitCount => _storyUnits.Count;
+        public bool IsBranchUnit =>CurrentStoryUnit != null && !_storyUnits.Contains(CurrentStoryUnit);
+
         public bool IsPlaying
         {
             get => _isPlaying; 
@@ -303,14 +308,6 @@ namespace BAStoryPlayer
                 return false;
             }
 
-            FlagTable = flagTable;
-            ModifiedFlagTable?.Clear();
-            ScriptsToExecute?.Clear();
-
-            IsSkippable = true;
-            IsPlaying = true;
-            gameObject.SetActive(true);
-
             UniversalCommandParser parser = new UniversalCommandParser(this);
             List<StoryUnit> units = parser.Parse(storyScript);
 
@@ -319,6 +316,14 @@ namespace BAStoryPlayer
                 Debug.Log("无可执行单元");
                 return false;
             }
+
+            FlagTable = flagTable;
+            ModifiedFlagTable?.Clear();
+            ScriptsToExecute?.Clear();
+
+            IsSkippable = true;
+            IsPlaying = true;
+            gameObject.SetActive(true);
 
             LoadUnits(0, units);
             ReadyToExecute();

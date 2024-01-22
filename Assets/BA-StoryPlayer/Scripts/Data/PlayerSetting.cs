@@ -1,3 +1,4 @@
+using System.IO;
 using UnityEngine;
 namespace BAStoryPlayer
 {
@@ -45,15 +46,15 @@ namespace BAStoryPlayer
         [SerializeField] private float _timeBgmFade = 0.5f;
         [Space]
         [Header("资源路径设置")]
-        [Tooltip("音乐资源路径")]
+        [Tooltip("音乐资源路径"), HideInInspector]
         [SerializeField] private string _pathMusic = "Music/";
-        [Tooltip("音效资源路径")]
+        [Tooltip("音效资源路径"), HideInInspector]
         [SerializeField] private string _pathSound = "Sound/";
-        [Tooltip("背景图片路径")]
+        [Tooltip("背景图片路径"), HideInInspector]
         [SerializeField] private string _pathBackground = "Background/";
-        [Tooltip("角色Skel以及Prefab路径")]
+        [Tooltip("角色Skel以及Prefab路径"), HideInInspector]
         [SerializeField] private string _pathCharacterSkeletonData = "CharacterSkeletonData/";
-        [Tooltip("剧情脚本路径")]
+        [Tooltip("剧情脚本路径"), HideInInspector]
         [SerializeField] private string _pathStoryScript = "StoryScript/";
 
         public int NumCharPerSecond => _numCharPerSecond;
