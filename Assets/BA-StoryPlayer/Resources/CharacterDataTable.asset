@@ -28,7 +28,7 @@ MonoBehaviour:
     collage: 
     affiliation: 
     loadType: 0
-    skeletonDataUrl: hoshino
+    skeletonDataUrl: hoshino_spr_SkeletonData
     portraitUrl: 
     facePosition: {x: 17.975986, y: 924.4399}
   - indexName: midori

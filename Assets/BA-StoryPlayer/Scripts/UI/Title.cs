@@ -9,12 +9,26 @@ namespace BAStoryPlayer.UI
     public class Title : MonoBehaviour
     {
         [Header("References")]
+#if UNITY_EDITOR
+        [SerializeField] public bool testMode = false;
+        [Space]
+#endif
         [SerializeField] private Image _imgBannerline;
         [SerializeField] private Image _imgBaner;
         [SerializeField] private TextMeshProUGUI _txtTitle;
         [SerializeField] private TextMeshProUGUI _txtSubtitle;
 
         public BAStoryPlayer StoryPlayer { get; private set; }
+
+        private void Start()
+        {
+#if UNITY_EDITOR
+            if (testMode)
+            {
+                PlayAnimation();
+            }
+#endif
+        }
 
         public void InitializeAndPlay(BAStoryPlayer player,string title ,string subtitle = "")
         {
@@ -60,11 +74,24 @@ namespace BAStoryPlayer.UI
 
         public void RemoveBlurEffect()
         {
+#if UNITY_EDITOR
+            if (testMode)
+            {
+                return;
+            }
+#endif
             StoryPlayer.BackgroundModule.SetBlurBackground(false);
         }
 
         public void RunOnComplete()
         {
+#if UNITY_EDITOR
+            if (testMode)
+            {
+                PlayAnimation();
+                return;
+            }
+#endif
             //  一般播放完标题就开始执行下一个单元
             StoryPlayer.ReadyToExecute(true);
             Destroy(gameObject);
@@ -75,12 +102,17 @@ namespace BAStoryPlayer.UI
             TweenSequence sequence = new();
 
             _txtTitle.rectTransform.localScale = Vector3.one;
+            _imgBaner.transform.localScale = new Vector2(1, 0.8f);
             _imgBannerline.color = new Color(_imgBannerline.color.r, _imgBannerline.color.g, _imgBannerline.color.b, 0.5f);
             _imgBaner.color = new Color(_imgBaner.color.r, _imgBaner.color.g, _imgBaner.color.b, 0);
             _txtSubtitle.color = new Color(_txtSubtitle.color.r, _txtSubtitle.color.g, _txtSubtitle.color.b,0);
             _txtTitle.color = new Color(_txtTitle.color.r, _txtTitle.color.g, _txtTitle.color.b, 0);
 
             sequence.Append(_imgBannerline.DoAlpha(1, 0.33333f));
+            sequence.Append(() =>
+            {
+                _imgBaner.transform.DoLocalScale(Vector2.one, 0.3333f);
+            });
             sequence.Append(_imgBaner.DoAlpha(1, 0.3333f));
             sequence.Wait(0.05f);
             if (!string.IsNullOrEmpty(_txtSubtitle.text))

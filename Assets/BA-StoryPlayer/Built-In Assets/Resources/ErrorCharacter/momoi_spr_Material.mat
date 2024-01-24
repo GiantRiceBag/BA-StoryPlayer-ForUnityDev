@@ -31,6 +31,10 @@ Material:
     - _CanvasGroupCompatible: 0
     - _ColorMask: 15
     - _Cutoff: 0.1
+    - _HologramSFX: 0
+    - _HologramSFXBrightness: 0.8
+    - _HologramSFXDensity: 0.1151
+    - _HologramSFXSpeed: 8.62
     - _OutlineMipLevel: 0
     - _OutlineReferenceTexWidth: 1024
     - _OutlineSmoothness: 1
@@ -47,5 +51,10 @@ Material:
     - _UseUIAlphaClip: 0
     m_Colors:
     - _Color: {r: 1, g: 0, b: 0, a: 1}
+    - _HologramJitterOffset: {r: 2, g: 1, b: 0, a: 0}
+    - _HologramJitterRangeVertex: {r: 20, g: 1500, b: 0, a: 1}
+    - _HologramJitterSpeedRadio: {r: 70, g: 70, b: 0, a: 0}
+    - _HologramJitterThreshold: {r: 0.99, g: 0.99, b: 0, a: 0}
+    - _HologramSFXColor: {r: 0.5896226, g: 8559483, b: 1, a: 1}
     - _OutlineColor: {r: 1, g: 1, b: 0, a: 1}
   m_BuildTextureStacks: []

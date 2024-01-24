@@ -341,6 +341,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bada98a6d2f4a042a179a510e3da893, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  testMode: 0
   _imgBannerline: {fileID: 818927088371723408}
   _imgBaner: {fileID: 818927088789685294}
   _txtTitle: {fileID: 818927088991763033}

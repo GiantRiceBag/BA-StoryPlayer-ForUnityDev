@@ -5,7 +5,6 @@ Shader "Spine/SkeletonGraphic"
 	Properties
 	{
 		[PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
-		[Toggle(_STRAIGHT_ALPHA_INPUT)] _StraightAlphaInput("Straight Alpha Texture", Int) = 1
 		[Toggle(_CANVAS_GROUP_COMPATIBLE)] _CanvasGroupCompatible("CanvasGroup Compatible", Int) = 0
 		_Color ("Tint", Color) = (1,1,1,1)
 
@@ -62,7 +61,6 @@ Shader "Spine/SkeletonGraphic"
 			Name "Normal"
 
 		CGPROGRAM
-			#pragma multi_compile _ _STRAIGHT_ALPHA_INPUT
 			#pragma shader_feature _ _CANVAS_GROUP_COMPATIBLE
 			#pragma vertex vert
 			#pragma fragment frag
@@ -70,6 +68,7 @@ Shader "Spine/SkeletonGraphic"
 
 			#include "UnityCG.cginc"
 			#include "UnityUI.cginc"
+			#include "Assets/BA-StoryPlayer/Built-In Assets/Shader/Library/HologramSFX.cginc"
 
 			#pragma multi_compile __ UNITY_UI_ALPHACLIP
 
@@ -92,6 +91,9 @@ Shader "Spine/SkeletonGraphic"
 			fixed4 _TextureSampleAdd;
 			float4 _ClipRect;
 
+			sampler2D _MainTex;
+			float2 _MainTex_TexelSize;
+
 			VertexOutput vert (VertexInput IN) {
 				VertexOutput OUT;
 
@@ -110,15 +112,12 @@ Shader "Spine/SkeletonGraphic"
 				return OUT;
 			}
 
-			sampler2D _MainTex;
-
 			fixed4 frag (VertexOutput IN) : SV_Target
 			{
 				half4 texColor = tex2D(_MainTex, IN.texcoord);
 
-				 #ifdef _STRAIGHT_ALPHA_INPUT
+				// 不需要额外变体
 				texColor.rgb *= texColor.a;
-				#endif
 
 				half4 color = (texColor + _TextureSampleAdd) * IN.color;
 				#ifdef _CANVAS_GROUP_COMPATIBLE

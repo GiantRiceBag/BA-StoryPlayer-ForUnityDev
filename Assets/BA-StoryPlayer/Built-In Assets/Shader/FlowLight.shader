@@ -29,6 +29,8 @@ Shader "Hidden/FlowLight"
         }
         Pass // Normal Pass
         {
+            Name "Normal"
+
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
@@ -80,6 +82,8 @@ Shader "Hidden/FlowLight"
         }
         Pass // Outline Pass
         {
+            Name "Outline"
+
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag

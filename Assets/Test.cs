@@ -215,15 +215,25 @@ public class Test : MonoBehaviour
             }
 
             DrawCuttingLine();
+
+            if (GUILayout.Button("替换全息特效材质"))
+            {
+                foreach(var chr in testor.storyPlayer.CharacterModule.Characters)
+                {
+                    if (!chr)
+                        continue;
+                    if (!chr.CustomMaterialOverride.ContainsKey(chr.mainTexture))
+                    {
+                        Shader shader = Resources.Load<Shader>("Shader/HologramEffect");
+                        Material mt = new Material(shader);
+                        chr.material = mt;
+                    }
+                }
+            }
+
             if (testor.storyPlayer.IsPlaying)
             {
                 DrawPlayerDetailsWhilePlaying();
-                return;
-            }
-
-            if (GUILayout.Button("Test"))
-            {
-                
             }
         }
     }

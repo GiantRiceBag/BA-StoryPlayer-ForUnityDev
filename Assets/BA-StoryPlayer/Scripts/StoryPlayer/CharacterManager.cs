@@ -567,8 +567,8 @@ namespace BAStoryPlayer
                             shader = Resources.Load<Shader>("Shader/Spine-SkeletonGraphic");
                         }
                         Material mat = new Material(shader);
-                        UnityEngine.Rendering.LocalKeyword keyword = new UnityEngine.Rendering.LocalKeyword(mat.shader, "_STRAIGHT_ALPHA_INPUT");
-                        mat.SetKeyword(keyword, true);
+                        //UnityEngine.Rendering.LocalKeyword keyword = new UnityEngine.Rendering.LocalKeyword(mat.shader, "_STRAIGHT_ALPHA_INPUT");
+                        //mat.SetKeyword(keyword, true);
                         prefab = SkeletonGraphic.NewSkeletonGraphicGameObject(skelData, transform, mat).gameObject;
                         break;
                     }
@@ -609,8 +609,8 @@ namespace BAStoryPlayer
             SkeletonGraphic skeletonGraphic = obj.GetComponent<SkeletonGraphic>();
             skeletonGraphic.MatchRectTransformWithBounds();
 
-            UnityEngine.Rendering.LocalKeyword keyword = new UnityEngine.Rendering.LocalKeyword(skeletonGraphic.material.shader, "_STRAIGHT_ALPHA_INPUT");
-            skeletonGraphic.material.SetKeyword(keyword, true);
+            //UnityEngine.Rendering.LocalKeyword keyword = new UnityEngine.Rendering.LocalKeyword(skeletonGraphic.material.shader, "_STRAIGHT_ALPHA_INPUT");
+            //skeletonGraphic.material.SetKeyword(keyword, true);
             SetAnimation(obj.GetComponent<SkeletonGraphic>(), "Idle_01", 1, true); // ºôÎü¹ìµÀ
 
             CharacterPool.Remove(indexName);
