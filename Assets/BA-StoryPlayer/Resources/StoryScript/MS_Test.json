@@ -52,11 +52,20 @@
       "characters": [
         {
           "uuid": "92ccc146-29aa-42bb-8138-023804860272",
-          "name": "hoshino123",
+          "name": "hoshino",
           "position": 3,
           "face": "00",
           "emotion": "",
           "action": ""
+        },
+        {
+          "uuid": "92ccc146-29aa-42bb-8138-023804860272",
+          "name": "momoi",
+          "position": 1,
+          "face": "00",
+          "emotion": "",
+          "action": "",
+          "highlight":true
         }
       ],
       "script": "单元3"

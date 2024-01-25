@@ -89,6 +89,11 @@ namespace BAStoryPlayer.Parser.UniversaScriptParser
 
                 storyUnit.actions += () => StoryPlayer.CharacterModule.ActivateCharacter(characterIndex, indexName, characterUnit.face);
 
+                if (characterUnit.highlight)
+                {
+                    storyUnit.actions += () => StoryPlayer.CharacterModule.Highlight(characterIndex);
+                }
+
                 if (characterUnit.emotion != null)
                 {
                     switch (characterUnit.emotion)

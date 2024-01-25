@@ -118,6 +118,7 @@ namespace BAStoryPlayer
         public string emotion;
         public string action;
         public int actionArgs;
+        public bool highlight;
         public string filter;
 
 #if UNITY_EDITOR
@@ -132,6 +133,7 @@ namespace BAStoryPlayer
             stringBuilder.AppendLine($"emotion   [{emotion}]");
             stringBuilder.AppendLine($"action   [{action}]");
             stringBuilder.AppendLine($"actionArgs   [{actionArgs}]");
+            stringBuilder.AppendLine($"highlight [{highlight}]");
             stringBuilder.AppendLine($"filter   [{filter}]");
 
             return stringBuilder.ToString();
