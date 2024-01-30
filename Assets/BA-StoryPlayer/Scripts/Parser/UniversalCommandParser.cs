@@ -69,7 +69,6 @@ namespace BAStoryPlayer.Parser.UniversaScriptParser
 
             storyUnit.scripts = rawStoryUnit.script;
 
-            HandleUnitCommand(rawStoryUnit, storyUnit);
             HandleCommonSetting(rawStoryUnit, storyUnit);
 
             return storyUnit;
@@ -251,76 +250,6 @@ namespace BAStoryPlayer.Parser.UniversaScriptParser
                 }
             }
         }
-        private void HandleUnitCommand(RawStoryUnit rawStoryUnit, StoryUnit storyUnit)
-        {
-            switch (rawStoryUnit.command)
-            {
-                case "wait":
-                    {
-                        if(ArgsParser.TryParse(rawStoryUnit.commandArgs,out int waitTime))
-                        {
-                            storyUnit.wait = waitTime;
-                        }
-                        break;
-                    }
-                case "setFlag":
-                    {
-                        if(ArgsParser.TryParse(rawStoryUnit.commandArgs, out string flagName,out FlagOperator flagOperator,out int value))
-                        {
-                            if (FlagOperation.Handle(StoryPlayer.FlagTable, flagName, flagOperator, value))
-                            {
-                                if (!StoryPlayer.ModifiedFlagTable.ContainsKey(flagName))
-                                {
-                                    StoryPlayer.ModifiedFlagTable.Add(flagName, value);
-                                }
-                                else
-                                {
-                                    StoryPlayer.ModifiedFlagTable[flagName] = value;
-                                }
-                            }
-                        }
-                        break;
-                    }
-                case "manipulateFlag":
-                    break;
-                case "clearST":
-                    break;
-                case "hideAll":
-                    break;
-                case "bgShake":
-                    break;
-                case "popupFile":
-                    break;
-                case "BG_Filter_Red":
-                    break;
-                case "BG_Wave_F":
-                    break;
-                case "BG_Flash":
-                    break;
-                case "BG_UnderFire_R":
-                    break;
-                case "BG_Love_L":
-                    break;
-                case "BG_Rain_L":
-                    break;
-                case "BG_UnderFire":
-                    break;
-                case "BG_SandStorm_L":
-                    break;
-                case "BG_Shining_L":
-                    break;
-                case "BG_Dust_L":
-                    break;
-                case "BG_Flash_Sound":
-                    break;
-                case "BG_FocusLine":
-                    break;
-                case "BG_Ash_Red":
-                    break;
-                case "BG_Snow_L":
-                    break;
-            }
-        }
         //  处理一些脚本单元公共配置 音频及背景等
         private void HandleCommonSetting(RawStoryUnit rawStoryUnit, StoryUnit storyUnit)
         {
@@ -369,15 +298,12 @@ namespace BAStoryPlayer.Parser.UniversaScriptParser
         {
             StoryUnit storyUnit = new StoryUnit();
 
-            if (string.IsNullOrEmpty(rawStoryUnit.text))
+            if (!string.IsNullOrEmpty(rawStoryUnit.text))
             {
-                return storyUnit;
+                storyUnit.UpdateType(UnitType.Text);
+                storyUnit.actions += () => StoryPlayer.UIModule.SetSpeaker(rawStoryUnit.speaker, rawStoryUnit.affiliation);
+                storyUnit.actions += () => StoryPlayer.UIModule.PrintMainText(rawStoryUnit.text);
             }
-
-            storyUnit.UpdateType(UnitType.Text);
-
-            storyUnit.actions += () => StoryPlayer.UIModule.SetSpeaker(rawStoryUnit.speaker, rawStoryUnit.affiliation);
-            storyUnit.actions += () => StoryPlayer.UIModule.PrintMainText(rawStoryUnit.text);
 
             if(rawStoryUnit.characters.Count > 0)
             {
@@ -444,16 +370,82 @@ namespace BAStoryPlayer.Parser.UniversaScriptParser
 
             return storyUnit;
         }
-
-        private StoryUnit HandleStUnit(RawStoryUnit rawStoryUnit)
+        private StoryUnit HandleEffectOnlyUnit(RawStoryUnit rawStoryUnit)
         {
             StoryUnit storyUnit = new StoryUnit();
 
-            // TODO
+            switch (rawStoryUnit.command)
+            {
+                case "wait":
+                    {
+                        if (ArgsParser.TryParse(rawStoryUnit.commandArgs, out int waitTime))
+                        {
+                            storyUnit.wait = waitTime;
+                        }
+                        break;
+                    }
+                case "setFlag":
+                    {
+                        if (ArgsParser.TryParse(rawStoryUnit.commandArgs, out string flagName, out FlagOperator flagOperator, out int value))
+                        {
+                            if (FlagOperation.Handle(StoryPlayer.FlagTable, flagName, flagOperator, value))
+                            {
+                                if (!StoryPlayer.ModifiedFlagTable.ContainsKey(flagName))
+                                {
+                                    StoryPlayer.ModifiedFlagTable.Add(flagName, value);
+                                }
+                                else
+                                {
+                                    StoryPlayer.ModifiedFlagTable[flagName] = value;
+                                }
+                            }
+                        }
+                        break;
+                    }
+                case "manipulateFlag":
+                    break;
+                case "clearST":
+                    break;
+                case "hideAll":
+                    break;
+                case "bgShake":
+                    break;
+                case "popupFile":
+                    break;
+                case "BG_Filter_Red":
+                    break;
+                case "BG_Wave_F":
+                    break;
+                case "BG_Flash":
+                    break;
+                case "BG_UnderFire_R":
+                    break;
+                case "BG_Love_L":
+                    break;
+                case "BG_Rain_L":
+                    break;
+                case "BG_UnderFire":
+                    break;
+                case "BG_SandStorm_L":
+                    break;
+                case "BG_Shining_L":
+                    break;
+                case "BG_Dust_L":
+                    break;
+                case "BG_Flash_Sound":
+                    break;
+                case "BG_FocusLine":
+                    break;
+                case "BG_Ash_Red":
+                    break;
+                case "BG_Snow_L":
+                    break;
+            }
 
             return storyUnit;
         }
-        private StoryUnit HandleEffectOnlyUnit(RawStoryUnit rawStoryUnit)
+
+        private StoryUnit HandleStUnit(RawStoryUnit rawStoryUnit)
         {
             StoryUnit storyUnit = new StoryUnit();
 

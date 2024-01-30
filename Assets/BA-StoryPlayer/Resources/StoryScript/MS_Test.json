@@ -1,35 +1,13 @@
 {
   "serial": "MS_Test",
   "uuid": "ddaeb26d-2dde-4699-8030-6c41e37ce05e",
-  "lastUpdated": 1705305658041,
+  "lastUpdated": 1706608199875,
   "status": 0,
-  "description": "TestTestTestTestTestTestTestTestTest",
+  "description": "123123123",
   "tags": [
     "测试1"
   ],
   "content": [
-    {
-      "id": 1705242632272,
-      "type": "place",
-      "backgroundImage": "",
-      "selectionGroups": [
-        {
-          "id": 1705242632273,
-          "type": "option",
-          "text": "",
-          "isConditional": false,
-          "condition": [],
-          "content": [],
-          "script": ""
-        }
-      ],
-      "bgm": "",
-      "speaker": "",
-      "affiliation": "",
-      "text": "场景",
-      "characters": [],
-      "script": "单元2"
-    },
     {
       "id": 1705242664806,
       "type": "text",
@@ -48,55 +26,46 @@
       "bgm": "",
       "speaker": "星野",
       "affiliation": "无",
-      "text": "测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试",
+      "text": "1",
       "characters": [
         {
-          "uuid": "92ccc146-29aa-42bb-8138-023804860272",
-          "name": "hoshino",
+          "uuid": "974b214a-40b4-40b1-845c-86784766ee47",
+          "name": "momoi",
           "position": 3,
           "face": "00",
           "emotion": "",
           "action": ""
-        },
-        {
-          "uuid": "92ccc146-29aa-42bb-8138-023804860272",
-          "name": "momoi",
-          "position": 1,
-          "face": "00",
-          "emotion": "",
-          "action": "",
-          "highlight":true
         }
       ],
-      "script": "单元3"
+      "script": ""
     },
     {
-      "id": 1705242749048,
+      "id": 1706608135600,
       "type": "text",
       "backgroundImage": "",
       "bgm": "",
-      "speaker": "星野",
-      "affiliation": "无",
-      "text": "测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试2222222",
-      "script": "单元4",
+      "speaker": "",
+      "affiliation": "",
+      "text": "",
+      "script": "",
       "characters": [
         {
-          "uuid": "92ccc146-29aa-42bb-8138-023804860272",
-          "name": "hoshino",
+          "uuid": "974b214a-40b4-40b1-845c-86784766ee47",
+          "name": "momoi",
           "position": 3,
           "face": "00",
           "emotion": "",
-          "action": ""
+          "action": "disappear"
         }
       ]
     },
     {
-      "id": 1705242769902,
+      "id": 1706608154039,
       "type": "effectOnly",
       "backgroundImage": "",
       "selectionGroups": [
         {
-          "id": 1705242769902,
+          "id": 1706608154040,
           "type": "option",
           "text": "",
           "isConditional": false,
@@ -110,176 +79,49 @@
       "affiliation": "",
       "text": "",
       "characters": [],
-      "script": "等待单元1",
+      "script": "",
       "command": "wait",
       "commandArgs": [
-        800
+        750
       ]
     },
     {
-      "id": 1705299340057,
+      "id": 1706608186943,
       "type": "text",
       "backgroundImage": "",
-      "bgm": "",
-      "speaker": "星野",
-      "affiliation": "无",
-      "text": "测试333333测试333333测试333333测试333333测试333333测试333333测试333333测试333333测试333333测试333333测试333333测试333333测试333333",
-      "script": "单元5",
-      "characters": [
-        {
-          "uuid": "92ccc146-29aa-42bb-8138-023804860272",
-          "name": "hoshino",
-          "position": 3,
-          "face": "00",
-          "emotion": "",
-          "action": ""
-        }
-      ]
-    },
-    {
-      "id": 1705299360003,
-      "type": "select",
-      "backgroundImage": "",
-      "selectionGroups": [
-        {
-          "id": 1705299360003,
-          "type": "option",
-          "text": "选项1111",
-          "isConditional": false,
-          "conditions": [
-            {
-              "flag":"TestFlag1",
-              "operation":"Greater",
-              "value":1
-            }
-          ],
-          "content": [
-            {
-              "id": 1705305551986,
-              "type": "text",
-              "backgroundImage": "",
-              "bgm": "",
-              "speaker": "hoshino",
-              "affiliation": "选项1",
-              "text": "选择选项11111111111111",
-              "characters": [
-                {
-                  "uuid": "2bae2da0-e8dd-4f96-8653-92cc74e7b0e8",
-                  "name": "hoshino",
-                  "position": 1,
-                  "face": "1",
-                  "emotion": "twinkle",
-                  "action": ""
-                }
-              ],
-              "script": "选项单元1-1"
-            }
-          ],
-          "script": "选项单元1"
-        },
-        {
-          "id": 1705299383891,
-          "type": "option",
-          "text": "选项2222",
-          "isConditional": false,
-          "conditions": [
-            {
-              "flag":"TestFlag1",
-              "operation":"Greater",
-              "value":1
-            }
-          ],
-          "content": [
-            {
-              "id": 1705305580208,
-              "type": "text",
-              "backgroundImage": "",
-              "bgm": "",
-              "speaker": "hoshino",
-              "affiliation": "选项2",
-              "text": "选择选项2222222222222222222222",
-              "characters": [
-                {
-                  "uuid": "1dd638cf-6239-40c5-9d3d-a4eed31c4cc5",
-                  "name": "hoshino",
-                  "position": 2,
-                  "face": "3",
-                  "emotion": "sweat",
-                  "action": "appear"
-                }
-              ],
-              "script": "选项单元2-1"
-            }
-          ],
-          "script": "选项单元2"
-        },
-        {
-          "id": 1705300898647,
-          "type": "option",
-          "text": "条件选项33333",
-          "isConditional": true,
-          "conditions": [
-            {
-              "flag":"TestFlag1",
-              "operation":"Greater",
-              "value":1
-            }
-          ],
-          "content": [
-            {
-              "id": 1705302349255,
-              "type": "text",
-              "backgroundImage": "",
-              "bgm": "",
-              "speaker": "hishono",
-              "affiliation": "选项3",
-              "text": "选择条件选项3333333333",
-              "characters": [
-                {
-                  "uuid": "82f76438-9366-43ce-97d5-d5db9063a996",
-                  "name": "hoshino",
-                  "position": 5,
-                  "face": "7",
-                  "emotion": "zzz",
-                  "action": ""
-                }
-              ],
-              "script": "选项单元3-1",
-              "command": "setFlag",
-              "commandArgs": [
-                "",
-                "",
-                ""
-              ]
-            }
-          ],
-          "script": "选项单元3"
-        }
-      ],
       "bgm": "",
       "speaker": "",
       "affiliation": "",
       "text": "",
-      "characters": [],
-      "script": "整体选项单元"
-    },
-    {
-      "id": 1705299395660,
-      "type": "text",
-      "backgroundImage": "",
-      "bgm": "",
-      "speaker": "星野",
-      "affiliation": "无",
-      "text": "选项完选项完选项完选项完选项完选项完选项完选项完选项完选项完选项完",
-      "script": "完结单元",
+      "script": "",
       "characters": [
         {
-          "uuid": "92ccc146-29aa-42bb-8138-023804860272",
-          "name": "hoshino",
+          "uuid": "974b214a-40b4-40b1-845c-86784766ee47",
+          "name": "momoi",
           "position": 3,
           "face": "00",
           "emotion": "",
-          "action": ""
+          "action": "appear"
+        }
+      ]
+    },
+    {
+      "id": 1706608199874,
+      "type": "text",
+      "backgroundImage": "",
+      "bgm": "",
+      "speaker": "是的",
+      "affiliation": "",
+      "text": "asdasd",
+      "script": "",
+      "characters": [
+        {
+          "uuid": "974b214a-40b4-40b1-845c-86784766ee47",
+          "name": "momoi",
+          "position": 3,
+          "face": "00",
+          "emotion": "",
+          "action": "closeup"
         }
       ]
     }

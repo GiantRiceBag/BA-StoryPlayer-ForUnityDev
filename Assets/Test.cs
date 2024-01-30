@@ -282,19 +282,19 @@ public class Test : MonoBehaviour
 
                 foreach(var texKV in backgroundCache)
                 {
-                    DestroyImmediate(texKV.Value);
+                    DestroyImmediate(texKV.Value,true);
                 }
                 backgroundCache.Clear();
 
                 foreach(var bgmKV in bgmCache)
                 {
-                    DestroyImmediate(bgmKV.Value);
+                    DestroyImmediate(bgmKV.Value,true);
                 }
                 bgmCache.Clear();
 
                 foreach(var sprKV in sprCache)
                 {
-                    DestroyImmediate(sprKV.Value);
+                    DestroyImmediate(sprKV.Value,true);
                 }
                 sprCache.Clear();
             }

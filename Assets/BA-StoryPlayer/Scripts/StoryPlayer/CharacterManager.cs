@@ -8,9 +8,6 @@ using Random = UnityEngine.Random;
 
 using BAStoryPlayer.DoTweenS;
 using BAStoryPlayer.Event;
-using System.Collections.ObjectModel;
-using System.Reflection;
-using Unity.Mathematics;
 
 namespace BAStoryPlayer
 {
@@ -261,7 +258,7 @@ namespace BAStoryPlayer
         }
         private void MoveCharacterTo(GameObject obj, int targetIndex, TransistionType transition = TransistionType.Immediate)
         {
-            targetIndex = Mathf.Clamp(targetIndex, 0, 4);
+            targetIndex = Mathf.Clamp(targetIndex, 0, 5);
             RectTransform rect = obj.GetComponent<RectTransform>();
             MoveCharacterTo(obj, new Vector2((targetIndex + 1) * SlotInterval, rect.anchoredPosition.y), transition);
         }
@@ -400,7 +397,6 @@ namespace BAStoryPlayer
                 case CharacterAction.Close:
                     obj.transform.localScale = Vector3.one;
                     obj.GetComponent<RectTransform>().anchoredPosition = obj.GetComponent<RectTransform>().anchoredPosition * Vector2.right - Vector2.up * 350;
-                    MoveCharacterTo(obj, 2);
                     break;
                 case CharacterAction.Back:
                     obj.transform.localScale = Vector3.one * 0.7f;
