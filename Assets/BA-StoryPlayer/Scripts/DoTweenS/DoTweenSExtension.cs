@@ -128,10 +128,10 @@ namespace BAStoryPlayer.DoTweenS
         #endregion
 
         #region X÷·“°ªŒ
-        public static TweenS DoShakeX(this Transform transform,float maxOffsetX,float duration,int time = 1)
+        public static TweenS DoShakeX(this Transform transform,float maxOffsetX,float duration,int times = 1)
         {
             MonoBehaviour mono = transform.GetComponent<MonoBehaviour>();
-            TweenS tween = new TweenS(maxOffsetX, duration, time, mono,TweenSType.Position);
+            TweenS tween = new TweenS(maxOffsetX, duration, times, mono,TweenSType.Position);
             tween.StartCoroutine(DoShakeX);
             return tween;
         }

@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
 using Spine.Unity;
-
 using Random = UnityEngine.Random;
-
-using BAStoryPlayer.DoTweenS;
-using BAStoryPlayer.Event;
 
 namespace BAStoryPlayer
 {
+    using DoTweenS;
+    using Event;
+
     public enum CharacterAction
     {
         Appear = 0,
@@ -37,7 +36,11 @@ namespace BAStoryPlayer
         private const int CharacterSlotCount = 5;
         private const float CharacterScale = 0.7f;
         private const float SlotIntervalNormal = 0.1666667f;
+
         private float SlotInterval => StoryPlayer.CanvasRect.sizeDelta.x * SlotIntervalNormal;
+        private Vector2 ScaleOffset => Vector2.up * 350; // 角色放大后的偏移量
+        private Vector2 StandByPositionLeft => new Vector2(-SlotInterval * 2.5f, 0);
+        private Vector2 StandByPositionRight => new Vector2(StoryPlayer.CanvasRect.sizeDelta.x + SlotInterval * 2.5f, 0);
 
         private Color ColorUnhighlight { get { return new Color(0.6f, 0.6f, 0.6f);  } }
 
@@ -95,7 +98,7 @@ namespace BAStoryPlayer
                 if(currentIndex != index)
                 {
                     DestroyCharacter(index);
-                    MoveCharacterTo(currentIndex, index);
+                    MoveCharacterTo(currentIndex, index,0);
                     Characters[index] = Characters[currentIndex];
                     Characters[currentIndex] = null;
                 }
@@ -154,7 +157,7 @@ namespace BAStoryPlayer
                 return;
             Destroy(_characterPool[indexName]);
         }
-        void DestroyCharacter(GameObject obj,bool destoryObject = false)
+        private void DestroyCharacter(GameObject obj,bool destoryObject = false)
         {
             if (destoryObject)
             {
@@ -220,74 +223,82 @@ namespace BAStoryPlayer
                 yield break;
             }
 
-            yield return new WaitForSeconds(Random.Range(base.StoryPlayer.Setting.TimeRangeCharacterWink.x, base.StoryPlayer.Setting.TimeRangeCharacterWink.y));
+            yield return new WaitForSeconds(Random.Range(StoryPlayer.Setting.DefaultTimeRangeCharacterWink.x, StoryPlayer.Setting.DefaultTimeRangeCharacterWink.y));
             while (true)
             {
                 skel.AnimationState.SetAnimation(0, ani_EyeClose_Name, false);
-                yield return new WaitForSeconds(Random.Range(base.StoryPlayer.Setting.TimeRangeCharacterWink.x, base.StoryPlayer.Setting.TimeRangeCharacterWink.y));
+                yield return new WaitForSeconds(Random.Range(StoryPlayer.Setting.DefaultTimeRangeCharacterWink.x, StoryPlayer.Setting.DefaultTimeRangeCharacterWink.y));
             }
         }
 
-        private void MoveCharacterTo(int currentIndex,int targetIndex,TransistionType transition = TransistionType.Immediate)
+        private void MoveCharacterTo(int currentIndex,int targetIndex, float time)
         {
             if (!CheckIfIndexValid(currentIndex) || !CheckIfIndexValid(targetIndex))
                 return;
             if (CheckIfSlotEmpty(currentIndex))
                 return;
-            MoveCharacterTo(Characters[currentIndex].gameObject, targetIndex, transition);
+            MoveCharacterTo(Characters[currentIndex].gameObject, targetIndex, time);
         }
-        private void MoveCharacterTo(int currentIndex,Vector2 pos,TransistionType transition = TransistionType.Immediate)
+        private void MoveCharacterTo(int currentIndex,Vector2 pos, float time)
         {
             if (CheckIfSlotEmpty(currentIndex))
                 return;
-            MoveCharacterTo(Characters[currentIndex].gameObject, pos, transition);
+            MoveCharacterTo(Characters[currentIndex].gameObject, pos, time);
         }
-        public void MoveCharacterTo(string indexName, int targetIndex, TransistionType transition = TransistionType.Immediate)
+        [Obsolete]
+        public void MoveCharacterTo(string indexName, int targetIndex, float time)
         {
             if (!CheckIfCharacterInPool(indexName))
                 CreateCharacterObj(indexName);
             _characterPool[indexName].SetActive(true);
-            MoveCharacterTo(_characterPool[indexName], targetIndex, transition);
+            MoveCharacterTo(_characterPool[indexName], targetIndex, time);
         }
-        private void MoveCharacterTo(string indexName, Vector2 pos, TransistionType transition = TransistionType.Immediate)
+        [Obsolete]
+        private void MoveCharacterTo(string indexName, Vector2 pos, float time)
         {
             if (!CheckIfCharacterInPool(indexName))
                 CreateCharacterObj(indexName);
             CharacterPool[indexName].SetActive(true);
-            MoveCharacterTo(CharacterPool[indexName], pos, transition);
+            MoveCharacterTo(CharacterPool[indexName], pos, time);
         }
-        private void MoveCharacterTo(GameObject obj, int targetIndex, TransistionType transition = TransistionType.Immediate)
+        private void MoveCharacterTo(GameObject obj, int targetIndex, float time)
         {
             targetIndex = Mathf.Clamp(targetIndex, 0, 5);
             RectTransform rect = obj.GetComponent<RectTransform>();
-            MoveCharacterTo(obj, new Vector2((targetIndex + 1) * SlotInterval, rect.anchoredPosition.y), transition);
+            MoveCharacterTo(obj, new Vector2((targetIndex + 1) * SlotInterval, rect.anchoredPosition.y), time);
         }
-        private void MoveCharacterTo(GameObject obj, Vector2 pos, TransistionType transition = TransistionType.Immediate)
+        private void MoveCharacterTo(GameObject obj, Vector2 pos, float time)
         {
-            switch (transition)
+            obj.transform.localRotation = Quaternion.identity;
+
+            if (time == 0)
             {
-                case TransistionType.Immediate:
-                    {
-                        obj.GetComponent<RectTransform>().anchoredPosition = pos;
-                        break;
-                    }
-                case TransistionType.Fade:
-                    {
-                        obj.transform.DoMove_Anchored(pos, base.StoryPlayer.Setting.TimeCharacterMove);
-                        EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = base.StoryPlayer.Setting.TimeCharacterMove });
-                        break;
-                    }
-                default: break;
+                obj.GetComponent<RectTransform>().anchoredPosition = pos;
+            }
+            else if (time > 0)
+            {
+                obj.transform.DoMove_Anchored(pos, time);
+                EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = time });
+            }
+            else
+            {
+                obj.transform.DoMove_Anchored(pos, StoryPlayer.Setting.DefaultTimeCharacterMove);
+                EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = StoryPlayer.Setting.DefaultTimeCharacterMove });
             }
         }
 
-        public void SetAction(int index,CharacterAction action,int arg = -1)
+        public void SetAction(int index, CharacterAction action,  float time)
+        {
+            SetAction(index, action, -1, time);
+        }
+        public void SetAction(int index,CharacterAction action,int arg = -1, float time = 0)
         {
             if (CheckIfSlotEmpty(index))
                 return;
-            SetAction(Characters[index].gameObject, action, arg);
+            SetAction(Characters[index].gameObject, action, arg, time);
         }
-        public void SetAction(string indexName,CharacterAction action,int arg = -1)
+        [Obsolete]
+        public void SetAction(string indexName,CharacterAction action,int arg = -1, float time = 0)
         {
             if (!CheckIfCharacterInPool(indexName))
             {
@@ -295,100 +306,133 @@ namespace BAStoryPlayer
             }
 
             CharacterPool[indexName].SetActive(true);
-            SetAction(CharacterPool[indexName], action,arg);
+            SetAction(CharacterPool[indexName], action,arg,time);
         }
-        public void SetAction(GameObject obj,CharacterAction action,int arg = -1)
+        public void SetAction(GameObject obj,CharacterAction action,int arg = -1, float time = 0)
         {
             SkeletonGraphic skelGraphic = obj.GetComponent<SkeletonGraphic>();
+            float actionTime;
 
             switch (action)
             {
                 case CharacterAction.Appear: //黑色剪影渐变进场
                     skelGraphic.color = Color.black;
-                    skelGraphic.DoColor(Color.white, base.StoryPlayer.Setting.TimeCharacterFade);
-                    EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = base.StoryPlayer.Setting.TimeCharacterFade });
+                    actionTime = time <= 0 ? StoryPlayer.Setting.DefaultTimeCharacterFade : time;
+                    skelGraphic.DoColor(Color.white, actionTime);
+                    EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = actionTime });
                     break;
                 case CharacterAction.Disapper: // 渐变至黑色剪影同时离场
                     skelGraphic.color = Color.white;
-                    skelGraphic.DoColor(Color.black, base.StoryPlayer.Setting.TimeCharacterFade).onCompleted = ()=> { SetAction(obj, CharacterAction.Hide); };
-                    EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = base.StoryPlayer.Setting.TimeCharacterFade });
+                    actionTime = time <= 0 ? StoryPlayer.Setting.DefaultTimeCharacterFade : time;
+                    skelGraphic.DoColor(Color.black, actionTime).onCompleted = ()=> { SetAction(obj, CharacterAction.Hide); };
+                    EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = actionTime });
                     break;
                 case CharacterAction.Disapper2Left:
-                    MoveCharacterTo(obj, new Vector2(-SlotInterval * 2, 0), TransistionType.Fade);
-                    EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = base.StoryPlayer.Setting.TimeCharacterMove });
+                    actionTime = time <= 0 ? StoryPlayer.Setting.DefaultTimeCharacterMove : time;
+                    MoveCharacterTo(obj,StandByPositionLeft , actionTime);
+                    EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = actionTime });
                     break;
                 case CharacterAction.Disapper2Right:
-                    MoveCharacterTo(obj, new Vector2(StoryPlayer.CanvasRect.sizeDelta.x + SlotInterval * 2, 0), TransistionType.Fade);
-                    EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = base.StoryPlayer.Setting.TimeCharacterMove });
+                    actionTime = time <= 0 ? StoryPlayer.Setting.DefaultTimeCharacterMove : time;
+                    MoveCharacterTo(obj,StandByPositionRight , actionTime);
+                    EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = actionTime });
                     break;
                 case CharacterAction.AppearL2R:
+                    actionTime = time <= 0 ? StoryPlayer.Setting.DefaultTimeCharacterMove : time;
                     skelGraphic.color = Color.white;
-                    MoveCharacterTo(obj, new Vector2(-500, 0));
-                    MoveCharacterTo(obj, arg, TransistionType.Fade);
-                    EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = base.StoryPlayer.Setting.TimeCharacterMove });
+                    MoveCharacterTo(obj, StandByPositionLeft, 0);
+                    MoveCharacterTo(obj, arg, actionTime);
+                    EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = actionTime });
                     break;
                 case CharacterAction.AppearR2L:
+                    actionTime = time <= 0 ? StoryPlayer.Setting.DefaultTimeCharacterMove : time;
                     skelGraphic.color = Color.white;
-                    MoveCharacterTo(obj, new Vector2(2420, 0));
-                    MoveCharacterTo(obj, arg, TransistionType.Fade);
-                    EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = base.StoryPlayer.Setting.TimeCharacterMove });
+                    MoveCharacterTo(obj, StandByPositionRight,0);
+                    MoveCharacterTo(obj, arg, actionTime);
+                    EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = actionTime });
                     break;
                 case CharacterAction.Hophop:
-                    obj.transform.DoBound_Anchored_Relative(new Vector2(0, 50), base.StoryPlayer.Setting.TimeCharacterHophop, 2);
-                    EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = base.StoryPlayer.Setting.TimeCharacterHophop });
+                    actionTime = time <= 0 ? StoryPlayer.Setting.DefaultTimeCharacterHophop : time;
+                    obj.transform.DoBound_Anchored_Relative(new Vector2(0, 50), actionTime, 2);
+                    EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = actionTime });
                     break;
                 case CharacterAction.Greeting:
-                    obj.transform.DoBound_Anchored_Relative(new Vector2(0, -70), base.StoryPlayer.Setting.TimeCharacterGreeting);
-                    EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = base.StoryPlayer.Setting.TimeCharacterGreeting });
+                    actionTime = time <= 0 ? StoryPlayer.Setting.DefaultTimeCharacterGreeting : time;
+                    obj.transform.DoBound_Anchored_Relative(new Vector2(0, -70), actionTime);
+                    EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = actionTime });
                     break;
                 case CharacterAction.Shake:
-                    obj.transform.DoShakeX(40, base.StoryPlayer.Setting.TimeCharacterShake, 2);
-                    EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = base.StoryPlayer.Setting.TimeCharacterShake });
+                    actionTime = time <= 0 ? StoryPlayer.Setting.DefaultTimeCharacterShake : time;
+                    obj.transform.DoShakeX(40, actionTime, 2);
+                    EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = actionTime });
                     break;
                 case CharacterAction.Move:
-                    MoveCharacterTo(obj, arg, TransistionType.Fade);
-                    EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = base.StoryPlayer.Setting.TimeCharacterMove });
+                    actionTime = time <= 0 ? StoryPlayer.Setting.DefaultTimeCharacterMove : time;
+                    MoveCharacterTo(obj, arg, actionTime);
+                    EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = actionTime });
                     break;
                 case CharacterAction.Stiff:
-                    obj.transform.DoShakeX(10, base.StoryPlayer.Setting.TimeCharacterStiff, 4);
-                    EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = base.StoryPlayer.Setting.TimeCharacterStiff });
+                    actionTime = time <= 0 ? StoryPlayer.Setting.DefaultTimeCharacterStiff : time;
+                    obj.transform.DoShakeX(10, actionTime, 4);
+                    EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = actionTime });
                     break;
                 case CharacterAction.Jump:
-                    obj.transform.DoBound_Anchored_Relative(new Vector2(0, 70), base.StoryPlayer.Setting.TimeCharacterJump);
-                    EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = base.StoryPlayer.Setting.TimeCharacterJump });
+                    actionTime = time <= 0 ? StoryPlayer.Setting.DefaultTimeCharacterJump : time;
+                    obj.transform.DoBound_Anchored_Relative(new Vector2(0, 70), actionTime);
+                    EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = actionTime });
                     break;
                 case CharacterAction.falldownR:
                     {
+                        int index = CheckIfCharacterOnSlot(obj.name);
+                        MoveCharacterTo(obj, index, 0);
+                        var rect = obj.GetComponent<RectTransform>();
+                        rect.anchoredPosition = new Vector2(
+                                rect.anchoredPosition.x,
+                                obj.transform.localScale.x == 1 ? -350 : 0
+                            );
+
+                        actionTime = time <= 0 ? StoryPlayer.Setting.DefaultTimeFalldown : time;
+
                         TweenSequence sequence_Rotation = new TweenSequence();
-                        sequence_Rotation.Append(obj.transform.DoEuler(new Vector3(0, 0, -10), 0.3f).SetEase(Ease.OutCubic));
-                        sequence_Rotation.Wait(0.1f);
-                        sequence_Rotation.Append(obj.transform.DoEuler(new Vector3(0, 0, 5), 0.5f).SetEase(Ease.OutCubic));
-                        sequence_Rotation.Wait(0.3f);
-                        sequence_Rotation.Append(obj.transform.DoLocalMove(obj.transform.localPosition - new Vector3(0, 1500, 0), 0.3f).SetEase(Ease.InCirc));
+                        sequence_Rotation.Append(obj.transform.DoEuler(new Vector3(0, 0, -10), 0.1875f * actionTime).SetEase(Ease.OutCubic));
+                        sequence_Rotation.Wait(0.0625f * actionTime);
+                        sequence_Rotation.Append(obj.transform.DoEuler(new Vector3(0, 0, 5), 0.3125f * actionTime).SetEase(Ease.OutCubic));
+                        sequence_Rotation.Wait(0.1875f * actionTime);
+                        sequence_Rotation.Append(obj.transform.DoLocalMove(obj.transform.localPosition - new Vector3(0, 1500, 0), 0.1875f * actionTime).SetEase(Ease.InCirc));
 
                         TweenSequence sequence_Position = new TweenSequence();
-                        sequence_Position.Append(obj.transform.DoLocalMove(obj.transform.localPosition + new Vector3(30, 0, 0), 0.3f).SetEase(Ease.OutCubic));
-                        sequence_Position.Wait(0.1f);
-                        sequence_Position.Append(obj.transform.DoLocalMove(obj.transform.localPosition - new Vector3(60, 0, 0), 0.5f).SetEase(Ease.OutCubic));
+                        sequence_Position.Append(obj.transform.DoLocalMove(obj.transform.localPosition + new Vector3(30, 0, 0), 0.1875f * actionTime).SetEase(Ease.OutCubic));
+                        sequence_Position.Wait(0.0625f * actionTime);
+                        sequence_Position.Append(obj.transform.DoLocalMove(obj.transform.localPosition - new Vector3(60, 0, 0), 0.3125f * actionTime).SetEase(Ease.OutCubic));
 
-                        EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = 1.6f });
+                        EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = actionTime });
                         break;
                     }
                 case CharacterAction.falldownL:
                     {
+                        int index = CheckIfCharacterOnSlot(obj.name);
+                        MoveCharacterTo(obj, index, 0);
+                        var rect = obj.GetComponent<RectTransform>();
+                        rect.anchoredPosition = new Vector2(
+                                rect.anchoredPosition.x,
+                                obj.transform.localScale.x == 1 ? -350 : 0
+                            );
+
+                        actionTime = time <= 0 ? StoryPlayer.Setting.DefaultTimeFalldown : time;
+
                         TweenSequence sequence_Rotation = new TweenSequence();
-                        sequence_Rotation.Append(obj.transform.DoEuler(new Vector3(0, 0, 5), 0.3f).SetEase(Ease.OutCubic));
-                        sequence_Rotation.Wait(0.1f);
-                        sequence_Rotation.Append(obj.transform.DoEuler(new Vector3(0, 0, -10), 0.5f).SetEase(Ease.OutCubic));
-                        sequence_Rotation.Wait(0.3f);
-                        sequence_Rotation.Append(obj.transform.DoLocalMove(obj.transform.localPosition - new Vector3(0, 1500, 0), 0.3f).SetEase(Ease.InCirc));
+                        sequence_Rotation.Append(obj.transform.DoEuler(new Vector3(0, 0, 5), 0.1875f * actionTime).SetEase(Ease.OutCubic));
+                        sequence_Rotation.Wait(0.0625f * actionTime);
+                        sequence_Rotation.Append(obj.transform.DoEuler(new Vector3(0, 0, -10), 0.3125f * actionTime).SetEase(Ease.OutCubic));
+                        sequence_Rotation.Wait(0.1875f * actionTime);
+                        sequence_Rotation.Append(obj.transform.DoLocalMove(obj.transform.localPosition - new Vector3(0, 1500, 0), 0.1875f * actionTime).SetEase(Ease.InCirc));
 
                         TweenSequence sequence_Position = new TweenSequence();
-                        sequence_Position.Append(obj.transform.DoLocalMove(obj.transform.localPosition + new Vector3(30, 0, 0), 0.3f).SetEase(Ease.OutCubic));
-                        sequence_Position.Wait(0.1f);
-                        sequence_Position.Append(obj.transform.DoLocalMove(obj.transform.localPosition - new Vector3(60, 0, 0), 0.5f).SetEase(Ease.OutCubic));
+                        sequence_Position.Append(obj.transform.DoLocalMove(obj.transform.localPosition + new Vector3(30, 0, 0), 0.1875f * actionTime).SetEase(Ease.OutCubic));
+                        sequence_Position.Wait(0.0625f * actionTime);
+                        sequence_Position.Append(obj.transform.DoLocalMove(obj.transform.localPosition - new Vector3(60, 0, 0), 0.3125f * actionTime).SetEase(Ease.OutCubic));
 
-                        EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = 1.6f });
+                        EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = actionTime });
                         break;
                     }
                 case CharacterAction.Hide: // 立即让角色离场
@@ -396,7 +440,7 @@ namespace BAStoryPlayer
                     break;
                 case CharacterAction.Close:
                     obj.transform.localScale = Vector3.one;
-                    obj.GetComponent<RectTransform>().anchoredPosition = obj.GetComponent<RectTransform>().anchoredPosition * Vector2.right - Vector2.up * 350;
+                    obj.GetComponent<RectTransform>().anchoredPosition = obj.GetComponent<RectTransform>().anchoredPosition * Vector2.right - ScaleOffset;
                     break;
                 case CharacterAction.Back:
                     obj.transform.localScale = Vector3.one * 0.7f;
@@ -430,17 +474,18 @@ namespace BAStoryPlayer
         public void SetEmotion(GameObject obj,CharacterEmotion emotion)
         {
             float time = 1;
-            EmotionFactory.SetEmotion(obj.transform, emotion, base.StoryPlayer.CharacterDataTable[obj.name], time);
+            EmotionFactory.SetEmotion(obj.transform, emotion, StoryPlayer.CharacterDataTable[obj.name], time);
             EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = time });
         }
 
-        public void Highlight(int index,TransistionType transition = TransistionType.Immediate)
+        public void Highlight(int index, float time = 0)
         {
             if (CheckIfSlotEmpty(index))
                 return;
-            Highlight(Characters[index].gameObject, transition);
+            Highlight(Characters[index].gameObject, time);
         }
-        public void Highlight(string indexName, TransistionType transition = TransistionType.Immediate)
+        [Obsolete]
+        public void Highlight(string indexName, float time = 0)
         {
             if (!CheckIfCharacterInPool(indexName))
             {
@@ -448,9 +493,9 @@ namespace BAStoryPlayer
                 return;
             }
             _characterPool[indexName].SetActive(true);
-            Highlight(_characterPool[indexName], transition);
+            Highlight(_characterPool[indexName], time);
         }
-        public void Highlight(GameObject obj, TransistionType transition = TransistionType.Immediate)
+        public void Highlight(GameObject obj, float time = 0)
         {
             SkeletonGraphic skelGraphic = obj.GetComponent<SkeletonGraphic>();
 
@@ -465,24 +510,21 @@ namespace BAStoryPlayer
                 if (skg.color == Color.black)
                     continue;
 
-                switch (transition)
+                if (time == 0)
                 {
-                    case TransistionType.Immediate:
-                        {
-                            skg.color = ColorUnhighlight;
-                            break;
-                        }
-                    case TransistionType.Fade:
-                        {
-                            skg.DoColor(ColorUnhighlight, base.StoryPlayer.Setting.TimeCharacterHighlight);
-                            break;
-                        }
-                    default: return;
+                    skg.color = ColorUnhighlight;
+                }
+                else
+                {
+                    skg.DoColor(
+                        ColorUnhighlight, 
+                        time > 0 ? time :  StoryPlayer.Setting.DefaultTimeCharacterHighlight
+                        );
                 }
             }
         }
 
-        public void HighlightAll(TransistionType transition = TransistionType.Immediate)
+        public void HighlightAll(float time = 0)
         {
             foreach (var chr in _characterPool.Values)
             {
@@ -490,19 +532,16 @@ namespace BAStoryPlayer
                     continue;
 
                 SkeletonGraphic skelGraphic = chr.GetComponent<SkeletonGraphic>();
-                switch (transition)
+                if(time == 0)
                 {
-                    case TransistionType.Immediate:
-                        {
-                            skelGraphic.color = ColorUnhighlight;
-                            break;
-                        }
-                    case TransistionType.Fade:
-                        {
-                            skelGraphic.DoColor(ColorUnhighlight, base.StoryPlayer.Setting.TimeCharacterHighlight);
-                            break;
-                        }
-                    default: return;
+                    skelGraphic.color = ColorUnhighlight;
+                }
+                else
+                {
+                    skelGraphic.DoColor(
+                        ColorUnhighlight,
+                        time > 0 ? time : StoryPlayer.Setting.DefaultTimeCharacterHighlight
+                        );
                 }
             }
         }
@@ -544,18 +583,17 @@ namespace BAStoryPlayer
 
             GameObject prefab = null;
 
-            switch (base.StoryPlayer.CharacterDataTable[indexName].loadType)
+            switch (StoryPlayer.CharacterDataTable[indexName].loadType)
             {
                 case LoadType.Prefab:
                     {
-                        prefab = Instantiate(Resources.Load(base.StoryPlayer.Setting.PathCharacterSkeletonData + base.StoryPlayer.CharacterDataTable[indexName].skeletonDataUrl) as GameObject);
+                        prefab = Instantiate(Resources.Load(StoryPlayer.Setting.PathCharacterSkeletonData(StoryPlayer.CharacterDataTable[indexName].skeletonDataUrl)) as GameObject);
                         break;
                     }
                 case LoadType.SkeletonData:
                     {
                         SkeletonDataAsset skelData =
-                            Resources.Load<SkeletonDataAsset>(base.StoryPlayer.Setting.PathCharacterSkeletonData
-                                + base.StoryPlayer.CharacterDataTable[indexName].skeletonDataUrl);
+                            Resources.Load<SkeletonDataAsset>(StoryPlayer.Setting.PathCharacterSkeletonData(StoryPlayer.CharacterDataTable[indexName].skeletonDataUrl));
 
                         Shader shader = Shader.Find("Spine/SkeletonGraphic");
                         if (shader == null)

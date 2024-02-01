@@ -476,7 +476,7 @@ public class Test : MonoBehaviour
                         continue;
                     }
 
-                    Sprite sprite = Resources.Load<Sprite>(testor.storyPlayer.Setting.PathBackground + rawStoryUnit.backgroundImage);
+                    Sprite sprite = Resources.Load<Sprite>(testor.storyPlayer.Setting.PathBackground(rawStoryUnit.backgroundImage));
                     if (sprite != null)
                     {
                         testor.storyPlayer.BackgroundModule.PreloadedImages.Add(rawStoryUnit.backgroundImage, sprite);
@@ -493,7 +493,7 @@ public class Test : MonoBehaviour
                         continue;
                     }
 
-                    AudioClip clip = Resources.Load<AudioClip>(testor.storyPlayer.Setting.PathMusic + rawStoryUnit.bgm);
+                    AudioClip clip = Resources.Load<AudioClip>(testor.storyPlayer.Setting.PathMusic(rawStoryUnit.bgm));
                     if (clip != null)
                     {
                         testor.storyPlayer.AudioModule.PreloadedMusicClips.Add(rawStoryUnit.bgm, clip);
@@ -534,7 +534,7 @@ public class Test : MonoBehaviour
                                     continue;
                                 }
 
-                                Sprite sprite = Resources.Load<Sprite>(testor.storyPlayer.Setting.PathBackground + unit.backgroundImage);
+                                Sprite sprite = Resources.Load<Sprite>(testor.storyPlayer.Setting.PathBackground(unit.backgroundImage));
                                 if (sprite != null)
                                 {
                                     testor.storyPlayer.BackgroundModule.PreloadedImages.Add(unit.backgroundImage, sprite);
@@ -551,7 +551,7 @@ public class Test : MonoBehaviour
                                     continue;
                                 }
 
-                                AudioClip clip = Resources.Load<AudioClip>(testor.storyPlayer.Setting.PathMusic + unit.bgm);
+                                AudioClip clip = Resources.Load<AudioClip>(testor.storyPlayer.Setting.PathMusic(unit.bgm));
                                 if (clip != null)
                                 {
                                     testor.storyPlayer.AudioModule.PreloadedMusicClips.Add(unit.bgm, clip);
@@ -718,7 +718,7 @@ public class Test : MonoBehaviour
                 yield break;
             }
 
-            Sprite sprite = Resources.Load<Sprite>(testor.storyPlayer.Setting.PathBackground + backgroundName);
+            Sprite sprite = Resources.Load<Sprite>(testor.storyPlayer.Setting.PathBackground(backgroundName));
             if (sprite != null)
             {
                 testor.storyPlayer.BackgroundModule.PreloadedImages.Add(backgroundName, sprite);
@@ -771,7 +771,7 @@ public class Test : MonoBehaviour
                 yield break;
             }
 
-            AudioClip clip = Resources.Load<AudioClip>(testor.storyPlayer.Setting.PathMusic + bgmName);
+            AudioClip clip = Resources.Load<AudioClip>(testor.storyPlayer.Setting.PathMusic(bgmName));
             if (clip != null)
             {
                 testor.storyPlayer.AudioModule.PreloadedMusicClips.Add(bgmName, clip);

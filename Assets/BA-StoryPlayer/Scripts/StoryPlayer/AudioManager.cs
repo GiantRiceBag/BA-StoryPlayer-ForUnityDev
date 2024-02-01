@@ -107,10 +107,10 @@ namespace BAStoryPlayer
             }
             else
             {
-                AudioClip clip = Resources.Load<AudioClip>(StoryPlayer.Setting.PathMusic + clipName);
+                AudioClip clip = Resources.Load<AudioClip>(StoryPlayer.Setting.PathMusic(clipName));
                 if (clip == null)
                 {
-                    Debug.LogError($"未能在路径 [{StoryPlayer.Setting.PathMusic + clipName}] 找到AudioClip");
+                    Debug.LogError($"未能在路径 [{StoryPlayer.Setting.PathMusic(clipName)}] 找到AudioClip");
                     return;
                 }
                 PreloadedMusicClips.Add(clipName, clip);
@@ -172,10 +172,10 @@ namespace BAStoryPlayer
 
         public int Play(string clipName, bool isOneShot = true, float scale = 1)
         {
-            AudioClip clip = Resources.Load<AudioClip>(StoryPlayer.Setting.PathSound + clipName);
+            AudioClip clip = Resources.Load<AudioClip>(StoryPlayer.Setting.PathSound(clipName));
             if (clip == null)
             {
-                Debug.LogError($"未能在路径 [{StoryPlayer.Setting.PathSound + clipName}] 找到AudioClip");
+                Debug.LogError($"未能在路径 [{StoryPlayer.Setting.PathSound(clipName)}] 找到AudioClip");
                 return -1;
             }
                 

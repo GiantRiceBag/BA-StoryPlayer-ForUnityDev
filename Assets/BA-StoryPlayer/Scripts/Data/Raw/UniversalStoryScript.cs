@@ -6,7 +6,7 @@ using UnityEngine;
 namespace BAStoryPlayer
 {
     /*
-     * 伟大的头给出的新版格式 这里为了纪念头要🔒一下它的🐂🐂
+     * 头给出的新版格式 这里为了纪念 要🔒一下它的🐂🐂
      */
     [Serializable]
     public class UniversalStoryScript
@@ -117,6 +117,7 @@ namespace BAStoryPlayer
         public string face;
         public string emotion;
         public string action;
+        public int actionTime;
         public int actionArgs;
         public bool highlight;
         public string filter;
@@ -132,6 +133,7 @@ namespace BAStoryPlayer
             stringBuilder.AppendLine($"face   [{face}]");
             stringBuilder.AppendLine($"emotion   [{emotion}]");
             stringBuilder.AppendLine($"action   [{action}]");
+            stringBuilder.AppendLine($"actionTime   [{actionTime}]");
             stringBuilder.AppendLine($"actionArgs   [{actionArgs}]");
             stringBuilder.AppendLine($"highlight [{highlight}]");
             stringBuilder.AppendLine($"filter   [{filter}]");

@@ -55,7 +55,8 @@
           "position": 3,
           "face": "00",
           "emotion": "",
-          "action": "disappear"
+          "action": "disappear",
+          "actionTime": 0
         }
       ]
     },

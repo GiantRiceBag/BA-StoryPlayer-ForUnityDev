@@ -90,9 +90,10 @@ namespace BAStoryPlayer.Parser.UniversaScriptParser
 
                 if (characterUnit.highlight)
                 {
-                    storyUnit.actions += () => StoryPlayer.CharacterModule.Highlight(characterIndex);
+                    // NOTE
+                    // 先使用默认的时间
+                    storyUnit.actions += () => StoryPlayer.CharacterModule.Highlight(characterIndex,-1);
                 }
-
                 if (characterUnit.emotion != null)
                 {
                     switch (characterUnit.emotion)
@@ -180,61 +181,62 @@ namespace BAStoryPlayer.Parser.UniversaScriptParser
                             break;
                     }
                 }
-
                 if (characterUnit.action != null)
                 {
+                    float actionTime = characterUnit.actionTime / 1000f;
+
                     switch (characterUnit.action)
                     {
                         case "a":
                         case "appear":
-                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Appear); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Appear, actionTime); };
                             break;
                         case "d":
                         case "disappear":
-                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Disapper); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Disapper, actionTime); };
                             break;
                         case "dl":
                         case "disappearLeft":
-                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Disapper2Left); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Disapper2Left, actionTime); };
                             break;
                         case "dr":
                         case "disappearRight":
-                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Disapper2Right); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Disapper2Right, actionTime); };
                             break;
                         case "ar":
                         case "appearToRight":
-                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.AppearL2R, characterIndex); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.AppearL2R, characterIndex, actionTime); };
                             break;
                         case "al":
                         case "appearToLeft":
-                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.AppearR2L, characterIndex); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.AppearR2L, characterIndex, actionTime); };
                             break;
                         case "hophop":
-                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Hophop); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Hophop, actionTime); };
                             break;
                         case "greeting":
-                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Greeting); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Greeting, actionTime); };
                             break;
                         case "shake":
-                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Shake); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Shake, actionTime); };
                             break;
                         case "move":
-                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Move, characterUnit.actionArgs - 1); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Move, characterUnit.actionArgs - 1, actionTime); };
                             break;
                         case "stiff":
-                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Stiff); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Stiff, actionTime); };
                             break;
                         case "closeup":
                             storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Close); };
                             break;
                         case "jump":
-                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Jump); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Jump, actionTime); };
                             break;
                         case "falldownL":
-                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.falldownL); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.falldownL, actionTime); };
                             break;
                         case "falldownR":
-                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.falldownR); };
+                            storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.falldownR, actionTime); };
                             break;
                         case "hide":
                             storyUnit.actions += () => { StoryPlayer.CharacterModule.SetAction(characterIndex, CharacterAction.Hide); };

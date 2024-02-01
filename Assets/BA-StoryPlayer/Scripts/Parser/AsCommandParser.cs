@@ -265,7 +265,7 @@ namespace BAStoryPlayer.Parser.AsScriptParser
                 // Character Movement
                 // 目前只接受 -10 -5 0 5 10这5个参数 对应原槽位 0-4 的位置
                 case "x":
-                    storyUnit.actions += () => StoryPlayer.CharacterModule.MoveCharacterTo(indexName, (int.Parse(command[3]) + 10) / 5);
+                    storyUnit.actions += () => StoryPlayer.CharacterModule.MoveCharacterTo(indexName, (int.Parse(command[3]) + 10) / 5,0);
                     break;
                 case "y":
                     break;
