@@ -10,6 +10,8 @@ namespace BAStoryPlayer.UI
         [SerializeField] private bool _isSelected = false;
         [SerializeField] private Material _material;
 
+        private readonly int RectOffsetPID = Shader.PropertyToID("_FlowingLightRectTransformOffset");
+
         public Material Material
         {
             get
@@ -36,11 +38,14 @@ namespace BAStoryPlayer.UI
             _isSelected = StoryPlayer.IsAuto = false;
             SetEnableFlowingLight(false);
             GetComponent<Image>().color = Color.white;
+
+            Canvas.willRenderCanvases += OnRenderCanvasesEventHandler;
         }
         private void OnDisable()
         {
             GetComponent<Button>().onClick.RemoveListener(OnClickEventHandler);
             EventBus<OnCanceledAuto>.Binding.Remove(OnCancelAutoEventHandler);
+            Canvas.willRenderCanvases -= OnRenderCanvasesEventHandler;
         }
 
         private void OnCancelAutoEventHandler(OnCanceledAuto data)
@@ -71,6 +76,13 @@ namespace BAStoryPlayer.UI
                 GetComponent<Image>().color = Color.white;
                 SetEnableFlowingLight(false);
             }
+        }
+        private void OnRenderCanvasesEventHandler()
+        {
+           _material.SetVector(
+               RectOffsetPID,
+               new Vector4(transform.localPosition.x, transform.localPosition.y - StoryPlayer.CanvasRect.sizeDelta.y / 2)
+               );
         }
     }
 }

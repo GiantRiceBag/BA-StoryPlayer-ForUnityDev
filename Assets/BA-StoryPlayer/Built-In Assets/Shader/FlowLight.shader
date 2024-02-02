@@ -12,7 +12,8 @@ Shader "Hidden/FlowLight"
         _FlowingLightLength("Flowing Light Length",Range(0,360)) = 180
         _FlowingLightSpeed("Flowing Light Speed",float) = 0.3
         _FlowingLightEdgeSize("Flowing Light Edge Size",Range(0,10)) = 2.42
-        _FlowingLightScale("Flowing Light Scale",Range(0,10)) = 1
+        [HideInInspector]_FlowingLightRectTransformOffset("Flowing Light RectTransform Offset",Vector) = (0,0,0,0)
+        _FlowingLightScale("Flowing Light Scale",Range(0,10)) = 0.95
         [HDR]_FlowingLightTint("Flowing Light Tint",Color) = (2,1.482,0.6509)
         _FlowingLightReinforcement("Flowing Lght Reinforcement",Range(1,100)) = 10.7
         _CullingResultPower("Culling Result Power",range(0,10)) = 1
@@ -129,13 +130,20 @@ Shader "Hidden/FlowLight"
             float _FlowingLightReinforcement;
             float _EdgeSmoothness;
             fixed4 _FlowingLightTint;
+            fixed4 _FlowingLightRectTransformOffset;
 
             float _CullingResultPower;
 
             v2f vert (appdata v)
             {
                 v2f o;
-                o.vertex = UnityObjectToClipPos(v.vertex);
+                
+                fixed4 positionOS = v.vertex;
+
+                positionOS -= _FlowingLightRectTransformOffset;
+                positionOS *= _FlowingLightScale;
+                positionOS += _FlowingLightRectTransformOffset;
+                o.vertex = UnityObjectToClipPos(positionOS);
                 o.uv = v.uv;
                 o.color = v.color;
                 return o;
