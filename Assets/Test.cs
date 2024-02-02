@@ -100,6 +100,13 @@ public class Test : MonoBehaviour
         public Color color;
     }
 
+    public enum AssetType
+    {
+        Background,
+        Music,
+        Spr
+    }
+
     public abstract class CustomGUI
     {
         public Vector2 messageScrollPos = new Vector2(10, 30);
@@ -248,6 +255,7 @@ public class Test : MonoBehaviour
         private Dictionary<string, Sprite> backgroundCache = new();
         private Dictionary<string, AudioClip> bgmCache = new();
         private Dictionary<string, SkeletonDataAsset> sprCache = new();
+        private Dictionary<string, AssetType> failedToLoadAsset = new();
 
         public GUIRemoteScriptsPage(Test testor) : base(testor) { }
 
@@ -297,7 +305,7 @@ public class Test : MonoBehaviour
                     DestroyImmediate(sprKV.Value,true);
                 }
                 sprCache.Clear();
-
+                failedToLoadAsset.Clear();
                 Resources.UnloadUnusedAssets();
             }
 
@@ -403,6 +411,17 @@ public class Test : MonoBehaviour
                     }
                 }
                 GUILayout.EndHorizontal();
+            }
+        }
+        private void PrintFailedToLoadAssets()
+        {
+            if (failedToLoadAsset.Count <= 0)
+                return;
+
+            ClearMessages();
+            foreach(var i in failedToLoadAsset)
+            {
+                AddMessage($"[{i.Value}] {i.Key}", Color.red);
             }
         }
 
@@ -587,12 +606,17 @@ public class Test : MonoBehaviour
             }
 
             isPreloadingAsset = false;
-            messages.Clear();
+            ClearMessages();
 
             testor.storyPlayer.LoadStory(storyScript);
         }
         private IEnumerator CrtLoadCharacterSpine(string chrName)
         {
+            if(failedToLoadAsset.ContainsKey(chrName))
+            {
+                yield break;
+            }
+
             if(sprCache.ContainsKey(chrName))
             {
                 SkeletonDataAsset skelAsset = sprCache[chrName];
@@ -619,6 +643,7 @@ public class Test : MonoBehaviour
                 if (atlasRequest.result != UnityWebRequest.Result.Success)
                 {
                     AddMessage($"ÏÂÔØ {chrNameWithSuffix}.atlas Ê§°Ü", Color.red);
+                    failedToLoadAsset.Add(chrName, AssetType.Spr);
                     yield break;
                 }
                 else
@@ -638,6 +663,7 @@ public class Test : MonoBehaviour
                 if (pngRequest.result != UnityWebRequest.Result.Success)
                 {
                     AddMessage($"ÏÂÔØ {chrNameWithSuffix}.png Ê§°Ü", Color.red);
+                    failedToLoadAsset.Add(chrName, AssetType.Spr);
                     yield break;
                 }
                 else
@@ -666,6 +692,7 @@ public class Test : MonoBehaviour
                 if (skelRequest.result != UnityWebRequest.Result.Success)
                 {
                     AddMessage($"ÏÂÔØ {chrNameWithSuffix}.skel Ê§°Ü", Color.red);
+                    failedToLoadAsset.Add(chrName, AssetType.Spr);
                     yield break;
                 }
                 else
@@ -711,6 +738,11 @@ public class Test : MonoBehaviour
         }
         private IEnumerator CrtLoadBackground(string backgroundName)
         {
+            if (failedToLoadAsset.ContainsKey(backgroundName))
+            {
+                yield break;
+            }
+
             if (backgroundCache.ContainsKey(backgroundName))
             {
                 testor.storyPlayer.BackgroundModule.PreloadedImages.Add(
@@ -748,25 +780,23 @@ public class Test : MonoBehaviour
                             );
                         backgroundCache.Add(backgroundName, sprite);
 
-                        messages.Add(new GUIMessage()
-                        {
-                            text = $"ÔØÈë±³¾° {backgroundName}.jpg ³É¹¦",
-                            color = Color.green
-                        });
+                        AddMessage($"ÔØÈë±³¾° {backgroundName}.jpg ³É¹¦", Color.green);
                     }
                     else
                     {
-                        messages.Add(new GUIMessage()
-                        {
-                            text = $"ÔØÈë±³¾° {backgroundName}.jpg Ê§°Ü",
-                            color = Color.red
-                        });
+                        AddMessage($"ÔØÈë±³¾° {backgroundName}.jpg Ê§°Ü", Color.red);
+                        failedToLoadAsset.Add(backgroundName, AssetType.Background);
                     }
                 }
             }
         }
         private IEnumerator CrtLoadBGM(string bgmName)
         {
+            if(failedToLoadAsset.ContainsKey(bgmName))
+            {
+                yield break;
+            }
+
             if (bgmCache.ContainsKey(bgmName))
             {
                 testor.storyPlayer.AudioModule.PreloadedMusicClips.Add(bgmName, bgmCache[bgmName]);
@@ -799,19 +829,12 @@ public class Test : MonoBehaviour
                                 clip
                             );
                         bgmCache.Add(bgmName,clip);
-                        messages.Add(new GUIMessage()
-                        {
-                            text = $"ÔØÈëÒôÀÖ {bgmName}.mp3 ³É¹¦",
-                            color = Color.green
-                        });
+                        AddMessage($"ÔØÈëÒôÀÖ {bgmName}.mp3 ³É¹¦", Color.green);
                     }
                     else
                     {
-                        messages.Add(new GUIMessage()
-                        {
-                            text = $"ÔØÈëÒôÀÖ {bgmName}.mp3 Ê§°Ü",
-                            color = Color.red
-                        });
+                        AddMessage($"ÔØÈëÒôÀÖ {bgmName}.mp3 Ê§°Ü",Color.red);
+                        failedToLoadAsset.Add(bgmName, AssetType.Music);
                     }
                 }
             }

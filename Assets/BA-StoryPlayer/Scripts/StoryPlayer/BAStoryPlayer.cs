@@ -496,6 +496,7 @@ namespace BAStoryPlayer
                 {
                     Destroy(gameObject);
                 }
+                Resources.UnloadUnusedAssets();
             };
 
             this.Delay(() =>
