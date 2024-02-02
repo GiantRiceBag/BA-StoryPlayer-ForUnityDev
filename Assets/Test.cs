@@ -297,6 +297,8 @@ public class Test : MonoBehaviour
                     DestroyImmediate(sprKV.Value,true);
                 }
                 sprCache.Clear();
+
+                Resources.UnloadUnusedAssets();
             }
 
             if (testor.storyPlayer.IsPlaying)

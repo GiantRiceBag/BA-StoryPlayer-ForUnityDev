@@ -36,9 +36,10 @@ namespace BAStoryPlayer
         private const int CharacterSlotCount = 5;
         private const float CharacterScale = 0.7f;
         private const float SlotIntervalNormal = 0.1666667f;
+        private const float ZoomInOffsetY = -350;
 
         private float SlotInterval => StoryPlayer.CanvasRect.sizeDelta.x * SlotIntervalNormal;
-        private Vector2 ScaleOffset => Vector2.up * 350; // 角色放大后的偏移量
+        private Vector2 ZoomInOffset => Vector2.up * ZoomInOffsetY; // 角色放大后的偏移量
         private Vector2 StandByPositionLeft => new Vector2(-SlotInterval * 2.5f, 0);
         private Vector2 StandByPositionRight => new Vector2(StoryPlayer.CanvasRect.sizeDelta.x + SlotInterval * 2.5f, 0);
 
@@ -68,7 +69,7 @@ namespace BAStoryPlayer
         /// </summary>
         public void ActivateCharacter(int index,string indexName,string animationID)
         {
-            int currentIndex = CheckIfCharacterOnSlot(indexName);
+            int currentIndex = IsCharacterOnSlot(indexName);
             // 角色不在场上
             if (currentIndex == -1)
             {
@@ -102,6 +103,10 @@ namespace BAStoryPlayer
                     Characters[index] = Characters[currentIndex];
                     Characters[currentIndex] = null;
                 }
+                else
+                {
+                    MoveCharacterTo(currentIndex, currentIndex, 0);
+                }
             }
 
             SetAnimation(index, animationID);
@@ -119,17 +124,16 @@ namespace BAStoryPlayer
         [Obsolete]
         public void ActivateCharacter(string indexName)
         {
-            if (!CheckIfCharacterInPool(indexName))
+            if (!IsCharacterInPool(indexName))
             {
                 CreateCharacterObj(indexName);
             }
             _characterPool[indexName].SetActive(true);
         }
 
-        private bool CheckIfCharacterInPool(string indexName) => _characterPool.ContainsKey(indexName) ? _characterPool[indexName] != null : false;
-        private int CheckIfCharacterOnSlot(string indexName)
+        private int IsCharacterOnSlot(string indexName)
         {
-            for(int i = 0; i < CharacterSlotCount; i++)
+            for (int i = 0; i < CharacterSlotCount; i++)
             {
                 if (Characters[i] == null)
                     continue;
@@ -139,12 +143,23 @@ namespace BAStoryPlayer
 
             return -1;
         }
-        private bool CheckIfSlotEmpty(int index) => CheckIfIndexValid(index) ? Characters[index] == null : false;
-        private bool CheckIfIndexValid(int index) => (index >= 0 && index < CharacterSlotCount);
+        private bool IsCharacterInPool(string indexName) => CharacterPool.ContainsKey(indexName) ? CharacterPool[indexName] != null : false;
+        private bool IsSlotEmpty(int index) => ValidateIndex(index) ? Characters[index] == null : false;
+        private bool ValidateIndex(int index) => (index >= 0 && index < CharacterSlotCount);
+        private bool IsCharacterZoomIn(int index)
+        {
+            if (IsSlotEmpty(index))
+                return false;
+            return IsCharacterZoomIn(Characters[index].gameObject);
+        }
+        private bool IsCharacterZoomIn(GameObject obj)
+        {
+            return obj.transform.localScale.x == 1;
+        }
 
         private void DestroyCharacter(int index,bool destroyObject = false)
         {
-            if (CheckIfSlotEmpty(index))
+            if (IsSlotEmpty(index))
                 return;
             // 先停掉角色的眨眼动画在变换位置
             SetWinkAction(Characters[index].name, false);
@@ -153,7 +168,7 @@ namespace BAStoryPlayer
         }
         private void DestroyCharacter(string indexName,bool destroyObject = false)
         {
-            if (!CheckIfCharacterInPool(indexName))
+            if (!IsCharacterInPool(indexName))
                 return;
             Destroy(_characterPool[indexName]);
         }
@@ -170,7 +185,7 @@ namespace BAStoryPlayer
             }
 
             SetWinkAction(obj.name, false);
-            int slotIndex = CheckIfCharacterOnSlot(obj.name);
+            int slotIndex = IsCharacterOnSlot(obj.name);
             if (slotIndex != -1)
                 _characters[slotIndex] = null;
         }
@@ -233,22 +248,22 @@ namespace BAStoryPlayer
 
         private void MoveCharacterTo(int currentIndex,int targetIndex, float time)
         {
-            if (!CheckIfIndexValid(currentIndex) || !CheckIfIndexValid(targetIndex))
+            if (!ValidateIndex(currentIndex) || !ValidateIndex(targetIndex))
                 return;
-            if (CheckIfSlotEmpty(currentIndex))
+            if (IsSlotEmpty(currentIndex))
                 return;
             MoveCharacterTo(Characters[currentIndex].gameObject, targetIndex, time);
         }
         private void MoveCharacterTo(int currentIndex,Vector2 pos, float time)
         {
-            if (CheckIfSlotEmpty(currentIndex))
+            if (IsSlotEmpty(currentIndex))
                 return;
             MoveCharacterTo(Characters[currentIndex].gameObject, pos, time);
         }
         [Obsolete]
         public void MoveCharacterTo(string indexName, int targetIndex, float time)
         {
-            if (!CheckIfCharacterInPool(indexName))
+            if (!IsCharacterInPool(indexName))
                 CreateCharacterObj(indexName);
             _characterPool[indexName].SetActive(true);
             MoveCharacterTo(_characterPool[indexName], targetIndex, time);
@@ -256,7 +271,7 @@ namespace BAStoryPlayer
         [Obsolete]
         private void MoveCharacterTo(string indexName, Vector2 pos, float time)
         {
-            if (!CheckIfCharacterInPool(indexName))
+            if (!IsCharacterInPool(indexName))
                 CreateCharacterObj(indexName);
             CharacterPool[indexName].SetActive(true);
             MoveCharacterTo(CharacterPool[indexName], pos, time);
@@ -264,8 +279,12 @@ namespace BAStoryPlayer
         private void MoveCharacterTo(GameObject obj, int targetIndex, float time)
         {
             targetIndex = Mathf.Clamp(targetIndex, 0, 5);
-            RectTransform rect = obj.GetComponent<RectTransform>();
-            MoveCharacterTo(obj, new Vector2((targetIndex + 1) * SlotInterval, rect.anchoredPosition.y), time);
+            MoveCharacterTo(
+                obj, 
+                new Vector2(
+                    (targetIndex + 1) * SlotInterval, 
+                    GetCharacterDesiredPositionY(obj)),
+                time);
         }
         private void MoveCharacterTo(GameObject obj, Vector2 pos, float time)
         {
@@ -293,14 +312,14 @@ namespace BAStoryPlayer
         }
         public void SetAction(int index,CharacterAction action,int arg = -1, float time = 0)
         {
-            if (CheckIfSlotEmpty(index))
+            if (IsSlotEmpty(index))
                 return;
             SetAction(Characters[index].gameObject, action, arg, time);
         }
         [Obsolete]
         public void SetAction(string indexName,CharacterAction action,int arg = -1, float time = 0)
         {
-            if (!CheckIfCharacterInPool(indexName))
+            if (!IsCharacterInPool(indexName))
             {
                 CreateCharacterObj(indexName);
             }
@@ -329,25 +348,25 @@ namespace BAStoryPlayer
                     break;
                 case CharacterAction.Disapper2Left:
                     actionTime = time <= 0 ? StoryPlayer.Setting.DefaultTimeCharacterMove : time;
-                    MoveCharacterTo(obj,StandByPositionLeft , actionTime);
+                    MoveCharacterTo(obj,GetStandbyPostionLeft(obj) , actionTime);
                     EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = actionTime });
                     break;
                 case CharacterAction.Disapper2Right:
                     actionTime = time <= 0 ? StoryPlayer.Setting.DefaultTimeCharacterMove : time;
-                    MoveCharacterTo(obj,StandByPositionRight , actionTime);
+                    MoveCharacterTo(obj,GetStandbyPostionRight(obj) , actionTime);
                     EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = actionTime });
                     break;
                 case CharacterAction.AppearL2R:
                     actionTime = time <= 0 ? StoryPlayer.Setting.DefaultTimeCharacterMove : time;
                     skelGraphic.color = Color.white;
-                    MoveCharacterTo(obj, StandByPositionLeft, 0);
+                    MoveCharacterTo(obj, GetStandbyPostionLeft(obj), 0);
                     MoveCharacterTo(obj, arg, actionTime);
                     EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = actionTime });
                     break;
                 case CharacterAction.AppearR2L:
                     actionTime = time <= 0 ? StoryPlayer.Setting.DefaultTimeCharacterMove : time;
                     skelGraphic.color = Color.white;
-                    MoveCharacterTo(obj, StandByPositionRight,0);
+                    MoveCharacterTo(obj, GetStandbyPostionRight(obj),0);
                     MoveCharacterTo(obj, arg, actionTime);
                     EventBus<OnSetCharacterAction>.Raise(new OnSetCharacterAction() { time = actionTime });
                     break;
@@ -383,13 +402,8 @@ namespace BAStoryPlayer
                     break;
                 case CharacterAction.falldownR:
                     {
-                        int index = CheckIfCharacterOnSlot(obj.name);
+                        int index = IsCharacterOnSlot(obj.name);
                         MoveCharacterTo(obj, index, 0);
-                        var rect = obj.GetComponent<RectTransform>();
-                        rect.anchoredPosition = new Vector2(
-                                rect.anchoredPosition.x,
-                                obj.transform.localScale.x == 1 ? -350 : 0
-                            );
 
                         actionTime = time <= 0 ? StoryPlayer.Setting.DefaultTimeFalldown : time;
 
@@ -410,13 +424,8 @@ namespace BAStoryPlayer
                     }
                 case CharacterAction.falldownL:
                     {
-                        int index = CheckIfCharacterOnSlot(obj.name);
+                        int index = IsCharacterOnSlot(obj.name);
                         MoveCharacterTo(obj, index, 0);
-                        var rect = obj.GetComponent<RectTransform>();
-                        rect.anchoredPosition = new Vector2(
-                                rect.anchoredPosition.x,
-                                obj.transform.localScale.x == 1 ? -350 : 0
-                            );
 
                         actionTime = time <= 0 ? StoryPlayer.Setting.DefaultTimeFalldown : time;
 
@@ -440,7 +449,7 @@ namespace BAStoryPlayer
                     break;
                 case CharacterAction.Close:
                     obj.transform.localScale = Vector3.one;
-                    obj.GetComponent<RectTransform>().anchoredPosition = obj.GetComponent<RectTransform>().anchoredPosition * Vector2.right - ScaleOffset;
+                    obj.GetComponent<RectTransform>().anchoredPosition = obj.GetComponent<RectTransform>().anchoredPosition * Vector2.right + ZoomInOffset;
                     break;
                 case CharacterAction.Back:
                     obj.transform.localScale = Vector3.one * 0.7f;
@@ -460,13 +469,13 @@ namespace BAStoryPlayer
 
         public void SetEmotion(int index,CharacterEmotion emotion)
         {
-            if (CheckIfSlotEmpty(index))
+            if (IsSlotEmpty(index))
                 return;
             SetEmotion(Characters[index].gameObject,emotion);
         }
         public void SetEmotion(string indexName, CharacterEmotion emotion)
         {
-            if (!CheckIfCharacterInPool(indexName))
+            if (!IsCharacterInPool(indexName))
                 CreateCharacterObj(indexName);
             _characterPool[indexName].SetActive(true);
             SetEmotion(_characterPool[indexName], emotion);
@@ -480,14 +489,14 @@ namespace BAStoryPlayer
 
         public void Highlight(int index, float time = 0)
         {
-            if (CheckIfSlotEmpty(index))
+            if (IsSlotEmpty(index))
                 return;
             Highlight(Characters[index].gameObject, time);
         }
         [Obsolete]
         public void Highlight(string indexName, float time = 0)
         {
-            if (!CheckIfCharacterInPool(indexName))
+            if (!IsCharacterInPool(indexName))
             {
                 // CreateCharacterObj(indexName);
                 return;
@@ -653,14 +662,14 @@ namespace BAStoryPlayer
 
         public void SetAnimation(int index, string animationID, int track = 0, bool loop = true)
         {
-            if (CheckIfSlotEmpty(index))
+            if (IsSlotEmpty(index))
                 return;
             SetAnimation(Characters[index], animationID, track, loop);
             SetWinkAction(Characters[index].name, animationID.Contains("01") ? true : false);
         }
         public void SetAnimation(string indexName,string animationID, int track = 0, bool loop = true)
         {
-            if (!CheckIfCharacterInPool(indexName))
+            if (!IsCharacterInPool(indexName))
                 CreateCharacterObj(indexName);
             _characterPool[indexName].SetActive(true);
             SetAnimation(_characterPool[indexName].GetComponent<SkeletonGraphic>(),animationID,track,loop);
@@ -673,6 +682,25 @@ namespace BAStoryPlayer
                 skel.AnimationState.SetAnimation(track, animationID, loop);
             }
             catch { }
+        }
+
+        private float GetCharacterDesiredPositionY(int index)
+        {
+            if(IsSlotEmpty(index))
+                return -1;
+            return GetCharacterDesiredPositionY(Characters[index].gameObject);
+        }
+        private float GetCharacterDesiredPositionY(GameObject obj)
+        {
+            return IsCharacterZoomIn(obj) ? ZoomInOffsetY : 0;
+        }
+        private Vector2 GetStandbyPostionLeft(GameObject obj)
+        {
+            return StandByPositionLeft + new Vector2(0, GetCharacterDesiredPositionY(obj));
+        }
+        private Vector2 GetStandbyPostionRight(GameObject obj)
+        {
+            return StandByPositionRight + new Vector2(0, GetCharacterDesiredPositionY(obj));
         }
 
         public void ClearAllObject()
