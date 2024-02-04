@@ -12,10 +12,10 @@ Shader "Spine/HologramEffect"
 		_HologramSFXColor("Hologram SFX Color",COLOR) = (0.5896226,0.8559483,1,1)
 		_HologramSFXBrightness("Hologram SFX Brightness",Range(0,2)) = 0.8
 
-		_HologramJitterThreshold("Hologram Jitter Threshold",vector) = (0.99,0.99,0,0)
+		_HologramJitterThreshold("Hologram Jitter Threshold",vector) = (0.95,0.96,0,0)
 		_HologramJitterSpeedRadio("Hologram Jitter Speed Radio",vector) = (70,70,0,0)
 		_HologramJitterRangeVertex("Hologram Jitter Range Vertex",vector) = (20,1500,0,1)
-		_HologramJitterOffset("Hologram Jitter Offset",vector) = (2,1,0,0)
+		_HologramJitterOffset("Hologram Jitter Offset",vector) = (3,2,0,0)
 
 		[Space]
 		[HideInInspector][Enum(UnityEngine.Rendering.CompareFunction)] _StencilComp ("Stencil Comparison", Float) = 8
@@ -110,7 +110,7 @@ Shader "Spine/HologramEffect"
 				UNITY_SETUP_INSTANCE_ID(IN);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(OUT);
 
-				OUT.worldPosition = IN.vertex + float4(HologramSFXJitterOffsetVertex(IN.vertex,fixed2(1,0)),0,0);
+				OUT.worldPosition = IN.vertex + float4(HologramSFXJitterOffsetVertex(IN.vertex,half2(1,0)),0,0);
 				OUT.vertex = UnityObjectToClipPos(OUT.worldPosition);
 				OUT.texcoord = IN.texcoord;
 
@@ -140,11 +140,7 @@ Shader "Spine/HologramEffect"
 				clip (color.a - 0.001);
 				#endif
 
-				HologramSFXInput sfxData;
-				sfxData.color = color;
-				sfxData.uv = IN.vertex;
-
-				return HologramSFX(sfxData);
+				return HologramSFX(color,IN.vertex);
 			}
 		ENDCG
 		}

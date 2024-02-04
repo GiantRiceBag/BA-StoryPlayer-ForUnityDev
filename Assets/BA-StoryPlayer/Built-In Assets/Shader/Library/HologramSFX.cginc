@@ -2,12 +2,6 @@
 #define HOLOGRAM_SFX_PROCESSOR
 #endif
 
-struct HologramSFXInput
-{
-    half4 color;
-    float2 uv;
-};
-
 half _HologramSFXSpeed;
 half _HologramSFXDensity;
 half _HologramSFXBrightness;
@@ -26,7 +20,7 @@ half2 HologramSFXJitterOffsetVertex(half2 vertex, half2 direction)
     half jitterPosRange = step(_HologramJitterRangeVertex.x, jitterPos) * step(jitterPos, _HologramJitterRangeVertex.y);
     half offset = jitterPosRange * _HologramJitterOffset.x * timeToJitter * _SinTime.y;
     
-    return offset * direction;
+    return half2(offset * direction.x,offset * direction.y);
 }
 
 float2 HologramSFXJitterOffseUV(float2 uv, float2 texelSize, float2 direction)
@@ -40,12 +34,12 @@ float2 HologramSFXJitterOffseUV(float2 uv, float2 texelSize, float2 direction)
     return offset * direction;
 }
 
-half4 HologramSFX(HologramSFXInput input)
+half4 HologramSFX(half4 originColor,float2 uv)
 {
-    float mask = frac((input.uv.y - _Time.y * _HologramSFXSpeed) * _HologramSFXDensity);
+    float mask = frac((uv.y - _Time.y * _HologramSFXSpeed) * _HologramSFXDensity);
     mask = (sign(mask - 0.5) * (mask - 0.5) * 2 + 1) / 2;
 
-    half4 color = input.color * _HologramSFXColor;
+    half4 color = originColor * _HologramSFXColor;
 
     return lerp(color, half4(color.xyz * (mask + 1) * _HologramSFXBrightness, color.a), mask);
 }
